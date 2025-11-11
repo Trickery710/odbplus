@@ -1,0 +1,39 @@
+# 1) Unquote version-catalog usages:
+#    implementation("libs.xxx")  -> implementation(libs.xxx)
+#    platform("libs.xxx")        -> platform(libs.xxx)
+find . -name "build.gradle.kts" -print0 | xargs -0 sed -Ei '
+  s/(implementation|api|kapt|ksp|debugImplementation|androidTestImplementation|testImplementation)\("libs\.([^"]+)"\)/\1(libs.\2)/g;
+  s/platform\("libs\.([^"]+)"\)/platform(libs.\1)/g
+'
+
+# 2) Convert hyphens to dots in accessors:
+#    libs.kotlin-stdlib -> libs.kotlin.stdlib, etc.
+find . -name "build.gradle.kts" -print0 | xargs -0 sed -Ei '
+  s/libs\.kotlin-stdlib/libs.kotlin.stdlib/g;
+  s/libs\.coroutines-android/libs.coroutines.android/g;
+  s/libs\.androidx-core/libs.androidx.core/g;
+  s/libs\.activity-compose/libs.activity.compose/g;
+  s/libs\.lifecycle-runtime/libs.lifecycle.runtime/g;
+  s/libs\.compose-bom/libs.compose.bom/g;
+  s/libs\.compose-ui-test/libs.compose.ui.test/g;
+  s/libs\.compose-ui-preview/libs.compose.ui.preview/g;
+  s/libs\.compose-ui-tooling/libs.compose.ui.tooling/g;
+  s/libs\.compose-ui/libs.compose.ui/g;
+  s/libs\.compose-material3/libs.compose.material3/g;
+  s/libs\.nav-compose/libs.nav.compose/g;
+  s/libs\.androidx-junit/libs.androidx.junit/g
+'
+
+# 3) desugar accessor (just in case it was quoted anywhere)
+find . -name "build.gradle.kts" -print0 | xargs -0 sed -Ei '
+  s/coreLibraryDesugaring\("libs\.desugar"\)/coreLibraryDesugaring(libs.desugar)/g;
+  s/coreLibraryDesugaring\(libs\.desugar\)/coreLibraryDesugaring(libs.desugar)/g
+'
+
+# 4) Avoid operator confusion in packaging excludes (use add())
+#    Rewrites typical += into .add(...)
+find . -name "build.gradle.kts" -print0 | xargs -0 sed -Ei '
+  s/excludes\s*\+=\s*"\s*\/META-INF\/AL2\.0\s*"/excludes.add("\/META-INF\/AL2.0")/g;
+  s/excludes\s*\+=\s*"\s*\/META-INF\/LGPL2\.1\s*"/excludes.add("\/META-INF\/LGPL2.1")/g
+'
+
