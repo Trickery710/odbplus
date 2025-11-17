@@ -1,8 +1,8 @@
 pluginManagement {
     repositories {
+        gradlePluginPortal()
         google()
         mavenCentral()
-        gradlePluginPortal()
     }
 }
 dependencyResolutionManagement {
@@ -12,14 +12,6 @@ dependencyResolutionManagement {
         mavenCentral()
     }
 }
-rootProject.name = "odbplus"
-include(
-    ":app",
-    ":core-transport",
-    ":core-protocol",
-    ":data-schema",
-    ":feature-live",
-    ":feature-diagnostics",
-    ":feature-logger",
-    ":feature-ecu-profile"
-)
+rootProject.name = "odbplus_multi_module_scaffold"
+include(":app", ":core-transport", ":core-protocol")
+

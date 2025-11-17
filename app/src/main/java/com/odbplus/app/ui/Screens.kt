@@ -1,139 +1,112 @@
 package com.odbplus.app.ui
 
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.width
+import androidx.compose.material3.Button
+import androidx.compose.material3.Divider
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.odbplus.core.transport.TransportRepository
-import com.odbplus.core.transport.ConnType
-
-// DI via CompositionLocal
-private val LocalTransport = staticCompositionLocalOf<TransportRepository> {
-    error("TransportRepository not provided")
-}
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.odbplus.app.connect.ConnectViewModel
+import kotlinx.coroutines.launch
+import kotlin.text.decodeToString
+import kotlin.text.trim
 
 @Composable
-fun ProvideTransport(content: @Composable () -> Unit) {
-    val repo = remember { TransportRepository() }
-    CompositionLocalProvider(LocalTransport provides repo, content = content)
-}
+fun ConnectScreen(
+    vm: ConnectViewModel = hiltViewModel()
+) {
+    val scope = rememberCoroutineScope()
 
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun ConnectScreen() {
-    val repo = LocalTransport.current
-    val state by repo.state.collectAsState()
-
-    var host by remember { mutableStateOf(state.host) }
-    var portText by remember { mutableStateOf(state.port.toString()) }
-    var typeExpanded by remember { mutableStateOf(false) }
+    var cmd by remember { mutableStateOf("") }
+    val log = remember { mutableStateListOf<String>() }
 
     Column(
-        Modifier.fillMaxSize().padding(16.dp),
-        verticalArrangement = Arrangement.spacedBy(12.dp)
+        modifier = Modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.spacedBy(12.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text("Connection", style = MaterialTheme.typography.titleMedium)
+        Text("Connection")
 
-        ExposedDropdownMenuBox(
-            expanded = typeExpanded,
-            onExpandedChange = { typeExpanded = !typeExpanded }
-        ) {
-            OutlinedTextField(
-                readOnly = true,
-                value = when (state.type) {
-                    ConnType.TCP -> "TCP"
-                    ConnType.BluetoothSPP -> "Bluetooth SPP"
-                },
-                onValueChange = {},
-                label = { Text("Type") },
-                trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = typeExpanded) },
-                modifier = Modifier.menuAnchor().fillMaxWidth()
-            )
-            ExposedDropdownMenu(expanded = typeExpanded, onDismissRequest = { typeExpanded = false }) {
-                DropdownMenuItem(text = { Text("TCP") }, onClick = { typeExpanded = false; repo.setType(ConnType.TCP) })
-                DropdownMenuItem(text = { Text("Bluetooth SPP") }, onClick = { typeExpanded = false; repo.setType(ConnType.BluetoothSPP) })
-            }
-        }
-
-        if (state.type == ConnType.TCP) {
-            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                OutlinedTextField(
-                    value = host,
-                    onValueChange = { host = it },
-                    label = { Text("Host/IP") },
-                    modifier = Modifier.weight(1f)
-                )
-                OutlinedTextField(
-                    value = portText,
-                    onValueChange = { portText = it.filter(Char::isDigit).take(5) },
-                    label = { Text("Port") },
-                    modifier = Modifier.width(120.dp),
-                    singleLine = true
-                )
-            }
-            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                Button(onClick = {
-                    repo.updateTcpEndpoint(host.ifBlank { "10.0.2.2" }, portText.toIntOrNull() ?: 35000)
-                    repo.connect()
-                }) { Text("Connect") }
-                Button(onClick = { repo.disconnect() }) { Text("Disconnect") }
-                AssistChip(
-                    onClick = {
-                        host = "10.0.2.2"
-                        portText = "35000"
-                        repo.updateTcpEndpoint(host, 35000)
-                        repo.connect()
-                    },
-                    label = { Text("Quick: OBDSim") }
-                )
-            }
-        } else {
-            Text("Bluetooth UI TODO")
+        Row {
+            Button(onClick = { vm.connect() }) { Text("Connect") }
+            Spacer(Modifier.width(8.dp))
+            Button(onClick = {
+                // If you implemented repo.disconnect(), you can expose it via vm too.
+                // For now we omit to keep it minimal.
+                log.add("Disconnect not implemented in VM (optional).")
+            }) { Text("Disconnect") }
         }
 
         Divider()
 
-        var cmd by remember { mutableStateOf("") }
         Row {
             OutlinedTextField(
                 value = cmd,
                 onValueChange = { cmd = it },
                 label = { Text("Command") },
-                modifier = Modifier.weight(1f),
                 singleLine = true
             )
             Spacer(Modifier.width(8.dp))
-            Button(onClick = {
-                if (cmd.isNotBlank()) {
-                    repo.send(cmd.trim())
+            Button(
+                enabled = cmd.isNotBlank(),
+                onClick = {
+                    val toSend = cmd.trim()
                     cmd = ""
+                    vm.sendCustom(toSend) { result ->
+                        log.add("> $toSend")
+                        log.add(result.trim())
+                    }
                 }
-            }) { Text("Send") }
-        }
-
-        Text("Command Log")
-        val lines by LocalTransport.current.log.lines.collectAsState()
-        val listState = rememberLazyListState()
-        LaunchedEffect(lines.size) {
-            if (lines.isNotEmpty()) listState.animateScrollToItem(lines.lastIndex)
-        }
-        Surface(tonalElevation = 2.dp, modifier = Modifier.fillMaxWidth().weight(1f)) {
-            LazyColumn(
-                state = listState,
-                contentPadding = PaddingValues(12.dp),
-                verticalArrangement = Arrangement.spacedBy(6.dp)
             ) {
-                items(lines) { Text(it) }
+                Text("Send")
             }
         }
+
+        Divider()
+
+        Text("Command Log")
+        Column(
+            verticalArrangement = Arrangement.spacedBy(6.dp)
+        ) {
+            log.forEach { line -> Text(line) }
+        }
+    }
+
+    // Optional: auto-connect once on first composition
+    LaunchedEffect(Unit) {
+        // Comment out if you only want manual connect
+        // vm.connect()
     }
 }
 
-@Composable fun LiveScreen() { Text("Live Data (placeholder)") }
-@Composable fun DiagnosticsScreen() { Text("Diagnostics (placeholder)") }
-@Composable fun LoggerScreen() { Text("Logger (placeholder)") }
-@Composable fun EcuProfileScreen() { Text("ECU Profile (placeholder)") }
+@Composable fun LiveScreen() { CenteredStub("Live Data (placeholder)") }
+@Composable fun DiagnosticsScreen() { CenteredStub("Diagnostics (placeholder)") }
+@Composable fun LoggerScreen() { CenteredStub("Logger (placeholder)") }
+@Composable fun EcuProfileScreen() { CenteredStub("ECU Profile (placeholder)") }
+
+@Composable
+private fun CenteredStub(title: String) {
+    Column(
+        modifier = Modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Text(title)
+    }
+}

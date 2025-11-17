@@ -2,6 +2,8 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.hilt)
+    kotlin("kapt")
 }
 
 android {
@@ -13,65 +15,57 @@ android {
         minSdk = 26
         targetSdk = 35
         versionCode = 1
-        versionName = "1.0.0"
-        vectorDrawables { useSupportLibrary = true }
+        versionName = "1.0"
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
-    buildTypes {
-        release {
-            isMinifyEnabled = false
-            proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
-            )
-        }
-    }
+    buildFeatures { compose = true }
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
-        // if you don't actually need desugaring here, you can set this to false
         isCoreLibraryDesugaringEnabled = true
     }
     kotlinOptions { jvmTarget = "17" }
-
-    buildFeatures { compose = true }
-
-    // Use .add() to avoid any operator overloading ambiguity in Kotlin DSL
-    packaging {
-        resources {
-            excludes.add("/META-INF/AL2.0")
-            excludes.add("/META-INF/LGPL2.1")
-        }
-    }
 }
 
 dependencies {
-    // Desugaring (required because we enabled it above)
-    coreLibraryDesugaring(libs.desugar)
-
-    // Kotlin / AndroidX
-    implementation(libs.kotlin.stdlib)
+    // Core
+    implementation(libs.androidx.core.ktx)
     implementation(libs.coroutines.android)
-    implementation(libs.androidx.core)
-    implementation(libs.activity.compose)
-    implementation(libs.lifecycle.runtime)
-    implementation(libs.compose.material.icons.extended)
-    implementation(platform(libs.compose.bom))
-    implementation(libs.compose.ui)
-    implementation(libs.compose.ui.preview)
-    implementation(libs.compose.material3)
-    debugImplementation(libs.compose.ui.tooling)
-
-    implementation(libs.nav.compose)
     implementation(libs.timber)
 
-    coreLibraryDesugaring(libs.desugar)
+    // Compose
+    implementation(platform(libs.compose.bom))
+    implementation(libs.compose.ui)
+    implementation(libs.compose.material3)
+    implementation(libs.compose.runtime)
+    implementation(libs.activity.compose)
+    implementation(libs.lifecycle.viewmodel.compose)
+    implementation(libs.compose.ui.tooling.preview)
+    debugImplementation(libs.compose.ui.tooling)
 
+    // Hilt
+    implementation(libs.hilt.android)
+    kapt(libs.hilt.compiler)
+    implementation(libs.hilt.navigation.compose)
+
+    // Desugaring
+    coreLibraryDesugaring(libs.desugar.jdk.libs)
+
+    // Modules
+    implementation(project(":core-transport"))
+    implementation(project(":core-protocol"))
+
+    // Tests
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.espresso)
-    androidTestImplementation(libs.compose.ui.test)
-    implementation(project(":core-transport"))
+    androidTestImplementation(libs.espresso.core)
+    androidTestImplementation(platform(libs.compose.bom))
+    androidTestImplementation(libs.compose.ui.test.junit4)
+    implementation(libs.compose.material.icons.extended)   // ✅ add this line
 
 }
+
+kapt { correctErrorTypes = true }
+

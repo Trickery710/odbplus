@@ -12,11 +12,6 @@
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/core-protocol" />
             <option value="$PROJECT_DIR$/core-transport" />
-            <option value="$PROJECT_DIR$/data-schema" />
-            <option value="$PROJECT_DIR$/feature-diagnostics" />
-            <option value="$PROJECT_DIR$/feature-ecu-profile" />
-            <option value="$PROJECT_DIR$/feature-live" />
-            <option value="$PROJECT_DIR$/feature-logger" />
           </set>
         </option>
       </GradleProjectSettings>
