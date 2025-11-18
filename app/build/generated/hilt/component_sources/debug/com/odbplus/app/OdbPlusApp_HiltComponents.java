@@ -179,7 +179,8 @@ public final class OdbPlusApp_HiltComponents {
       }
   )
   @ActivityScoped
-  public abstract static class ActivityC implements ActivityComponent,
+  public abstract static class ActivityC implements MainActivity_GeneratedInjector,
+      ActivityComponent,
       DefaultViewModelFactories.ActivityEntryPoint,
       HiltWrapper_HiltViewModelFactory_ActivityCreatorEntryPoint,
       FragmentComponentManager.FragmentComponentBuilderEntryPoint,

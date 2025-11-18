@@ -9,7 +9,7 @@ import androidx.compose.material3.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Build
 import androidx.compose.material.icons.filled.Link
-import androidx.compose.material.icons.filled.ListAlt
+import androidx.compose.material.icons.automirrored.filled.ListAlt // <-- Correct import
 import androidx.compose.material.icons.filled.Memory
 import androidx.compose.material.icons.filled.Speed
 import androidx.compose.runtime.Composable
@@ -25,12 +25,18 @@ import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.ui.Modifier
 
+
+import androidx.compose.material3.Scaffold
+import androidx.navigation.compose.rememberNavController
+import androidx.compose.foundation.layout.padding
+
+
 // --- Destination Enum ---
 enum class Dest(val route: String, val label: String, val icon: ImageVector) {
     Connect("connect", "Connect", Icons.Filled.Link),
     Live("live", "Live", Icons.Filled.Speed),
     Diagnostics("diag", "Diag", Icons.Filled.Build),
-    Logger("logger", "Logger", Icons.Filled.ListAlt),
+    Logger("logger", "Logger", Icons.AutoMirrored.Filled.ListAlt),
     EcuProfile("ecu", "ECU", Icons.Filled.Memory)
 }
 
@@ -62,5 +68,20 @@ fun BottomBar(nav: NavHostController) {
                 label = { Text(d.label) }
             )
         }
+    }
+}
+
+
+
+@Composable
+fun AppScreen() {
+    val navController = rememberNavController()
+    Scaffold(
+        bottomBar = { BottomBar(nav = navController) }
+    ) { innerPadding ->
+        AppNavHost(
+            nav = navController,
+            modifier = Modifier.padding(innerPadding)
+        )
     }
 }

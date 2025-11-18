@@ -367,6 +367,10 @@ public final class DaggerOdbPlusApp_HiltComponents_SingletonC {
     }
 
     @Override
+    public void injectMainActivity(MainActivity arg0) {
+    }
+
+    @Override
     public DefaultViewModelFactories.InternalFactoryFactory getHiltInternalFactoryFactory() {
       return DefaultViewModelFactories_InternalFactoryFactory_Factory.newInstance(getViewModelKeys(), new ViewModelCBuilder(singletonCImpl, activityRetainedCImpl));
     }

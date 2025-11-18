@@ -26,6 +26,9 @@ import com.odbplus.app.connect.ConnectViewModel
 import kotlinx.coroutines.launch
 import kotlin.text.decodeToString
 import kotlin.text.trim
+import com.odbplus.app.ui.theme.Odbplus_multi_module_scaffoldTheme
+
+
 
 @Composable
 fun ConnectScreen(
