@@ -1,6 +1,6 @@
 package com.odbplus.app.connect;
 
-import com.odbplus.core.protocol.TransportRepository;
+import com.odbplus.core.transport.TransportRepository;
 import dagger.internal.DaggerGenerated;
 import dagger.internal.Factory;
 import dagger.internal.QualifierMetadata;
@@ -20,8 +20,7 @@ import javax.inject.Provider;
     "rawtypes",
     "KotlinInternal",
     "KotlinInternalInJava",
-    "cast",
-    "deprecation"
+    "cast"
 })
 public final class ConnectViewModel_Factory implements Factory<ConnectViewModel> {
   private final Provider<TransportRepository> repoProvider;

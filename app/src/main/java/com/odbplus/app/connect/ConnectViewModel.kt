@@ -2,8 +2,10 @@ package com.odbplus.app.connect
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.odbplus.core.protocol.TransportRepository   // <-- correct import
+import com.odbplus.core.transport.ConnectionState
+import com.odbplus.core.transport.TransportRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -11,24 +13,40 @@ import javax.inject.Inject
 class ConnectViewModel @Inject constructor(
     private val repo: TransportRepository
 ) : ViewModel() {
-    val isConnected = repo.isConnected
 
-    fun connect() {
+    val connectionState: StateFlow<ConnectionState> = repo.connectionState
+    val logLines: StateFlow<List<String>> = repo.logLines
+
+    // --- FIX: Renamed the old 'connect' to be specific to TCP ---
+    fun connectTcp(host: String, port: Int) {
         viewModelScope.launch {
-            if (!isConnected.value) {
-                repo.connect()
-                repo.initElmSession()
-            }
+            repo.connect(host, port, isBluetooth = false)
         }
     }
 
-    fun sendCustom(cmd: String, onResult: (String) -> Unit) {
+    // --- FIX: Added a new function specifically for Bluetooth ---
+    fun connectBluetooth(macAddress: String) {
         viewModelScope.launch {
-            onResult(repo.sendAndAwait(cmd))
+            repo.connect(macAddress, 0, isBluetooth = true)
+        }
+    }
+
+    // --- FIX: Added the missing function for sending custom commands ---
+    fun sendCustomCommand(cmd: String) {
+        viewModelScope.launch {
+            repo.sendAndAwait(cmd)
+        }
+    }
+
+    fun disconnect() {
+        viewModelScope.launch {
+            repo.disconnect()
         }
     }
 
     override fun onCleared() {
-        viewModelScope.launch { repo.disconnect() }
+        if (repo.connectionState.value == ConnectionState.CONNECTED) {
+            disconnect()
+        }
     }
 }

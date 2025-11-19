@@ -1,19 +1,34 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.hilt)
+    kotlin("kapt")
 }
+
 
 android {
     namespace = "com.odbplus.core.protocol"
-    compileSdk = 35
-    defaultConfig { minSdk = 26 }
+    compileSdk = 34
 
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
-        isCoreLibraryDesugaringEnabled = true
+    defaultConfig {
+        minSdk = 24
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles("consumer-rules.pro")
     }
-    kotlinOptions { jvmTarget = "17" }
+
+    buildTypes {
+        release {
+            isMinifyEnabled = false
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
+        }
+    }
+    kotlin {
+        // Set the JVM toolchain to version 17
+        jvmToolchain(17)
+    }
 }
 
 dependencies {
@@ -22,6 +37,10 @@ dependencies {
     implementation(libs.timber)
     implementation(project(":core-transport"))
     implementation(libs.javax.inject)
+
+    // Add these Hilt dependencies
+    implementation(libs.hilt.android)
+    kapt(libs.hilt.compiler)
 
     coreLibraryDesugaring(libs.desugar.jdk.libs)
 }

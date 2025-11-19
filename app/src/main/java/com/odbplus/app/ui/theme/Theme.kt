@@ -15,16 +15,9 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 
-// Import the colors from your Color.kt file
-import com.odbplus.app.ui.theme.Pink40
-import com.odbplus.app.ui.theme.Pink80
-import com.odbplus.app.ui.theme.Purple40
-import com.odbplus.app.ui.theme.Purple80
-import com.odbplus.app.ui.theme.PurpleGrey40
-import com.odbplus.app.ui.theme.PurpleGrey80
-
-// Import the Typography from your Type.kt file
-import com.odbplus.app.ui.theme.Typography
+// Imports for your Colors and Typography are now assumed to be correct
+// If they are not, please add:
+// import com.odbplus.app.ui.theme.*
 
 private val DarkColorScheme = darkColorScheme(
     primary = Purple80,
@@ -57,14 +50,16 @@ fun Odbplus_multi_module_scaffoldTheme(
     if (!view.isInEditMode) {
         SideEffect {
             val window = (view.context as Activity).window
-            window.statusBarColor = colorScheme.primary.toArgb()
-            WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = darkTheme
+            // Set the system bar icon colors
+            val insetsController = WindowCompat.getInsetsController(window, view)
+            insetsController.isAppearanceLightStatusBars = !darkTheme
+            insetsController.isAppearanceLightNavigationBars = !darkTheme
         }
     }
 
     MaterialTheme(
         colorScheme = colorScheme,
-        typography = Typography, // This will now resolve correctly
+        typography = Typography,
         content = content
     )
 }

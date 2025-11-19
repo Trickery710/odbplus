@@ -10,11 +10,12 @@ import androidx.compose.ui.Modifier
 import com.odbplus.app.nav.AppScreen
 import com.odbplus.app.ui.theme.Odbplus_multi_module_scaffoldTheme
 import dagger.hilt.android.AndroidEntryPoint
-
+import androidx.core.view.WindowCompat
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        WindowCompat.setDecorFitsSystemWindows(window, false)
         setContent {
             // Apply your app's theme
             Odbplus_multi_module_scaffoldTheme {

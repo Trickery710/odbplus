@@ -21,12 +21,10 @@ android {
 
     buildFeatures { compose = true }
 
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
-        isCoreLibraryDesugaringEnabled = true
+    kotlin {
+        // Set the JVM toolchain to version 17
+        jvmToolchain(17)
     }
-    kotlinOptions { jvmTarget = "17" }
 }
 
 dependencies {
@@ -44,6 +42,7 @@ dependencies {
     implementation(libs.lifecycle.viewmodel.compose)
     implementation(libs.compose.ui.tooling.preview)
     debugImplementation(libs.compose.ui.tooling)
+    implementation(libs.compose.material.icons.extended)
 
     // Hilt
     implementation(libs.hilt.android)
@@ -63,9 +62,6 @@ dependencies {
     androidTestImplementation(libs.espresso.core)
     androidTestImplementation(platform(libs.compose.bom))
     androidTestImplementation(libs.compose.ui.test.junit4)
-    implementation(libs.compose.material.icons.extended)   // ✅ add this line
-
 }
 
 kapt { correctErrorTypes = true }
-

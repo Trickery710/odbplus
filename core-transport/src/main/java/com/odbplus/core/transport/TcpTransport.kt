@@ -1,5 +1,6 @@
 package com.odbplus.core.transport
 
+import com.odbplus.core.transport.di.AppScope
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -9,11 +10,14 @@ import java.io.BufferedInputStream
 import java.io.BufferedOutputStream
 import java.net.InetSocketAddress
 import java.net.Socket
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class TcpTransport(
-    private val host: String,
-    private val port: Int,
-    private val externalScope: CoroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
+
+@Singleton
+// Inject the CoroutineScope into the constructor
+class TcpTransport @Inject constructor(
+    @AppScope private val externalScope: CoroutineScope
 ) : ObdTransport {
 
     private var socket: Socket? = null
@@ -28,12 +32,14 @@ class TcpTransport(
 
     private var readerJob: Job? = null
 
-    override suspend fun connect() = withContext(Dispatchers.IO) {
+    // Update the connect method to accept host and port
+    override suspend fun connect(host: String, port: Int) = withContext(Dispatchers.IO) {
         if (_isConnected.value) return@withContext
         val s = Socket().apply {
             tcpNoDelay = true
             keepAlive = true
             soTimeout = 0
+            // Use the host and port parameters here
             connect(InetSocketAddress(host, port), 3000)
         }
         socket = s
@@ -41,7 +47,7 @@ class TcpTransport(
         output = BufferedOutputStream(s.getOutputStream())
         _isConnected.value = true
 
-        readerJob = externalScope.launch {
+        readerJob = externalScope.launch { // Now externalScope is available
             val sb = StringBuilder()
             while (isActive && _isConnected.value) {
                 val b = try { input?.read() } catch (_: Throwable) { -1 }
@@ -86,4 +92,3 @@ class TcpTransport(
         input = null; output = null; socket = null
     }
 }
-

@@ -21,7 +21,8 @@ import hilt_aggregated_deps._com_odbplus_app_MainActivity_GeneratedInjector;
 import hilt_aggregated_deps._com_odbplus_app_OdbPlusApp_GeneratedInjector;
 import hilt_aggregated_deps._com_odbplus_app_connect_ConnectViewModel_HiltModules_BindsModule;
 import hilt_aggregated_deps._com_odbplus_app_connect_ConnectViewModel_HiltModules_KeyModule;
-import hilt_aggregated_deps._com_odbplus_app_di_TransportModule;
+import hilt_aggregated_deps._com_odbplus_core_transport_di_CoroutineModule;
+import hilt_aggregated_deps._com_odbplus_core_transport_di_TransportModule;
 import hilt_aggregated_deps._dagger_hilt_android_flags_FragmentGetContextFix_FragmentGetContextFixEntryPoint;
 import hilt_aggregated_deps._dagger_hilt_android_flags_HiltWrapper_FragmentGetContextFix_FragmentGetContextFixModule;
 import hilt_aggregated_deps._dagger_hilt_android_internal_lifecycle_DefaultViewModelFactories_ActivityEntryPoint;
@@ -66,7 +67,8 @@ import hilt_aggregated_deps._dagger_hilt_android_internal_modules_HiltWrapper_Ac
         _com_odbplus_app_OdbPlusApp_GeneratedInjector.class,
         _com_odbplus_app_connect_ConnectViewModel_HiltModules_BindsModule.class,
         _com_odbplus_app_connect_ConnectViewModel_HiltModules_KeyModule.class,
-        _com_odbplus_app_di_TransportModule.class,
+        _com_odbplus_core_transport_di_CoroutineModule.class,
+        _com_odbplus_core_transport_di_TransportModule.class,
         _dagger_hilt_android_flags_FragmentGetContextFix_FragmentGetContextFixEntryPoint.class,
         _dagger_hilt_android_flags_HiltWrapper_FragmentGetContextFix_FragmentGetContextFixModule.class,
         _dagger_hilt_android_internal_lifecycle_DefaultViewModelFactories_ActivityEntryPoint.class,

@@ -28,75 +28,7 @@ import kotlin.text.decodeToString
 import kotlin.text.trim
 import com.odbplus.app.ui.theme.Odbplus_multi_module_scaffoldTheme
 
-
-
-@Composable
-fun ConnectScreen(
-    vm: ConnectViewModel = hiltViewModel()
-) {
-    val scope = rememberCoroutineScope()
-
-    var cmd by remember { mutableStateOf("") }
-    val log = remember { mutableStateListOf<String>() }
-
-    Column(
-        modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.spacedBy(12.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Text("Connection")
-
-        Row {
-            Button(onClick = { vm.connect() }) { Text("Connect") }
-            Spacer(Modifier.width(8.dp))
-            Button(onClick = {
-                // If you implemented repo.disconnect(), you can expose it via vm too.
-                // For now we omit to keep it minimal.
-                log.add("Disconnect not implemented in VM (optional).")
-            }) { Text("Disconnect") }
-        }
-
-        Divider()
-
-        Row {
-            OutlinedTextField(
-                value = cmd,
-                onValueChange = { cmd = it },
-                label = { Text("Command") },
-                singleLine = true
-            )
-            Spacer(Modifier.width(8.dp))
-            Button(
-                enabled = cmd.isNotBlank(),
-                onClick = {
-                    val toSend = cmd.trim()
-                    cmd = ""
-                    vm.sendCustom(toSend) { result ->
-                        log.add("> $toSend")
-                        log.add(result.trim())
-                    }
-                }
-            ) {
-                Text("Send")
-            }
-        }
-
-        Divider()
-
-        Text("Command Log")
-        Column(
-            verticalArrangement = Arrangement.spacedBy(6.dp)
-        ) {
-            log.forEach { line -> Text(line) }
-        }
-    }
-
-    // Optional: auto-connect once on first composition
-    LaunchedEffect(Unit) {
-        // Comment out if you only want manual connect
-        // vm.connect()
-    }
-}
+// FIX: DELETED the entire duplicate @Composable fun ConnectScreen(...) function from this file.
 
 @Composable fun LiveScreen() { CenteredStub("Live Data (placeholder)") }
 @Composable fun DiagnosticsScreen() { CenteredStub("Diagnostics (placeholder)") }

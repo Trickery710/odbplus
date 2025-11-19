@@ -8,10 +8,13 @@ import androidx.lifecycle.SavedStateHandle;
 import androidx.lifecycle.ViewModel;
 import com.odbplus.app.connect.ConnectViewModel;
 import com.odbplus.app.connect.ConnectViewModel_HiltModules;
-import com.odbplus.app.di.TransportModule_ProvideExternalScopeFactory;
-import com.odbplus.app.di.TransportModule_ProvideObdTransportFactory;
-import com.odbplus.core.protocol.TransportRepository;
+import com.odbplus.core.transport.BluetoothTransport;
 import com.odbplus.core.transport.ObdTransport;
+import com.odbplus.core.transport.TcpTransport;
+import com.odbplus.core.transport.TransportRepositoryImpl;
+import com.odbplus.core.transport.di.CoroutineModule_ProvideApplicationScopeFactory;
+import com.odbplus.core.transport.di.TransportModule_Companion_ProvideBluetoothTransportFactory;
+import com.odbplus.core.transport.di.TransportModule_Companion_ProvideTcpTransportFactory;
 import dagger.hilt.android.ActivityRetainedLifecycle;
 import dagger.hilt.android.ViewModelLifecycle;
 import dagger.hilt.android.internal.builders.ActivityComponentBuilder;
@@ -26,6 +29,7 @@ import dagger.hilt.android.internal.lifecycle.DefaultViewModelFactories_Internal
 import dagger.hilt.android.internal.managers.ActivityRetainedComponentManager_LifecycleModule_ProvideActivityRetainedLifecycleFactory;
 import dagger.hilt.android.internal.managers.SavedStateHandleHolder;
 import dagger.hilt.android.internal.modules.ApplicationContextModule;
+import dagger.hilt.android.internal.modules.ApplicationContextModule_ProvideContextFactory;
 import dagger.internal.DaggerGenerated;
 import dagger.internal.DoubleCheck;
 import dagger.internal.IdentifierNameString;
@@ -49,8 +53,7 @@ import kotlinx.coroutines.CoroutineScope;
     "rawtypes",
     "KotlinInternal",
     "KotlinInternalInJava",
-    "cast",
-    "deprecation"
+    "cast"
 })
 public final class DaggerOdbPlusApp_HiltComponents_SingletonC {
   private DaggerOdbPlusApp_HiltComponents_SingletonC() {
@@ -60,25 +63,20 @@ public final class DaggerOdbPlusApp_HiltComponents_SingletonC {
     return new Builder();
   }
 
-  public static OdbPlusApp_HiltComponents.SingletonC create() {
-    return new Builder().build();
-  }
-
   public static final class Builder {
+    private ApplicationContextModule applicationContextModule;
+
     private Builder() {
     }
 
-    /**
-     * @deprecated This module is declared, but an instance is not used in the component. This method is a no-op. For more, see https://dagger.dev/unused-modules.
-     */
-    @Deprecated
     public Builder applicationContextModule(ApplicationContextModule applicationContextModule) {
-      Preconditions.checkNotNull(applicationContextModule);
+      this.applicationContextModule = Preconditions.checkNotNull(applicationContextModule);
       return this;
     }
 
     public OdbPlusApp_HiltComponents.SingletonC build() {
-      return new SingletonCImpl();
+      Preconditions.checkBuilderRequirement(applicationContextModule, ApplicationContextModule.class);
+      return new SingletonCImpl(applicationContextModule);
     }
   }
 
@@ -469,7 +467,7 @@ public final class DaggerOdbPlusApp_HiltComponents_SingletonC {
       public T get() {
         switch (id) {
           case 0: // com.odbplus.app.connect.ConnectViewModel 
-          return (T) new ConnectViewModel(singletonCImpl.transportRepositoryProvider.get());
+          return (T) new ConnectViewModel(singletonCImpl.transportRepositoryImplProvider.get());
 
           default: throw new AssertionError(id);
         }
@@ -547,29 +545,41 @@ public final class DaggerOdbPlusApp_HiltComponents_SingletonC {
   }
 
   private static final class SingletonCImpl extends OdbPlusApp_HiltComponents.SingletonC {
+    private final ApplicationContextModule applicationContextModule;
+
     private final SingletonCImpl singletonCImpl = this;
 
-    private Provider<CoroutineScope> provideExternalScopeProvider;
+    private Provider<CoroutineScope> provideApplicationScopeProvider;
 
-    private Provider<ObdTransport> provideObdTransportProvider;
+    private Provider<TcpTransport> tcpTransportProvider;
 
-    private Provider<TransportRepository> transportRepositoryProvider;
+    private Provider<ObdTransport> provideTcpTransportProvider;
 
-    private SingletonCImpl() {
+    private Provider<ObdTransport> provideBluetoothTransportProvider;
 
-      initialize();
+    private Provider<TransportRepositoryImpl> transportRepositoryImplProvider;
 
+    private SingletonCImpl(ApplicationContextModule applicationContextModuleParam) {
+      this.applicationContextModule = applicationContextModuleParam;
+      initialize(applicationContextModuleParam);
+
+    }
+
+    private BluetoothTransport bluetoothTransport() {
+      return new BluetoothTransport(ApplicationContextModule_ProvideContextFactory.provideContext(applicationContextModule), provideApplicationScopeProvider.get());
     }
 
     @SuppressWarnings("unchecked")
-    private void initialize() {
-      this.provideExternalScopeProvider = DoubleCheck.provider(new SwitchingProvider<CoroutineScope>(singletonCImpl, 2));
-      this.provideObdTransportProvider = DoubleCheck.provider(new SwitchingProvider<ObdTransport>(singletonCImpl, 1));
-      this.transportRepositoryProvider = DoubleCheck.provider(new SwitchingProvider<TransportRepository>(singletonCImpl, 0));
+    private void initialize(final ApplicationContextModule applicationContextModuleParam) {
+      this.provideApplicationScopeProvider = DoubleCheck.provider(new SwitchingProvider<CoroutineScope>(singletonCImpl, 3));
+      this.tcpTransportProvider = DoubleCheck.provider(new SwitchingProvider<TcpTransport>(singletonCImpl, 2));
+      this.provideTcpTransportProvider = DoubleCheck.provider(new SwitchingProvider<ObdTransport>(singletonCImpl, 1));
+      this.provideBluetoothTransportProvider = DoubleCheck.provider(new SwitchingProvider<ObdTransport>(singletonCImpl, 4));
+      this.transportRepositoryImplProvider = DoubleCheck.provider(new SwitchingProvider<TransportRepositoryImpl>(singletonCImpl, 0));
     }
 
     @Override
-    public void injectOdbPlusApp(OdbPlusApp arg0) {
+    public void injectOdbPlusApp(OdbPlusApp odbPlusApp) {
     }
 
     @Override
@@ -601,14 +611,20 @@ public final class DaggerOdbPlusApp_HiltComponents_SingletonC {
       @Override
       public T get() {
         switch (id) {
-          case 0: // com.odbplus.core.protocol.TransportRepository 
-          return (T) new TransportRepository(singletonCImpl.provideObdTransportProvider.get());
+          case 0: // com.odbplus.core.transport.TransportRepositoryImpl 
+          return (T) new TransportRepositoryImpl(singletonCImpl.provideTcpTransportProvider.get(), singletonCImpl.provideBluetoothTransportProvider.get());
 
-          case 1: // com.odbplus.core.transport.ObdTransport 
-          return (T) TransportModule_ProvideObdTransportFactory.provideObdTransport(singletonCImpl.provideExternalScopeProvider.get());
+          case 1: // @javax.inject.Named("tcp") com.odbplus.core.transport.ObdTransport 
+          return (T) TransportModule_Companion_ProvideTcpTransportFactory.provideTcpTransport(singletonCImpl.tcpTransportProvider.get());
 
-          case 2: // kotlinx.coroutines.CoroutineScope 
-          return (T) TransportModule_ProvideExternalScopeFactory.provideExternalScope();
+          case 2: // com.odbplus.core.transport.TcpTransport 
+          return (T) new TcpTransport(singletonCImpl.provideApplicationScopeProvider.get());
+
+          case 3: // @com.odbplus.core.transport.di.AppScope kotlinx.coroutines.CoroutineScope 
+          return (T) CoroutineModule_ProvideApplicationScopeFactory.provideApplicationScope();
+
+          case 4: // @javax.inject.Named("bt") com.odbplus.core.transport.ObdTransport 
+          return (T) TransportModule_Companion_ProvideBluetoothTransportFactory.provideBluetoothTransport(singletonCImpl.bluetoothTransport());
 
           default: throw new AssertionError(id);
         }

@@ -18,8 +18,7 @@ import javax.annotation.processing.Generated;
     "rawtypes",
     "KotlinInternal",
     "KotlinInternalInJava",
-    "cast",
-    "deprecation"
+    "cast"
 })
 public final class ConnectViewModel_HiltModules_KeyModule_ProvideFactory implements Factory<Boolean> {
   @Override

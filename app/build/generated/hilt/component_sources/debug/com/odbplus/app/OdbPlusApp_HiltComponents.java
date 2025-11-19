@@ -1,7 +1,8 @@
 package com.odbplus.app;
 
 import com.odbplus.app.connect.ConnectViewModel_HiltModules;
-import com.odbplus.app.di.TransportModule;
+import com.odbplus.core.transport.di.CoroutineModule;
+import com.odbplus.core.transport.di.TransportModule;
 import dagger.Binds;
 import dagger.Component;
 import dagger.Module;
@@ -127,6 +128,7 @@ public final class OdbPlusApp_HiltComponents {
   @Component(
       modules = {
           ApplicationContextModule.class,
+          CoroutineModule.class,
           HiltWrapper_FragmentGetContextFix_FragmentGetContextFixModule.class,
           ActivityRetainedCBuilderModule.class,
           ServiceCBuilderModule.class,
