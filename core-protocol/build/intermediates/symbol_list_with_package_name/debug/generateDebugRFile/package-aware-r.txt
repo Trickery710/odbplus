@@ -1,2 +1,0 @@
-com.odbplus.core.protocol
-string lib_name

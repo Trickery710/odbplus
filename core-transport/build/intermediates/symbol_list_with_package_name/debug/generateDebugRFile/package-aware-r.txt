@@ -1,2 +1,0 @@
-com.odbplus.core.transport
-string lib_name
