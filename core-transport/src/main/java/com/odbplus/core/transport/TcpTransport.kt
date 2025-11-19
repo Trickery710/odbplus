@@ -15,7 +15,6 @@ import javax.inject.Singleton
 
 
 @Singleton
-// Inject the CoroutineScope into the constructor
 class TcpTransport @Inject constructor(
     @AppScope private val externalScope: CoroutineScope
 ) : ObdTransport {
@@ -24,7 +23,7 @@ class TcpTransport @Inject constructor(
     private var input: BufferedInputStream? = null
     private var output: BufferedOutputStream? = null
 
-    private val inboundChan = Channel<String>(Channel.BUFFERED)
+    private val inboundChan = Channel<String>(Channel.UNLIMITED)
     override val inbound = inboundChan.receiveAsFlow()
 
     private val _isConnected = MutableStateFlow(false)
@@ -32,14 +31,12 @@ class TcpTransport @Inject constructor(
 
     private var readerJob: Job? = null
 
-    // Update the connect method to accept host and port
     override suspend fun connect(host: String, port: Int) = withContext(Dispatchers.IO) {
         if (_isConnected.value) return@withContext
         val s = Socket().apply {
             tcpNoDelay = true
             keepAlive = true
             soTimeout = 0
-            // Use the host and port parameters here
             connect(InetSocketAddress(host, port), 3000)
         }
         socket = s
@@ -47,19 +44,34 @@ class TcpTransport @Inject constructor(
         output = BufferedOutputStream(s.getOutputStream())
         _isConnected.value = true
 
-        readerJob = externalScope.launch { // Now externalScope is available
-            val sb = StringBuilder()
-            while (isActive && _isConnected.value) {
-                val b = try { input?.read() } catch (_: Throwable) { -1 }
-                if (b == null || b < 0) { delay(10); continue }
-                val ch = b.toInt().toChar()
+        readerJob = externalScope.launch { readerLoop() }
+    }
+
+    // --- DEFINITIVE FIX: The reader logic is corrected here ---
+    private suspend fun CoroutineScope.readerLoop() {
+        val sb = StringBuilder()
+        while (isActive && _isConnected.value) {
+            val b: Int? = try { input?.read() } catch (_: Throwable) { -1 }
+            if (b == null || b < 0) {
+                if (isActive) delay(10) // Small delay if stream is empty but still active
+                continue
+            }
+
+            val ch = b.toChar()
+
+            if (ch == '>') {
+                // If we have any pending text before the '>', send it first.
+                val pendingLine = sb.toString().replace("\r", "").trim()
+                if (pendingLine.isNotEmpty()) inboundChan.trySend(pendingLine)
+
+                inboundChan.trySend(">")
+                sb.clear() // Clear the buffer AFTER handling the prompt.
+            } else {
                 sb.append(ch)
                 if (ch == '\n') {
                     val line = sb.toString().replace("\r", "").trim()
                     if (line.isNotEmpty()) inboundChan.trySend(line)
-                    sb.clear()
-                } else if (ch == '>') {
-                    inboundChan.trySend(">")
+                    sb.clear() // Clear the buffer after sending a line.
                 }
             }
         }
@@ -72,17 +84,19 @@ class TcpTransport @Inject constructor(
     }
 
     override suspend fun readUntilPrompt(timeoutMs: Long): String = withContext(Dispatchers.IO) {
-        val deadline = System.currentTimeMillis() + timeoutMs
         val sb = StringBuilder()
-        while (System.currentTimeMillis() < deadline) {
-            while (!inboundChan.isEmpty) {
-                val next = inboundChan.receive()
-                if (next == ">") return@withContext sb.toString()
-                sb.appendLine(next)
+        try {
+            withTimeout(timeoutMs) {
+                while (true) {
+                    val next = inboundChan.receive()
+                    if (next == ">") break
+                    sb.appendLine(next)
+                }
             }
-            delay(10)
+        } catch (e: TimeoutCancellationException) {
+            // This is an expected outcome if the device doesn't respond.
         }
-        sb.toString()
+        return@withContext sb.toString().trim()
     }
 
     override suspend fun close() = withContext(Dispatchers.IO) {

@@ -27,5 +27,5 @@ interface ObdTransport {
      * Reads from the inbound flow until a prompt character ('>') is received or a timeout occurs.
      * Returns the aggregated response.
      */
-    suspend fun readUntilPrompt(timeoutMs: Long = 1500): String
+    suspend fun readUntilPrompt(timeoutMs: Long = 3000L): String
 }

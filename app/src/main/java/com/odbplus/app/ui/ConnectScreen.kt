@@ -39,46 +39,61 @@ fun ConnectScreen(viewModel: ConnectViewModel = hiltViewModel()) {
         }
     }
 
+    // --- FIX: Restructure Scaffold to move CommandInputBar into the main content area ---
     Scaffold(
         topBar = {
             ConnectScreenTopBar(
                 connectionState = connectionState,
                 onConnectTcp = { viewModel.connectTcp("10.0.2.2", 35000) },
                 onConnectBt = {
-                    // In a real app, you'd show a device picker. For now, we mock it.
-                    // Replace "00:11:22:33:44:55" with your actual device's MAC address.
-                    viewModel.connectBluetooth("00:11:22:33:44:55")                },
+                    viewModel.connectBluetooth("00:11:22:33:44:55")
+                },
                 onDisconnect = { viewModel.disconnect() }
             )
-        },
-        bottomBar = {
-            // The command input bar only shows when connected
+        }
+        // No bottomBar here anymore
+    ) { innerPadding ->
+        // Use a Column to arrange the log and the input bar
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding)
+        ) {
+            // The scrolling log takes up all available space
+            LazyColumn(
+                state = lazyListState,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1f)
+                    .background(MaterialTheme.colorScheme.surfaceVariant)
+                    .padding(horizontal = 8.dp)
+            ) {
+                items(logLines) { line ->
+                    val color = when {
+                        line.startsWith(">>") -> MaterialTheme.colorScheme.primary
+                        line.startsWith("<<") -> Color(0xFF006400) // Dark Green
+                        else -> MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f) // Neutral for status
+                    }
+                    Text(
+                        text = line,
+                        color = color, // Apply the determined color
+                        fontFamily = FontFamily.Monospace,
+                        modifier = Modifier.padding(vertical = 2.dp)
+                    )
+                }
+            }
+            // The command input bar is at the bottom of the Column
             if (connectionState == ConnectionState.CONNECTED) {
                 CommandInputBar(onSendCommand = { cmd ->
                     scope.launch { viewModel.sendCustomCommand(cmd) }
                 })
             }
         }
-    ) { innerPadding ->
-        // The scrolling log takes up the main content area
-        LazyColumn(
-            state = lazyListState,
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(innerPadding)
-                .background(MaterialTheme.colorScheme.surfaceVariant)
-                .padding(horizontal = 8.dp)
-        ) {
-            items(logLines) { line ->
-                Text(
-                    text = line,
-                    fontFamily = FontFamily.Monospace,
-                    modifier = Modifier.padding(vertical = 2.dp)
-                )
-            }
-        }
     }
 }
+
+
+// --- ConnectScreenTopBar and CommandInputBar are unchanged ---
 
 @Composable
 fun ConnectScreenTopBar(

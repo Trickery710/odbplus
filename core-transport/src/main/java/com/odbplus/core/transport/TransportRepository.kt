@@ -12,7 +12,7 @@ interface TransportRepository {
     val connectionState: StateFlow<ConnectionState>
     val logLines: StateFlow<List<String>>
     suspend fun connect(address: String, port: Int, isBluetooth: Boolean)
-    suspend fun sendAndAwait(cmd: String)
+    suspend fun sendAndAwait(cmd: String, timeoutMs: Long = 3000L)
     suspend fun disconnect()
 }
 
@@ -32,7 +32,7 @@ class TransportRepositoryImpl @Inject constructor(
     override val logLines: StateFlow<List<String>> = _logLines.asStateFlow()
 
     private fun addLog(line: String) {
-        _logLines.update { (it + line).takeLast(100) }
+        _logLines.update { (it + line).takeLast(200) } // Increased log buffer
     }
 
     override suspend fun connect(address: String, port: Int, isBluetooth: Boolean) {
@@ -50,7 +50,7 @@ class TransportRepositoryImpl @Inject constructor(
             initElmSession()
         } catch (e: Exception) {
             _connectionState.value = ConnectionState.ERROR
-            addLog("Error: ${e.message}")
+            addLog("!! Connection Failed: ${e.message}")
             activeTransport = null
         }
     }
@@ -67,23 +67,34 @@ class TransportRepositoryImpl @Inject constructor(
 
     private suspend fun initElmSession() {
         addLog("Initializing ELM327 session...")
-        sendAndAwait("ATZ")
-        sendAndAwait("ATE0")
-        sendAndAwait("ATL0")
-        sendAndAwait("ATS0")
+        sendAndAwait("ATZ", timeoutMs = 5000L)
+        sendAndAwait("ATE0") // Echo off
+        sendAndAwait("ATL0") // Linefeeds off
         addLog("Session initialized.")
     }
 
-    override suspend fun sendAndAwait(cmd: String) {
+    override suspend fun sendAndAwait(cmd: String, timeoutMs: Long) {
         val transport = activeTransport ?: run {
-            addLog("Error: Not connected. Cannot send command.")
+            addLog("!! Error: Not connected.")
             return
         }
 
         addLog(">> $cmd")
-        // --- FIX: Correctly call writeLine first, then readUntilPrompt ---
-        transport.writeLine(cmd)
-        val response = transport.readUntilPrompt()
-        response.lines().forEach { if (it.isNotBlank()) addLog("<< $it") }
+
+        try {
+            transport.writeLine(cmd)
+            val response = transport.readUntilPrompt(timeoutMs)
+
+            // Only log if the response is not blank. ATE0 returns nothing, which is correct.
+            if (response.isNotBlank()) {
+                response.lines().forEach { line ->
+                    if (line.isNotBlank()) {
+                        addLog("<< $line")
+                    }
+                }
+            }
+        } catch (e: Exception) {
+            addLog("!! Error during send/receive: ${e.message}")
+        }
     }
 }
