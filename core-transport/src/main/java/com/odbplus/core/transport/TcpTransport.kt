@@ -12,8 +12,7 @@ import java.net.InetSocketAddress
 import java.net.Socket
 import javax.inject.Inject
 import javax.inject.Singleton
-
-
+import java.io.IOException
 @Singleton
 class TcpTransport @Inject constructor(
     @AppScope private val externalScope: CoroutineScope
@@ -25,7 +24,9 @@ class TcpTransport @Inject constructor(
 
     private val inboundChan = Channel<String>(Channel.UNLIMITED)
     override val inbound = inboundChan.receiveAsFlow()
-
+    override fun drainChannel() {
+        while (inboundChan.tryReceive().isSuccess) { /* Do nothing, just consume */ }
+    }
     private val _isConnected = MutableStateFlow(false)
     override val isConnected: StateFlow<Boolean> = _isConnected
 
@@ -36,7 +37,7 @@ class TcpTransport @Inject constructor(
         val s = Socket().apply {
             tcpNoDelay = true
             keepAlive = true
-            soTimeout = 0
+            soTimeout = 0 // Use non-blocking reads in the loop
             connect(InetSocketAddress(host, port), 3000)
         }
         socket = s
@@ -47,35 +48,44 @@ class TcpTransport @Inject constructor(
         readerJob = externalScope.launch { readerLoop() }
     }
 
-    // --- DEFINITIVE FIX: The reader logic is corrected here ---
+    // --- DEFINITIVE FIX: Reverted to a simple, correct line-based parser ---
     private suspend fun CoroutineScope.readerLoop() {
         val sb = StringBuilder()
-        while (isActive && _isConnected.value) {
-            val b: Int? = try { input?.read() } catch (_: Throwable) { -1 }
-            if (b == null || b < 0) {
-                if (isActive) delay(10) // Small delay if stream is empty but still active
+        while (isActive) {
+            val b: Int = try { input?.read() ?: -1 } catch (_: Throwable) { -1 }
+            if (b < 0) {
+                // If the stream ends, break the loop
+                if (socket?.isConnected != true) break
+                // If it's just temporarily empty, delay and continue
+                delay(10)
                 continue
             }
 
             val ch = b.toChar()
 
+            // The '>' prompt is a terminator for a command response.
             if (ch == '>') {
-                // If we have any pending text before the '>', send it first.
-                val pendingLine = sb.toString().replace("\r", "").trim()
-                if (pendingLine.isNotEmpty()) inboundChan.trySend(pendingLine)
-
+                // Send any text that came before the prompt as its own line
+                if (sb.isNotEmpty()) {
+                    val line = sb.toString().replace("\r", "").trim()
+                    if (line.isNotEmpty()) inboundChan.trySend(line)
+                    sb.clear()
+                }
+                // Send the prompt itself as a signal
                 inboundChan.trySend(">")
-                sb.clear() // Clear the buffer AFTER handling the prompt.
             } else {
+                // Otherwise, append the character to the buffer
                 sb.append(ch)
+                // If we hit a newline, send the buffered line
                 if (ch == '\n') {
                     val line = sb.toString().replace("\r", "").trim()
                     if (line.isNotEmpty()) inboundChan.trySend(line)
-                    sb.clear() // Clear the buffer after sending a line.
+                    sb.clear()
                 }
             }
         }
     }
+
 
     override suspend fun writeLine(line: String) = withContext(Dispatchers.IO) {
         val out = output ?: error("Not connected")
@@ -83,6 +93,7 @@ class TcpTransport @Inject constructor(
         out.flush()
     }
 
+    // This logic is correct. It consumes from the channel until the ">" signal.
     override suspend fun readUntilPrompt(timeoutMs: Long): String = withContext(Dispatchers.IO) {
         val sb = StringBuilder()
         try {
@@ -102,7 +113,10 @@ class TcpTransport @Inject constructor(
     override suspend fun close() = withContext(Dispatchers.IO) {
         _isConnected.value = false
         readerJob?.cancelAndJoin()
-        input?.close(); output?.close(); socket?.close()
+        // Close resources safely
+        try { socket?.close() } catch (_: IOException) {}
+        try { input?.close() } catch (_: IOException) {}
+        try { output?.close() } catch (_: IOException) {}
         input = null; output = null; socket = null
     }
 }

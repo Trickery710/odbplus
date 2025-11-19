@@ -78,7 +78,7 @@ class TransportRepositoryImpl @Inject constructor(
             addLog("!! Error: Not connected.")
             return
         }
-
+        transport.drainChannel()
         addLog(">> $cmd")
 
         try {

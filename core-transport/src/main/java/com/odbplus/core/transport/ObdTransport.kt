@@ -16,7 +16,7 @@ interface ObdTransport {
 
     /** Initiates a connection to the configured endpoint. */
     suspend fun connect(host: String, port: Int)
-
+    fun drainChannel()
     /** Closes the active connection and releases resources. */
     suspend fun close()
 

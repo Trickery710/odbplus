@@ -1,8 +1,7 @@
 package com.odbplus.app.ui
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.layout.*import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.text.KeyboardActions
@@ -32,68 +31,56 @@ fun ConnectScreen(viewModel: ConnectViewModel = hiltViewModel()) {
     val lazyListState = rememberLazyListState()
     val scope = rememberCoroutineScope()
 
-    // Automatically scroll to the bottom of the log
     LaunchedEffect(logLines.size) {
         if (logLines.isNotEmpty()) {
             lazyListState.animateScrollToItem(logLines.size - 1)
         }
     }
 
-    // --- FIX: Restructure Scaffold to move CommandInputBar into the main content area ---
-    Scaffold(
-        topBar = {
-            ConnectScreenTopBar(
-                connectionState = connectionState,
-                onConnectTcp = { viewModel.connectTcp("10.0.2.2", 35000) },
-                onConnectBt = {
-                    viewModel.connectBluetooth("00:11:22:33:44:55")
-                },
-                onDisconnect = { viewModel.disconnect() }
-            )
-        }
-        // No bottomBar here anymore
-    ) { innerPadding ->
-        // Use a Column to arrange the log and the input bar
-        Column(
+    // --- DEFINITIVE FIX: Removed the nested Scaffold, using a Column instead ---
+    Column(modifier = Modifier.fillMaxSize()) {
+        // 1. Top Bar content remains at the top
+        ConnectScreenTopBar(
+            connectionState = connectionState,
+            onConnectTcp = { viewModel.connectTcp("10.0.2.2", 35000) },
+            onConnectBt = { viewModel.connectBluetooth("00:11:22:33:44:55") },
+            onDisconnect = { viewModel.disconnect() }
+        )
+
+        // 2. The LazyColumn (log) takes up all the remaining space
+        LazyColumn(
+            state = lazyListState,
             modifier = Modifier
-                .fillMaxSize()
-                .padding(innerPadding)
+                .fillMaxWidth()
+                .weight(1f) // This is the key change
+                .background(MaterialTheme.colorScheme.surfaceVariant)
+                .padding(horizontal = 8.dp)
         ) {
-            // The scrolling log takes up all available space
-            LazyColumn(
-                state = lazyListState,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .weight(1f)
-                    .background(MaterialTheme.colorScheme.surfaceVariant)
-                    .padding(horizontal = 8.dp)
-            ) {
-                items(logLines) { line ->
-                    val color = when {
-                        line.startsWith(">>") -> MaterialTheme.colorScheme.primary
-                        line.startsWith("<<") -> Color(0xFF006400) // Dark Green
-                        else -> MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f) // Neutral for status
-                    }
-                    Text(
-                        text = line,
-                        color = color, // Apply the determined color
-                        fontFamily = FontFamily.Monospace,
-                        modifier = Modifier.padding(vertical = 2.dp)
-                    )
+            items(logLines) { line ->
+                val color = when {
+                    line.startsWith(">>") -> MaterialTheme.colorScheme.primary
+                    line.startsWith("<<") -> Color(0xFF006400) // Dark Green
+                    line.startsWith("!!") -> MaterialTheme.colorScheme.error // Error color
+                    else -> MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f)
                 }
+                Text(
+                    text = line,
+                    color = color,
+                    fontFamily = FontFamily.Monospace,
+                    modifier = Modifier.padding(vertical = 2.dp)
+                )
             }
-            // The command input bar is at the bottom of the Column
-            if (connectionState == ConnectionState.CONNECTED) {
-                CommandInputBar(onSendCommand = { cmd ->
-                    scope.launch { viewModel.sendCustomCommand(cmd) }
-                })
-            }
+        }
+
+        // 3. The Command Input Bar sits at the bottom of the column
+        if (connectionState == ConnectionState.CONNECTED) {
+            CommandInputBar(onSendCommand = { cmd ->
+                scope.launch { viewModel.sendCustomCommand(cmd) }
+            })
         }
     }
 }
 
-
-// --- ConnectScreenTopBar and CommandInputBar are unchanged ---
 
 @Composable
 fun ConnectScreenTopBar(
@@ -158,12 +145,18 @@ fun CommandInputBar(onSendCommand: (String) -> Unit) {
         }
     }
 
-    Surface(shadowElevation = 4.dp) {
+    // Use Surface with a higher elevation and wrap the text field
+    Surface(
+        shadowElevation = 8.dp,
+        color = MaterialTheme.colorScheme.surface
+    ) {
         OutlinedTextField(
             value = command,
             onValueChange = { command = it },
             modifier = Modifier
                 .fillMaxWidth()
+                // Use imePadding() to add space for the keyboard
+                .imePadding()
                 .padding(8.dp),
             placeholder = { Text("Enter command (e.g., 010C)") },
             trailingIcon = {

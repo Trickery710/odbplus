@@ -2,8 +2,8 @@ package com.odbplus.core.transport
 
 import android.annotation.SuppressLint
 import android.bluetooth.BluetoothAdapter
-import android.bluetooth.BluetoothDevice // Corrected import
-import android.bluetooth.BluetoothManager // Corrected import
+import android.bluetooth.BluetoothDevice
+import android.bluetooth.BluetoothManager
 import android.content.Context
 import com.odbplus.core.transport.di.AppScope
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -34,7 +34,9 @@ class BluetoothTransport @Inject constructor(
 
     private val inboundChan = Channel<String>(Channel.UNLIMITED)
     override val inbound = inboundChan.receiveAsFlow()
-
+    override fun drainChannel() {
+        while (inboundChan.tryReceive().isSuccess) { /* Do nothing, just consume */ }
+    }
     private val _isConnected = MutableStateFlow(false)
     override val isConnected: StateFlow<Boolean> = _isConnected
 
@@ -46,13 +48,11 @@ class BluetoothTransport @Inject constructor(
         val adapter = bluetoothAdapter ?: throw IOException("Bluetooth not supported")
         if (!adapter.isEnabled) throw IOException("Bluetooth is not enabled")
 
-        // --- FIX: Use the correct platform BluetoothDevice class ---
         val device: BluetoothDevice = adapter.getRemoteDevice(host)
         val s = device.createRfcommSocketToServiceRecord(sppUuid)
         s.connect()
 
         socket = s
-        // --- FIX: Use the correct inputStream from the socket ---
         input = BufferedInputStream(s.inputStream)
         output = BufferedOutputStream(s.outputStream)
         _isConnected.value = true
@@ -60,25 +60,35 @@ class BluetoothTransport @Inject constructor(
         readerJob = externalScope.launch { readerLoop() }
     }
 
-    // This reader logic is correct
+    // --- DEFINITIVE FIX: Reverted to a simple, correct line-based parser ---
     private suspend fun CoroutineScope.readerLoop() {
         val sb = StringBuilder()
-        while (isActive && _isConnected.value) {
-            val b: Int? = try { input?.read() } catch (_: Throwable) { -1 }
-            if (b == null || b < 0) {
-                if (isActive) delay(10)
+        while (isActive) {
+            val b: Int = try { input?.read() ?: -1 } catch (_: Throwable) { -1 }
+            if (b < 0) {
+                // If the stream ends, break the loop
+                if (socket?.isConnected != true) break
+                // If it's just temporarily empty, delay and continue
+                delay(10)
                 continue
             }
 
             val ch = b.toChar()
 
+            // The '>' prompt is a terminator for a command response.
             if (ch == '>') {
-                val pendingLine = sb.toString().replace("\r", "").trim()
-                if (pendingLine.isNotEmpty()) inboundChan.trySend(pendingLine)
+                // Send any text that came before the prompt as its own line
+                if (sb.isNotEmpty()) {
+                    val line = sb.toString().replace("\r", "").trim()
+                    if (line.isNotEmpty()) inboundChan.trySend(line)
+                    sb.clear()
+                }
+                // Send the prompt itself as a signal
                 inboundChan.trySend(">")
-                sb.clear()
             } else {
+                // Otherwise, append the character to the buffer
                 sb.append(ch)
+                // If we hit a newline, send the buffered line
                 if (ch == '\n') {
                     val line = sb.toString().replace("\r", "").trim()
                     if (line.isNotEmpty()) inboundChan.trySend(line)
@@ -94,6 +104,7 @@ class BluetoothTransport @Inject constructor(
         out.flush()
     }
 
+    // This logic is correct. It consumes from the channel until the ">" signal.
     override suspend fun readUntilPrompt(timeoutMs: Long): String = withContext(Dispatchers.IO) {
         val sb = StringBuilder()
         try {
@@ -105,7 +116,7 @@ class BluetoothTransport @Inject constructor(
                 }
             }
         } catch (e: TimeoutCancellationException) {
-            // Expected if the device doesn't respond in time.
+            // This is an expected outcome if the device doesn't respond.
         }
         return@withContext sb.toString().trim()
     }
@@ -113,7 +124,10 @@ class BluetoothTransport @Inject constructor(
     override suspend fun close() = withContext(Dispatchers.IO) {
         _isConnected.value = false
         readerJob?.cancelAndJoin()
-        input?.close(); output?.close(); socket?.close()
+        // Close resources safely
+        try { socket?.close() } catch (_: IOException) {}
+        try { input?.close() } catch (_: IOException) {}
+        try { output?.close() } catch (_: IOException) {}
         input = null; output = null; socket = null
     }
 }
