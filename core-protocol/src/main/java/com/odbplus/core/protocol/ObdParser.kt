@@ -18,17 +18,44 @@ class ObdParser @Inject constructor() {
     /**
      * Parse a raw response string for a known PID request.
      *
+     * Handles multi-line responses where the adapter returns multiple PID responses
+     * in a single batch. Searches for the response matching the requested PID.
+     *
      * @param rawResponse The raw hex response from the adapter (e.g., "41 0C 1A F8")
      * @param requestedPid The PID that was requested (for validation)
      * @return Parsed OBD response
      */
     fun parse(rawResponse: String, requestedPid: ObdPid): ObdResponse {
+        // Split into individual response lines first
+        val responseLines = rawResponse
+            .split("\n", "\r")
+            .map { it.trim() }
+            .filter { it.isNotEmpty() }
+
+        // If we have multiple lines, try to find the one matching our requested PID
+        if (responseLines.size > 1) {
+            val matchingResponse = findMatchingResponse(responseLines, requestedPid)
+            if (matchingResponse != null) {
+                return parseDataResponse(rawResponse, matchingResponse, requestedPid)
+            }
+        }
+
         val cleaned = cleanResponse(rawResponse)
 
-        // Check for error responses
+        // Try to extract matching response from merged multi-response data FIRST
+        // This handles cases where "NO DATA" appears alongside valid responses
+        val extractedResponse = extractMatchingPidResponse(cleaned, requestedPid)
+        if (extractedResponse != null) {
+            return parseDataResponse(rawResponse, extractedResponse, requestedPid)
+        }
+
+        // Check for error responses only if we couldn't find a valid response
         when {
             cleaned.isEmpty() -> return ObdResponse.NoData(rawResponse, requestedPid)
             cleaned == "NO DATA" -> return ObdResponse.NoData(rawResponse, requestedPid)
+            // Only treat as NO DATA if there's no valid 41 response mixed in
+            cleaned.contains("NO DATA") && !cleaned.contains("41") ->
+                return ObdResponse.NoData(rawResponse, requestedPid)
             cleaned == "?" -> return ObdResponse.Error(rawResponse, "Unknown command")
             cleaned.startsWith("ERROR") -> return ObdResponse.Error(rawResponse, cleaned)
             cleaned == "UNABLE TO CONNECT" -> return ObdResponse.Error(rawResponse, "Unable to connect to vehicle")
@@ -37,6 +64,48 @@ class ObdParser @Inject constructor() {
         }
 
         return parseDataResponse(rawResponse, cleaned, requestedPid)
+    }
+
+    /**
+     * Find a response line that matches the requested PID.
+     */
+    private fun findMatchingResponse(responseLines: List<String>, requestedPid: ObdPid): String? {
+        val expectedPrefix = "41 ${requestedPid.code}".uppercase()
+        val expectedPrefixNoSpace = "41${requestedPid.code}".uppercase()
+
+        for (line in responseLines) {
+            val cleaned = cleanResponse(line)
+            if (cleaned.uppercase().startsWith(expectedPrefix) ||
+                cleaned.uppercase().replace(" ", "").startsWith(expectedPrefixNoSpace)) {
+                return cleaned
+            }
+        }
+        return null
+    }
+
+    /**
+     * Extract a specific PID response from a merged multi-response string.
+     * Handles cases like "41 0C 1A F8 41 0D 3C" where multiple responses are concatenated.
+     */
+    private fun extractMatchingPidResponse(merged: String, requestedPid: ObdPid): String? {
+        val pidCode = requestedPid.code.uppercase()
+        val pattern = "41\\s*$pidCode\\s*([0-9A-F]{2}\\s*)+".toRegex(RegexOption.IGNORE_CASE)
+
+        val match = pattern.find(merged)
+        if (match != null) {
+            val matchedResponse = match.value.trim()
+            // Validate we have enough bytes
+            val bytes = hexStringToBytes(matchedResponse)
+            if (bytes.size >= 2 + requestedPid.expectedBytes) {
+                return matchedResponse
+            }
+            // If not enough bytes, try to get more from the match
+            val startIndex = match.range.first
+            val endIndex = minOf(startIndex + 2 + 2 + (requestedPid.expectedBytes * 3), merged.length)
+            val extendedMatch = merged.substring(startIndex, endIndex).trim()
+            return cleanResponse(extendedMatch)
+        }
+        return null
     }
 
     /**

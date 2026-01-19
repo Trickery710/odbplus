@@ -1,5 +1,6 @@
 package com.odbplus.app.live
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.odbplus.core.protocol.ObdPid
@@ -74,7 +75,9 @@ data class LiveDataUiState(
 
 @HiltViewModel
 class LiveDataViewModel @Inject constructor(
-    private val obdService: ObdService
+    private val obdService: ObdService,
+    private val repository: LogSessionRepository,
+    private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(LiveDataUiState())
@@ -84,6 +87,43 @@ class LiveDataViewModel @Inject constructor(
     private var replayJob: Job? = null
 
     init {
+        // Initialize repository and restore state
+        viewModelScope.launch {
+            repository.initialize()
+
+            // Restore selected PIDs from repository
+            repository.selectedPids.collect { savedPids ->
+                if (savedPids.isNotEmpty() && _uiState.value.selectedPids.isEmpty()) {
+                    val updatedAvailable = _uiState.value.availablePids.map { pidState ->
+                        pidState.copy(isSelected = pidState.pid in savedPids)
+                    }
+                    _uiState.update {
+                        it.copy(
+                            selectedPids = savedPids,
+                            availablePids = updatedAvailable
+                        )
+                    }
+                }
+            }
+        }
+
+        // Restore PID values from repository
+        viewModelScope.launch {
+            repository.currentPidValues.collect { savedValues ->
+                if (savedValues.isNotEmpty()) {
+                    _uiState.update { it.copy(pidValues = savedValues) }
+                }
+            }
+        }
+
+        // Load saved sessions from repository
+        viewModelScope.launch {
+            repository.sessions.collect { sessions ->
+                _uiState.update { it.copy(savedSessions = sessions) }
+            }
+        }
+
+        // Monitor connection state
         viewModelScope.launch {
             obdService.connectionState.collect { state ->
                 val isConnected = state == ConnectionState.CONNECTED
@@ -127,6 +167,10 @@ class LiveDataViewModel @Inject constructor(
                 selectedPids = pids,
                 availablePids = updatedAvailable
             )
+        }
+        // Persist selected PIDs
+        viewModelScope.launch {
+            repository.saveSelectedPids(pids)
         }
     }
 
@@ -261,6 +305,10 @@ class LiveDataViewModel @Inject constructor(
 
             val updatedValues = state.pidValues.toMutableMap()
             updatedValues[pid] = pidState
+
+            // Persist PID values to repository for tab switching
+            repository.updatePidValues(updatedValues)
+
             state.copy(pidValues = updatedValues)
         }
     }
@@ -294,12 +342,15 @@ class LiveDataViewModel @Inject constructor(
         val finalSession = currentSession.copy(endTime = System.currentTimeMillis())
 
         _uiState.update { state ->
-            val updatedSessions = state.savedSessions + finalSession
             state.copy(
                 isLogging = false,
-                currentLogSession = null,
-                savedSessions = updatedSessions.takeLast(10) // Keep last 10 sessions
+                currentLogSession = null
             )
+        }
+
+        // Persist session to repository
+        viewModelScope.launch {
+            repository.saveSession(finalSession)
         }
     }
 
@@ -326,13 +377,15 @@ class LiveDataViewModel @Inject constructor(
     }
 
     fun deleteSession(session: LogSession) {
-        _uiState.update { state ->
-            state.copy(savedSessions = state.savedSessions.filter { it.id != session.id })
+        viewModelScope.launch {
+            repository.deleteSession(session.id)
         }
     }
 
     fun clearAllSessions() {
-        _uiState.update { it.copy(savedSessions = emptyList()) }
+        viewModelScope.launch {
+            repository.clearAllSessions()
+        }
     }
 
     // ==================== Replay ====================

@@ -160,8 +160,26 @@ class ObdService @Inject constructor(
         // Find response lines (those starting with "<<")
         val responseLines = newLines
             .filter { it.startsWith("<< ") }
-            .map { it.removePrefix("<< ") }
+            .map { it.removePrefix("<< ").trim() }
+            .filter { it.isNotEmpty() }
 
+        // Extract the PID code from the command (e.g., "010C" -> "0C")
+        val pidCode = if (command.length >= 4 && command.startsWith("01")) {
+            command.substring(2).uppercase()
+        } else null
+
+        // If we have a specific PID, try to find matching responses first
+        if (pidCode != null) {
+            val matchingResponses = responseLines.filter { line ->
+                val cleaned = line.uppercase().replace(" ", "")
+                cleaned.startsWith("41$pidCode")
+            }
+            if (matchingResponses.isNotEmpty()) {
+                return matchingResponses.joinToString("\n")
+            }
+        }
+
+        // Fall back to returning all non-empty responses
         return responseLines.joinToString("\n")
     }
 

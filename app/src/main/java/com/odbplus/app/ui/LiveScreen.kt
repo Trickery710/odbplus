@@ -30,6 +30,8 @@ import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.FiberManualRecord
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
+import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.Stop
@@ -548,6 +550,75 @@ private fun formatDisplayValue(value: Double, pid: ObdPid): String {
     }
 }
 
+/**
+ * Categories for organizing PIDs in the selector.
+ */
+enum class PidCategory(val displayName: String) {
+    ENGINE("Engine"),
+    FUEL("Fuel System"),
+    TEMPERATURE("Temperature"),
+    SPEED_DISTANCE("Speed & Distance"),
+    OXYGEN_SENSORS("Oxygen Sensors"),
+    EMISSIONS("Emissions & EGR"),
+    THROTTLE_PEDAL("Throttle & Pedal"),
+    TURBO_BOOST("Turbo & Boost"),
+    DIAGNOSTICS("Diagnostics"),
+    OTHER("Other")
+}
+
+/**
+ * Get the category for a PID based on its code and description.
+ */
+private fun ObdPid.getCategory(): PidCategory {
+    return when {
+        // Engine PIDs
+        code in listOf("04", "0C", "0E", "1F", "61", "62", "63", "64", "8E") -> PidCategory.ENGINE
+        description.contains("Engine", ignoreCase = true) && !description.contains("Temp", ignoreCase = true) -> PidCategory.ENGINE
+
+        // Fuel PIDs
+        code in listOf("03", "06", "07", "08", "09", "0A", "22", "23", "2F", "51", "52", "59", "5D", "5E", "9D") -> PidCategory.FUEL
+        description.contains("Fuel", ignoreCase = true) -> PidCategory.FUEL
+
+        // Temperature PIDs
+        code in listOf("05", "0F", "46", "5C", "67", "68", "6B", "75", "76", "77", "78", "79", "84") -> PidCategory.TEMPERATURE
+        description.contains("Temp", ignoreCase = true) -> PidCategory.TEMPERATURE
+
+        // Speed & Distance PIDs
+        code in listOf("0D", "21", "30", "31", "4D", "4E", "7F") -> PidCategory.SPEED_DISTANCE
+        description.contains("Speed", ignoreCase = true) || description.contains("Distance", ignoreCase = true) -> PidCategory.SPEED_DISTANCE
+
+        // Oxygen Sensor PIDs
+        code in listOf("13", "14", "15", "16", "17", "18", "19", "1A", "1B", "1D",
+            "24", "25", "26", "27", "28", "29", "2A", "2B",
+            "34", "35", "36", "37", "38", "39", "3A", "3B",
+            "55", "56", "57", "58", "8C", "9C") -> PidCategory.OXYGEN_SENSORS
+        description.contains("O2", ignoreCase = true) || description.contains("Oxygen", ignoreCase = true) -> PidCategory.OXYGEN_SENSORS
+
+        // Emissions & EGR PIDs
+        code in listOf("12", "2C", "2D", "2E", "32", "3C", "3D", "3E", "3F", "53", "54",
+            "69", "6A", "7A", "7B", "7C", "7D", "7E", "83", "85", "86", "88", "8B", "94") -> PidCategory.EMISSIONS
+        description.contains("EGR", ignoreCase = true) || description.contains("Catalyst", ignoreCase = true) ||
+        description.contains("Evap", ignoreCase = true) || description.contains("NOx", ignoreCase = true) ||
+        description.contains("DPF", ignoreCase = true) || description.contains("Particulate", ignoreCase = true) -> PidCategory.EMISSIONS
+
+        // Throttle & Pedal PIDs
+        code in listOf("11", "45", "47", "48", "49", "4A", "4B", "4C", "5A", "6C", "8D") -> PidCategory.THROTTLE_PEDAL
+        description.contains("Throttle", ignoreCase = true) || description.contains("Pedal", ignoreCase = true) -> PidCategory.THROTTLE_PEDAL
+
+        // Turbo & Boost PIDs
+        code in listOf("6F", "70", "71", "72", "73", "74") -> PidCategory.TURBO_BOOST
+        description.contains("Turbo", ignoreCase = true) || description.contains("Boost", ignoreCase = true) ||
+        description.contains("Wastegate", ignoreCase = true) -> PidCategory.TURBO_BOOST
+
+        // Diagnostics PIDs
+        code in listOf("00", "01", "02", "1C", "1E", "20", "40", "41", "60", "65", "80", "A0", "C0") -> PidCategory.DIAGNOSTICS
+        description.contains("Monitor", ignoreCase = true) || description.contains("DTC", ignoreCase = true) ||
+        description.contains("Supported", ignoreCase = true) || description.contains("Status", ignoreCase = true) -> PidCategory.DIAGNOSTICS
+
+        else -> PidCategory.OTHER
+    }
+}
+
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 private fun PidSelectorDialog(
@@ -557,12 +628,30 @@ private fun PidSelectorDialog(
     onSelectPreset: (PidPreset) -> Unit,
     onClearAll: () -> Unit
 ) {
+    // Group PIDs by category
+    val groupedPids = remember(uiState.availablePids) {
+        uiState.availablePids
+            .groupBy { it.pid.getCategory() }
+            .toSortedMap(compareBy { it.ordinal })
+    }
+
+    var expandedCategory by remember { mutableStateOf<PidCategory?>(PidCategory.ENGINE) }
+
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("Select PIDs to Monitor") },
+        title = {
+            Column {
+                Text("Select PIDs to Monitor")
+                Text(
+                    text = "${uiState.selectedPids.size} selected",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
+        },
         text = {
             LazyColumn(
-                verticalArrangement = Arrangement.spacedBy(12.dp)
+                verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 item {
                     Text(
@@ -593,7 +682,7 @@ private fun PidSelectorDialog(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
-                            text = "Individual PIDs",
+                            text = "By Category",
                             style = MaterialTheme.typography.titleSmall,
                             fontWeight = FontWeight.Bold
                         )
@@ -605,11 +694,31 @@ private fun PidSelectorDialog(
                     }
                 }
 
-                items(uiState.availablePids) { pidState ->
-                    PidSelectorItem(
-                        pidState = pidState,
-                        onToggle = { onTogglePid(pidState.pid) }
-                    )
+                // Render each category
+                groupedPids.forEach { (category, pidsInCategory) ->
+                    val selectedCount = pidsInCategory.count { it.isSelected }
+                    val isExpanded = expandedCategory == category
+
+                    item {
+                        PidCategoryHeader(
+                            category = category,
+                            totalCount = pidsInCategory.size,
+                            selectedCount = selectedCount,
+                            isExpanded = isExpanded,
+                            onClick = {
+                                expandedCategory = if (isExpanded) null else category
+                            }
+                        )
+                    }
+
+                    if (isExpanded) {
+                        items(pidsInCategory) { pidState ->
+                            PidSelectorItem(
+                                pidState = pidState,
+                                onToggle = { onTogglePid(pidState.pid) }
+                            )
+                        }
+                    }
                 }
             }
         },
@@ -619,6 +728,59 @@ private fun PidSelectorDialog(
             }
         }
     )
+}
+
+@Composable
+private fun PidCategoryHeader(
+    category: PidCategory,
+    totalCount: Int,
+    selectedCount: Int,
+    isExpanded: Boolean,
+    onClick: () -> Unit
+) {
+    Surface(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(8.dp))
+            .clickable { onClick() },
+        color = if (selectedCount > 0)
+            MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.3f)
+        else
+            MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(12.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Icon(
+                    imageVector = if (isExpanded)
+                        Icons.Default.KeyboardArrowDown
+                    else
+                        Icons.AutoMirrored.Filled.KeyboardArrowRight,
+                    contentDescription = if (isExpanded) "Collapse" else "Expand",
+                    modifier = Modifier.size(20.dp)
+                )
+                Spacer(Modifier.width(8.dp))
+                Text(
+                    text = category.displayName,
+                    style = MaterialTheme.typography.titleSmall,
+                    fontWeight = FontWeight.Medium
+                )
+            }
+            Text(
+                text = if (selectedCount > 0) "$selectedCount / $totalCount" else "$totalCount",
+                style = MaterialTheme.typography.bodySmall,
+                color = if (selectedCount > 0)
+                    MaterialTheme.colorScheme.primary
+                else
+                    MaterialTheme.colorScheme.onSurfaceVariant
+            )
+        }
+    }
 }
 
 @Composable
