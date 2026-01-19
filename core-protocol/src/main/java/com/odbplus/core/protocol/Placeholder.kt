@@ -1,3 +1,8 @@
 package com.odbplus.core.protocol
 
-object ProtocolCore { fun version() = "0.1" }
+/**
+ * Core protocol module version info.
+ */
+object ProtocolCore {
+    const val VERSION = "1.0.0"
+}
