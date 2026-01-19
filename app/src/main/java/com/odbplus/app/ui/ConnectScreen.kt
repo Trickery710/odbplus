@@ -7,7 +7,7 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Send
+import androidx.compose.material.icons.automirrored.filled.Send
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.getValue
@@ -128,7 +128,7 @@ fun ConnectScreenTopBar(
                 }
             }
         }
-        Divider(modifier = Modifier.padding(top = 16.dp))
+        HorizontalDivider(modifier = Modifier.padding(top = 16.dp))
     }
 }
 
@@ -161,7 +161,7 @@ fun CommandInputBar(onSendCommand: (String) -> Unit) {
             placeholder = { Text("Enter command (e.g., 010C)") },
             trailingIcon = {
                 IconButton(onClick = send) {
-                    Icon(Icons.Default.Send, contentDescription = "Send Command")
+                    Icon(Icons.AutoMirrored.Filled.Send, contentDescription = "Send Command")
                 }
             },
             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Send),

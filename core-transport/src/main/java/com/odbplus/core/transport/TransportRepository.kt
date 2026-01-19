@@ -12,10 +12,9 @@ interface TransportRepository {
     val connectionState: StateFlow<ConnectionState>
     val logLines: StateFlow<List<String>>
     suspend fun connect(address: String, port: Int, isBluetooth: Boolean)
-    suspend fun sendAndAwait(cmd: String, timeoutMs: Long = 3000L)
+    suspend fun sendAndAwait(cmd: String, timeoutMs: Long = TransportConstants.DEFAULT_RESPONSE_TIMEOUT_MS)
     suspend fun disconnect()
 }
-
 
 @Singleton
 class TransportRepositoryImpl @Inject constructor(
@@ -32,7 +31,7 @@ class TransportRepositoryImpl @Inject constructor(
     override val logLines: StateFlow<List<String>> = _logLines.asStateFlow()
 
     private fun addLog(line: String) {
-        _logLines.update { (it + line).takeLast(200) } // Increased log buffer
+        _logLines.update { (it + line).takeLast(TransportConstants.MAX_LOG_LINES) }
     }
 
     override suspend fun connect(address: String, port: Int, isBluetooth: Boolean) {
@@ -48,9 +47,17 @@ class TransportRepositoryImpl @Inject constructor(
             _connectionState.value = ConnectionState.CONNECTED
             addLog("Connection successful.")
             initElmSession()
-        } catch (e: Exception) {
+        } catch (e: BluetoothUnavailableException) {
+            _connectionState.value = ConnectionState.ERROR
+            addLog("!! Bluetooth Error: ${e.message}")
+            activeTransport = null
+        } catch (e: TransportException) {
             _connectionState.value = ConnectionState.ERROR
             addLog("!! Connection Failed: ${e.message}")
+            activeTransport = null
+        } catch (e: Exception) {
+            _connectionState.value = ConnectionState.ERROR
+            addLog("!! Unexpected Error: ${e.message}")
             activeTransport = null
         }
     }
@@ -67,9 +74,9 @@ class TransportRepositoryImpl @Inject constructor(
 
     private suspend fun initElmSession() {
         addLog("Initializing ELM327 session...")
-        sendAndAwait("ATZ", timeoutMs = 5000L)
-        sendAndAwait("ATE0") // Echo off
-        sendAndAwait("ATL0") // Linefeeds off
+        sendAndAwait(ElmCommands.RESET, timeoutMs = TransportConstants.INIT_TIMEOUT_MS)
+        sendAndAwait(ElmCommands.ECHO_OFF)
+        sendAndAwait(ElmCommands.LINEFEEDS_OFF)
         addLog("Session initialized.")
     }
 
@@ -85,7 +92,6 @@ class TransportRepositoryImpl @Inject constructor(
             transport.writeLine(cmd)
             val response = transport.readUntilPrompt(timeoutMs)
 
-            // Only log if the response is not blank. ATE0 returns nothing, which is correct.
             if (response.isNotBlank()) {
                 response.lines().forEach { line ->
                     if (line.isNotBlank()) {
@@ -93,6 +99,11 @@ class TransportRepositoryImpl @Inject constructor(
                     }
                 }
             }
+        } catch (e: NotConnectedException) {
+            addLog("!! Error: Connection lost.")
+            _connectionState.value = ConnectionState.ERROR
+        } catch (e: TransportException) {
+            addLog("!! Transport Error: ${e.message}")
         } catch (e: Exception) {
             addLog("!! Error during send/receive: ${e.message}")
         }
