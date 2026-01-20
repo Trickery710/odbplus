@@ -10,10 +10,12 @@ import com.odbplus.core.protocol.ObdPid
  */
 data class VehicleContext(
     val isConnected: Boolean = false,
+    val vehicleInfo: VehicleInfo? = null,
     val storedDtcs: List<DiagnosticTroubleCode> = emptyList(),
     val pendingDtcs: List<DiagnosticTroubleCode> = emptyList(),
     val livePidValues: Map<ObdPid, PidDisplayState> = emptyMap(),
-    val recentSessions: List<LogSession> = emptyList()
+    val recentSessions: List<LogSession> = emptyList(),
+    val isFetchingVehicleInfo: Boolean = false
 ) {
     /**
      * Format vehicle context for AI system prompt injection.
@@ -25,6 +27,12 @@ data class VehicleContext(
         sb.appendLine("## Current Vehicle Status")
         sb.appendLine("Connection: ${if (isConnected) "CONNECTED" else "DISCONNECTED"}")
         sb.appendLine()
+
+        // Vehicle info
+        if (vehicleInfo != null && vehicleInfo.vin.isNotEmpty()) {
+            sb.appendLine(vehicleInfo.formatForAi())
+            sb.appendLine()
+        }
 
         // DTCs section
         if (storedDtcs.isNotEmpty() || pendingDtcs.isNotEmpty()) {
@@ -79,7 +87,8 @@ data class VehicleContext(
      * Check if there's any vehicle data available.
      */
     fun hasData(): Boolean {
-        return storedDtcs.isNotEmpty() ||
+        return (vehicleInfo != null && vehicleInfo.vin.isNotEmpty()) ||
+                storedDtcs.isNotEmpty() ||
                 pendingDtcs.isNotEmpty() ||
                 livePidValues.any { it.value.value != null } ||
                 recentSessions.isNotEmpty()

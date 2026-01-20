@@ -97,6 +97,55 @@ class ObdService @Inject constructor(
     }
 
     /**
+     * Read Calibration ID (Mode 09, PID 04).
+     * This identifies the software calibration version.
+     */
+    suspend fun readCalibrationId(timeoutMs: Long = 5000L): String? {
+        val rawResponse = sendCommand("0904", timeoutMs)
+        return parser.parseMode09String(rawResponse, 0x04)
+    }
+
+    /**
+     * Read Calibration Verification Number (Mode 09, PID 06).
+     * This is used to verify the calibration integrity.
+     */
+    suspend fun readCalibrationVerificationNumber(timeoutMs: Long = 5000L): String? {
+        val rawResponse = sendCommand("0906", timeoutMs)
+        return parser.parseMode09Hex(rawResponse, 0x06)
+    }
+
+    /**
+     * Read ECU Name (Mode 09, PID 0A).
+     * This identifies the ECU module.
+     */
+    suspend fun readEcuName(timeoutMs: Long = 5000L): String? {
+        val rawResponse = sendCommand("090A", timeoutMs)
+        return parser.parseMode09String(rawResponse, 0x0A)
+    }
+
+    /**
+     * Read all available vehicle information.
+     * Returns a map of info type to value.
+     */
+    suspend fun readAllVehicleInfo(timeoutMs: Long = 5000L): Map<String, String> {
+        val info = mutableMapOf<String, String>()
+
+        // VIN
+        readVin(timeoutMs)?.let { info["VIN"] = it }
+
+        // Calibration ID
+        readCalibrationId(timeoutMs)?.let { info["Calibration ID"] = it }
+
+        // Calibration Verification Number
+        readCalibrationVerificationNumber(timeoutMs)?.let { info["CVN"] = it }
+
+        // ECU Name
+        readEcuName(timeoutMs)?.let { info["ECU Name"] = it }
+
+        return info
+    }
+
+    /**
      * Check which PIDs are supported by the vehicle.
      * Returns a set of supported PID codes.
      */

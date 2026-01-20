@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.odbplus.app.ai.data.ChatMessage
 import com.odbplus.app.ai.data.VehicleContext
-import com.odbplus.app.diagnostics.DiagnosticsViewModel
+import com.odbplus.app.ai.data.VehicleInfo
 import com.odbplus.app.live.LogSessionRepository
 import com.odbplus.core.protocol.ObdService
 import com.odbplus.core.transport.ConnectionState
@@ -15,6 +15,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 /**
@@ -26,6 +27,8 @@ data class AiChatUiState(
     val hasApiKey: Boolean = false,
     val showApiKeyDialog: Boolean = false,
     val isConnected: Boolean = false,
+    val isFetchingVehicleInfo: Boolean = false,
+    val currentVin: String? = null,
     val messages: List<ChatMessage> = emptyList(),
     val suggestedPrompts: List<String> = emptyList(),
     val errorMessage: String? = null,
@@ -38,13 +41,15 @@ class AiChatViewModel @Inject constructor(
     private val chatRepository: ChatRepository,
     private val claudeApiService: ClaudeApiService,
     private val obdService: ObdService,
-    private val logSessionRepository: LogSessionRepository
+    private val logSessionRepository: LogSessionRepository,
+    private val vehicleInfoRepository: VehicleInfoRepository
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(AiChatUiState())
     val uiState: StateFlow<AiChatUiState> = _uiState.asStateFlow()
 
     private var currentVehicleContext = VehicleContext()
+    private var wasConnected = false
 
     init {
         initialize()
@@ -54,8 +59,9 @@ class AiChatViewModel @Inject constructor(
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true) }
 
-            // Initialize chat repository
+            // Initialize repositories
             chatRepository.initialize()
+            vehicleInfoRepository.initialize()
 
             // Collect messages
             launch {
@@ -72,12 +78,33 @@ class AiChatViewModel @Inject constructor(
                 }
             }
 
-            // Collect connection state
+            // Collect connection state and fetch vehicle info on new connection
             launch {
                 obdService.connectionState.collect { state ->
                     val isConnected = state == ConnectionState.CONNECTED
                     _uiState.update { it.copy(isConnected = isConnected) }
+
+                    // Detect new connection
+                    if (isConnected && !wasConnected) {
+                        fetchVehicleInfo()
+                    } else if (!isConnected && wasConnected) {
+                        // Clear current vehicle on disconnect
+                        vehicleInfoRepository.clearCurrentVehicle()
+                        currentVehicleContext = currentVehicleContext.copy(vehicleInfo = null)
+                        _uiState.update { it.copy(currentVin = null) }
+                    }
+
+                    wasConnected = isConnected
                     updateVehicleContext()
+                }
+            }
+
+            // Collect current vehicle info
+            launch {
+                vehicleInfoRepository.currentVehicle.collect { vehicleInfo ->
+                    currentVehicleContext = currentVehicleContext.copy(vehicleInfo = vehicleInfo)
+                    _uiState.update { it.copy(currentVin = vehicleInfo?.vin) }
+                    updateSuggestedPrompts()
                 }
             }
 
@@ -97,6 +124,67 @@ class AiChatViewModel @Inject constructor(
             }
 
             _uiState.update { it.copy(isLoading = false) }
+        }
+    }
+
+    /**
+     * Fetch vehicle information (VIN and additional info) from the connected vehicle.
+     */
+    private fun fetchVehicleInfo() {
+        viewModelScope.launch {
+            _uiState.update { it.copy(isFetchingVehicleInfo = true) }
+            currentVehicleContext = currentVehicleContext.copy(isFetchingVehicleInfo = true)
+
+            try {
+                // First, get the VIN
+                val vin = obdService.readVin()
+                if (vin.isNullOrBlank()) {
+                    Timber.w("Could not read VIN from vehicle")
+                    _uiState.update { it.copy(isFetchingVehicleInfo = false) }
+                    currentVehicleContext = currentVehicleContext.copy(isFetchingVehicleInfo = false)
+                    return@launch
+                }
+
+                Timber.d("Read VIN: $vin")
+
+                // Check if this is a new vehicle
+                val isFirstTime = vehicleInfoRepository.isFirstTimeVehicle(vin)
+
+                // Build vehicle info
+                var vehicleInfo = VehicleInfo(vin = vin)
+
+                // If first time seeing this vehicle, read additional info
+                if (isFirstTime) {
+                    Timber.d("First time vehicle, reading additional info...")
+
+                    val calibrationId = obdService.readCalibrationId()
+                    val cvn = obdService.readCalibrationVerificationNumber()
+                    val ecuName = obdService.readEcuName()
+
+                    vehicleInfo = vehicleInfo.copy(
+                        calibrationId = calibrationId,
+                        calibrationVerificationNumber = cvn,
+                        ecuName = ecuName
+                    )
+
+                    Timber.d("Vehicle info: CalID=$calibrationId, CVN=$cvn, ECU=$ecuName")
+                } else {
+                    // Use existing info but update timestamps
+                    val existing = vehicleInfoRepository.getVehicle(vin)
+                    if (existing != null) {
+                        vehicleInfo = existing.copy(lastSeenTimestamp = System.currentTimeMillis())
+                    }
+                }
+
+                // Save to repository
+                vehicleInfoRepository.saveVehicle(vehicleInfo)
+
+            } catch (e: Exception) {
+                Timber.e(e, "Error fetching vehicle info")
+            } finally {
+                _uiState.update { it.copy(isFetchingVehicleInfo = false) }
+                currentVehicleContext = currentVehicleContext.copy(isFetchingVehicleInfo = false)
+            }
         }
     }
 

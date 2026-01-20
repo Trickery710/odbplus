@@ -204,6 +204,59 @@ class ObdParser @Inject constructor() {
             .take(17) // VIN is 17 characters
     }
 
+    /**
+     * Parse a Mode 09 response as ASCII string (e.g., Calibration ID, ECU Name).
+     */
+    fun parseMode09String(rawResponse: String, expectedPid: Int): String? {
+        val cleaned = cleanResponse(rawResponse)
+        if (cleaned.isEmpty() || cleaned == "NO DATA") return null
+
+        val bytes = hexStringToBytes(cleaned)
+
+        // Response starts with 49 XX (Mode 09 response)
+        if (bytes.size < 3 || bytes[0] != 0x49.toByte()) return null
+
+        // Verify PID
+        if ((bytes[1].toInt() and 0xFF) != expectedPid) return null
+
+        // Skip header bytes (49 XX) and message count byte
+        val dataBytes = bytes.drop(3)
+        if (dataBytes.isEmpty()) return null
+
+        // Convert to ASCII, filtering printable characters
+        return dataBytes
+            .map { (it.toInt() and 0xFF).toChar() }
+            .filter { it.isLetterOrDigit() || it.isWhitespace() || it in ".-_" }
+            .joinToString("")
+            .trim()
+            .takeIf { it.isNotEmpty() }
+    }
+
+    /**
+     * Parse a Mode 09 response as hex string (e.g., CVN).
+     */
+    fun parseMode09Hex(rawResponse: String, expectedPid: Int): String? {
+        val cleaned = cleanResponse(rawResponse)
+        if (cleaned.isEmpty() || cleaned == "NO DATA") return null
+
+        val bytes = hexStringToBytes(cleaned)
+
+        // Response starts with 49 XX (Mode 09 response)
+        if (bytes.size < 3 || bytes[0] != 0x49.toByte()) return null
+
+        // Verify PID
+        if ((bytes[1].toInt() and 0xFF) != expectedPid) return null
+
+        // Skip header bytes (49 XX) and message count byte
+        val dataBytes = bytes.drop(3)
+        if (dataBytes.isEmpty()) return null
+
+        // Return as hex string
+        return dataBytes
+            .joinToString("") { String.format("%02X", it.toInt() and 0xFF) }
+            .takeIf { it.isNotEmpty() }
+    }
+
     private fun parseDataResponse(
         rawResponse: String,
         cleaned: String,
