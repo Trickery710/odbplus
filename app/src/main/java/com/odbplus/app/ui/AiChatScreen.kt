@@ -71,6 +71,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.odbplus.app.ai.AiChatUiState
 import com.odbplus.app.ai.AiChatViewModel
+import com.odbplus.app.ai.data.AiProvider
 import com.odbplus.app.ai.data.ChatMessage
 import com.odbplus.app.ai.data.MessageRole
 import java.text.SimpleDateFormat
@@ -91,6 +92,7 @@ fun AiChatScreen(viewModel: AiChatViewModel = hiltViewModel()) {
             // Header
             ChatHeader(
                 uiState = uiState,
+                onProviderClick = { viewModel.showProviderSelector() },
                 onSettingsClick = { viewModel.showApiKeyDialog() },
                 onClearHistory = { viewModel.clearHistory() }
             )
@@ -135,9 +137,19 @@ fun AiChatScreen(viewModel: AiChatViewModel = hiltViewModel()) {
             }
         }
 
+        // Provider Selector Dialog
+        if (uiState.showProviderSelector) {
+            ProviderSelectorDialog(
+                currentProvider = uiState.selectedProvider,
+                onProviderSelected = { viewModel.selectProvider(it) },
+                onDismiss = { viewModel.hideProviderSelector() }
+            )
+        }
+
         // API Key Dialog
         if (uiState.showApiKeyDialog) {
             ApiKeyDialog(
+                provider = uiState.selectedProvider,
                 onDismiss = { viewModel.hideApiKeyDialog() },
                 onSave = { key -> viewModel.saveApiKey(key) },
                 onClear = { viewModel.clearApiKey() },
@@ -169,6 +181,7 @@ fun AiChatScreen(viewModel: AiChatViewModel = hiltViewModel()) {
 @Composable
 private fun ChatHeader(
     uiState: AiChatUiState,
+    onProviderClick: () -> Unit,
     onSettingsClick: () -> Unit,
     onClearHistory: () -> Unit
 ) {
@@ -210,6 +223,16 @@ private fun ChatHeader(
                     onDismissRequest = { showMenu = false }
                 ) {
                     DropdownMenuItem(
+                        text = { Text("Change AI Provider") },
+                        onClick = {
+                            showMenu = false
+                            onProviderClick()
+                        },
+                        leadingIcon = {
+                            Icon(Icons.Default.Settings, contentDescription = null)
+                        }
+                    )
+                    DropdownMenuItem(
                         text = { Text("API Key Settings") },
                         onClick = {
                             showMenu = false
@@ -235,12 +258,44 @@ private fun ChatHeader(
             }
         }
 
-        // VIN display when connected
-        if (uiState.isConnected) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.padding(top = 4.dp)
+        // Provider chip (clickable)
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.padding(top = 4.dp)
+        ) {
+            Surface(
+                modifier = Modifier.clickable(onClick = onProviderClick),
+                shape = RoundedCornerShape(16.dp),
+                color = if (uiState.selectedProvider == AiProvider.GEMINI || uiState.selectedProvider == AiProvider.GROQ)
+                    Color(0xFF4CAF50).copy(alpha = 0.15f)
+                else
+                    MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.5f)
             ) {
+                Row(
+                    modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = uiState.selectedProvider.displayName,
+                        style = MaterialTheme.typography.labelSmall,
+                        fontWeight = FontWeight.Medium
+                    )
+                    if (uiState.selectedProvider == AiProvider.GEMINI || uiState.selectedProvider == AiProvider.GROQ) {
+                        Spacer(Modifier.width(4.dp))
+                        Text(
+                            text = "FREE",
+                            style = MaterialTheme.typography.labelSmall,
+                            fontWeight = FontWeight.Bold,
+                            color = Color(0xFF4CAF50),
+                            fontSize = 9.sp
+                        )
+                    }
+                }
+            }
+
+            // VIN display when connected
+            if (uiState.isConnected) {
+                Spacer(Modifier.width(8.dp))
                 if (uiState.isFetchingVehicleInfo) {
                     CircularProgressIndicator(
                         modifier = Modifier.size(12.dp),
@@ -248,7 +303,7 @@ private fun ChatHeader(
                     )
                     Spacer(Modifier.width(6.dp))
                     Text(
-                        text = "Reading vehicle info...",
+                        text = "Reading...",
                         style = MaterialTheme.typography.labelSmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
@@ -567,7 +622,99 @@ private fun ChatInputBar(
 }
 
 @Composable
+private fun ProviderSelectorDialog(
+    currentProvider: AiProvider,
+    onProviderSelected: (AiProvider) -> Unit,
+    onDismiss: () -> Unit
+) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text("Select AI Provider") },
+        text = {
+            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                AiProvider.sortedByCost().forEach { provider ->
+                    ProviderOptionCard(
+                        provider = provider,
+                        isSelected = provider == currentProvider,
+                        onClick = { onProviderSelected(provider) }
+                    )
+                }
+            }
+        },
+        confirmButton = {
+            TextButton(onClick = onDismiss) {
+                Text("Close")
+            }
+        }
+    )
+}
+
+@Composable
+private fun ProviderOptionCard(
+    provider: AiProvider,
+    isSelected: Boolean,
+    onClick: () -> Unit
+) {
+    val isFree = provider == AiProvider.GEMINI || provider == AiProvider.GROQ
+
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable(onClick = onClick),
+        colors = CardDefaults.cardColors(
+            containerColor = if (isSelected)
+                MaterialTheme.colorScheme.primaryContainer
+            else
+                MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
+        ),
+        shape = RoundedCornerShape(12.dp)
+    ) {
+        Column(modifier = Modifier.padding(12.dp)) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = provider.displayName,
+                    style = MaterialTheme.typography.titleSmall,
+                    fontWeight = FontWeight.Bold
+                )
+                if (isFree) {
+                    Surface(
+                        shape = RoundedCornerShape(4.dp),
+                        color = Color(0xFF4CAF50).copy(alpha = 0.2f)
+                    ) {
+                        Text(
+                            text = "FREE",
+                            modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp),
+                            style = MaterialTheme.typography.labelSmall,
+                            fontWeight = FontWeight.Bold,
+                            color = Color(0xFF4CAF50)
+                        )
+                    }
+                }
+            }
+            Spacer(Modifier.height(4.dp))
+            Text(
+                text = provider.description,
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+            Spacer(Modifier.height(4.dp))
+            Text(
+                text = provider.costInfo,
+                style = MaterialTheme.typography.labelSmall,
+                color = if (isFree) Color(0xFF4CAF50) else MaterialTheme.colorScheme.onSurfaceVariant,
+                fontWeight = if (isFree) FontWeight.Medium else FontWeight.Normal
+            )
+        }
+    }
+}
+
+@Composable
 private fun ApiKeyDialog(
+    provider: AiProvider,
     onDismiss: () -> Unit,
     onSave: (String) -> Unit,
     onClear: () -> Unit,
@@ -577,26 +724,71 @@ private fun ApiKeyDialog(
 ) {
     var apiKey by remember { mutableStateOf("") }
     val uriHandler = LocalUriHandler.current
+    val isFree = provider == AiProvider.GEMINI || provider == AiProvider.GROQ
+    val instructions = provider.getSetupInstructions()
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("Claude API Key") },
+        title = {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Text("${provider.displayName} API Key")
+                if (isFree) {
+                    Spacer(Modifier.width(8.dp))
+                    Surface(
+                        shape = RoundedCornerShape(4.dp),
+                        color = Color(0xFF4CAF50).copy(alpha = 0.2f)
+                    ) {
+                        Text(
+                            text = "FREE",
+                            modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp),
+                            style = MaterialTheme.typography.labelSmall,
+                            fontWeight = FontWeight.Bold,
+                            color = Color(0xFF4CAF50)
+                        )
+                    }
+                }
+            }
+        },
         text = {
             Column {
                 Text(
                     text = if (hasExistingKey)
                         "Your API key is saved. Enter a new key to update it."
                     else
-                        "Enter your Claude API key to enable AI diagnostics.",
+                        "Enter your ${provider.displayName} API key to enable AI diagnostics.",
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
+
+                Spacer(Modifier.height(12.dp))
+
+                // Cost info
+                Card(
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = CardDefaults.cardColors(
+                        containerColor = if (isFree)
+                            Color(0xFF4CAF50).copy(alpha = 0.1f)
+                        else
+                            MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f)
+                    ),
+                    shape = RoundedCornerShape(8.dp)
+                ) {
+                    Text(
+                        text = provider.costInfo,
+                        modifier = Modifier.padding(10.dp),
+                        style = MaterialTheme.typography.bodySmall,
+                        color = if (isFree) Color(0xFF4CAF50) else MaterialTheme.colorScheme.onSurfaceVariant,
+                        fontWeight = FontWeight.Medium
+                    )
+                }
+
                 Spacer(Modifier.height(16.dp))
+
                 OutlinedTextField(
                     value = apiKey,
                     onValueChange = { apiKey = it },
                     label = { Text("API Key") },
-                    placeholder = { Text("sk-ant-...") },
+                    placeholder = { Text(provider.keyPlaceholder) },
                     visualTransformation = PasswordVisualTransformation(),
                     singleLine = true,
                     isError = error != null,
@@ -624,26 +816,15 @@ private fun ApiKeyDialog(
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                         Spacer(Modifier.height(8.dp))
-                        Text(
-                            text = "1. Go to the Anthropic Console",
-                            style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                        Text(
-                            text = "2. Sign in or create an account",
-                            style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                        Text(
-                            text = "3. Navigate to API Keys section",
-                            style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                        Text(
-                            text = "4. Create a new API key",
-                            style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
+
+                        instructions.forEachIndexed { index, instruction ->
+                            Text(
+                                text = "${index + 1}. $instruction",
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
+
                         Spacer(Modifier.height(8.dp))
 
                         // Clickable link
@@ -655,13 +836,13 @@ private fun ApiKeyDialog(
                                     fontWeight = FontWeight.Medium
                                 )
                             ) {
-                                append("Open console.anthropic.com")
+                                append("Open ${provider.setupUrl.removePrefix("https://")}")
                             }
                         }
                         Text(
                             text = linkText,
                             modifier = Modifier.clickable {
-                                uriHandler.openUri("https://console.anthropic.com/settings/keys")
+                                uriHandler.openUri(provider.setupUrl)
                             },
                             style = MaterialTheme.typography.bodySmall
                         )

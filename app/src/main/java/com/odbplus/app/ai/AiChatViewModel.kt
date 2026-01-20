@@ -2,6 +2,7 @@ package com.odbplus.app.ai
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.odbplus.app.ai.data.AiProvider
 import com.odbplus.app.ai.data.ChatMessage
 import com.odbplus.app.ai.data.VehicleContext
 import com.odbplus.app.ai.data.VehicleInfo
@@ -26,6 +27,8 @@ data class AiChatUiState(
     val isSending: Boolean = false,
     val hasApiKey: Boolean = false,
     val showApiKeyDialog: Boolean = false,
+    val showProviderSelector: Boolean = false,
+    val selectedProvider: AiProvider = AiProvider.GEMINI,
     val isConnected: Boolean = false,
     val isFetchingVehicleInfo: Boolean = false,
     val currentVin: String? = null,
@@ -71,7 +74,14 @@ class AiChatViewModel @Inject constructor(
                 }
             }
 
-            // Collect API key status
+            // Collect selected provider
+            launch {
+                aiSettingsRepository.selectedProvider.collect { provider ->
+                    _uiState.update { it.copy(selectedProvider = provider) }
+                }
+            }
+
+            // Collect API key status for current provider
             launch {
                 aiSettingsRepository.hasApiKey.collect { hasKey ->
                     _uiState.update { it.copy(hasApiKey = hasKey) }
@@ -231,8 +241,9 @@ class AiChatViewModel @Inject constructor(
 
             _uiState.update { it.copy(isSending = true, errorMessage = null) }
 
-            // Get API key
-            val apiKey = aiSettingsRepository.apiKey.first()
+            // Get current provider and API key
+            val provider = _uiState.value.selectedProvider
+            val apiKey = aiSettingsRepository.getApiKeyForProvider(provider).first()
             if (apiKey == null) {
                 _uiState.update {
                     it.copy(
@@ -250,14 +261,10 @@ class AiChatViewModel @Inject constructor(
             // Generate system prompt with vehicle context
             val systemPrompt = AutomotiveSystemPrompt.generate(currentVehicleContext)
 
-            // Send to Claude API
-            when (val result = claudeApiService.sendMessage(apiKey, systemPrompt, claudeMessages)) {
+            // Send to selected AI provider
+            when (val result = claudeApiService.sendMessage(provider, apiKey, systemPrompt, claudeMessages)) {
                 is ApiResult.Success -> {
                     val responseText = result.data.content
-                        .filter { it.type == "text" }
-                        .mapNotNull { it.text }
-                        .joinToString("\n")
-
                     if (responseText.isNotBlank()) {
                         val assistantMessage = ChatMessage.assistantMessage(responseText)
                         chatRepository.addMessage(assistantMessage)
@@ -295,13 +302,39 @@ class AiChatViewModel @Inject constructor(
     }
 
     /**
-     * Save the API key.
+     * Show the provider selector.
+     */
+    fun showProviderSelector() {
+        _uiState.update { it.copy(showProviderSelector = true) }
+    }
+
+    /**
+     * Hide the provider selector.
+     */
+    fun hideProviderSelector() {
+        _uiState.update { it.copy(showProviderSelector = false) }
+    }
+
+    /**
+     * Select a new AI provider.
+     */
+    fun selectProvider(provider: AiProvider) {
+        viewModelScope.launch {
+            aiSettingsRepository.saveSelectedProvider(provider)
+            _uiState.update { it.copy(showProviderSelector = false) }
+        }
+    }
+
+    /**
+     * Save the API key for the current provider.
      */
     fun saveApiKey(key: String) {
         viewModelScope.launch {
-            if (!aiSettingsRepository.isValidApiKeyFormat(key)) {
+            val provider = _uiState.value.selectedProvider
+
+            if (!aiSettingsRepository.isValidApiKeyFormat(provider, key)) {
                 _uiState.update {
-                    it.copy(apiKeyError = "Invalid API key format. Key should start with 'sk-ant-'")
+                    it.copy(apiKeyError = "Invalid API key format. Key should start with '${provider.keyPrefix}'")
                 }
                 return@launch
             }
@@ -309,9 +342,9 @@ class AiChatViewModel @Inject constructor(
             _uiState.update { it.copy(isLoading = true, apiKeyError = null) }
 
             // Test the API key
-            when (val result = claudeApiService.testApiKey(key.trim())) {
+            when (val result = claudeApiService.testApiKey(provider, key.trim())) {
                 is ApiResult.Success -> {
-                    aiSettingsRepository.saveApiKey(key.trim())
+                    aiSettingsRepository.saveApiKey(provider, key.trim())
                     _uiState.update {
                         it.copy(
                             isLoading = false,
@@ -333,11 +366,12 @@ class AiChatViewModel @Inject constructor(
     }
 
     /**
-     * Clear the API key.
+     * Clear the API key for the current provider.
      */
     fun clearApiKey() {
         viewModelScope.launch {
-            aiSettingsRepository.clearApiKey()
+            val provider = _uiState.value.selectedProvider
+            aiSettingsRepository.clearApiKey(provider)
             _uiState.update { it.copy(hasApiKey = false) }
         }
     }
