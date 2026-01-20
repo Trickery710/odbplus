@@ -89,11 +89,12 @@ class LiveDataViewModel @Inject constructor(
     init {
         // Initialize repository and restore state
         viewModelScope.launch {
-            repository.initialize()
+            try {
+                repository.initialize()
 
-            // Restore selected PIDs from repository
-            repository.selectedPids.collect { savedPids ->
-                if (savedPids.isNotEmpty() && _uiState.value.selectedPids.isEmpty()) {
+                // Restore selected PIDs once after initialization
+                val savedPids = repository.selectedPids.value
+                if (savedPids.isNotEmpty()) {
                     val updatedAvailable = _uiState.value.availablePids.map { pidState ->
                         pidState.copy(isSelected = pidState.pid in savedPids)
                     }
@@ -104,15 +105,14 @@ class LiveDataViewModel @Inject constructor(
                         )
                     }
                 }
-            }
-        }
 
-        // Restore PID values from repository
-        viewModelScope.launch {
-            repository.currentPidValues.collect { savedValues ->
+                // Restore PID values once
+                val savedValues = repository.currentPidValues.value
                 if (savedValues.isNotEmpty()) {
                     _uiState.update { it.copy(pidValues = savedValues) }
                 }
+            } catch (e: Exception) {
+                // Ignore initialization errors
             }
         }
 

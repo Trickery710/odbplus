@@ -23,19 +23,31 @@ class LogsViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            repository.initialize()
+            try {
+                repository.initialize()
+            } catch (e: Exception) {
+                // Ignore initialization errors
+            }
         }
     }
 
     fun deleteSession(session: LogSession) {
         viewModelScope.launch {
-            repository.deleteSession(session.id)
+            try {
+                repository.deleteSession(session.id)
+            } catch (e: Exception) {
+                // Ignore errors
+            }
         }
     }
 
     fun clearAllSessions() {
         viewModelScope.launch {
-            repository.clearAllSessions()
+            try {
+                repository.clearAllSessions()
+            } catch (e: Exception) {
+                // Ignore errors
+            }
         }
     }
 }

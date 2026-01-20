@@ -9,12 +9,12 @@ import androidx.datastore.preferences.core.stringSetPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import com.odbplus.core.protocol.ObdPid
 import dagger.hilt.android.qualifiers.ApplicationContext
-import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.withContext
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
@@ -64,17 +64,17 @@ class LogSessionRepository @Inject constructor(
     private val _selectedPids = MutableStateFlow<List<ObdPid>>(emptyList())
     val selectedPids: StateFlow<List<ObdPid>> = _selectedPids.asStateFlow()
 
-    suspend fun initialize() {
+    suspend fun initialize() = withContext(Dispatchers.IO) {
         // Load saved sessions
         loadSessions()
         // Load selected PIDs
         loadSelectedPids()
     }
 
-    private suspend fun loadSessions() {
+    private suspend fun loadSessions() = withContext(Dispatchers.IO) {
         try {
             val prefs = context.dataStore.data.first()
-            val sessionsJson = prefs[sessionsKey] ?: return
+            val sessionsJson = prefs[sessionsKey] ?: return@withContext
             val serialized = json.decodeFromString<List<SerializableLogSession>>(sessionsJson)
             _sessions.value = serialized.map { it.toLogSession() }
         } catch (e: Exception) {
@@ -83,17 +83,17 @@ class LogSessionRepository @Inject constructor(
         }
     }
 
-    private suspend fun loadSelectedPids() {
+    private suspend fun loadSelectedPids() = withContext(Dispatchers.IO) {
         try {
             val prefs = context.dataStore.data.first()
-            val pidCodes = prefs[selectedPidsKey] ?: return
+            val pidCodes = prefs[selectedPidsKey] ?: return@withContext
             _selectedPids.value = pidCodes.mapNotNull { ObdPid.fromCode(it) }
         } catch (e: Exception) {
             _selectedPids.value = emptyList()
         }
     }
 
-    suspend fun saveSession(session: LogSession) {
+    suspend fun saveSession(session: LogSession) = withContext(Dispatchers.IO) {
         val currentSessions = _sessions.value.toMutableList()
         // Keep only last 20 sessions
         currentSessions.add(session)
@@ -102,28 +102,36 @@ class LogSessionRepository @Inject constructor(
         persistSessions(trimmed)
     }
 
-    suspend fun deleteSession(sessionId: String) {
+    suspend fun deleteSession(sessionId: String) = withContext(Dispatchers.IO) {
         val updated = _sessions.value.filter { it.id != sessionId }
         _sessions.value = updated
         persistSessions(updated)
     }
 
-    suspend fun clearAllSessions() {
+    suspend fun clearAllSessions() = withContext(Dispatchers.IO) {
         _sessions.value = emptyList()
         persistSessions(emptyList())
     }
 
     private suspend fun persistSessions(sessions: List<LogSession>) {
-        val serialized = sessions.map { it.toSerializable() }
-        context.dataStore.edit { prefs ->
-            prefs[sessionsKey] = json.encodeToString(serialized)
+        try {
+            val serialized = sessions.map { it.toSerializable() }
+            context.dataStore.edit { prefs ->
+                prefs[sessionsKey] = json.encodeToString(serialized)
+            }
+        } catch (e: Exception) {
+            // Ignore persistence errors
         }
     }
 
-    suspend fun saveSelectedPids(pids: List<ObdPid>) {
+    suspend fun saveSelectedPids(pids: List<ObdPid>) = withContext(Dispatchers.IO) {
         _selectedPids.value = pids
-        context.dataStore.edit { prefs ->
-            prefs[selectedPidsKey] = pids.map { it.code }.toSet()
+        try {
+            context.dataStore.edit { prefs ->
+                prefs[selectedPidsKey] = pids.map { it.code }.toSet()
+            }
+        } catch (e: Exception) {
+            // Ignore persistence errors
         }
     }
 
@@ -144,9 +152,11 @@ class LogSessionRepository @Inject constructor(
             dataPoints = dataPoints.map { dp ->
                 LoggedDataPoint(
                     timestamp = dp.timestamp,
-                    pidValues = dp.pidValues.mapKeys { (code, _) ->
-                        ObdPid.fromCode(code) ?: ObdPid.ENGINE_RPM
-                    }.filterKeys { it != ObdPid.ENGINE_RPM || dp.pidValues.containsKey("0C") }
+                    pidValues = dp.pidValues
+                        .mapNotNull { (code, value) ->
+                            ObdPid.fromCode(code)?.let { pid -> pid to value }
+                        }
+                        .toMap()
                 )
             }
         )
