@@ -3,8 +3,7 @@ package com.odbplus.app.nav
 import com.odbplus.app.ui.ConnectScreen
 import com.odbplus.app.ui.LiveScreen
 import com.odbplus.app.ui.CodesScreen
-import com.odbplus.app.ui.DiagnosticsScreen
-import com.odbplus.app.ui.EcuProfileScreen
+import com.odbplus.app.ui.AiChatScreen
 import com.odbplus.app.ui.LogsScreen
 
 import androidx.compose.material3.*
@@ -53,7 +52,7 @@ fun AppNavHost(nav: NavHostController, modifier: Modifier = Modifier) {
             )
         }
         composable(Dest.Codes.route) { CodesScreen() }
-        composable(Dest.Diagnostics.route) { DiagnosticsScreen() }
+        composable(Dest.Diagnostics.route) { AiChatScreen() }
     }
 }
 
