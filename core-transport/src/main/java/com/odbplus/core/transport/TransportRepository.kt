@@ -14,6 +14,7 @@ interface TransportRepository {
     suspend fun connect(address: String, port: Int, isBluetooth: Boolean)
     suspend fun sendAndAwait(cmd: String, timeoutMs: Long = TransportConstants.DEFAULT_RESPONSE_TIMEOUT_MS)
     suspend fun disconnect()
+    fun clearLogs()
 }
 
 @Singleton
@@ -32,6 +33,10 @@ class TransportRepositoryImpl @Inject constructor(
 
     private fun addLog(line: String) {
         _logLines.update { (it + line).takeLast(TransportConstants.MAX_LOG_LINES) }
+    }
+
+    override fun clearLogs() {
+        _logLines.value = emptyList()
     }
 
     override suspend fun connect(address: String, port: Int, isBluetooth: Boolean) {

@@ -7,6 +7,7 @@ import com.odbplus.app.ai.data.ChatMessage
 import com.odbplus.app.ai.data.VehicleContext
 import com.odbplus.app.ai.data.VehicleInfo
 import com.odbplus.app.live.LogSessionRepository
+import com.odbplus.app.parts.PartsRepository
 import com.odbplus.core.protocol.ObdService
 import com.odbplus.core.transport.ConnectionState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -45,7 +46,8 @@ class AiChatViewModel @Inject constructor(
     private val claudeApiService: ClaudeApiService,
     private val obdService: ObdService,
     private val logSessionRepository: LogSessionRepository,
-    private val vehicleInfoRepository: VehicleInfoRepository
+    private val vehicleInfoRepository: VehicleInfoRepository,
+    private val partsRepository: PartsRepository
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(AiChatUiState())
@@ -268,6 +270,12 @@ class AiChatViewModel @Inject constructor(
                     if (responseText.isNotBlank()) {
                         val assistantMessage = ChatMessage.assistantMessage(responseText)
                         chatRepository.addMessage(assistantMessage)
+
+                        // Parse and save any recommended parts from the response
+                        val recommendedParts = partsRepository.parsePartsFromAiResponse(responseText)
+                        if (recommendedParts.isNotEmpty()) {
+                            partsRepository.addParts(recommendedParts)
+                        }
                     }
 
                     _uiState.update { it.copy(isSending = false) }

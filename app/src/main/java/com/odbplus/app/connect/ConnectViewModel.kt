@@ -44,6 +44,10 @@ class ConnectViewModel @Inject constructor(
         }
     }
 
+    fun clearLogs() {
+        repo.clearLogs()
+    }
+
     override fun onCleared() {
         if (repo.connectionState.value == ConnectionState.CONNECTED) {
             disconnect()
