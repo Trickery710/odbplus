@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Kia Forums - Get help with Kia Telluride, Sportage, Sorento, Forte, K5 and more. Expert advice for all Kia models and years.">
+    <title>Kia Forums | ODB+</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../../css/styles.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="navbar-container">
+            <a href="../../index.html" class="navbar-brand">
+                <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="40" height="40" rx="8" fill="url(#gradient)"/>
+                    <path d="M12 20C12 15.5817 15.5817 12 20 12C24.4183 12 28 15.5817 28 20C28 24.4183 24.4183 28 20 28" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+                    <path d="M20 16V20L23 23" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    <circle cx="20" cy="20" r="2" fill="white"/>
+                    <defs>
+                        <linearGradient id="gradient" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse">
+                            <stop stop-color="#2563eb"/>
+                            <stop offset="1" stop-color="#10b981"/>
+                        </linearGradient>
+                    </defs>
+                </svg>
+                <span>ODB+</span>
+            </a>
+            <ul class="navbar-menu">
+                <li><a href="../../index.html">Home</a></li>
+                <li><a href="../codes/index.html">Error Codes</a></li>
+                <li><a href="index.html" class="active">Forums</a></li>
+                <li><a href="../sensors/index.html">Sensors</a></li>
+            </ul>
+            <div class="navbar-actions">
+                <a href="../auth/login.html" class="btn btn-secondary">Log In</a>
+                <a href="../auth/signup.html" class="btn btn-primary">Sign Up</a>
+            </div>
+        </div>
+    </nav>
+
+    <main style="padding-top: 100px; padding-bottom: 4rem;">
+        <div class="container">
+            <!-- Breadcrumb -->
+            <nav class="breadcrumb mb-4">
+                <a href="index.html">Forums</a>
+                <span class="separator">/</span>
+                <span class="current">Kia</span>
+            </nav>
+
+            <!-- Header -->
+            <div class="make-header mb-4">
+                <div class="make-logo">
+                    <img src="https://logo.clearbit.com/kia.com" alt="Kia" onerror="this.parentElement.innerHTML='<span style=font-size:2rem;font-weight:bold>K</span>'">
+                </div>
+                <div class="make-info">
+                    <h1>Kia Forums</h1>
+                    <p>Get expert help for your Kia. Select your model below or browse recent discussions.</p>
+                </div>
+            </div>
+
+            <!-- Search -->
+            <div class="search-box mb-4" style="max-width: 100%;">
+                <svg class="search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="11" cy="11" r="8"/>
+                    <path d="M21 21l-4.35-4.35"/>
+                </svg>
+                <input type="text" class="search-input" id="modelSearch" placeholder="Search Kia models...">
+            </div>
+
+            <!-- Popular Models -->
+            <h2 class="mb-3">Popular Models</h2>
+            <div class="model-grid mb-5">
+                <a href="kia-telluride.html" class="model-card">
+                    <div class="model-image">
+                        <svg viewBox="0 0 100 60" fill="none">
+                            <rect x="5" y="18" width="90" height="32" rx="5" fill="var(--primary)"/>
+                            <rect x="14" y="6" width="62" height="18" rx="3" fill="var(--primary)"/>
+                            <circle cx="25" cy="50" r="9" fill="#333"/>
+                            <circle cx="75" cy="50" r="9" fill="#333"/>
+                        </svg>
+                    </div>
+                    <div class="model-info">
+                        <h3>Telluride</h3>
+                        <p>2019 - Present</p>
+                    </div>
+                </a>
+                <a href="kia-sportage.html" class="model-card">
+                    <div class="model-image">
+                        <svg viewBox="0 0 100 60" fill="none">
+                            <rect x="10" y="22" width="80" height="28" rx="5" fill="var(--primary)"/>
+                            <rect x="18" y="10" width="52" height="17" rx="3" fill="var(--primary)"/>
+                            <circle cx="25" cy="50" r="8" fill="#333"/>
+                            <circle cx="75" cy="50" r="8" fill="#333"/>
+                        </svg>
+                    </div>
+                    <div class="model-info">
+                        <h3>Sportage</h3>
+                        <p>1993 - Present</p>
+                    </div>
+                </a>
+                <a href="kia-sorento.html" class="model-card">
+                    <div class="model-image">
+                        <svg viewBox="0 0 100 60" fill="none">
+                            <rect x="8" y="20" width="84" height="30" rx="5" fill="var(--primary)"/>
+                            <rect x="16" y="8" width="58" height="18" rx="3" fill="var(--primary)"/>
+                            <circle cx="25" cy="50" r="9" fill="#333"/>
+                            <circle cx="75" cy="50" r="9" fill="#333"/>
+                        </svg>
+                    </div>
+                    <div class="model-info">
+                        <h3>Sorento</h3>
+                        <p>2002 - Present</p>
+                    </div>
+                </a>
+                <a href="kia-forte.html" class="model-card">
+                    <div class="model-image">
+                        <svg viewBox="0 0 100 60" fill="none">
+                            <rect x="10" y="25" width="80" height="25" rx="5" fill="var(--primary)"/>
+                            <rect x="20" y="15" width="50" height="15" rx="3" fill="var(--primary)"/>
+                            <circle cx="25" cy="50" r="8" fill="#333"/>
+                            <circle cx="75" cy="50" r="8" fill="#333"/>
+                        </svg>
+                    </div>
+                    <div class="model-info">
+                        <h3>Forte</h3>
+                        <p>2008 - Present</p>
+                    </div>
+                </a>
+                <a href="kia-k5.html" class="model-card">
+                    <div class="model-image">
+                        <svg viewBox="0 0 100 60" fill="none">
+                            <rect x="8" y="24" width="84" height="26" rx="5" fill="var(--primary)"/>
+                            <rect x="18" y="14" width="54" height="15" rx="3" fill="var(--primary)"/>
+                            <circle cx="25" cy="50" r="8" fill="#333"/>
+                            <circle cx="75" cy="50" r="8" fill="#333"/>
+                        </svg>
+                    </div>
+                    <div class="model-info">
+                        <h3>K5</h3>
+                        <p>2020 - Present</p>
+                    </div>
+                </a>
+                <a href="kia-seltos.html" class="model-card">
+                    <div class="model-image">
+                        <svg viewBox="0 0 100 60" fill="none">
+                            <rect x="12" y="24" width="76" height="26" rx="5" fill="var(--primary)"/>
+                            <rect x="20" y="14" width="48" height="15" rx="3" fill="var(--primary)"/>
+                            <circle cx="28" cy="50" r="8" fill="#333"/>
+                            <circle cx="72" cy="50" r="8" fill="#333"/>
+                        </svg>
+                    </div>
+                    <div class="model-info">
+                        <h3>Seltos</h3>
+                        <p>2019 - Present</p>
+                    </div>
+                </a>
+            </div>
+
+            <!-- All Models A-Z -->
+            <h2 class="mb-3">All Models</h2>
+            <div class="model-list mb-5">
+                <div class="model-list-section">
+                    <h3 class="model-list-letter">C</h3>
+                    <ul>
+                        <li><a href="#">Cadenza</a></li>
+                        <li><a href="#">Carnival</a></li>
+                    </ul>
+                </div>
+                <div class="model-list-section">
+                    <h3 class="model-list-letter">E</h3>
+                    <ul>
+                        <li><a href="#">EV6</a></li>
+                        <li><a href="#">EV9</a></li>
+                    </ul>
+                </div>
+                <div class="model-list-section">
+                    <h3 class="model-list-letter">F</h3>
+                    <ul>
+                        <li><a href="kia-forte.html">Forte</a></li>
+                        <li><a href="#">Forte5</a></li>
+                    </ul>
+                </div>
+                <div class="model-list-section">
+                    <h3 class="model-list-letter">K</h3>
+                    <ul>
+                        <li><a href="kia-k5.html">K5</a></li>
+                        <li><a href="#">K5 GT</a></li>
+                    </ul>
+                </div>
+                <div class="model-list-section">
+                    <h3 class="model-list-letter">N</h3>
+                    <ul>
+                        <li><a href="#">Niro</a></li>
+                        <li><a href="#">Niro EV</a></li>
+                    </ul>
+                </div>
+                <div class="model-list-section">
+                    <h3 class="model-list-letter">O</h3>
+                    <ul>
+                        <li><a href="#">Optima</a></li>
+                    </ul>
+                </div>
+                <div class="model-list-section">
+                    <h3 class="model-list-letter">R</h3>
+                    <ul>
+                        <li><a href="#">Rio</a></li>
+                    </ul>
+                </div>
+                <div class="model-list-section">
+                    <h3 class="model-list-letter">S</h3>
+                    <ul>
+                        <li><a href="#">Sedona</a></li>
+                        <li><a href="kia-seltos.html">Seltos</a></li>
+                        <li><a href="kia-sorento.html">Sorento</a></li>
+                        <li><a href="#">Soul</a></li>
+                        <li><a href="kia-sportage.html">Sportage</a></li>
+                        <li><a href="#">Stinger</a></li>
+                    </ul>
+                </div>
+                <div class="model-list-section">
+                    <h3 class="model-list-letter">T</h3>
+                    <ul>
+                        <li><a href="kia-telluride.html">Telluride</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Recent Discussions -->
+            <h2 class="mb-3">Recent Discussions</h2>
+            <div class="thread-list">
+                <a href="#" class="thread-item">
+                    <div class="thread-content">
+                        <h4>Oil dilution issue - 2022 Telluride 3.8L</h4>
+                        <p class="thread-meta">
+                            <span class="thread-author">TellurideFamily</span>
+                            <span class="thread-model">2022 Telluride SX 3.8L</span>
+                            <span class="thread-time">2 hours ago</span>
+                        </p>
+                    </div>
+                </a>
+                <a href="#" class="thread-item">
+                    <div class="thread-content">
+                        <h4>DCT shudder at low speeds - 2021 Forte</h4>
+                        <p class="thread-meta">
+                            <span class="thread-author">ForteDCT</span>
+                            <span class="thread-model">2021 Forte GT-Line 2.0L</span>
+                            <span class="thread-time">5 hours ago</span>
+                        </p>
+                    </div>
+                </a>
+                <a href="#" class="thread-item">
+                    <div class="thread-content">
+                        <h4>EV6 range dropping in cold weather</h4>
+                        <p class="thread-meta">
+                            <span class="thread-author">EV6Owner</span>
+                            <span class="thread-model">2022 EV6 GT-Line AWD</span>
+                            <span class="thread-time">8 hours ago</span>
+                        </p>
+                    </div>
+                </a>
+                <a href="#" class="thread-item">
+                    <div class="thread-content">
+                        <h4>Stinger 3.3T engine knock recall update</h4>
+                        <p class="thread-meta">
+                            <span class="thread-author">StingerGT</span>
+                            <span class="thread-model">2019 Stinger GT 3.3T</span>
+                            <span class="thread-time">12 hours ago</span>
+                        </p>
+                    </div>
+                </a>
+                <a href="#" class="thread-item">
+                    <div class="thread-content">
+                        <h4>P0420 Catalyst efficiency - 2018 Sportage</h4>
+                        <p class="thread-meta">
+                            <span class="thread-author">SportageAWD</span>
+                            <span class="thread-model">2018 Sportage EX 2.4L</span>
+                            <span class="thread-time">1 day ago</span>
+                        </p>
+                    </div>
+                </a>
+            </div>
+
+            <div style="text-align: center; margin-top: 2rem;">
+                <button class="btn btn-outline">Load More Discussions</button>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-bottom" style="border-top: none; padding-top: 0;">
+                <p>&copy; 2024 ODB+. All rights reserved.</p>
+                <div class="footer-legal">
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Terms of Service</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../../js/main.js"></script>
+</body>
+</html>

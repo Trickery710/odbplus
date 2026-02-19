@@ -63,6 +63,11 @@ dependencies {
     implementation(libs.ktor.client.content.negotiation)
     implementation(libs.ktor.serialization.kotlinx.json)
 
+    // Google Sign-In (Credential Manager)
+    implementation(libs.credentials)
+    implementation(libs.credentials.play.services)
+    implementation(libs.google.id)
+
     // Desugaring
     coreLibraryDesugaring(libs.desugar.jdk.libs)
 

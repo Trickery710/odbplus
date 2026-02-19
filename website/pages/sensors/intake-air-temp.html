@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Intake Air Temperature (IAT) Sensor Guide - Learn how IAT sensors work, common failure symptoms, testing procedures, and their role in fuel calculation.">
+    <title>Intake Air Temperature (IAT) Sensor Guide | ODB+</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../../css/styles.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="navbar-container">
+            <a href="../../index.html" class="navbar-brand">
+                <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="40" height="40" rx="8" fill="url(#gradient)"/>
+                    <path d="M12 20C12 15.5817 15.5817 12 20 12C24.4183 12 28 15.5817 28 20C28 24.4183 24.4183 28 20 28" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+                    <path d="M20 16V20L23 23" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    <circle cx="20" cy="20" r="2" fill="white"/>
+                    <defs>
+                        <linearGradient id="gradient" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse">
+                            <stop stop-color="#2563eb"/>
+                            <stop offset="1" stop-color="#10b981"/>
+                        </linearGradient>
+                    </defs>
+                </svg>
+                <span>ODB+</span>
+            </a>
+            <ul class="navbar-menu">
+                <li><a href="../../index.html">Home</a></li>
+                <li><a href="../codes/index.html">Error Codes</a></li>
+                <li><a href="../forums/index.html">Forums</a></li>
+                <li><a href="index.html" class="active">Sensors</a></li>
+            </ul>
+            <div class="navbar-actions">
+                <a href="../auth/login.html" class="btn btn-secondary">Log In</a>
+                <a href="../auth/signup.html" class="btn btn-primary">Sign Up</a>
+            </div>
+        </div>
+    </nav>
+
+    <main style="padding-top: 100px; padding-bottom: 4rem;">
+        <div class="container" style="max-width: 900px;">
+            <!-- Breadcrumb -->
+            <nav class="breadcrumb mb-4">
+                <a href="index.html">Sensors</a>
+                <span class="separator">/</span>
+                <a href="index.html#temperature">Temperature</a>
+                <span class="separator">/</span>
+                <span class="current">IAT Sensor</span>
+            </nav>
+
+            <!-- Sensor Header -->
+            <div class="sensor-detail-header mb-4">
+                <div class="sensor-icon-lg">
+                    <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="1.5">
+                        <path d="M14 14.76V3.5a2.5 2.5 0 0 0-5 0v11.26a4.5 4.5 0 1 0 5 0z"/>
+                        <path d="M17 8h2"/>
+                        <path d="M17 12h4"/>
+                    </svg>
+                </div>
+                <div class="sensor-detail-info">
+                    <h1>Intake Air Temperature (IAT) Sensor</h1>
+                    <p class="sensor-subtitle">Also known as: Air Charge Temperature (ACT), Manifold Air Temperature (MAT)</p>
+                    <div class="sensor-meta">
+                        <span class="badge badge-primary">Temperature</span>
+                        <span class="badge badge-success">Fuel Calculation</span>
+                        <span class="badge badge-secondary">Moderate</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Facts -->
+            <div class="quick-info-grid mb-4">
+                <div class="quick-info-card">
+                    <h4>Location</h4>
+                    <p>Air Intake or MAF Housing</p>
+                </div>
+                <div class="quick-info-card">
+                    <h4>Signal Type</h4>
+                    <p>Variable Resistance (NTC)</p>
+                </div>
+                <div class="quick-info-card">
+                    <h4>Lifespan</h4>
+                    <p>150,000+ miles</p>
+                </div>
+                <div class="quick-info-card">
+                    <h4>Replacement Cost</h4>
+                    <p>$15 - $80</p>
+                </div>
+            </div>
+
+            <!-- Overview -->
+            <section class="content-section mb-4">
+                <h2>What Is an IAT Sensor?</h2>
+                <p>The Intake Air Temperature (IAT) sensor measures the temperature of the air entering the engine. This information is vital for the Engine Control Module (ECM) to calculate air density and adjust fuel delivery accordingly - cold air is denser and requires more fuel than hot air for the same air mass reading.</p>
+
+                <p>The IAT sensor is commonly located in the air intake tube, integrated into the MAF sensor housing, or in the intake manifold. On turbocharged vehicles, an additional IAT sensor may be located after the intercooler to measure charge air temperature.</p>
+
+                <div class="info-box">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"/>
+                        <line x1="12" y1="16" x2="12" y2="12"/>
+                        <line x1="12" y1="8" x2="12.01" y2="8"/>
+                    </svg>
+                    <div>
+                        <strong>Speed-Density Systems:</strong> On vehicles without a MAF sensor (speed-density systems), the IAT sensor is especially critical. The ECM calculates air mass using MAP, IAT, and RPM data. A faulty IAT can significantly impact fuel mixture accuracy.
+                    </div>
+                </div>
+            </section>
+
+            <!-- How It Works -->
+            <section class="content-section mb-4">
+                <h2>How IAT Sensors Work</h2>
+
+                <h4>Thermistor Technology</h4>
+                <p>The IAT sensor uses a thermistor - a resistor that changes resistance based on temperature. Most IAT sensors use a Negative Temperature Coefficient (NTC) thermistor, meaning resistance decreases as temperature increases. This is the same technology used in coolant temperature sensors.</p>
+
+                <h4 class="mt-3">Signal Circuit</h4>
+                <p>The ECM supplies a 5-volt reference voltage to the sensor. As the thermistor resistance changes with temperature, it creates a voltage divider effect. The ECM reads this varying voltage (typically 0.5V to 4.5V) and converts it to a temperature value using a calibration table.</p>
+
+                <h4 class="mt-3">Air Density Correction</h4>
+                <p>The IAT reading allows the ECM to correct for air density changes. Hot air is less dense (fewer oxygen molecules per volume) than cold air. Without IAT compensation, hot weather would cause a rich condition, and cold weather would cause lean operation.</p>
+            </section>
+
+            <!-- Normal Values -->
+            <section class="content-section mb-4">
+                <h2>Normal IAT Sensor Readings</h2>
+
+                <div class="data-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Temperature</th>
+                                <th>Typical Resistance</th>
+                                <th>Typical Voltage</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>-4°F (-20°C)</td>
+                                <td>13,000 - 17,000 ohms</td>
+                                <td>4.0 - 4.5V</td>
+                            </tr>
+                            <tr>
+                                <td>32°F (0°C)</td>
+                                <td>5,000 - 7,000 ohms</td>
+                                <td>3.3 - 3.8V</td>
+                            </tr>
+                            <tr>
+                                <td>68°F (20°C)</td>
+                                <td>2,000 - 3,000 ohms</td>
+                                <td>2.5 - 3.0V</td>
+                            </tr>
+                            <tr>
+                                <td>104°F (40°C)</td>
+                                <td>1,000 - 1,500 ohms</td>
+                                <td>1.5 - 2.0V</td>
+                            </tr>
+                            <tr>
+                                <td>176°F (80°C)</td>
+                                <td>250 - 400 ohms</td>
+                                <td>0.5 - 1.0V</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <p class="mt-3"><strong>Cold Start Check:</strong> On a cold engine (sitting overnight), the IAT reading should closely match the ambient temperature and the ECT reading. Large differences indicate a sensor problem.</p>
+            </section>
+
+            <!-- Failure Symptoms -->
+            <section class="content-section mb-4">
+                <h2>Symptoms of a Failing IAT Sensor</h2>
+                <ul class="symptom-list">
+                    <li>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="2">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                        </svg>
+                        <div>
+                            <strong>Check Engine Light with P0110-P0114 Codes</strong>
+                            <p>IAT circuit malfunction, range/performance, or signal codes</p>
+                        </div>
+                    </li>
+                    <li>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="2">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                        </svg>
+                        <div>
+                            <strong>Hard Starting in Cold Weather</strong>
+                            <p>Sensor reading too warm causes lean cold-start mixture</p>
+                        </div>
+                    </li>
+                    <li>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="2">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                        </svg>
+                        <div>
+                            <strong>Rough Idle or Stalling</strong>
+                            <p>Incorrect air density calculation affects idle fuel mixture</p>
+                        </div>
+                    </li>
+                    <li>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="2">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                        </svg>
+                        <div>
+                            <strong>Decreased Fuel Economy</strong>
+                            <p>Incorrect fuel mixture wastes fuel</p>
+                        </div>
+                    </li>
+                    <li>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="2">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                        </svg>
+                        <div>
+                            <strong>Hesitation During Acceleration</strong>
+                            <p>Fuel mixture doesn't match actual air conditions</p>
+                        </div>
+                    </li>
+                    <li>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="2">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                        </svg>
+                        <div>
+                            <strong>Unrealistic Temperature Readings</strong>
+                            <p>Scanner shows -40°F or 300°F regardless of actual temperature</p>
+                        </div>
+                    </li>
+                </ul>
+            </section>
+
+            <!-- Common Causes -->
+            <section class="content-section mb-4">
+                <h2>What Causes IAT Sensor Problems?</h2>
+                <div class="causes-grid">
+                    <div class="cause-category">
+                        <h4>Sensor Failure</h4>
+                        <ul>
+                            <li>Thermistor degradation</li>
+                            <li>Internal open circuit</li>
+                            <li>Internal short circuit</li>
+                            <li>Physical damage</li>
+                        </ul>
+                    </div>
+                    <div class="cause-category">
+                        <h4>Contamination</h4>
+                        <ul>
+                            <li>Oil from aftermarket air filters</li>
+                            <li>Dirt/dust buildup</li>
+                            <li>PCV oil mist</li>
+                            <li>Carbon deposits</li>
+                        </ul>
+                    </div>
+                    <div class="cause-category">
+                        <h4>Wiring Issues</h4>
+                        <ul>
+                            <li>Damaged wiring harness</li>
+                            <li>Corroded connector pins</li>
+                            <li>Poor ground connection</li>
+                            <li>Water intrusion</li>
+                        </ul>
+                    </div>
+                    <div class="cause-category">
+                        <h4>Installation Issues</h4>
+                        <ul>
+                            <li>Sensor not fully seated</li>
+                            <li>Heat soak from engine</li>
+                            <li>Incorrect sensor location</li>
+                            <li>Loose connection</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Testing Procedures -->
+            <section class="content-section mb-4">
+                <h2>How to Test an IAT Sensor</h2>
+
+                <div class="diagnostic-steps">
+                    <div class="step">
+                        <div class="step-number">1</div>
+                        <div class="step-content">
+                            <h4>Cold Engine Comparison</h4>
+                            <p>On a cold engine, compare IAT reading to ECT (coolant temperature) using your ODB+ scanner. Both should be within a few degrees of ambient temperature. Large differences indicate a problem with one of the sensors.</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">2</div>
+                        <div class="step-content">
+                            <h4>Check for Realistic Values</h4>
+                            <p>Monitor IAT while driving. It should increase slightly above ambient due to engine heat but remain reasonable (typically 10-40°F above ambient). Readings stuck at -40°F indicate an open circuit; stuck at 300°F indicates a short.</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">3</div>
+                        <div class="step-content">
+                            <h4>Resistance Test</h4>
+                            <p>Disconnect the sensor and measure resistance across the terminals. Compare to temperature/resistance specifications. Test at different temperatures by warming the sensor with a heat gun (carefully) to verify it changes correctly.</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">4</div>
+                        <div class="step-content">
+                            <h4>Check Reference Voltage</h4>
+                            <p>With sensor disconnected and ignition on, check for 5V reference on the supply wire. If missing, check wiring back to the ECM or look for a shared 5V reference circuit problem.</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">5</div>
+                        <div class="step-content">
+                            <h4>Visual Inspection</h4>
+                            <p>Inspect the sensor tip for contamination, damage, or corrosion. Check the connector for bent pins, corrosion, or water damage. Clean any contamination carefully.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Related Codes -->
+            <section class="content-section mb-4">
+                <h2>Related Diagnostic Codes</h2>
+                <div class="related-codes-grid">
+                    <a href="../codes/index.html" class="related-code">
+                        <span class="code-badge-sm">P0110</span>
+                        <span>IAT Circuit Malfunction</span>
+                    </a>
+                    <a href="../codes/index.html" class="related-code">
+                        <span class="code-badge-sm">P0111</span>
+                        <span>IAT Range/Performance</span>
+                    </a>
+                    <a href="../codes/index.html" class="related-code">
+                        <span class="code-badge-sm">P0112</span>
+                        <span>IAT Circuit Low (Hot)</span>
+                    </a>
+                    <a href="../codes/index.html" class="related-code">
+                        <span class="code-badge-sm">P0113</span>
+                        <span>IAT Circuit High (Cold)</span>
+                    </a>
+                    <a href="../codes/P0171.html" class="related-code">
+                        <span class="code-badge-sm">P0171</span>
+                        <span>System Too Lean Bank 1</span>
+                    </a>
+                    <a href="../codes/index.html" class="related-code">
+                        <span class="code-badge-sm">P0172</span>
+                        <span>System Too Rich Bank 1</span>
+                    </a>
+                </div>
+            </section>
+
+            <!-- Forum Discussion -->
+            <section class="content-section mb-4">
+                <h2>Community Discussion</h2>
+                <p class="mb-3">Have questions about IAT sensors? Get help from experienced mechanics and fellow car owners.</p>
+                <a href="../forums/index.html" class="btn btn-primary">Visit Forums</a>
+                <a href="../forums/index.html?search=IAT+sensor" class="btn btn-outline" style="margin-left: 0.5rem;">Search IAT Sensor Threads</a>
+            </section>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-bottom" style="border-top: none; padding-top: 0;">
+                <p>&copy; 2024 ODB+. All rights reserved.</p>
+                <div class="footer-legal">
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Terms of Service</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../../js/main.js"></script>
+</body>
+</html>

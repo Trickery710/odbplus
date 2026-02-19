@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="P0171 System Too Lean Bank 1 - Complete guide with causes, symptoms, diagnostic steps, and repair information.">
+    <title>P0171 - System Too Lean Bank 1 | ODB+</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../../css/styles.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="navbar-container">
+            <a href="../../index.html" class="navbar-brand">
+                <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="40" height="40" rx="8" fill="url(#gradient)"/>
+                    <path d="M12 20C12 15.5817 15.5817 12 20 12C24.4183 12 28 15.5817 28 20C28 24.4183 24.4183 28 20 28" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+                    <path d="M20 16V20L23 23" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    <circle cx="20" cy="20" r="2" fill="white"/>
+                    <defs>
+                        <linearGradient id="gradient" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse">
+                            <stop stop-color="#2563eb"/>
+                            <stop offset="1" stop-color="#10b981"/>
+                        </linearGradient>
+                    </defs>
+                </svg>
+                <span>ODB+</span>
+            </a>
+            <ul class="navbar-menu">
+                <li><a href="../../index.html">Home</a></li>
+                <li><a href="index.html" class="active">Error Codes</a></li>
+                <li><a href="../forums/index.html">Forums</a></li>
+                <li><a href="../sensors/index.html">Sensors</a></li>
+            </ul>
+            <div class="navbar-actions">
+                <a href="../auth/login.html" class="btn btn-secondary">Log In</a>
+                <a href="../auth/signup.html" class="btn btn-primary">Sign Up</a>
+            </div>
+        </div>
+    </nav>
+
+    <main style="padding-top: 100px; padding-bottom: 4rem;">
+        <div class="container" style="max-width: 900px;">
+            <!-- Breadcrumb -->
+            <nav class="breadcrumb mb-4">
+                <a href="index.html">Error Codes</a>
+                <span class="separator">/</span>
+                <a href="index.html#powertrain">Powertrain</a>
+                <span class="separator">/</span>
+                <span class="current">P0171</span>
+            </nav>
+
+            <!-- Code Header -->
+            <div class="code-detail-header mb-4">
+                <div class="code-badge-lg">P0171</div>
+                <div class="code-detail-info">
+                    <h1>System Too Lean (Bank 1)</h1>
+                    <div class="code-meta">
+                        <span class="badge badge-danger">Powertrain</span>
+                        <span class="badge badge-secondary">Generic (SAE)</span>
+                        <span class="severity-medium">Severity: Medium</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Info -->
+            <div class="quick-info-grid mb-4">
+                <div class="quick-info-card">
+                    <h4>System</h4>
+                    <p>Fuel and Air Metering</p>
+                </div>
+                <div class="quick-info-card">
+                    <h4>Subsystem</h4>
+                    <p>Fuel Trim / O2 Sensor</p>
+                </div>
+                <div class="quick-info-card">
+                    <h4>Common Fix</h4>
+                    <p>Vacuum Leak / MAF Sensor</p>
+                </div>
+                <div class="quick-info-card">
+                    <h4>Repair Cost</h4>
+                    <p>$50 - $400</p>
+                </div>
+            </div>
+
+            <!-- Description -->
+            <section class="content-section mb-4">
+                <h2>What Does P0171 Mean?</h2>
+                <p>The P0171 code indicates that the engine control module (ECM) has detected that the air/fuel mixture on Bank 1 is running too lean. "Lean" means there's too much air and not enough fuel in the combustion mixture.</p>
+
+                <p>The ECM continuously monitors the oxygen (O2) sensors to determine if the fuel mixture is correct. When it detects a lean condition, it adds more fuel through the fuel injectors. The amount of extra fuel needed is tracked as "fuel trim." When long-term fuel trim exceeds approximately +25%, the P0171 code is set.</p>
+
+                <div class="info-box">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"/>
+                        <line x1="12" y1="16" x2="12" y2="12"/>
+                        <line x1="12" y1="8" x2="12.01" y2="8"/>
+                    </svg>
+                    <div>
+                        <strong>Bank 1 Location:</strong> On V6/V8 engines, Bank 1 is the side containing cylinder #1. On inline 4-cylinder engines, there's only one bank. Check your vehicle's repair manual to confirm which side is Bank 1.
+                    </div>
+                </div>
+            </section>
+
+            <!-- How the System Works -->
+            <section class="content-section mb-4">
+                <h2>How the Fuel System Works</h2>
+                <p>Modern engines use closed-loop fuel control to maintain the ideal air/fuel ratio of 14.7:1 (stoichiometric). This ratio provides complete combustion and optimal catalytic converter operation.</p>
+
+                <div class="system-diagram">
+                    <h4>Fuel Control Components:</h4>
+                    <ul class="component-list">
+                        <li>
+                            <strong>Mass Airflow Sensor (MAF):</strong> Measures the amount of air entering the engine
+                        </li>
+                        <li>
+                            <strong>Upstream O2 Sensor:</strong> Monitors exhaust oxygen content before the catalytic converter
+                        </li>
+                        <li>
+                            <strong>Fuel Injectors:</strong> Spray precise amounts of fuel based on ECM calculations
+                        </li>
+                        <li>
+                            <strong>Fuel Pressure Regulator:</strong> Maintains consistent fuel pressure to injectors
+                        </li>
+                        <li>
+                            <strong>ECM (Engine Computer):</strong> Calculates fuel delivery based on sensor inputs
+                        </li>
+                    </ul>
+                </div>
+
+                <h4 class="mt-3">Understanding Fuel Trim</h4>
+                <p>Fuel trim values show how much the ECM is adjusting fuel delivery:</p>
+                <ul>
+                    <li><strong>0%:</strong> No correction needed - running at calculated value</li>
+                    <li><strong>Positive values (+):</strong> ECM is adding fuel (lean condition)</li>
+                    <li><strong>Negative values (-):</strong> ECM is removing fuel (rich condition)</li>
+                    <li><strong>Normal range:</strong> -10% to +10%</li>
+                </ul>
+            </section>
+
+            <!-- Symptoms -->
+            <section class="content-section mb-4">
+                <h2>Common Symptoms</h2>
+                <ul class="symptom-list">
+                    <li>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="2">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                        </svg>
+                        <div>
+                            <strong>Check Engine Light</strong>
+                            <p>Usually steady, not flashing unless misfires occur</p>
+                        </div>
+                    </li>
+                    <li>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="2">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                        </svg>
+                        <div>
+                            <strong>Rough or High Idle</strong>
+                            <p>Engine may idle roughly or higher than normal as ECM compensates</p>
+                        </div>
+                    </li>
+                    <li>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="2">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                        </svg>
+                        <div>
+                            <strong>Hesitation on Acceleration</strong>
+                            <p>Stumbling or hesitation when pressing the gas pedal</p>
+                        </div>
+                    </li>
+                    <li>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="2">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                        </svg>
+                        <div>
+                            <strong>Hard Starting</strong>
+                            <p>Engine may be difficult to start, especially when cold</p>
+                        </div>
+                    </li>
+                    <li>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="2">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                        </svg>
+                        <div>
+                            <strong>Decreased Fuel Economy</strong>
+                            <p>Counterintuitively, a lean condition often hurts fuel economy due to incomplete combustion</p>
+                        </div>
+                    </li>
+                    <li>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="2">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                        </svg>
+                        <div>
+                            <strong>Hissing Sound from Engine</strong>
+                            <p>Audible vacuum leak, often more noticeable at idle</p>
+                        </div>
+                    </li>
+                </ul>
+            </section>
+
+            <!-- Possible Causes -->
+            <section class="content-section mb-4">
+                <h2>Possible Causes</h2>
+                <p>A lean condition can be caused by either too much air entering the engine or not enough fuel being delivered:</p>
+
+                <div class="causes-grid">
+                    <div class="cause-category">
+                        <h4>Too Much Air (Most Common)</h4>
+                        <ul>
+                            <li>Vacuum leak (intake manifold gasket)</li>
+                            <li>Cracked or disconnected vacuum hose</li>
+                            <li>Leaking PCV valve or hose</li>
+                            <li>Brake booster vacuum leak</li>
+                            <li>Intake air duct leak after MAF sensor</li>
+                            <li>Leaking EVAP purge valve</li>
+                        </ul>
+                    </div>
+                    <div class="cause-category">
+                        <h4>Sensor Issues</h4>
+                        <ul>
+                            <li>Dirty or faulty MAF sensor</li>
+                            <li>Faulty upstream O2 sensor</li>
+                            <li>Dirty or faulty MAP sensor</li>
+                            <li>Faulty coolant temperature sensor</li>
+                        </ul>
+                    </div>
+                    <div class="cause-category">
+                        <h4>Fuel Delivery Problems</h4>
+                        <ul>
+                            <li>Weak fuel pump (low pressure)</li>
+                            <li>Clogged fuel filter</li>
+                            <li>Clogged or dirty fuel injectors</li>
+                            <li>Leaking fuel pressure regulator</li>
+                        </ul>
+                    </div>
+                    <div class="cause-category">
+                        <h4>Other Causes</h4>
+                        <ul>
+                            <li>Exhaust leak before O2 sensor</li>
+                            <li>Low engine compression</li>
+                            <li>EGR system malfunction</li>
+                            <li>PCM software needs update</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Diagnostic Steps -->
+            <section class="content-section mb-4">
+                <h2>Diagnostic Steps</h2>
+                <div class="diagnostic-steps">
+                    <div class="step">
+                        <div class="step-number">1</div>
+                        <div class="step-content">
+                            <h4>Check Fuel Trim Values</h4>
+                            <p>Use your ODB+ scanner to view Short Term Fuel Trim (STFT) and Long Term Fuel Trim (LTFT) at idle and at 2500 RPM. Values over +10% confirm a lean condition. Note if the lean condition is worse at idle (suggests vacuum leak) or at higher RPM (suggests fuel delivery issue).</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">2</div>
+                        <div class="step-content">
+                            <h4>Listen and Look for Vacuum Leaks</h4>
+                            <p>With the engine running, listen for hissing sounds around the intake manifold, throttle body, and vacuum hoses. Visually inspect all rubber hoses for cracks or disconnections. Pay special attention to:</p>
+                            <ul>
+                                <li>PCV valve and hose</li>
+                                <li>Brake booster hose</li>
+                                <li>Intake manifold gasket area</li>
+                                <li>Throttle body gasket</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">3</div>
+                        <div class="step-content">
+                            <h4>Smoke Test (Recommended)</h4>
+                            <p>A smoke machine is the most effective way to find vacuum leaks. Smoke is introduced into the intake system and leaks become visible. Many auto parts stores rent smoke machines, or a shop can perform this test.</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">4</div>
+                        <div class="step-content">
+                            <h4>Inspect and Clean MAF Sensor</h4>
+                            <p>A contaminated MAF sensor is a very common cause of P0171. Remove the MAF sensor and inspect the sensing element for dirt or oil contamination. Clean with MAF sensor cleaner spray only - never touch the element or use other cleaners.</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">5</div>
+                        <div class="step-content">
+                            <h4>Check Fuel Pressure</h4>
+                            <p>If vacuum leaks and MAF sensor aren't the issue, test fuel pressure. Connect a fuel pressure gauge and compare to specifications (typically 40-60 PSI). Check pressure at idle, under acceleration, and watch for pressure drop over time (leaky injector).</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">6</div>
+                        <div class="step-content">
+                            <h4>Check for Exhaust Leaks</h4>
+                            <p>An exhaust leak before the O2 sensor can draw in outside air, making the sensor read lean. Inspect exhaust manifold gaskets and connections. Look for black soot marks indicating leaks.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Common Repairs -->
+            <section class="content-section mb-4">
+                <h2>Common Repairs</h2>
+                <div class="repair-list">
+                    <div class="repair-item">
+                        <div class="repair-info">
+                            <h4>Clean MAF Sensor</h4>
+                            <p>Use MAF sensor cleaner to remove contamination from sensing element.</p>
+                        </div>
+                        <div class="repair-cost">
+                            <span class="diy">DIY: $8-$15</span>
+                            <span class="shop">Shop: $50-$100</span>
+                        </div>
+                    </div>
+                    <div class="repair-item">
+                        <div class="repair-info">
+                            <h4>Replace Vacuum Hoses</h4>
+                            <p>Replace cracked or deteriorated vacuum lines causing leaks.</p>
+                        </div>
+                        <div class="repair-cost">
+                            <span class="diy">DIY: $10-$30</span>
+                            <span class="shop">Shop: $75-$150</span>
+                        </div>
+                    </div>
+                    <div class="repair-item">
+                        <div class="repair-info">
+                            <h4>Replace Intake Manifold Gasket</h4>
+                            <p>Common leak point, especially on higher mileage vehicles.</p>
+                        </div>
+                        <div class="repair-cost">
+                            <span class="diy">DIY: $30-$80</span>
+                            <span class="shop">Shop: $200-$500</span>
+                        </div>
+                    </div>
+                    <div class="repair-item">
+                        <div class="repair-info">
+                            <h4>Replace MAF Sensor</h4>
+                            <p>If cleaning doesn't help, MAF sensor may need replacement.</p>
+                        </div>
+                        <div class="repair-cost">
+                            <span class="diy">DIY: $80-$200</span>
+                            <span class="shop">Shop: $150-$350</span>
+                        </div>
+                    </div>
+                    <div class="repair-item">
+                        <div class="repair-info">
+                            <h4>Replace PCV Valve</h4>
+                            <p>Stuck open PCV valve causes vacuum leak and lean condition.</p>
+                        </div>
+                        <div class="repair-cost">
+                            <span class="diy">DIY: $10-$30</span>
+                            <span class="shop">Shop: $50-$100</span>
+                        </div>
+                    </div>
+                    <div class="repair-item">
+                        <div class="repair-info">
+                            <h4>Clean Fuel Injectors</h4>
+                            <p>Professional cleaning service or fuel injector cleaner additive.</p>
+                        </div>
+                        <div class="repair-cost">
+                            <span class="diy">DIY: $15-$30</span>
+                            <span class="shop">Shop: $100-$200</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Related Codes -->
+            <section class="content-section mb-4">
+                <h2>Related Codes</h2>
+                <div class="related-codes-grid">
+                    <a href="#" class="related-code">
+                        <span class="code-badge-sm">P0174</span>
+                        <span>System Too Lean Bank 2</span>
+                    </a>
+                    <a href="#" class="related-code">
+                        <span class="code-badge-sm">P0172</span>
+                        <span>System Too Rich Bank 1</span>
+                    </a>
+                    <a href="#" class="related-code">
+                        <span class="code-badge-sm">P0101</span>
+                        <span>MAF Circuit Range/Performance</span>
+                    </a>
+                    <a href="#" class="related-code">
+                        <span class="code-badge-sm">P0507</span>
+                        <span>Idle RPM Higher Than Expected</span>
+                    </a>
+                    <a href="P0300.html" class="related-code">
+                        <span class="code-badge-sm">P0300</span>
+                        <span>Random Misfire Detected</span>
+                    </a>
+                    <a href="#" class="related-code">
+                        <span class="code-badge-sm">P0130</span>
+                        <span>O2 Sensor Circuit Bank 1</span>
+                    </a>
+                </div>
+            </section>
+
+            <!-- Tech Tips -->
+            <section class="content-section mb-4">
+                <h2>Tech Tips</h2>
+                <div class="tech-tips">
+                    <div class="tip">
+                        <h4>Toyota/Lexus</h4>
+                        <p>Check the air intake hose between the MAF and throttle body for cracks. These are notorious for developing splits on the underside that aren't visible from above.</p>
+                    </div>
+                    <div class="tip">
+                        <h4>Ford</h4>
+                        <p>The PCV elbow on many Ford engines cracks and causes P0171. Check the PCV system thoroughly before replacing other parts.</p>
+                    </div>
+                    <div class="tip">
+                        <h4>GM/Chevrolet</h4>
+                        <p>Intake manifold gaskets on 3.1L and 3.4L V6 engines commonly fail and cause lean codes. Check for coolant leaks as well.</p>
+                    </div>
+                    <div class="tip">
+                        <h4>Honda</h4>
+                        <p>Check the IACV (Idle Air Control Valve) gasket and the fast idle valve. These are common vacuum leak points on Honda engines.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Forum Discussion -->
+            <section class="content-section mb-4">
+                <h2>Community Discussion</h2>
+                <p class="mb-3">Have questions about P0171? Get help from experienced mechanics and fellow car owners.</p>
+                <a href="../forums/index.html" class="btn btn-primary">Visit Forums</a>
+                <a href="../forums/index.html?search=P0171" class="btn btn-outline" style="margin-left: 0.5rem;">Search P0171 Threads</a>
+            </section>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-bottom" style="border-top: none; padding-top: 0;">
+                <p>&copy; 2024 ODB+. All rights reserved.</p>
+                <div class="footer-legal">
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Terms of Service</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../../js/main.js"></script>
+</body>
+</html>

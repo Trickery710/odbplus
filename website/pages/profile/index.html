@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile | ODB+</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../../css/styles.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="navbar-container">
+            <a href="../../index.html" class="navbar-brand">
+                <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="40" height="40" rx="8" fill="url(#gradient)"/>
+                    <path d="M12 20C12 15.5817 15.5817 12 20 12C24.4183 12 28 15.5817 28 20C28 24.4183 24.4183 28 20 28" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+                    <path d="M20 16V20L23 23" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    <circle cx="20" cy="20" r="2" fill="white"/>
+                    <defs>
+                        <linearGradient id="gradient" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse">
+                            <stop stop-color="#2563eb"/>
+                            <stop offset="1" stop-color="#10b981"/>
+                        </linearGradient>
+                    </defs>
+                </svg>
+                <span>ODB+</span>
+            </a>
+            <ul class="navbar-menu">
+                <li><a href="../../index.html">Home</a></li>
+                <li><a href="../codes/index.html">Error Codes</a></li>
+                <li><a href="../forums/index.html">Forums</a></li>
+                <li><a href="../sensors/index.html">Sensors</a></li>
+            </ul>
+            <div class="navbar-actions">
+                <a href="#" class="btn btn-secondary" id="userMenuBtn">My Account</a>
+            </div>
+        </div>
+    </nav>
+
+    <main style="padding-top: 100px;">
+        <div class="container" style="max-width: 900px;">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h1 style="margin-bottom: 0;">My Profile</h1>
+                </div>
+                <div class="card-body">
+                    <form id="profileForm">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+                            <div class="form-group">
+                                <label class="form-label" for="firstName">First Name</label>
+                                <input type="text" class="form-input" id="firstName" value="John">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" for="lastName">Last Name</label>
+                                <input type="text" class="form-input" id="lastName" value="Doe">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="email">Email Address</label>
+                            <input type="email" class="form-input" id="email" value="john.doe@example.com">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="bio">Bio</label>
+                            <textarea class="form-textarea" id="bio" placeholder="Tell us about yourself and your automotive interests..."></textarea>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">Save Changes</button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h2 style="margin-bottom: 0;">My Vehicles</h2>
+                </div>
+                <div class="card-body">
+                    <div id="vehicleList">
+                        <div class="card mb-3" style="border-left: 4px solid var(--primary);">
+                            <div class="card-body" style="display: flex; justify-content: space-between; align-items: center;">
+                                <div>
+                                    <h4 style="margin-bottom: 0.25rem;">2019 Toyota Camry SE</h4>
+                                    <p class="text-muted mb-0">VIN: 4T1B11HK5KU******</p>
+                                </div>
+                                <span class="badge badge-primary">Primary</span>
+                            </div>
+                        </div>
+                        <div class="card mb-3">
+                            <div class="card-body" style="display: flex; justify-content: space-between; align-items: center;">
+                                <div>
+                                    <h4 style="margin-bottom: 0.25rem;">2015 Ford F-150 XLT</h4>
+                                    <p class="text-muted mb-0">VIN: 1FTEW1EF5F******</p>
+                                </div>
+                                <button class="btn btn-sm btn-secondary">Set as Primary</button>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="btn btn-outline" style="margin-top: 1rem;">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 5v14M5 12h14"/>
+                        </svg>
+                        Add Vehicle
+                    </button>
+                </div>
+            </div>
+
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h2 style="margin-bottom: 0;">Diagnostic History</h2>
+                </div>
+                <div class="card-body">
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Vehicle</th>
+                                    <th>Codes Found</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Jan 15, 2024</td>
+                                    <td>2019 Toyota Camry</td>
+                                    <td><span class="badge badge-danger">P0171</span></td>
+                                    <td><span class="badge badge-success">Resolved</span></td>
+                                    <td><a href="#">View Details</a></td>
+                                </tr>
+                                <tr>
+                                    <td>Dec 28, 2023</td>
+                                    <td>2015 Ford F-150</td>
+                                    <td>
+                                        <span class="badge badge-danger">P0300</span>
+                                        <span class="badge badge-danger">P0301</span>
+                                    </td>
+                                    <td><span class="badge badge-success">Resolved</span></td>
+                                    <td><a href="#">View Details</a></td>
+                                </tr>
+                                <tr>
+                                    <td>Nov 10, 2023</td>
+                                    <td>2019 Toyota Camry</td>
+                                    <td><span class="badge badge-warning">P0442</span></td>
+                                    <td><span class="badge badge-success">Resolved</span></td>
+                                    <td><a href="#">View Details</a></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h2 style="margin-bottom: 0;">Account Settings</h2>
+                </div>
+                <div class="card-body">
+                    <div style="display: flex; flex-direction: column; gap: 1rem;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; padding: 1rem; background: var(--bg-secondary); border-radius: var(--radius-md);">
+                            <div>
+                                <h4 style="margin-bottom: 0.25rem;">Change Password</h4>
+                                <p class="text-muted mb-0">Update your password regularly for security</p>
+                            </div>
+                            <button class="btn btn-secondary">Change</button>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; align-items: center; padding: 1rem; background: var(--bg-secondary); border-radius: var(--radius-md);">
+                            <div>
+                                <h4 style="margin-bottom: 0.25rem;">Email Notifications</h4>
+                                <p class="text-muted mb-0">Manage your email preferences</p>
+                            </div>
+                            <button class="btn btn-secondary">Configure</button>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; align-items: center; padding: 1rem; background: var(--bg-secondary); border-radius: var(--radius-md);">
+                            <div>
+                                <h4 style="margin-bottom: 0.25rem;">Delete Account</h4>
+                                <p class="text-muted mb-0">Permanently delete your account and data</p>
+                            </div>
+                            <button class="btn btn-danger">Delete</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="../../js/main.js"></script>
+</body>
+</html>

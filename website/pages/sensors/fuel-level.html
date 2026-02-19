@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Fuel Level Sensor Guide - Learn how fuel tank level sensors work, common failure symptoms, testing procedures, and why your fuel gauge might be inaccurate.">
+    <title>Fuel Level Sensor Guide | ODB+</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../../css/styles.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="navbar-container">
+            <a href="../../index.html" class="navbar-brand">
+                <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="40" height="40" rx="8" fill="url(#gradient)"/>
+                    <path d="M12 20C12 15.5817 15.5817 12 20 12C24.4183 12 28 15.5817 28 20C28 24.4183 24.4183 28 20 28" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+                    <path d="M20 16V20L23 23" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    <circle cx="20" cy="20" r="2" fill="white"/>
+                    <defs>
+                        <linearGradient id="gradient" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse">
+                            <stop stop-color="#2563eb"/>
+                            <stop offset="1" stop-color="#10b981"/>
+                        </linearGradient>
+                    </defs>
+                </svg>
+                <span>ODB+</span>
+            </a>
+            <ul class="navbar-menu">
+                <li><a href="../../index.html">Home</a></li>
+                <li><a href="../codes/index.html">Error Codes</a></li>
+                <li><a href="../forums/index.html">Forums</a></li>
+                <li><a href="index.html" class="active">Sensors</a></li>
+            </ul>
+            <div class="navbar-actions">
+                <a href="../auth/login.html" class="btn btn-secondary">Log In</a>
+                <a href="../auth/signup.html" class="btn btn-primary">Sign Up</a>
+            </div>
+        </div>
+    </nav>
+
+    <main style="padding-top: 100px; padding-bottom: 4rem;">
+        <div class="container" style="max-width: 900px;">
+            <!-- Breadcrumb -->
+            <nav class="breadcrumb mb-4">
+                <a href="index.html">Sensors</a>
+                <span class="separator">/</span>
+                <a href="index.html#fuel">Fuel System</a>
+                <span class="separator">/</span>
+                <span class="current">Fuel Level Sensor</span>
+            </nav>
+
+            <!-- Sensor Header -->
+            <div class="sensor-detail-header mb-4">
+                <div class="sensor-icon-lg">
+                    <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="1.5">
+                        <rect x="3" y="4" width="18" height="16" rx="2"/>
+                        <path d="M3 14h18"/>
+                        <path d="M7 10h2"/>
+                    </svg>
+                </div>
+                <div class="sensor-detail-info">
+                    <h1>Fuel Level Sensor</h1>
+                    <p class="sensor-subtitle">Also known as: Fuel Sender, Fuel Tank Unit, Fuel Gauge Sensor</p>
+                    <div class="sensor-meta">
+                        <span class="badge badge-primary">Fuel System</span>
+                        <span class="badge badge-success">Instrumentation</span>
+                        <span class="badge badge-secondary">Moderate</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Facts -->
+            <div class="quick-info-grid mb-4">
+                <div class="quick-info-card">
+                    <h4>Location</h4>
+                    <p>Inside Fuel Tank</p>
+                </div>
+                <div class="quick-info-card">
+                    <h4>Signal Type</h4>
+                    <p>Variable Resistance</p>
+                </div>
+                <div class="quick-info-card">
+                    <h4>Lifespan</h4>
+                    <p>100,000+ miles (varies)</p>
+                </div>
+                <div class="quick-info-card">
+                    <h4>Replacement Cost</h4>
+                    <p>$150 - $400 (with pump)</p>
+                </div>
+            </div>
+
+            <!-- Overview -->
+            <section class="content-section mb-4">
+                <h2>What Is a Fuel Level Sensor?</h2>
+                <p>The fuel level sensor measures the amount of fuel in the fuel tank and sends this information to the fuel gauge on the instrument cluster. On modern vehicles, this data also goes to the Engine Control Module (ECM) for range calculations, fuel economy displays, and EVAP system monitoring.</p>
+
+                <p>Most fuel level sensors are part of the fuel pump module assembly, located inside the fuel tank. Some vehicles with saddle tanks or large capacity tanks may have two fuel level sensors to accurately measure total fuel quantity.</p>
+
+                <div class="info-box">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"/>
+                        <line x1="12" y1="16" x2="12" y2="12"/>
+                        <line x1="12" y1="8" x2="12.01" y2="8"/>
+                    </svg>
+                    <div>
+                        <strong>EVAP Connection:</strong> The fuel level sensor input is used by the EVAP system to determine when to run leak tests. A faulty fuel level sensor can trigger EVAP-related codes if the system can't determine proper fuel level for testing.
+                    </div>
+                </div>
+            </section>
+
+            <!-- How It Works -->
+            <section class="content-section mb-4">
+                <h2>How Fuel Level Sensors Work</h2>
+
+                <h4>Float and Rheostat Design</h4>
+                <p>The traditional fuel level sensor consists of a buoyant float attached to a metal arm. As fuel level changes, the float rises or falls, moving a contact across a resistor strip (rheostat). This changes the resistance, which the gauge or module interprets as fuel level. Empty tank might read 240 ohms, while full reads 33 ohms (varies by manufacturer).</p>
+
+                <h4 class="mt-3">Electronic/Reed Switch Types</h4>
+                <p>Some modern sensors use reed switches instead of a sliding contact. Multiple reed switches are activated by a magnet in the float as it moves. This design eliminates the wear issues of traditional rheostats but is more complex.</p>
+
+                <h4 class="mt-3">Signal Damping</h4>
+                <p>To prevent the fuel gauge from bouncing with every turn or stop, the instrument cluster or body control module applies damping to the signal. Changes in reading are gradual, which is why your gauge takes time to respond after filling up or why it might stay on full for a while before dropping.</p>
+            </section>
+
+            <!-- Normal Values -->
+            <section class="content-section mb-4">
+                <h2>Typical Fuel Level Sensor Specifications</h2>
+
+                <div class="data-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Fuel Level</th>
+                                <th>GM Vehicles (typical)</th>
+                                <th>Ford Vehicles (typical)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Empty</td>
+                                <td>0 ohms</td>
+                                <td>160 ohms</td>
+                            </tr>
+                            <tr>
+                                <td>1/4 Tank</td>
+                                <td>~23 ohms</td>
+                                <td>~120 ohms</td>
+                            </tr>
+                            <tr>
+                                <td>1/2 Tank</td>
+                                <td>~45 ohms</td>
+                                <td>~75 ohms</td>
+                            </tr>
+                            <tr>
+                                <td>Full</td>
+                                <td>90 ohms</td>
+                                <td>15 ohms</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <p class="mt-3"><strong>Note:</strong> Specifications vary significantly between manufacturers and even model years. Always verify the correct resistance range for your specific vehicle.</p>
+            </section>
+
+            <!-- Failure Symptoms -->
+            <section class="content-section mb-4">
+                <h2>Symptoms of a Failing Fuel Level Sensor</h2>
+                <ul class="symptom-list">
+                    <li>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="2">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                        </svg>
+                        <div>
+                            <strong>Fuel Gauge Always Reads Empty or Full</strong>
+                            <p>Gauge stuck at one position regardless of actual fuel level</p>
+                        </div>
+                    </li>
+                    <li>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="2">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                        </svg>
+                        <div>
+                            <strong>Erratic Gauge Movement</strong>
+                            <p>Gauge jumps between readings inconsistently, especially over bumps</p>
+                        </div>
+                    </li>
+                    <li>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="2">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                        </svg>
+                        <div>
+                            <strong>Low Fuel Light Always On or Never On</strong>
+                            <p>Warning light behavior doesn't match actual fuel level</p>
+                        </div>
+                    </li>
+                    <li>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="2">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                        </svg>
+                        <div>
+                            <strong>Inaccurate Range Estimates</strong>
+                            <p>Miles-to-empty calculation wildly inaccurate</p>
+                        </div>
+                    </li>
+                    <li>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="2">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                        </svg>
+                        <div>
+                            <strong>EVAP System Codes</strong>
+                            <p>P0460-P0464 codes related to fuel level circuit</p>
+                        </div>
+                    </li>
+                    <li>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="2">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                        </svg>
+                        <div>
+                            <strong>Gauge Reads Differently at Startup</strong>
+                            <p>Gauge shows different level after sitting vs. driving</p>
+                        </div>
+                    </li>
+                </ul>
+            </section>
+
+            <!-- Common Causes -->
+            <section class="content-section mb-4">
+                <h2>What Causes Fuel Level Sensor Problems?</h2>
+                <div class="causes-grid">
+                    <div class="cause-category">
+                        <h4>Wear and Tear</h4>
+                        <ul>
+                            <li>Rheostat contact wear</li>
+                            <li>Resistor track deterioration</li>
+                            <li>Float arm fatigue</li>
+                            <li>Age-related degradation</li>
+                        </ul>
+                    </div>
+                    <div class="cause-category">
+                        <h4>Contamination</h4>
+                        <ul>
+                            <li>Fuel tank corrosion/rust</li>
+                            <li>Water in fuel</li>
+                            <li>Sediment buildup</li>
+                            <li>Fuel additive residue</li>
+                        </ul>
+                    </div>
+                    <div class="cause-category">
+                        <h4>Physical Damage</h4>
+                        <ul>
+                            <li>Float damage or saturation</li>
+                            <li>Bent float arm</li>
+                            <li>Tank deformation</li>
+                            <li>Impact damage</li>
+                        </ul>
+                    </div>
+                    <div class="cause-category">
+                        <h4>Electrical Issues</h4>
+                        <ul>
+                            <li>Corroded connector</li>
+                            <li>Ground issues</li>
+                            <li>Wiring damage</li>
+                            <li>Instrument cluster failure</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="warning-box mt-3">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+                        <line x1="12" y1="9" x2="12" y2="13"/>
+                        <line x1="12" y1="17" x2="12.01" y2="17"/>
+                    </svg>
+                    <div>
+                        <strong>Fuel Tank Safety:</strong> Working inside a fuel tank requires proper safety precautions. Ensure the tank is properly drained and ventilated. Never use open flames or create sparks near fuel. Follow proper procedures for fuel system service.
+                    </div>
+                </div>
+            </section>
+
+            <!-- Testing Procedures -->
+            <section class="content-section mb-4">
+                <h2>How to Test a Fuel Level Sensor</h2>
+
+                <div class="diagnostic-steps">
+                    <div class="step">
+                        <div class="step-number">1</div>
+                        <div class="step-content">
+                            <h4>Check Scanner Data</h4>
+                            <p>Use your ODB+ scanner to read fuel level percentage. Compare this to your fuel gauge. If the scanner shows a steady, realistic reading but the gauge is erratic, the problem may be in the gauge/cluster, not the sensor.</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">2</div>
+                        <div class="step-content">
+                            <h4>Movement Test</h4>
+                            <p>Rock the vehicle gently side to side while monitoring fuel level on the scanner. The reading should change smoothly as fuel sloshes. Erratic jumps or no change indicates a sticky or damaged sensor.</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">3</div>
+                        <div class="step-content">
+                            <h4>Fill Tank Test</h4>
+                            <p>With a near-empty tank, add 5 gallons and check if the reading increases appropriately. Repeat until full. The gauge should rise progressively - if it stays stuck then suddenly jumps, there's a dead spot in the sensor.</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">4</div>
+                        <div class="step-content">
+                            <h4>Resistance Test (Direct)</h4>
+                            <p>If accessible, disconnect the sensor and measure resistance while manually moving the float arm through its range. Resistance should change smoothly with no drops or spikes.</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">5</div>
+                        <div class="step-content">
+                            <h4>Check Ground and Wiring</h4>
+                            <p>Verify good ground connection at the fuel pump module. Check for damaged wiring or corroded connectors that could cause intermittent readings.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Related Codes -->
+            <section class="content-section mb-4">
+                <h2>Related Diagnostic Codes</h2>
+                <div class="related-codes-grid">
+                    <a href="../codes/index.html" class="related-code">
+                        <span class="code-badge-sm">P0460</span>
+                        <span>Fuel Level Sensor Circuit</span>
+                    </a>
+                    <a href="../codes/index.html" class="related-code">
+                        <span class="code-badge-sm">P0461</span>
+                        <span>Fuel Level Range/Performance</span>
+                    </a>
+                    <a href="../codes/index.html" class="related-code">
+                        <span class="code-badge-sm">P0462</span>
+                        <span>Fuel Level Circuit Low</span>
+                    </a>
+                    <a href="../codes/index.html" class="related-code">
+                        <span class="code-badge-sm">P0463</span>
+                        <span>Fuel Level Circuit High</span>
+                    </a>
+                    <a href="../codes/P0442.html" class="related-code">
+                        <span class="code-badge-sm">P0442</span>
+                        <span>EVAP Small Leak</span>
+                    </a>
+                    <a href="../codes/index.html" class="related-code">
+                        <span class="code-badge-sm">P0464</span>
+                        <span>Fuel Level Intermittent</span>
+                    </a>
+                </div>
+            </section>
+
+            <!-- Forum Discussion -->
+            <section class="content-section mb-4">
+                <h2>Community Discussion</h2>
+                <p class="mb-3">Have questions about fuel level sensors? Get help from experienced mechanics and fellow car owners.</p>
+                <a href="../forums/index.html" class="btn btn-primary">Visit Forums</a>
+                <a href="../forums/index.html?search=fuel+gauge" class="btn btn-outline" style="margin-left: 0.5rem;">Search Fuel Gauge Threads</a>
+            </section>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-bottom" style="border-top: none; padding-top: 0;">
+                <p>&copy; 2024 ODB+. All rights reserved.</p>
+                <div class="footer-legal">
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Terms of Service</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../../js/main.js"></script>
+</body>
+</html>

@@ -1,6 +1,7 @@
 package com.odbplus.app.ui
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -42,6 +43,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Snackbar
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -56,6 +58,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.text.SpanStyle
@@ -66,14 +69,18 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.withStyle
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.odbplus.app.ai.AiChatUiState
 import com.odbplus.app.ai.AiChatViewModel
+import com.odbplus.app.ai.GoogleSignInResult
 import com.odbplus.app.ai.data.AiProvider
 import com.odbplus.app.ai.data.ChatMessage
 import com.odbplus.app.ai.data.MessageRole
+import com.odbplus.app.ui.theme.*
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -82,8 +89,14 @@ import java.util.Locale
 fun AiChatScreen(viewModel: AiChatViewModel = hiltViewModel()) {
     val uiState by viewModel.uiState.collectAsState()
     var inputText by remember { mutableStateOf("") }
+    val context = LocalContext.current
+    val coroutineScope = androidx.compose.runtime.rememberCoroutineScope()
 
-    Box(modifier = Modifier.fillMaxSize()) {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.background)
+    ) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -94,17 +107,31 @@ fun AiChatScreen(viewModel: AiChatViewModel = hiltViewModel()) {
                 uiState = uiState,
                 onProviderClick = { viewModel.showProviderSelector() },
                 onSettingsClick = { viewModel.showApiKeyDialog() },
-                onClearHistory = { viewModel.clearHistory() }
+                onClearHistory = { viewModel.clearHistory() },
+                onGoogleSignOut = { viewModel.googleSignOut() }
             )
 
-            HorizontalDivider()
+            // Subtle divider using theme border color
+            HorizontalDivider(
+                color = DarkBorder,
+                thickness = 1.dp
+            )
 
             // Content
             Box(modifier = Modifier.weight(1f)) {
                 if (uiState.isLoading) {
                     LoadingContent()
-                } else if (!uiState.hasApiKey) {
-                    ApiKeyRequiredContent(onSetupClick = { viewModel.showApiKeyDialog() })
+                } else if (!uiState.hasApiKey && !uiState.isGoogleSignedIn) {
+                    ApiKeyRequiredContent(
+                        provider = uiState.selectedProvider,
+                        onSetupClick = { viewModel.showApiKeyDialog() },
+                        onGoogleSignIn = {
+                            coroutineScope.launch {
+                                viewModel.googleSignIn(context)
+                            }
+                        },
+                        isGoogleSignInConfigured = uiState.isGoogleSignInConfigured
+                    )
                 } else if (uiState.messages.isEmpty()) {
                     EmptyStateContent(
                         suggestedPrompts = uiState.suggestedPrompts,
@@ -122,7 +149,7 @@ fun AiChatScreen(viewModel: AiChatViewModel = hiltViewModel()) {
             }
 
             // Input bar
-            if (uiState.hasApiKey) {
+            if (uiState.hasApiKey || uiState.isGoogleSignedIn) {
                 ChatInputBar(
                     value = inputText,
                     onValueChange = { inputText = it },
@@ -141,6 +168,8 @@ fun AiChatScreen(viewModel: AiChatViewModel = hiltViewModel()) {
         if (uiState.showProviderSelector) {
             ProviderSelectorDialog(
                 currentProvider = uiState.selectedProvider,
+                isGoogleSignedIn = uiState.isGoogleSignedIn,
+                googleEmail = uiState.googleUserEmail,
                 onProviderSelected = { viewModel.selectProvider(it) },
                 onDismiss = { viewModel.hideProviderSelector() }
             )
@@ -155,7 +184,16 @@ fun AiChatScreen(viewModel: AiChatViewModel = hiltViewModel()) {
                 onClear = { viewModel.clearApiKey() },
                 hasExistingKey = uiState.hasApiKey,
                 isLoading = uiState.isLoading,
-                error = uiState.apiKeyError
+                error = uiState.apiKeyError ?: uiState.googleSignInError,
+                isGoogleSignedIn = uiState.isGoogleSignedIn,
+                googleEmail = uiState.googleUserEmail,
+                onGoogleSignIn = {
+                    coroutineScope.launch {
+                        viewModel.googleSignIn(context)
+                    }
+                },
+                onGoogleSignOut = { viewModel.googleSignOut() },
+                isGoogleSignInConfigured = uiState.isGoogleSignInConfigured
             )
         }
 
@@ -167,10 +205,11 @@ fun AiChatScreen(viewModel: AiChatViewModel = hiltViewModel()) {
                     .padding(16.dp),
                 action = {
                     TextButton(onClick = { viewModel.dismissError() }) {
-                        Text("Dismiss")
+                        Text("Dismiss", color = Color.White)
                     }
                 },
-                containerColor = MaterialTheme.colorScheme.error
+                containerColor = RedError,
+                contentColor = Color.White
             ) {
                 Text(uiState.errorMessage!!)
             }
@@ -183,14 +222,16 @@ private fun ChatHeader(
     uiState: AiChatUiState,
     onProviderClick: () -> Unit,
     onSettingsClick: () -> Unit,
-    onClearHistory: () -> Unit
+    onClearHistory: () -> Unit,
+    onGoogleSignOut: () -> Unit
 ) {
     var showMenu by remember { mutableStateOf(false) }
 
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 16.dp, vertical = 8.dp)
+            .background(DarkSurface)
+            .padding(horizontal = 16.dp, vertical = 12.dp)
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -202,21 +243,27 @@ private fun ChatHeader(
                 Text(
                     text = "AI Diagnostics",
                     style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Bold,
+                    color = TextPrimary
                 )
-                Spacer(Modifier.width(8.dp))
+                Spacer(Modifier.width(10.dp))
+                // Glowing connection dot
                 Box(
                     modifier = Modifier
-                        .size(8.dp)
+                        .size(10.dp)
                         .clip(CircleShape)
-                        .background(if (uiState.isConnected) Color(0xFF4CAF50) else Color.Gray)
+                        .background(if (uiState.isConnected) GreenSuccess else TextTertiary)
                 )
             }
 
             // Menu button
             Box {
                 IconButton(onClick = { showMenu = true }) {
-                    Icon(Icons.Default.MoreVert, contentDescription = "Menu")
+                    Icon(
+                        Icons.Default.MoreVert,
+                        contentDescription = "Menu",
+                        tint = TextSecondary
+                    )
                 }
                 DropdownMenu(
                     expanded = showMenu,
@@ -242,6 +289,18 @@ private fun ChatHeader(
                             Icon(Icons.Default.Settings, contentDescription = null)
                         }
                     )
+                    if (uiState.isGoogleSignedIn) {
+                        DropdownMenuItem(
+                            text = { Text("Sign out (${uiState.googleUserEmail?.take(20) ?: "Google"})") },
+                            onClick = {
+                                showMenu = false
+                                onGoogleSignOut()
+                            },
+                            leadingIcon = {
+                                Icon(Icons.Default.Close, contentDescription = null)
+                            }
+                        )
+                    }
                     if (uiState.messages.isNotEmpty()) {
                         DropdownMenuItem(
                             text = { Text("Clear History") },
@@ -258,38 +317,59 @@ private fun ChatHeader(
             }
         }
 
-        // Provider chip (clickable)
+        Spacer(Modifier.height(6.dp))
+
+        // Provider chip row
         Row(
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.padding(top = 4.dp)
+            verticalAlignment = Alignment.CenterVertically
         ) {
+            // Provider chip with brand-colored background
+            val isFree = uiState.selectedProvider == AiProvider.GEMINI ||
+                    uiState.selectedProvider == AiProvider.GROQ
             Surface(
                 modifier = Modifier.clickable(onClick = onProviderClick),
-                shape = RoundedCornerShape(16.dp),
-                color = if (uiState.selectedProvider == AiProvider.GEMINI || uiState.selectedProvider == AiProvider.GROQ)
-                    Color(0xFF4CAF50).copy(alpha = 0.15f)
+                shape = RoundedCornerShape(20.dp),
+                color = if (isFree)
+                    GreenSuccess.copy(alpha = 0.15f)
                 else
-                    MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.5f)
+                    CyanPrimary.copy(alpha = 0.12f)
             ) {
                 Row(
-                    modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp),
+                    modifier = Modifier.padding(horizontal = 12.dp, vertical = 5.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
                         text = uiState.selectedProvider.displayName,
                         style = MaterialTheme.typography.labelSmall,
-                        fontWeight = FontWeight.Medium
+                        fontWeight = FontWeight.SemiBold,
+                        color = if (isFree) GreenSuccess else CyanPrimary
                     )
-                    if (uiState.selectedProvider == AiProvider.GEMINI || uiState.selectedProvider == AiProvider.GROQ) {
-                        Spacer(Modifier.width(4.dp))
+                    if (isFree) {
+                        Spacer(Modifier.width(6.dp))
                         Text(
                             text = "FREE",
                             style = MaterialTheme.typography.labelSmall,
-                            fontWeight = FontWeight.Bold,
-                            color = Color(0xFF4CAF50),
+                            fontWeight = FontWeight.ExtraBold,
+                            color = GreenSuccess,
                             fontSize = 9.sp
                         )
                     }
+                }
+            }
+
+            // Google Sign-In status
+            if (uiState.isGoogleSignedIn && uiState.selectedProvider == AiProvider.GEMINI) {
+                Spacer(Modifier.width(8.dp))
+                Surface(
+                    shape = RoundedCornerShape(20.dp),
+                    color = GoogleBlue.copy(alpha = 0.12f)
+                ) {
+                    Text(
+                        text = uiState.googleUserEmail?.take(15)?.plus("...") ?: "Signed in",
+                        modifier = Modifier.padding(horizontal = 10.dp, vertical = 5.dp),
+                        style = MaterialTheme.typography.labelSmall,
+                        color = GoogleBlue
+                    )
                 }
             }
 
@@ -299,21 +379,28 @@ private fun ChatHeader(
                 if (uiState.isFetchingVehicleInfo) {
                     CircularProgressIndicator(
                         modifier = Modifier.size(12.dp),
-                        strokeWidth = 1.5.dp
+                        strokeWidth = 1.5.dp,
+                        color = CyanPrimary
                     )
                     Spacer(Modifier.width(6.dp))
                     Text(
                         text = "Reading...",
                         style = MaterialTheme.typography.labelSmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                        color = TextSecondary
                     )
                 } else if (uiState.currentVin != null) {
-                    Text(
-                        text = "VIN: ${uiState.currentVin}",
-                        style = MaterialTheme.typography.labelSmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        fontWeight = FontWeight.Medium
-                    )
+                    Surface(
+                        shape = RoundedCornerShape(20.dp),
+                        color = DarkSurfaceVariant
+                    ) {
+                        Text(
+                            text = "VIN: ${uiState.currentVin}",
+                            modifier = Modifier.padding(horizontal = 10.dp, vertical = 5.dp),
+                            style = MaterialTheme.typography.labelSmall,
+                            color = TextSecondary,
+                            fontWeight = FontWeight.Medium
+                        )
+                    }
                 }
             }
         }
@@ -326,12 +413,17 @@ private fun LoadingContent() {
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
-        CircularProgressIndicator()
+        CircularProgressIndicator(color = CyanPrimary)
     }
 }
 
 @Composable
-private fun ApiKeyRequiredContent(onSetupClick: () -> Unit) {
+private fun ApiKeyRequiredContent(
+    provider: AiProvider,
+    onSetupClick: () -> Unit,
+    onGoogleSignIn: () -> Unit,
+    isGoogleSignInConfigured: Boolean
+) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -339,28 +431,72 @@ private fun ApiKeyRequiredContent(onSetupClick: () -> Unit) {
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Icon(
-            Icons.Default.Settings,
-            contentDescription = null,
-            modifier = Modifier.size(64.dp),
-            tint = MaterialTheme.colorScheme.primary
-        )
-        Spacer(Modifier.height(16.dp))
+        // Icon in a glowing circle
+        Box(
+            modifier = Modifier
+                .size(80.dp)
+                .clip(CircleShape)
+                .background(CyanPrimary.copy(alpha = 0.1f)),
+            contentAlignment = Alignment.Center
+        ) {
+            Icon(
+                Icons.Default.Settings,
+                contentDescription = null,
+                modifier = Modifier.size(40.dp),
+                tint = CyanPrimary
+            )
+        }
+        Spacer(Modifier.height(20.dp))
         Text(
             text = "Setup Required",
             style = MaterialTheme.typography.headlineSmall,
-            fontWeight = FontWeight.Bold
+            fontWeight = FontWeight.Bold,
+            color = TextPrimary
         )
         Spacer(Modifier.height(8.dp))
         Text(
-            text = "Enter your Claude API key to start using the AI diagnostics assistant.",
+            text = if (provider == AiProvider.GEMINI)
+                "Sign in with Google or enter an API key to start using AI diagnostics."
+            else
+                "Enter your ${provider.displayName} API key to start using the AI diagnostics assistant.",
             style = MaterialTheme.typography.bodyMedium,
             textAlign = TextAlign.Center,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
+            color = TextSecondary
         )
-        Spacer(Modifier.height(24.dp))
+        Spacer(Modifier.height(28.dp))
+
+        // Google Sign-In button for Gemini
+        if (provider == AiProvider.GEMINI && isGoogleSignInConfigured) {
+            androidx.compose.material3.Button(
+                onClick = onGoogleSignIn,
+                colors = androidx.compose.material3.ButtonDefaults.buttonColors(
+                    containerColor = Color.White
+                ),
+                shape = RoundedCornerShape(12.dp),
+                modifier = Modifier.fillMaxWidth(0.8f)
+            ) {
+                Text(
+                    text = "G",
+                    color = GoogleBlue,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.padding(end = 8.dp)
+                )
+                Text(
+                    text = "Sign in with Google",
+                    color = Color.DarkGray
+                )
+            }
+            Spacer(Modifier.height(16.dp))
+            Text(
+                text = "or",
+                style = MaterialTheme.typography.bodySmall,
+                color = TextTertiary
+            )
+            Spacer(Modifier.height(16.dp))
+        }
+
         TextButton(onClick = onSetupClick) {
-            Text("Setup API Key")
+            Text("Enter API Key Manually", color = CyanPrimary)
         }
     }
 }
@@ -382,28 +518,30 @@ private fun EmptyStateContent(
             text = "Auto Diagnostics Assistant",
             style = MaterialTheme.typography.headlineSmall,
             fontWeight = FontWeight.Bold,
-            textAlign = TextAlign.Center
+            textAlign = TextAlign.Center,
+            color = TextPrimary
         )
         Spacer(Modifier.height(8.dp))
         Text(
             text = "Ask questions about your vehicle's health, error codes, or maintenance.",
             style = MaterialTheme.typography.bodyMedium,
             textAlign = TextAlign.Center,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
+            color = TextSecondary
         )
 
         Spacer(Modifier.height(32.dp))
 
         if (suggestedPrompts.isNotEmpty()) {
             Text(
-                text = "Try asking:",
+                text = "TRY ASKING",
                 style = MaterialTheme.typography.labelMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
+                color = TextTertiary,
+                letterSpacing = 1.5.sp
             )
-            Spacer(Modifier.height(12.dp))
+            Spacer(Modifier.height(16.dp))
 
             Column(
-                verticalArrangement = Arrangement.spacedBy(8.dp)
+                verticalArrangement = Arrangement.spacedBy(10.dp)
             ) {
                 suggestedPrompts.forEach { prompt ->
                     SuggestedPromptChip(
@@ -428,12 +566,14 @@ private fun SuggestedPromptChip(
             .fillMaxWidth()
             .clickable(onClick = onClick),
         shape = RoundedCornerShape(12.dp),
-        color = MaterialTheme.colorScheme.surfaceVariant
+        color = DarkSurfaceVariant,
+        border = androidx.compose.foundation.BorderStroke(1.dp, DarkBorder)
     ) {
         Text(
             text = text,
-            modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp),
-            style = MaterialTheme.typography.bodyMedium
+            modifier = Modifier.padding(horizontal = 16.dp, vertical = 14.dp),
+            style = MaterialTheme.typography.bodyMedium,
+            color = TextPrimary
         )
     }
 }
@@ -457,7 +597,7 @@ private fun MessageList(
         state = listState,
         modifier = Modifier.fillMaxSize(),
         contentPadding = PaddingValues(16.dp),
-        verticalArrangement = Arrangement.spacedBy(12.dp)
+        verticalArrangement = Arrangement.spacedBy(14.dp)
     ) {
         items(messages, key = { it.id }) { message ->
             MessageBubble(
@@ -473,17 +613,19 @@ private fun MessageList(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(start = 8.dp),
-                    horizontalArrangement = Arrangement.Start
+                    horizontalArrangement = Arrangement.Start,
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
                     CircularProgressIndicator(
-                        modifier = Modifier.size(24.dp),
-                        strokeWidth = 2.dp
+                        modifier = Modifier.size(20.dp),
+                        strokeWidth = 2.dp,
+                        color = CyanPrimary
                     )
-                    Spacer(Modifier.width(8.dp))
+                    Spacer(Modifier.width(10.dp))
                     Text(
                         text = "Thinking...",
                         style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                        color = TextSecondary
                     )
                 }
             }
@@ -497,10 +639,17 @@ private fun MessageBubble(
     onRetryClick: (() -> Unit)?
 ) {
     val isUser = message.role == MessageRole.USER
+
+    // Bubble background: gradient for user, solid for assistant
     val bubbleColor = when {
-        message.isError -> MaterialTheme.colorScheme.errorContainer
-        isUser -> MaterialTheme.colorScheme.primaryContainer
-        else -> MaterialTheme.colorScheme.surfaceVariant
+        message.isError -> RedContainer
+        isUser -> CyanContainer
+        else -> DarkSurfaceVariant
+    }
+    val bubbleBorder = when {
+        message.isError -> RedError.copy(alpha = 0.3f)
+        isUser -> CyanPrimary.copy(alpha = 0.2f)
+        else -> DarkBorder
     }
 
     Column(
@@ -508,7 +657,18 @@ private fun MessageBubble(
         horizontalAlignment = if (isUser) Alignment.End else Alignment.Start
     ) {
         Card(
-            modifier = Modifier.widthIn(max = 320.dp),
+            modifier = Modifier
+                .widthIn(max = 320.dp)
+                .border(
+                    width = 1.dp,
+                    color = bubbleBorder,
+                    shape = RoundedCornerShape(
+                        topStart = 16.dp,
+                        topEnd = 16.dp,
+                        bottomStart = if (isUser) 16.dp else 4.dp,
+                        bottomEnd = if (isUser) 4.dp else 16.dp
+                    )
+                ),
             shape = RoundedCornerShape(
                 topStart = 16.dp,
                 topEnd = 16.dp,
@@ -522,9 +682,9 @@ private fun MessageBubble(
                     text = message.content,
                     style = MaterialTheme.typography.bodyMedium,
                     color = when {
-                        message.isError -> MaterialTheme.colorScheme.onErrorContainer
-                        isUser -> MaterialTheme.colorScheme.onPrimaryContainer
-                        else -> MaterialTheme.colorScheme.onSurfaceVariant
+                        message.isError -> RedOnContainer
+                        isUser -> CyanOnContainer
+                        else -> TextPrimary
                     }
                 )
 
@@ -538,10 +698,11 @@ private fun MessageBubble(
                         Icon(
                             Icons.Default.Refresh,
                             contentDescription = null,
-                            modifier = Modifier.size(16.dp)
+                            modifier = Modifier.size(16.dp),
+                            tint = RedLight
                         )
                         Spacer(Modifier.width(4.dp))
-                        Text("Retry")
+                        Text("Retry", color = RedLight)
                     }
                 }
             }
@@ -552,8 +713,8 @@ private fun MessageBubble(
         Text(
             text = timeFormat.format(Date(message.timestamp)),
             style = MaterialTheme.typography.labelSmall,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-            modifier = Modifier.padding(horizontal = 4.dp, vertical = 2.dp)
+            color = TextTertiary,
+            modifier = Modifier.padding(horizontal = 4.dp, vertical = 3.dp)
         )
     }
 }
@@ -567,26 +728,41 @@ private fun ChatInputBar(
 ) {
     Surface(
         modifier = Modifier.fillMaxWidth(),
-        tonalElevation = 2.dp
+        color = DarkSurface,
+        shadowElevation = 8.dp
     ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 16.dp, vertical = 8.dp),
+                .padding(horizontal = 12.dp, vertical = 10.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             OutlinedTextField(
                 value = value,
                 onValueChange = onValueChange,
                 modifier = Modifier.weight(1f),
-                placeholder = { Text("Ask about your vehicle...") },
+                placeholder = {
+                    Text(
+                        "Ask about your vehicle...",
+                        color = TextTertiary
+                    )
+                },
                 enabled = !isSending,
                 maxLines = 4,
                 keyboardOptions = KeyboardOptions(imeAction = ImeAction.Send),
                 keyboardActions = KeyboardActions(onSend = { onSend() }),
-                shape = RoundedCornerShape(24.dp)
+                shape = RoundedCornerShape(24.dp),
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedBorderColor = CyanPrimary,
+                    unfocusedBorderColor = DarkBorder,
+                    focusedContainerColor = DarkSurfaceVariant,
+                    unfocusedContainerColor = DarkSurfaceVariant,
+                    cursorColor = CyanPrimary,
+                    focusedTextColor = TextPrimary,
+                    unfocusedTextColor = TextPrimary
+                )
             )
-            Spacer(Modifier.width(8.dp))
+            Spacer(Modifier.width(10.dp))
             IconButton(
                 onClick = onSend,
                 enabled = !isSending && value.isNotBlank(),
@@ -595,25 +771,25 @@ private fun ChatInputBar(
                     .clip(CircleShape)
                     .background(
                         if (!isSending && value.isNotBlank())
-                            MaterialTheme.colorScheme.primary
+                            CyanPrimary
                         else
-                            MaterialTheme.colorScheme.surfaceVariant
+                            DarkSurfaceVariant
                     )
             ) {
                 if (isSending) {
                     CircularProgressIndicator(
-                        modifier = Modifier.size(24.dp),
+                        modifier = Modifier.size(22.dp),
                         strokeWidth = 2.dp,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                        color = TextSecondary
                     )
                 } else {
                     Icon(
                         Icons.AutoMirrored.Filled.Send,
                         contentDescription = "Send",
                         tint = if (value.isNotBlank())
-                            MaterialTheme.colorScheme.onPrimary
+                            TextOnAccent
                         else
-                            MaterialTheme.colorScheme.onSurfaceVariant
+                            TextTertiary
                     )
                 }
             }
@@ -624,18 +800,28 @@ private fun ChatInputBar(
 @Composable
 private fun ProviderSelectorDialog(
     currentProvider: AiProvider,
+    isGoogleSignedIn: Boolean,
+    googleEmail: String?,
     onProviderSelected: (AiProvider) -> Unit,
     onDismiss: () -> Unit
 ) {
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("Select AI Provider") },
+        title = {
+            Text(
+                "Select AI Provider",
+                color = TextPrimary,
+                fontWeight = FontWeight.Bold
+            )
+        },
         text = {
-            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
                 AiProvider.sortedByCost().forEach { provider ->
                     ProviderOptionCard(
                         provider = provider,
                         isSelected = provider == currentProvider,
+                        isGoogleSignedIn = isGoogleSignedIn && provider == AiProvider.GEMINI,
+                        googleEmail = if (provider == AiProvider.GEMINI) googleEmail else null,
                         onClick = { onProviderSelected(provider) }
                     )
                 }
@@ -643,9 +829,12 @@ private fun ProviderSelectorDialog(
         },
         confirmButton = {
             TextButton(onClick = onDismiss) {
-                Text("Close")
+                Text("Close", color = CyanPrimary)
             }
-        }
+        },
+        containerColor = DarkSurface,
+        titleContentColor = TextPrimary,
+        textContentColor = TextPrimary
     )
 }
 
@@ -653,6 +842,8 @@ private fun ProviderSelectorDialog(
 private fun ProviderOptionCard(
     provider: AiProvider,
     isSelected: Boolean,
+    isGoogleSignedIn: Boolean = false,
+    googleEmail: String? = null,
     onClick: () -> Unit
 ) {
     val isFree = provider == AiProvider.GEMINI || provider == AiProvider.GROQ
@@ -660,16 +851,23 @@ private fun ProviderOptionCard(
     Card(
         modifier = Modifier
             .fillMaxWidth()
+            .then(
+                if (isSelected) Modifier.border(
+                    width = 1.dp,
+                    color = CyanPrimary.copy(alpha = 0.5f),
+                    shape = RoundedCornerShape(12.dp)
+                ) else Modifier
+            )
             .clickable(onClick = onClick),
         colors = CardDefaults.cardColors(
             containerColor = if (isSelected)
-                MaterialTheme.colorScheme.primaryContainer
+                CyanContainer
             else
-                MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
+                DarkSurfaceVariant
         ),
         shape = RoundedCornerShape(12.dp)
     ) {
-        Column(modifier = Modifier.padding(12.dp)) {
+        Column(modifier = Modifier.padding(14.dp)) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -678,20 +876,37 @@ private fun ProviderOptionCard(
                 Text(
                     text = provider.displayName,
                     style = MaterialTheme.typography.titleSmall,
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Bold,
+                    color = if (isSelected) CyanOnContainer else TextPrimary
                 )
-                if (isFree) {
-                    Surface(
-                        shape = RoundedCornerShape(4.dp),
-                        color = Color(0xFF4CAF50).copy(alpha = 0.2f)
-                    ) {
-                        Text(
-                            text = "FREE",
-                            modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp),
-                            style = MaterialTheme.typography.labelSmall,
-                            fontWeight = FontWeight.Bold,
-                            color = Color(0xFF4CAF50)
-                        )
+                Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+                    if (isGoogleSignedIn) {
+                        Surface(
+                            shape = RoundedCornerShape(6.dp),
+                            color = GoogleBlue.copy(alpha = 0.2f)
+                        ) {
+                            Text(
+                                text = "Google",
+                                modifier = Modifier.padding(horizontal = 8.dp, vertical = 3.dp),
+                                style = MaterialTheme.typography.labelSmall,
+                                fontWeight = FontWeight.Bold,
+                                color = GoogleBlue
+                            )
+                        }
+                    }
+                    if (isFree) {
+                        Surface(
+                            shape = RoundedCornerShape(6.dp),
+                            color = GreenSuccess.copy(alpha = 0.2f)
+                        ) {
+                            Text(
+                                text = "FREE",
+                                modifier = Modifier.padding(horizontal = 8.dp, vertical = 3.dp),
+                                style = MaterialTheme.typography.labelSmall,
+                                fontWeight = FontWeight.Bold,
+                                color = GreenSuccess
+                            )
+                        }
                     }
                 }
             }
@@ -699,13 +914,21 @@ private fun ProviderOptionCard(
             Text(
                 text = provider.description,
                 style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
+                color = if (isSelected) CyanOnContainer.copy(alpha = 0.8f) else TextSecondary
             )
+            if (isGoogleSignedIn && googleEmail != null) {
+                Spacer(Modifier.height(3.dp))
+                Text(
+                    text = "Signed in as: $googleEmail",
+                    style = MaterialTheme.typography.labelSmall,
+                    color = GoogleBlue
+                )
+            }
             Spacer(Modifier.height(4.dp))
             Text(
                 text = provider.costInfo,
                 style = MaterialTheme.typography.labelSmall,
-                color = if (isFree) Color(0xFF4CAF50) else MaterialTheme.colorScheme.onSurfaceVariant,
+                color = if (isFree) GreenSuccess else TextTertiary,
                 fontWeight = if (isFree) FontWeight.Medium else FontWeight.Normal
             )
         }
@@ -720,7 +943,12 @@ private fun ApiKeyDialog(
     onClear: () -> Unit,
     hasExistingKey: Boolean,
     isLoading: Boolean,
-    error: String?
+    error: String?,
+    isGoogleSignedIn: Boolean = false,
+    googleEmail: String? = null,
+    onGoogleSignIn: () -> Unit = {},
+    onGoogleSignOut: () -> Unit = {},
+    isGoogleSignInConfigured: Boolean = false
 ) {
     var apiKey by remember { mutableStateOf("") }
     val uriHandler = LocalUriHandler.current
@@ -729,21 +957,27 @@ private fun ApiKeyDialog(
 
     AlertDialog(
         onDismissRequest = onDismiss,
+        containerColor = DarkSurface,
+        titleContentColor = TextPrimary,
+        textContentColor = TextPrimary,
         title = {
             Row(verticalAlignment = Alignment.CenterVertically) {
-                Text("${provider.displayName} API Key")
+                Text(
+                    "${provider.displayName} Setup",
+                    fontWeight = FontWeight.Bold
+                )
                 if (isFree) {
                     Spacer(Modifier.width(8.dp))
                     Surface(
-                        shape = RoundedCornerShape(4.dp),
-                        color = Color(0xFF4CAF50).copy(alpha = 0.2f)
+                        shape = RoundedCornerShape(6.dp),
+                        color = GreenSuccess.copy(alpha = 0.2f)
                     ) {
                         Text(
                             text = "FREE",
-                            modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp),
+                            modifier = Modifier.padding(horizontal = 8.dp, vertical = 3.dp),
                             style = MaterialTheme.typography.labelSmall,
                             fontWeight = FontWeight.Bold,
-                            color = Color(0xFF4CAF50)
+                            color = GreenSuccess
                         )
                     }
                 }
@@ -751,126 +985,240 @@ private fun ApiKeyDialog(
         },
         text = {
             Column {
-                Text(
-                    text = if (hasExistingKey)
-                        "Your API key is saved. Enter a new key to update it."
-                    else
-                        "Enter your ${provider.displayName} API key to enable AI diagnostics.",
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-
-                Spacer(Modifier.height(12.dp))
-
-                // Cost info
-                Card(
-                    modifier = Modifier.fillMaxWidth(),
-                    colors = CardDefaults.cardColors(
-                        containerColor = if (isFree)
-                            Color(0xFF4CAF50).copy(alpha = 0.1f)
-                        else
-                            MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f)
-                    ),
-                    shape = RoundedCornerShape(8.dp)
-                ) {
-                    Text(
-                        text = provider.costInfo,
-                        modifier = Modifier.padding(10.dp),
-                        style = MaterialTheme.typography.bodySmall,
-                        color = if (isFree) Color(0xFF4CAF50) else MaterialTheme.colorScheme.onSurfaceVariant,
-                        fontWeight = FontWeight.Medium
-                    )
-                }
-
-                Spacer(Modifier.height(16.dp))
-
-                OutlinedTextField(
-                    value = apiKey,
-                    onValueChange = { apiKey = it },
-                    label = { Text("API Key") },
-                    placeholder = { Text(provider.keyPlaceholder) },
-                    visualTransformation = PasswordVisualTransformation(),
-                    singleLine = true,
-                    isError = error != null,
-                    supportingText = if (error != null) {
-                        { Text(error, color = MaterialTheme.colorScheme.error) }
-                    } else null,
-                    modifier = Modifier.fillMaxWidth()
-                )
-
-                Spacer(Modifier.height(16.dp))
-
-                // Instructions with clickable link
-                Card(
-                    modifier = Modifier.fillMaxWidth(),
-                    colors = CardDefaults.cardColors(
-                        containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
-                    ),
-                    shape = RoundedCornerShape(8.dp)
-                ) {
-                    Column(modifier = Modifier.padding(12.dp)) {
-                        Text(
-                            text = "How to get your API key:",
-                            style = MaterialTheme.typography.labelMedium,
-                            fontWeight = FontWeight.Bold,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                        Spacer(Modifier.height(8.dp))
-
-                        instructions.forEachIndexed { index, instruction ->
-                            Text(
-                                text = "${index + 1}. $instruction",
-                                style = MaterialTheme.typography.bodySmall,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant
-                            )
-                        }
-
-                        Spacer(Modifier.height(8.dp))
-
-                        // Clickable link
-                        val linkText = buildAnnotatedString {
-                            withStyle(
-                                style = SpanStyle(
-                                    color = MaterialTheme.colorScheme.primary,
-                                    textDecoration = TextDecoration.Underline,
-                                    fontWeight = FontWeight.Medium
-                                )
+                // Google Sign-In section for Gemini
+                if (provider == AiProvider.GEMINI && isGoogleSignInConfigured) {
+                    if (isGoogleSignedIn) {
+                        Card(
+                            modifier = Modifier.fillMaxWidth(),
+                            colors = CardDefaults.cardColors(
+                                containerColor = GoogleBlue.copy(alpha = 0.1f)
+                            ),
+                            shape = RoundedCornerShape(10.dp)
+                        ) {
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(12.dp),
+                                horizontalArrangement = Arrangement.SpaceBetween,
+                                verticalAlignment = Alignment.CenterVertically
                             ) {
-                                append("Open ${provider.setupUrl.removePrefix("https://")}")
+                                Column {
+                                    Text(
+                                        text = "Signed in with Google",
+                                        style = MaterialTheme.typography.labelMedium,
+                                        fontWeight = FontWeight.Bold,
+                                        color = GoogleBlue
+                                    )
+                                    if (googleEmail != null) {
+                                        Text(
+                                            text = googleEmail,
+                                            style = MaterialTheme.typography.bodySmall,
+                                            color = TextSecondary
+                                        )
+                                    }
+                                }
+                                TextButton(onClick = onGoogleSignOut) {
+                                    Text("Sign Out", color = RedError)
+                                }
                             }
                         }
+                        Spacer(Modifier.height(12.dp))
                         Text(
-                            text = linkText,
-                            modifier = Modifier.clickable {
-                                uriHandler.openUri(provider.setupUrl)
-                            },
-                            style = MaterialTheme.typography.bodySmall
+                            text = "You're all set! Gemini is ready to use.",
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = GreenSuccess
                         )
+                    } else {
+                        Text(
+                            text = "Sign in with Google for the easiest setup:",
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = TextSecondary
+                        )
+                        Spacer(Modifier.height(12.dp))
+
+                        androidx.compose.material3.Button(
+                            onClick = onGoogleSignIn,
+                            enabled = !isLoading,
+                            colors = androidx.compose.material3.ButtonDefaults.buttonColors(
+                                containerColor = Color.White
+                            ),
+                            shape = RoundedCornerShape(10.dp),
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            if (isLoading) {
+                                CircularProgressIndicator(
+                                    modifier = Modifier.size(20.dp),
+                                    strokeWidth = 2.dp,
+                                    color = GoogleBlue
+                                )
+                            } else {
+                                Text(
+                                    text = "G",
+                                    color = GoogleBlue,
+                                    fontWeight = FontWeight.Bold,
+                                    modifier = Modifier.padding(end = 8.dp)
+                                )
+                                Text(
+                                    text = "Sign in with Google",
+                                    color = Color.DarkGray
+                                )
+                            }
+                        }
+
+                        Spacer(Modifier.height(16.dp))
+                        HorizontalDivider(color = DarkBorder)
+                        Spacer(Modifier.height(8.dp))
+                        Text(
+                            text = "Or enter an API key manually:",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = TextTertiary
+                        )
+                        Spacer(Modifier.height(8.dp))
+                    }
+                } else {
+                    Text(
+                        text = if (hasExistingKey)
+                            "Your API key is saved. Enter a new key to update it."
+                        else
+                            "Enter your ${provider.displayName} API key to enable AI diagnostics.",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = TextSecondary
+                    )
+                    Spacer(Modifier.height(12.dp))
+                }
+
+                // Don't show API key input if already signed in with Google
+                if (!(provider == AiProvider.GEMINI && isGoogleSignedIn)) {
+                    // Cost info
+                    Card(
+                        modifier = Modifier.fillMaxWidth(),
+                        colors = CardDefaults.cardColors(
+                            containerColor = if (isFree)
+                                GreenSuccess.copy(alpha = 0.1f)
+                            else
+                                DarkSurfaceVariant
+                        ),
+                        shape = RoundedCornerShape(10.dp)
+                    ) {
+                        Text(
+                            text = provider.costInfo,
+                            modifier = Modifier.padding(12.dp),
+                            style = MaterialTheme.typography.bodySmall,
+                            color = if (isFree) GreenSuccess else TextSecondary,
+                            fontWeight = FontWeight.Medium
+                        )
+                    }
+
+                    Spacer(Modifier.height(16.dp))
+
+                    OutlinedTextField(
+                        value = apiKey,
+                        onValueChange = { apiKey = it },
+                        label = { Text("API Key", color = TextSecondary) },
+                        placeholder = { Text(provider.keyPlaceholder, color = TextTertiary) },
+                        visualTransformation = PasswordVisualTransformation(),
+                        singleLine = true,
+                        isError = error != null,
+                        supportingText = if (error != null) {
+                            { Text(error, color = RedError) }
+                        } else null,
+                        modifier = Modifier.fillMaxWidth(),
+                        colors = OutlinedTextFieldDefaults.colors(
+                            focusedBorderColor = CyanPrimary,
+                            unfocusedBorderColor = DarkBorder,
+                            cursorColor = CyanPrimary,
+                            focusedTextColor = TextPrimary,
+                            unfocusedTextColor = TextPrimary,
+                            focusedLabelColor = CyanPrimary
+                        )
+                    )
+
+                    Spacer(Modifier.height(16.dp))
+
+                    // Instructions with clickable link
+                    Card(
+                        modifier = Modifier.fillMaxWidth(),
+                        colors = CardDefaults.cardColors(
+                            containerColor = DarkSurfaceHigh
+                        ),
+                        shape = RoundedCornerShape(10.dp)
+                    ) {
+                        Column(modifier = Modifier.padding(12.dp)) {
+                            Text(
+                                text = "How to get your API key:",
+                                style = MaterialTheme.typography.labelMedium,
+                                fontWeight = FontWeight.Bold,
+                                color = TextPrimary
+                            )
+                            Spacer(Modifier.height(8.dp))
+
+                            instructions.forEachIndexed { index, instruction ->
+                                Text(
+                                    text = "${index + 1}. $instruction",
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = TextSecondary
+                                )
+                            }
+
+                            Spacer(Modifier.height(8.dp))
+
+                            // Clickable link
+                            val linkText = buildAnnotatedString {
+                                withStyle(
+                                    style = SpanStyle(
+                                        color = CyanPrimary,
+                                        textDecoration = TextDecoration.Underline,
+                                        fontWeight = FontWeight.Medium
+                                    )
+                                ) {
+                                    append("Open ${provider.setupUrl.removePrefix("https://")}")
+                                }
+                            }
+                            Text(
+                                text = linkText,
+                                modifier = Modifier.clickable {
+                                    uriHandler.openUri(provider.setupUrl)
+                                },
+                                style = MaterialTheme.typography.bodySmall
+                            )
+                        }
                     }
                 }
             }
         },
         confirmButton = {
-            if (isLoading) {
-                CircularProgressIndicator(modifier = Modifier.size(24.dp))
+            if (provider == AiProvider.GEMINI && isGoogleSignedIn) {
+                TextButton(onClick = onDismiss) {
+                    Text("Done", color = CyanPrimary)
+                }
+            } else if (isLoading) {
+                CircularProgressIndicator(
+                    modifier = Modifier.size(24.dp),
+                    color = CyanPrimary
+                )
             } else {
                 TextButton(
                     onClick = { onSave(apiKey) },
                     enabled = apiKey.isNotBlank()
                 ) {
-                    Text("Save")
+                    Text(
+                        "Save",
+                        color = if (apiKey.isNotBlank()) CyanPrimary else TextTertiary
+                    )
                 }
             }
         },
         dismissButton = {
-            Row {
-                if (hasExistingKey) {
-                    TextButton(onClick = onClear) {
-                        Text("Remove Key", color = MaterialTheme.colorScheme.error)
+            if (!(provider == AiProvider.GEMINI && isGoogleSignedIn)) {
+                Row {
+                    if (hasExistingKey) {
+                        TextButton(onClick = onClear) {
+                            Text("Remove Key", color = RedError)
+                        }
                     }
-                }
-                TextButton(onClick = onDismiss) {
-                    Text("Cancel")
+                    TextButton(onClick = onDismiss) {
+                        Text("Cancel", color = TextSecondary)
+                    }
                 }
             }
         }

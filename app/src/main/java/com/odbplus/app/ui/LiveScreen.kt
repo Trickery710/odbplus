@@ -2,6 +2,7 @@ package com.odbplus.app.ui
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -42,6 +43,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.FilterChip
+import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -49,6 +51,7 @@ import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Slider
+import androidx.compose.material3.SliderDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -62,16 +65,19 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.odbplus.app.live.LiveDataUiState
 import com.odbplus.app.live.LiveDataViewModel
 import com.odbplus.app.live.LogSession
 import com.odbplus.app.live.PidDisplayState
 import com.odbplus.app.live.PidPreset
+import com.odbplus.app.ui.theme.*
 import com.odbplus.core.protocol.ObdPid
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -83,7 +89,11 @@ fun LiveScreen(viewModel: LiveDataViewModel = hiltViewModel()) {
     var showPidSelector by remember { mutableStateOf(false) }
     var showLogSessions by remember { mutableStateOf(false) }
 
-    Column(modifier = Modifier.fillMaxSize()) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(DarkBackground)
+    ) {
         // Header with connection status and controls
         LiveDataHeader(
             uiState = uiState,
@@ -96,7 +106,7 @@ fun LiveScreen(viewModel: LiveDataViewModel = hiltViewModel()) {
             onSetReplaySpeed = { viewModel.setReplaySpeed(it) }
         )
 
-        HorizontalDivider()
+        HorizontalDivider(color = DarkBorder, thickness = 1.dp)
 
         if (uiState.selectedPids.isEmpty()) {
             EmptyStatePrompt(onOpenPidSelector = { showPidSelector = true })
@@ -148,6 +158,7 @@ private fun LiveDataHeader(
     Column(
         modifier = Modifier
             .fillMaxWidth()
+            .background(DarkSurface)
             .padding(16.dp)
     ) {
         // Status row
@@ -164,9 +175,9 @@ private fun LiveDataHeader(
                         .clip(CircleShape)
                         .background(
                             when {
-                                uiState.isReplaying -> Color(0xFF2196F3)
-                                uiState.isConnected -> Color(0xFF4CAF50)
-                                else -> Color.Gray
+                                uiState.isReplaying -> ReplayBlue
+                                uiState.isConnected -> GreenSuccess
+                                else -> TextTertiary
                             }
                         )
                 )
@@ -177,24 +188,44 @@ private fun LiveDataHeader(
                         uiState.isConnected -> "Connected"
                         else -> "Disconnected"
                     },
-                    style = MaterialTheme.typography.bodyMedium
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = when {
+                        uiState.isReplaying -> ReplayBlue
+                        uiState.isConnected -> GreenSuccess
+                        else -> TextSecondary
+                    },
+                    fontWeight = FontWeight.Medium
                 )
 
-                // Logging indicator
+                // Recording indicator with pulse feel
                 if (uiState.isLogging) {
-                    Spacer(Modifier.width(12.dp))
-                    Icon(
-                        Icons.Default.FiberManualRecord,
-                        contentDescription = "Recording",
-                        tint = Color.Red,
-                        modifier = Modifier.size(12.dp)
-                    )
-                    Spacer(Modifier.width(4.dp))
-                    Text(
-                        text = "REC ${uiState.currentLogSession?.dataPointCount ?: 0}",
-                        style = MaterialTheme.typography.bodySmall,
-                        color = Color.Red
-                    )
+                    Spacer(Modifier.width(14.dp))
+                    Surface(
+                        shape = RoundedCornerShape(12.dp),
+                        color = RecordingPulse.copy(alpha = 0.12f),
+                        border = androidx.compose.foundation.BorderStroke(
+                            1.dp, RecordingPulse.copy(alpha = 0.3f)
+                        )
+                    ) {
+                        Row(
+                            modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Icon(
+                                Icons.Default.FiberManualRecord,
+                                contentDescription = "Recording",
+                                tint = RecordingPulse,
+                                modifier = Modifier.size(10.dp)
+                            )
+                            Spacer(Modifier.width(5.dp))
+                            Text(
+                                text = "REC ${uiState.currentLogSession?.dataPointCount ?: 0}",
+                                style = MaterialTheme.typography.labelSmall,
+                                color = RecordingPulse,
+                                fontWeight = FontWeight.Bold
+                            )
+                        }
+                    }
                 }
             }
 
@@ -205,12 +236,13 @@ private fun LiveDataHeader(
                 } else {
                     "${uiState.selectedPids.size} PIDs"
                 },
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
+                style = MaterialTheme.typography.labelMedium,
+                color = TextTertiary,
+                fontWeight = FontWeight.Medium
             )
         }
 
-        Spacer(Modifier.height(12.dp))
+        Spacer(Modifier.height(14.dp))
 
         // Replay controls (when replaying)
         if (uiState.isReplaying) {
@@ -223,18 +255,18 @@ private fun LiveDataHeader(
             // Normal controls
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                horizontalArrangement = Arrangement.spacedBy(10.dp)
             ) {
-                // Start/Stop button
                 Button(
                     onClick = onTogglePolling,
                     enabled = uiState.isConnected && uiState.selectedPids.isNotEmpty(),
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = if (uiState.isPolling)
-                            MaterialTheme.colorScheme.error
-                        else
-                            MaterialTheme.colorScheme.primary
+                        containerColor = if (uiState.isPolling) RedError else CyanPrimary,
+                        contentColor = if (uiState.isPolling) Color.White else TextOnAccent,
+                        disabledContainerColor = DarkSurfaceVariant,
+                        disabledContentColor = TextTertiary
                     ),
+                    shape = RoundedCornerShape(12.dp),
                     modifier = Modifier.weight(1f)
                 ) {
                     Icon(
@@ -242,68 +274,87 @@ private fun LiveDataHeader(
                         contentDescription = null,
                         modifier = Modifier.size(18.dp)
                     )
-                    Spacer(Modifier.width(4.dp))
-                    Text(if (uiState.isPolling) "Stop" else "Start")
+                    Spacer(Modifier.width(6.dp))
+                    Text(
+                        if (uiState.isPolling) "Stop" else "Start",
+                        fontWeight = FontWeight.SemiBold
+                    )
                 }
 
-                // Select PIDs button
                 OutlinedButton(
                     onClick = onOpenPidSelector,
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier.weight(1f),
+                    shape = RoundedCornerShape(12.dp),
+                    border = ButtonDefaults.outlinedButtonBorder(enabled = true).copy(
+                        brush = androidx.compose.ui.graphics.SolidColor(DarkBorder)
+                    ),
+                    colors = ButtonDefaults.outlinedButtonColors(contentColor = TextPrimary)
                 ) {
-                    Text("Select PIDs")
+                    Text("Select PIDs", fontWeight = FontWeight.Medium)
                 }
             }
 
-            Spacer(Modifier.height(8.dp))
+            Spacer(Modifier.height(10.dp))
 
             // Logger controls row
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                horizontalArrangement = Arrangement.spacedBy(10.dp)
             ) {
-                // Record button
                 Button(
                     onClick = onToggleLogging,
                     enabled = uiState.isConnected && uiState.selectedPids.isNotEmpty(),
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = if (uiState.isLogging)
-                            Color.Red
-                        else
-                            MaterialTheme.colorScheme.secondary
+                        containerColor = if (uiState.isLogging) RecordingPulse else DarkSurfaceHigh,
+                        contentColor = if (uiState.isLogging) Color.White else TextPrimary,
+                        disabledContainerColor = DarkSurfaceVariant,
+                        disabledContentColor = TextTertiary
                     ),
+                    shape = RoundedCornerShape(12.dp),
                     modifier = Modifier.weight(1f)
                 ) {
                     Icon(
                         imageVector = if (uiState.isLogging) Icons.Default.Stop else Icons.Default.FiberManualRecord,
                         contentDescription = null,
-                        modifier = Modifier.size(18.dp)
+                        modifier = Modifier.size(18.dp),
+                        tint = if (uiState.isLogging) Color.White else RecordingPulse
                     )
-                    Spacer(Modifier.width(4.dp))
-                    Text(if (uiState.isLogging) "Stop Rec" else "Record")
+                    Spacer(Modifier.width(6.dp))
+                    Text(
+                        if (uiState.isLogging) "Stop Rec" else "Record",
+                        fontWeight = FontWeight.Medium
+                    )
                 }
 
-                // Saved logs button
                 OutlinedButton(
                     onClick = onOpenLogSessions,
                     enabled = uiState.savedSessions.isNotEmpty(),
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier.weight(1f),
+                    shape = RoundedCornerShape(12.dp),
+                    border = ButtonDefaults.outlinedButtonBorder(enabled = true).copy(
+                        brush = androidx.compose.ui.graphics.SolidColor(DarkBorder)
+                    ),
+                    colors = ButtonDefaults.outlinedButtonColors(contentColor = TextPrimary)
                 ) {
-                    Text("Logs (${uiState.savedSessions.size})")
+                    Text(
+                        "Logs (${uiState.savedSessions.size})",
+                        fontWeight = FontWeight.Medium
+                    )
                 }
             }
         }
 
         // Poll interval slider (when not replaying)
         if (!uiState.isReplaying && uiState.selectedPids.isNotEmpty()) {
-            Spacer(Modifier.height(12.dp))
+            Spacer(Modifier.height(14.dp))
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
                     text = "Interval:",
-                    style = MaterialTheme.typography.bodySmall
+                    style = MaterialTheme.typography.labelSmall,
+                    color = TextTertiary
                 )
                 Spacer(Modifier.width(8.dp))
                 Slider(
@@ -311,13 +362,20 @@ private fun LiveDataHeader(
                     onValueChange = { onSetPollInterval(it.toLong()) },
                     valueRange = 100f..2000f,
                     steps = 18,
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier.weight(1f),
+                    colors = SliderDefaults.colors(
+                        thumbColor = CyanPrimary,
+                        activeTrackColor = CyanPrimary,
+                        inactiveTrackColor = DarkBorder
+                    )
                 )
                 Spacer(Modifier.width(8.dp))
                 Text(
                     text = "${uiState.pollIntervalMs}ms",
-                    style = MaterialTheme.typography.bodySmall,
-                    modifier = Modifier.width(60.dp)
+                    style = MaterialTheme.typography.labelSmall,
+                    color = CyanPrimary,
+                    fontWeight = FontWeight.Medium,
+                    modifier = Modifier.width(52.dp)
                 )
             }
         }
@@ -338,46 +396,57 @@ private fun ReplayControls(
 
         LinearProgressIndicator(
             progress = { progress },
-            modifier = Modifier.fillMaxWidth(),
-            color = Color(0xFF2196F3)
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(4.dp)
+                .clip(RoundedCornerShape(2.dp)),
+            color = ReplayBlue,
+            trackColor = DarkBorder
         )
 
-        Spacer(Modifier.height(12.dp))
+        Spacer(Modifier.height(14.dp))
 
         Row(
             modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            horizontalArrangement = Arrangement.spacedBy(10.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            // Stop button
             Button(
                 onClick = onStop,
-                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.error),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = RedError,
+                    contentColor = Color.White
+                ),
+                shape = RoundedCornerShape(12.dp),
                 modifier = Modifier.weight(1f)
             ) {
                 Icon(Icons.Default.Stop, contentDescription = null, modifier = Modifier.size(18.dp))
-                Spacer(Modifier.width(4.dp))
-                Text("Stop Replay")
+                Spacer(Modifier.width(6.dp))
+                Text("Stop Replay", fontWeight = FontWeight.SemiBold)
             }
 
             // Speed controls
             Row(
                 verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.weight(1f)
+                modifier = Modifier.weight(1f),
+                horizontalArrangement = Arrangement.Center
             ) {
-                Text("Speed:", style = MaterialTheme.typography.bodySmall)
-                Spacer(Modifier.width(8.dp))
+                Text("Speed:", style = MaterialTheme.typography.labelSmall, color = TextTertiary)
+                Spacer(Modifier.width(6.dp))
                 listOf(0.5f, 1f, 2f).forEach { speed ->
                     TextButton(
                         onClick = { onSetSpeed(speed) },
                         colors = ButtonDefaults.textButtonColors(
                             contentColor = if (uiState.replaySpeed == speed)
-                                MaterialTheme.colorScheme.primary
+                                CyanPrimary
                             else
-                                MaterialTheme.colorScheme.onSurfaceVariant
+                                TextTertiary
                         )
                     ) {
-                        Text("${speed}x")
+                        Text(
+                            "${speed}x",
+                            fontWeight = if (uiState.replaySpeed == speed) FontWeight.Bold else FontWeight.Normal
+                        )
                     }
                 }
             }
@@ -397,18 +466,26 @@ private fun EmptyStatePrompt(onOpenPidSelector: () -> Unit) {
         Text(
             text = "No PIDs Selected",
             style = MaterialTheme.typography.headlineSmall,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
+            color = TextPrimary,
+            fontWeight = FontWeight.Bold
         )
         Spacer(Modifier.height(8.dp))
         Text(
             text = "Select which parameters to monitor from your vehicle",
             style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            color = TextSecondary,
             textAlign = TextAlign.Center
         )
-        Spacer(Modifier.height(24.dp))
-        Button(onClick = onOpenPidSelector) {
-            Text("Select PIDs")
+        Spacer(Modifier.height(28.dp))
+        Button(
+            onClick = onOpenPidSelector,
+            colors = ButtonDefaults.buttonColors(
+                containerColor = CyanPrimary,
+                contentColor = TextOnAccent
+            ),
+            shape = RoundedCornerShape(12.dp)
+        ) {
+            Text("Select PIDs", fontWeight = FontWeight.SemiBold)
         }
     }
 }
@@ -420,9 +497,9 @@ private fun LiveDataGrid(
 ) {
     LazyVerticalGrid(
         columns = GridCells.Fixed(2),
-        contentPadding = PaddingValues(8.dp),
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
-        verticalArrangement = Arrangement.spacedBy(8.dp),
+        contentPadding = PaddingValues(10.dp),
+        horizontalArrangement = Arrangement.spacedBy(10.dp),
+        verticalArrangement = Arrangement.spacedBy(10.dp),
         modifier = Modifier.fillMaxSize()
     ) {
         items(uiState.selectedPids) { pid ->
@@ -442,11 +519,20 @@ private fun PidDisplayCard(
     onRefresh: () -> Unit,
     isReplaying: Boolean = false
 ) {
-    val backgroundColor by animateColorAsState(
+    // Color-code based on state: error = red, active value = cyan glow, empty = neutral
+    val borderColor by animateColorAsState(
         targetValue = when {
-            pidState.error != null -> MaterialTheme.colorScheme.errorContainer.copy(alpha = 0.3f)
-            pidState.value != null -> MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.3f)
-            else -> MaterialTheme.colorScheme.surfaceVariant
+            pidState.error != null -> RedError.copy(alpha = 0.3f)
+            pidState.value != null -> CyanPrimary.copy(alpha = 0.25f)
+            else -> DarkBorder
+        },
+        label = "cardBorder"
+    )
+    val bgColor by animateColorAsState(
+        targetValue = when {
+            pidState.error != null -> RedContainer
+            pidState.value != null -> DarkSurfaceVariant
+            else -> DarkSurfaceVariant
         },
         label = "cardBackground"
     )
@@ -454,9 +540,14 @@ private fun PidDisplayCard(
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .aspectRatio(1.2f),
-        colors = CardDefaults.cardColors(containerColor = backgroundColor),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+            .aspectRatio(1.2f)
+            .border(
+                width = 1.dp,
+                color = borderColor,
+                shape = RoundedCornerShape(14.dp)
+            ),
+        colors = CardDefaults.cardColors(containerColor = bgColor),
+        shape = RoundedCornerShape(14.dp)
     ) {
         Column(
             modifier = Modifier
@@ -474,7 +565,8 @@ private fun PidDisplayCard(
                     style = MaterialTheme.typography.labelMedium,
                     maxLines = 2,
                     overflow = TextOverflow.Ellipsis,
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier.weight(1f),
+                    color = TextSecondary
                 )
                 if (!isReplaying) {
                     IconButton(
@@ -483,14 +575,16 @@ private fun PidDisplayCard(
                     ) {
                         if (pidState.isLoading) {
                             CircularProgressIndicator(
-                                modifier = Modifier.size(16.dp),
-                                strokeWidth = 2.dp
+                                modifier = Modifier.size(14.dp),
+                                strokeWidth = 2.dp,
+                                color = CyanPrimary
                             )
                         } else {
                             Icon(
                                 Icons.Default.Refresh,
                                 contentDescription = "Refresh",
-                                modifier = Modifier.size(16.dp)
+                                modifier = Modifier.size(16.dp),
+                                tint = TextTertiary
                             )
                         }
                     }
@@ -505,30 +599,35 @@ private fun PidDisplayCard(
                     Text(
                         text = pidState.error,
                         style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.error,
+                        color = RedLight,
                         textAlign = TextAlign.Center
                     )
                 } else {
+                    // Large bold value -- the dashboard-style readout
                     Text(
                         text = pidState.value?.let {
                             formatDisplayValue(it, pidState.pid)
                         } ?: "--",
                         style = MaterialTheme.typography.headlineMedium,
                         fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.onSurface
+                        color = if (pidState.value != null) CyanPrimary else TextTertiary,
+                        fontFamily = FontFamily.Default
                     )
+                    // Unit label in smaller muted text
                     Text(
                         text = pidState.pid.unit,
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                        style = MaterialTheme.typography.labelSmall,
+                        color = TextTertiary
                     )
                 }
             }
 
+            // PID code in bottom corner
             Text(
                 text = "PID: ${pidState.pid.code}",
                 style = MaterialTheme.typography.labelSmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f)
+                color = TextTertiary.copy(alpha = 0.6f),
+                fontFamily = FontFamily.Monospace
             )
         }
     }
@@ -571,50 +670,32 @@ enum class PidCategory(val displayName: String) {
  */
 private fun ObdPid.getCategory(): PidCategory {
     return when {
-        // Engine PIDs
         code in listOf("04", "0C", "0E", "1F", "61", "62", "63", "64", "8E") -> PidCategory.ENGINE
         description.contains("Engine", ignoreCase = true) && !description.contains("Temp", ignoreCase = true) -> PidCategory.ENGINE
-
-        // Fuel PIDs
         code in listOf("03", "06", "07", "08", "09", "0A", "22", "23", "2F", "51", "52", "59", "5D", "5E", "9D") -> PidCategory.FUEL
         description.contains("Fuel", ignoreCase = true) -> PidCategory.FUEL
-
-        // Temperature PIDs
         code in listOf("05", "0F", "46", "5C", "67", "68", "6B", "75", "76", "77", "78", "79", "84") -> PidCategory.TEMPERATURE
         description.contains("Temp", ignoreCase = true) -> PidCategory.TEMPERATURE
-
-        // Speed & Distance PIDs
         code in listOf("0D", "21", "30", "31", "4D", "4E", "7F") -> PidCategory.SPEED_DISTANCE
         description.contains("Speed", ignoreCase = true) || description.contains("Distance", ignoreCase = true) -> PidCategory.SPEED_DISTANCE
-
-        // Oxygen Sensor PIDs
         code in listOf("13", "14", "15", "16", "17", "18", "19", "1A", "1B", "1D",
             "24", "25", "26", "27", "28", "29", "2A", "2B",
             "34", "35", "36", "37", "38", "39", "3A", "3B",
             "55", "56", "57", "58", "8C", "9C") -> PidCategory.OXYGEN_SENSORS
         description.contains("O2", ignoreCase = true) || description.contains("Oxygen", ignoreCase = true) -> PidCategory.OXYGEN_SENSORS
-
-        // Emissions & EGR PIDs
         code in listOf("12", "2C", "2D", "2E", "32", "3C", "3D", "3E", "3F", "53", "54",
             "69", "6A", "7A", "7B", "7C", "7D", "7E", "83", "85", "86", "88", "8B", "94") -> PidCategory.EMISSIONS
         description.contains("EGR", ignoreCase = true) || description.contains("Catalyst", ignoreCase = true) ||
         description.contains("Evap", ignoreCase = true) || description.contains("NOx", ignoreCase = true) ||
         description.contains("DPF", ignoreCase = true) || description.contains("Particulate", ignoreCase = true) -> PidCategory.EMISSIONS
-
-        // Throttle & Pedal PIDs
         code in listOf("11", "45", "47", "48", "49", "4A", "4B", "4C", "5A", "6C", "8D") -> PidCategory.THROTTLE_PEDAL
         description.contains("Throttle", ignoreCase = true) || description.contains("Pedal", ignoreCase = true) -> PidCategory.THROTTLE_PEDAL
-
-        // Turbo & Boost PIDs
         code in listOf("6F", "70", "71", "72", "73", "74") -> PidCategory.TURBO_BOOST
         description.contains("Turbo", ignoreCase = true) || description.contains("Boost", ignoreCase = true) ||
         description.contains("Wastegate", ignoreCase = true) -> PidCategory.TURBO_BOOST
-
-        // Diagnostics PIDs
         code in listOf("00", "01", "02", "1C", "1E", "20", "40", "41", "60", "65", "80", "A0", "C0") -> PidCategory.DIAGNOSTICS
         description.contains("Monitor", ignoreCase = true) || description.contains("DTC", ignoreCase = true) ||
         description.contains("Supported", ignoreCase = true) || description.contains("Status", ignoreCase = true) -> PidCategory.DIAGNOSTICS
-
         else -> PidCategory.OTHER
     }
 }
@@ -628,7 +709,6 @@ private fun PidSelectorDialog(
     onSelectPreset: (PidPreset) -> Unit,
     onClearAll: () -> Unit
 ) {
-    // Group PIDs by category
     val groupedPids = remember(uiState.availablePids) {
         uiState.availablePids
             .groupBy { it.pid.getCategory() }
@@ -639,13 +719,18 @@ private fun PidSelectorDialog(
 
     AlertDialog(
         onDismissRequest = onDismiss,
+        containerColor = DarkSurface,
+        titleContentColor = TextPrimary,
         title = {
             Column {
-                Text("Select PIDs to Monitor")
+                Text(
+                    "Select PIDs to Monitor",
+                    fontWeight = FontWeight.Bold
+                )
                 Text(
                     text = "${uiState.selectedPids.size} selected",
                     style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    color = CyanPrimary
                 )
             }
         },
@@ -655,11 +740,13 @@ private fun PidSelectorDialog(
             ) {
                 item {
                     Text(
-                        text = "Quick Presets",
-                        style = MaterialTheme.typography.titleSmall,
-                        fontWeight = FontWeight.Bold
+                        text = "QUICK PRESETS",
+                        style = MaterialTheme.typography.labelSmall,
+                        fontWeight = FontWeight.Bold,
+                        color = TextTertiary,
+                        letterSpacing = 1.sp
                     )
-                    Spacer(Modifier.height(8.dp))
+                    Spacer(Modifier.height(10.dp))
                     FlowRow(
                         horizontalArrangement = Arrangement.spacedBy(8.dp),
                         verticalArrangement = Arrangement.spacedBy(8.dp)
@@ -668,28 +755,52 @@ private fun PidSelectorDialog(
                             FilterChip(
                                 selected = false,
                                 onClick = { onSelectPreset(preset) },
-                                label = { Text(preset.displayName) }
+                                label = {
+                                    Text(
+                                        preset.displayName,
+                                        color = CyanPrimary
+                                    )
+                                },
+                                colors = FilterChipDefaults.filterChipColors(
+                                    containerColor = CyanContainer,
+                                    labelColor = CyanPrimary
+                                ),
+                                border = FilterChipDefaults.filterChipBorder(
+                                    enabled = true,
+                                    selected = false,
+                                    borderColor = CyanPrimary.copy(alpha = 0.3f)
+                                )
                             )
                         }
                     }
                 }
 
                 item {
-                    HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
+                    HorizontalDivider(
+                        modifier = Modifier.padding(vertical = 10.dp),
+                        color = DarkBorder
+                    )
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
-                            text = "By Category",
-                            style = MaterialTheme.typography.titleSmall,
-                            fontWeight = FontWeight.Bold
+                            text = "BY CATEGORY",
+                            style = MaterialTheme.typography.labelSmall,
+                            fontWeight = FontWeight.Bold,
+                            color = TextTertiary,
+                            letterSpacing = 1.sp
                         )
                         TextButton(onClick = onClearAll) {
-                            Icon(Icons.Default.Clear, contentDescription = null, modifier = Modifier.size(16.dp))
+                            Icon(
+                                Icons.Default.Clear,
+                                contentDescription = null,
+                                modifier = Modifier.size(14.dp),
+                                tint = RedError
+                            )
                             Spacer(Modifier.width(4.dp))
-                            Text("Clear All")
+                            Text("Clear All", color = RedError)
                         }
                     }
                 }
@@ -723,8 +834,15 @@ private fun PidSelectorDialog(
             }
         },
         confirmButton = {
-            Button(onClick = onDismiss) {
-                Text("Done")
+            Button(
+                onClick = onDismiss,
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = CyanPrimary,
+                    contentColor = TextOnAccent
+                ),
+                shape = RoundedCornerShape(10.dp)
+            ) {
+                Text("Done", fontWeight = FontWeight.SemiBold)
             }
         }
     )
@@ -741,12 +859,13 @@ private fun PidCategoryHeader(
     Surface(
         modifier = Modifier
             .fillMaxWidth()
-            .clip(RoundedCornerShape(8.dp))
+            .clip(RoundedCornerShape(10.dp))
             .clickable { onClick() },
         color = if (selectedCount > 0)
-            MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.3f)
+            CyanContainer
         else
-            MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
+            DarkSurfaceVariant,
+        shape = RoundedCornerShape(10.dp)
     ) {
         Row(
             modifier = Modifier
@@ -762,22 +881,22 @@ private fun PidCategoryHeader(
                     else
                         Icons.AutoMirrored.Filled.KeyboardArrowRight,
                     contentDescription = if (isExpanded) "Collapse" else "Expand",
-                    modifier = Modifier.size(20.dp)
+                    modifier = Modifier.size(20.dp),
+                    tint = if (selectedCount > 0) CyanPrimary else TextSecondary
                 )
                 Spacer(Modifier.width(8.dp))
                 Text(
                     text = category.displayName,
                     style = MaterialTheme.typography.titleSmall,
-                    fontWeight = FontWeight.Medium
+                    fontWeight = FontWeight.Medium,
+                    color = if (selectedCount > 0) CyanOnContainer else TextPrimary
                 )
             }
             Text(
                 text = if (selectedCount > 0) "$selectedCount / $totalCount" else "$totalCount",
-                style = MaterialTheme.typography.bodySmall,
-                color = if (selectedCount > 0)
-                    MaterialTheme.colorScheme.primary
-                else
-                    MaterialTheme.colorScheme.onSurfaceVariant
+                style = MaterialTheme.typography.labelMedium,
+                color = if (selectedCount > 0) CyanPrimary else TextTertiary,
+                fontWeight = if (selectedCount > 0) FontWeight.Bold else FontWeight.Normal
             )
         }
     }
@@ -790,7 +909,7 @@ private fun PidSelectorItem(
 ) {
     val backgroundColor by animateColorAsState(
         targetValue = if (pidState.isSelected)
-            MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.5f)
+            CyanPrimary.copy(alpha = 0.1f)
         else
             Color.Transparent,
         label = "selectorBackground"
@@ -814,19 +933,20 @@ private fun PidSelectorItem(
             Column(modifier = Modifier.weight(1f)) {
                 Text(
                     text = pidState.pid.description,
-                    style = MaterialTheme.typography.bodyMedium
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = TextPrimary
                 )
                 Text(
                     text = "PID: ${pidState.pid.code} | ${pidState.pid.unit}",
                     style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    color = TextTertiary
                 )
             }
             if (pidState.isSelected) {
                 Icon(
                     Icons.Default.CheckCircle,
                     contentDescription = "Selected",
-                    tint = MaterialTheme.colorScheme.primary
+                    tint = CyanPrimary
                 )
             }
         }
@@ -843,17 +963,19 @@ private fun LogSessionsDialog(
 ) {
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("Saved Logs") },
+        containerColor = DarkSurface,
+        titleContentColor = TextPrimary,
+        title = { Text("Saved Logs", fontWeight = FontWeight.Bold) },
         text = {
             if (sessions.isEmpty()) {
                 Text(
                     text = "No saved logs yet.\nStart recording to create a log.",
                     style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    color = TextSecondary
                 )
             } else {
                 LazyColumn(
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                    verticalArrangement = Arrangement.spacedBy(10.dp)
                 ) {
                     items(sessions.reversed()) { session ->
                         LogSessionItem(
@@ -866,14 +988,21 @@ private fun LogSessionsDialog(
             }
         },
         confirmButton = {
-            Button(onClick = onDismiss) {
-                Text("Close")
+            Button(
+                onClick = onDismiss,
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = CyanPrimary,
+                    contentColor = TextOnAccent
+                ),
+                shape = RoundedCornerShape(10.dp)
+            ) {
+                Text("Close", fontWeight = FontWeight.SemiBold)
             }
         },
         dismissButton = {
             if (sessions.isNotEmpty()) {
                 TextButton(onClick = onClearAll) {
-                    Text("Clear All", color = MaterialTheme.colorScheme.error)
+                    Text("Clear All", color = RedError)
                 }
             }
         }
@@ -890,10 +1019,11 @@ private fun LogSessionItem(
     val durationSec = session.duration / 1000
 
     Card(
-        modifier = Modifier.fillMaxWidth(),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceVariant
-        )
+        modifier = Modifier
+            .fillMaxWidth()
+            .border(1.dp, DarkBorder, RoundedCornerShape(12.dp)),
+        colors = CardDefaults.cardColors(containerColor = DarkSurfaceVariant),
+        shape = RoundedCornerShape(12.dp)
     ) {
         Row(
             modifier = Modifier
@@ -906,12 +1036,13 @@ private fun LogSessionItem(
                 Text(
                     text = dateFormat.format(Date(session.startTime)),
                     style = MaterialTheme.typography.bodyMedium,
-                    fontWeight = FontWeight.Medium
+                    fontWeight = FontWeight.Medium,
+                    color = TextPrimary
                 )
                 Text(
-                    text = "${session.dataPointCount} samples • ${durationSec}s • ${session.selectedPids.size} PIDs",
+                    text = "${session.dataPointCount} samples | ${durationSec}s | ${session.selectedPids.size} PIDs",
                     style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    color = TextTertiary
                 )
             }
 
@@ -920,14 +1051,14 @@ private fun LogSessionItem(
                     Icon(
                         Icons.Default.PlayArrow,
                         contentDescription = "Replay",
-                        tint = MaterialTheme.colorScheme.primary
+                        tint = CyanPrimary
                     )
                 }
                 IconButton(onClick = onDelete) {
                     Icon(
                         Icons.Default.Delete,
                         contentDescription = "Delete",
-                        tint = MaterialTheme.colorScheme.error
+                        tint = RedError.copy(alpha = 0.7f)
                     )
                 }
             }

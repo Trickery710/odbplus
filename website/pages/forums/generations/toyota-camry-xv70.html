@@ -1,0 +1,932 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Toyota Camry XV70 (2018-Present) Forums - Subsystem discussions for 8th generation Camry owners.">
+    <title>Toyota Camry XV70 (2018-Present) Forums | ODB+</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/styles.css">
+</head>
+<body>
+    <nav class="navbar" id="navbar">
+        <div class="navbar-container">
+            <a href="../../../index.html" class="navbar-brand">
+                <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="40" height="40" rx="8" fill="url(#gradient)"/>
+                    <path d="M12 20C12 15.5817 15.5817 12 20 12C24.4183 12 28 15.5817 28 20C28 24.4183 24.4183 28 20 28" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+                    <path d="M20 16V20L23 23" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    <circle cx="20" cy="20" r="2" fill="white"/>
+                    <defs><linearGradient id="gradient" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse"><stop stop-color="#2563eb"/><stop offset="1" stop-color="#10b981"/></linearGradient></defs>
+                </svg>
+                <span>ODB+</span>
+            </a>
+            <ul class="navbar-menu">
+                <li><a href="../../../index.html">Home</a></li>
+                <li><a href="../../codes/index.html">Error Codes</a></li>
+                <li><a href="../index.html" class="active">Forums</a></li>
+                <li><a href="../../sensors/index.html">Sensors</a></li>
+            </ul>
+            <div class="navbar-actions">
+                <a href="../../auth/login.html" class="btn btn-secondary">Log In</a>
+                <a href="../../auth/signup.html" class="btn btn-primary">Sign Up</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="forum-main">
+        <div class="container">
+            <!-- Breadcrumb -->
+            <nav class="breadcrumb">
+                <a href="../index.html">Forums</a>
+                <span class="separator">/</span>
+                <a href="../toyota.html">Toyota</a>
+                <span class="separator">/</span>
+                <a href="../toyota-camry.html">Camry</a>
+                <span class="separator">/</span>
+                <span class="current">XV70 (2018-Present)</span>
+            </nav>
+
+            <!-- Generation Header -->
+            <div class="gen-header">
+                <div class="gen-info">
+                    <div class="gen-badge">8th Generation</div>
+                    <h1>Toyota Camry XV70</h1>
+                    <p class="gen-years">2018 - Present</p>
+                    <div class="gen-stats">
+                        <div class="stat">
+                            <span class="stat-value">2.4K</span>
+                            <span class="stat-label">Members</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-value">8.7K</span>
+                            <span class="stat-label">Threads</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-value">34K</span>
+                            <span class="stat-label">Posts</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="gen-actions">
+                    <button class="btn btn-primary">New Thread</button>
+                    <button class="btn btn-outline">Subscribe</button>
+                </div>
+            </div>
+
+            <!-- Quick Specs -->
+            <div class="specs-overview">
+                <h2>Available Configurations</h2>
+                <div class="specs-grid">
+                    <div class="spec-card">
+                        <h3>Engines</h3>
+                        <ul>
+                            <li><strong>A25A-FKS</strong> - 2.5L I4 (203 hp)</li>
+                            <li><strong>2GR-FKS</strong> - 3.5L V6 (301 hp)</li>
+                            <li><strong>A25A-FXS</strong> - 2.5L Hybrid (208 hp combined)</li>
+                        </ul>
+                    </div>
+                    <div class="spec-card">
+                        <h3>Transmissions</h3>
+                        <ul>
+                            <li><strong>Direct Shift 8AT</strong> - 8-speed automatic (2.5L)</li>
+                            <li><strong>Direct Shift 8AT</strong> - 8-speed automatic (3.5L V6)</li>
+                            <li><strong>eCVT</strong> - Hybrid planetary CVT</li>
+                        </ul>
+                    </div>
+                    <div class="spec-card">
+                        <h3>Drivetrain</h3>
+                        <ul>
+                            <li><strong>FWD</strong> - Front-wheel drive (standard)</li>
+                            <li><strong>AWD</strong> - All-wheel drive (2020+ 2.5L)</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Subsystem Forums -->
+            <div class="subsystem-forums">
+                <h2>Subsystem Forums</h2>
+
+                <!-- Engine -->
+                <div class="subsystem-category" id="engine">
+                    <div class="category-header">
+                        <div class="category-icon engine-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="2" y="6" width="20" height="12" rx="2"/>
+                                <path d="M6 6V4M18 6V4M6 18v2M18 18v2"/>
+                                <circle cx="12" cy="12" r="3"/>
+                            </svg>
+                        </div>
+                        <div class="category-info">
+                            <h3>Engine</h3>
+                            <p>Engine internals, fuel system, cooling, exhaust</p>
+                        </div>
+                        <div class="category-stats">
+                        </div>
+                    </div>
+
+                    <div class="variant-tabs">
+                        <button class="variant-tab active" data-variant="a25a-fks">2.5L I4 (A25A-FKS)</button>
+                        <button class="variant-tab" data-variant="2gr-fks">3.5L V6 (2GR-FKS)</button>
+                        <button class="variant-tab" data-variant="a25a-fxs">2.5L Hybrid (A25A-FXS)</button>
+                    </div>
+
+                    <div class="variant-content active" id="a25a-fks">
+                        <div class="variant-info">
+                            <h4>2.5L Dynamic Force I4 (A25A-FKS)</h4>
+                            <div class="variant-specs">
+                                <span>203 hp @ 6,600 rpm</span>
+                                <span>184 lb-ft @ 5,000 rpm</span>
+                                <span>Compression: 13.0:1</span>
+                                <span>Direct + Port Injection</span>
+                            </div>
+                            <div class="common-issues">
+                                <h5>Common Issues</h5>
+                                <ul>
+                                    <li><span class="issue-tag">TSB</span> Oil consumption monitoring - early production</li>
+                                    <li><span class="issue-tag">Common</span> Fuel injector tick noise (normal)</li>
+                                    <li><span class="issue-tag">Recall</span> Fuel pump (certain 2018-2019)</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="thread-list">
+                            <a href="#" class="thread-item">
+                                <div class="thread-votes">
+                                    <button class="vote-up">▲</button>
+                                    <span class="vote-count">47</span>
+                                    <button class="vote-down">▼</button>
+                                </div>
+                                <div class="thread-content">
+                                    <h4>Oil consumption test results - 2019 Camry 2.5L with 45K miles</h4>
+                                    <div class="thread-meta">
+                                        <span class="thread-author">CamryOwner2019</span>
+                                        <span class="thread-replies"></span>
+                                        <span class="thread-time">2 hours ago</span>
+                                    </div>
+                                </div>
+                            </a>
+                            <a href="#" class="thread-item">
+                                <div class="thread-votes">
+                                    <button class="vote-up">▲</button>
+                                    <span class="vote-count">23</span>
+                                    <button class="vote-down">▼</button>
+                                </div>
+                                <div class="thread-content">
+                                    <h4>Direct injection tick - is this normal? (video included)</h4>
+                                    <div class="thread-meta">
+                                        <span class="thread-author">NewCamryDriver</span>
+                                        <span class="thread-replies"></span>
+                                        <span class="thread-time">5 hours ago</span>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="variant-content" id="2gr-fks">
+                        <div class="variant-info">
+                            <h4>3.5L V6 (2GR-FKS)</h4>
+                            <div class="variant-specs">
+                                <span>301 hp @ 6,600 rpm</span>
+                                <span>267 lb-ft @ 4,700 rpm</span>
+                                <span>Compression: 11.8:1</span>
+                                <span>Direct + Port Injection</span>
+                            </div>
+                            <div class="common-issues">
+                                <h5>Common Issues</h5>
+                                <ul>
+                                    <li><span class="issue-tag">Common</span> Water pump weep hole seepage</li>
+                                    <li><span class="issue-tag">TSB</span> VVT-i solenoid noise on cold start</li>
+                                    <li><span class="issue-tag">Maintenance</span> Spark plug replacement at 120K</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="thread-list">
+                            <a href="#" class="thread-item">
+                                <div class="thread-votes">
+                                    <button class="vote-up">▲</button>
+                                    <span class="vote-count">31</span>
+                                    <button class="vote-down">▼</button>
+                                </div>
+                                <div class="thread-content">
+                                    <h4>V6 water pump replacement DIY guide with photos</h4>
+                                    <div class="thread-meta">
+                                        <span class="thread-author">DIYMechanic</span>
+                                        <span class="thread-replies"></span>
+                                        <span class="thread-time">1 day ago</span>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="variant-content" id="a25a-fxs">
+                        <div class="variant-info">
+                            <h4>2.5L Hybrid (A25A-FXS)</h4>
+                            <div class="variant-specs">
+                                <span>208 hp combined</span>
+                                <span>Atkinson Cycle</span>
+                                <span>Compression: 14.0:1</span>
+                                <span>Lithium-ion battery (2022+) / Ni-MH (earlier)</span>
+                            </div>
+                            <div class="common-issues">
+                                <h5>Common Issues</h5>
+                                <ul>
+                                    <li><span class="issue-tag">Normal</span> Engine cycling on/off (hybrid operation)</li>
+                                    <li><span class="issue-tag">TSB</span> Hybrid battery calibration update</li>
+                                    <li><span class="issue-tag">Rare</span> Inverter coolant pump noise</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="thread-list">
+                            <a href="#" class="thread-item">
+                                <div class="thread-votes">
+                                    <button class="vote-up">▲</button>
+                                    <span class="vote-count">56</span>
+                                    <button class="vote-down">▼</button>
+                                </div>
+                                <div class="thread-content">
+                                    <h4>Hybrid battery health after 100K miles - my results</h4>
+                                    <div class="thread-meta">
+                                        <span class="thread-author">HybridEnthusiast</span>
+                                        <span class="thread-replies"></span>
+                                        <span class="thread-time">3 hours ago</span>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                    <a href="#" class="view-all-link">View all Engine threads →</a>
+                </div>
+
+                <!-- Transmission -->
+                <div class="subsystem-category" id="transmission">
+                    <div class="category-header">
+                        <div class="category-icon trans-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="3"/>
+                                <circle cx="12" cy="12" r="8"/>
+                                <path d="M12 4v4M12 16v4M4 12h4M16 12h4"/>
+                            </svg>
+                        </div>
+                        <div class="category-info">
+                            <h3>Transmission</h3>
+                            <p>Automatic, CVT, shifting, fluid, torque converter</p>
+                        </div>
+                        <div class="category-stats">
+                        </div>
+                    </div>
+
+                    <div class="variant-tabs">
+                        <button class="variant-tab active" data-variant="8at">8-Speed Automatic</button>
+                        <button class="variant-tab" data-variant="ecvt">Hybrid eCVT</button>
+                    </div>
+
+                    <div class="variant-content active" id="8at">
+                        <div class="variant-info">
+                            <h4>Direct Shift 8-Speed Automatic</h4>
+                            <div class="variant-specs">
+                                <span>Aisin AWF8F35</span>
+                                <span>Toyota WS Fluid</span>
+                                <span>Fluid Capacity: 8.7 qt</span>
+                                <span>Service: 60K miles (severe) / Lifetime (normal)</span>
+                            </div>
+                            <div class="common-issues">
+                                <h5>Common Issues</h5>
+                                <ul>
+                                    <li><span class="issue-tag">Learning</span> Adaptive shift calibration period</li>
+                                    <li><span class="issue-tag">TSB</span> Shift quality update (TCM reflash)</li>
+                                    <li><span class="issue-tag">Maintenance</span> Fluid change improves shift feel</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="thread-list">
+                            <a href="#" class="thread-item">
+                                <div class="thread-votes">
+                                    <button class="vote-up">▲</button>
+                                    <span class="vote-count">38</span>
+                                    <button class="vote-down">▼</button>
+                                </div>
+                                <div class="thread-content">
+                                    <h4>8-speed transmission fluid change DIY - step by step</h4>
+                                    <div class="thread-meta">
+                                        <span class="thread-author">TransFluidGuy</span>
+                                        <span class="thread-replies"></span>
+                                        <span class="thread-time">4 hours ago</span>
+                                    </div>
+                                </div>
+                            </a>
+                            <a href="#" class="thread-item">
+                                <div class="thread-votes">
+                                    <button class="vote-up">▲</button>
+                                    <span class="vote-count">25</span>
+                                    <button class="vote-down">▼</button>
+                                </div>
+                                <div class="thread-content">
+                                    <h4>Harsh 1-2 shift when cold - normal or issue?</h4>
+                                    <div class="thread-meta">
+                                        <span class="thread-author">CamryXSE</span>
+                                        <span class="thread-replies"></span>
+                                        <span class="thread-time">8 hours ago</span>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="variant-content" id="ecvt">
+                        <div class="variant-info">
+                            <h4>Hybrid eCVT (Planetary Gear Set)</h4>
+                            <div class="variant-specs">
+                                <span>Power-split device</span>
+                                <span>No traditional clutches</span>
+                                <span>Toyota WS Fluid</span>
+                                <span>Service: Generally lifetime</span>
+                            </div>
+                            <div class="common-issues">
+                                <h5>Common Issues</h5>
+                                <ul>
+                                    <li><span class="issue-tag">Normal</span> "Rubber band" feel under acceleration</li>
+                                    <li><span class="issue-tag">Rare</span> MG1/MG2 bearing noise (high mileage)</li>
+                                    <li><span class="issue-tag">Info</span> Very reliable, minimal maintenance needed</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="thread-list">
+                            <a href="#" class="thread-item">
+                                <div class="thread-votes">
+                                    <button class="vote-up">▲</button>
+                                    <span class="vote-count">42</span>
+                                    <button class="vote-down">▼</button>
+                                </div>
+                                <div class="thread-content">
+                                    <h4>Understanding hybrid eCVT - how it actually works</h4>
+                                    <div class="thread-meta">
+                                        <span class="thread-author">HybridTech</span>
+                                        <span class="thread-replies"></span>
+                                        <span class="thread-time">1 day ago</span>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                    <a href="#" class="view-all-link">View all Transmission threads →</a>
+                </div>
+
+                <!-- Suspension & Steering -->
+                <div class="subsystem-category" id="suspension">
+                    <div class="category-header">
+                        <div class="category-icon susp-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="5" r="2"/>
+                                <circle cx="12" cy="19" r="2"/>
+                                <path d="M12 7v10"/>
+                                <path d="M8 9l4-2 4 2"/>
+                                <path d="M8 15l4 2 4-2"/>
+                            </svg>
+                        </div>
+                        <div class="category-info">
+                            <h3>Suspension & Steering</h3>
+                            <p>Shocks, struts, control arms, steering rack, alignment</p>
+                        </div>
+                        <div class="category-stats">
+                        </div>
+                    </div>
+
+                    <div class="variant-info" style="margin-top: 1rem;">
+                        <h4>Suspension Configuration</h4>
+                        <div class="variant-specs">
+                            <span>Front: MacPherson strut</span>
+                            <span>Rear: Multi-link (LE/XLE) / Double wishbone (SE/XSE)</span>
+                            <span>Electric Power Steering</span>
+                        </div>
+                        <div class="common-issues">
+                            <h5>Common Issues</h5>
+                            <ul>
+                                <li><span class="issue-tag">Common</span> Front strut mount noise over bumps</li>
+                                <li><span class="issue-tag">TSB</span> Steering intermediate shaft clunk</li>
+                                <li><span class="issue-tag">Wear</span> Rear sway bar end links (80K+ miles)</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="thread-list">
+                        <a href="#" class="thread-item">
+                            <div class="thread-votes">
+                                <button class="vote-up">▲</button>
+                                <span class="vote-count">33</span>
+                                <button class="vote-down">▼</button>
+                            </div>
+                            <div class="thread-content">
+                                <h4>Front strut replacement - OEM vs aftermarket comparison</h4>
+                                <div class="thread-meta">
+                                    <span class="thread-author">SuspensionPro</span>
+                                    <span class="thread-replies"></span>
+                                    <span class="thread-time">6 hours ago</span>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    <a href="#" class="view-all-link">View all Suspension threads →</a>
+                </div>
+
+                <!-- Electrical & Electronics -->
+                <div class="subsystem-category" id="electrical">
+                    <div class="category-header">
+                        <div class="category-icon elec-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+                            </svg>
+                        </div>
+                        <div class="category-info">
+                            <h3>Electrical & Electronics</h3>
+                            <p>Battery, alternator, sensors, infotainment, lighting</p>
+                        </div>
+                        <div class="category-stats">
+                        </div>
+                    </div>
+
+                    <div class="variant-info" style="margin-top: 1rem;">
+                        <h4>Electrical System</h4>
+                        <div class="variant-specs">
+                            <span>12V Battery: Group 35</span>
+                            <span>Entune 3.0 / Audio Plus / Premium</span>
+                            <span>Toyota Safety Sense 2.0/2.5+</span>
+                        </div>
+                        <div class="common-issues">
+                            <h5>Common Issues</h5>
+                            <ul>
+                                <li><span class="issue-tag">Common</span> Entune head unit freezing/rebooting</li>
+                                <li><span class="issue-tag">TSB</span> Backup camera delay fix</li>
+                                <li><span class="issue-tag">Recall</span> Fuel pump control module (2018-2019)</li>
+                                <li><span class="issue-tag">Common</span> 12V battery drain (short trips)</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="thread-list">
+                        <a href="#" class="thread-item">
+                            <div class="thread-votes">
+                                <button class="vote-up">▲</button>
+                                <span class="vote-count">67</span>
+                                <button class="vote-down">▼</button>
+                            </div>
+                            <div class="thread-content">
+                                <h4>CarPlay/Android Auto retrofit guide for older Entune</h4>
+                                <div class="thread-meta">
+                                    <span class="thread-author">TechModder</span>
+                                    <span class="thread-replies"></span>
+                                    <span class="thread-time">3 hours ago</span>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    <a href="#" class="view-all-link">View all Electrical threads →</a>
+                </div>
+
+                <!-- Brakes -->
+                <div class="subsystem-category" id="brakes">
+                    <div class="category-header">
+                        <div class="category-icon brake-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"/>
+                                <circle cx="12" cy="12" r="4"/>
+                                <path d="M12 2v4M12 18v4M2 12h4M18 12h4"/>
+                            </svg>
+                        </div>
+                        <div class="category-info">
+                            <h3>Brakes</h3>
+                            <p>Pads, rotors, calipers, brake fluid, ABS</p>
+                        </div>
+                        <div class="category-stats">
+                        </div>
+                    </div>
+
+                    <div class="variant-info" style="margin-top: 1rem;">
+                        <h4>Brake Configuration</h4>
+                        <div class="variant-specs">
+                            <span>Front: Ventilated disc (11.6" LE, 12.0" XSE)</span>
+                            <span>Rear: Solid disc</span>
+                            <span>ABS with EBD, BA, VSC, TRAC</span>
+                        </div>
+                        <div class="common-issues">
+                            <h5>Common Issues</h5>
+                            <ul>
+                                <li><span class="issue-tag">Common</span> Brake squeal in humid/wet conditions</li>
+                                <li><span class="issue-tag">Normal</span> Hybrid regenerative brake feel different</li>
+                                <li><span class="issue-tag">Wear</span> Front pads ~40K miles, rear ~60K miles</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="thread-list">
+                        <a href="#" class="thread-item">
+                            <div class="thread-votes">
+                                <button class="vote-up">▲</button>
+                                <span class="vote-count">28</span>
+                                <button class="vote-down">▼</button>
+                            </div>
+                            <div class="thread-content">
+                                <h4>Best brake pads for XV70 - ceramic vs semi-metallic</h4>
+                                <div class="thread-meta">
+                                    <span class="thread-author">BrakeExpert</span>
+                                    <span class="thread-replies"></span>
+                                    <span class="thread-time">12 hours ago</span>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    <a href="#" class="view-all-link">View all Brake threads →</a>
+                </div>
+
+                <!-- HVAC -->
+                <div class="subsystem-category" id="hvac">
+                    <div class="category-header">
+                        <div class="category-icon hvac-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M12 2v8M12 18v4"/>
+                                <path d="M4.93 10.93l2.83 2.83"/>
+                                <path d="M16.24 13.76l2.83 2.83"/>
+                                <path d="M2 18h4M18 18h4"/>
+                                <circle cx="12" cy="14" r="4"/>
+                            </svg>
+                        </div>
+                        <div class="category-info">
+                            <h3>HVAC & Climate</h3>
+                            <p>A/C, heating, ventilation, cabin filter, blend doors</p>
+                        </div>
+                        <div class="category-stats">
+                        </div>
+                    </div>
+
+                    <div class="variant-info" style="margin-top: 1rem;">
+                        <h4>Climate System</h4>
+                        <div class="variant-specs">
+                            <span>R-1234yf Refrigerant</span>
+                            <span>Dual-zone auto climate (XLE+)</span>
+                            <span>Cabin filter: CF11819</span>
+                        </div>
+                        <div class="common-issues">
+                            <h5>Common Issues</h5>
+                            <ul>
+                                <li><span class="issue-tag">Common</span> A/C musty smell (evaporator mold)</li>
+                                <li><span class="issue-tag">TSB</span> Blend door actuator clicking</li>
+                                <li><span class="issue-tag">Maintenance</span> Cabin filter every 15K miles</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="thread-list">
+                        <a href="#" class="thread-item">
+                            <div class="thread-votes">
+                                <button class="vote-up">▲</button>
+                                <span class="vote-count">45</span>
+                                <button class="vote-down">▼</button>
+                            </div>
+                            <div class="thread-content">
+                                <h4>Eliminating A/C smell - evaporator cleaning guide</h4>
+                                <div class="thread-meta">
+                                    <span class="thread-author">CleanAirFan</span>
+                                    <span class="thread-replies"></span>
+                                    <span class="thread-time">1 day ago</span>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    <a href="#" class="view-all-link">View all HVAC threads →</a>
+                </div>
+
+                <!-- Drivetrain (AWD specific) -->
+                <div class="subsystem-category" id="drivetrain">
+                    <div class="category-header">
+                        <div class="category-icon drive-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="5" cy="12" r="3"/>
+                                <circle cx="19" cy="12" r="3"/>
+                                <path d="M8 12h8"/>
+                                <path d="M5 9V6M5 15v3M19 9V6M19 15v3"/>
+                            </svg>
+                        </div>
+                        <div class="category-info">
+                            <h3>Drivetrain & AWD</h3>
+                            <p>Axles, CV joints, differential, AWD system</p>
+                        </div>
+                        <div class="category-stats">
+                        </div>
+                    </div>
+
+                    <div class="variant-tabs">
+                        <button class="variant-tab active" data-variant="fwd">Front-Wheel Drive</button>
+                        <button class="variant-tab" data-variant="awd">All-Wheel Drive (2020+)</button>
+                    </div>
+
+                    <div class="variant-content active" id="fwd">
+                        <div class="variant-info">
+                            <h4>Front-Wheel Drive</h4>
+                            <div class="variant-specs">
+                                <span>Standard configuration</span>
+                                <span>CV axles with boots</span>
+                            </div>
+                            <div class="common-issues">
+                                <h5>Common Issues</h5>
+                                <ul>
+                                    <li><span class="issue-tag">Wear</span> CV boot tears (100K+ miles)</li>
+                                    <li><span class="issue-tag">Normal</span> Slight axle click on full lock turns</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="variant-content" id="awd">
+                        <div class="variant-info">
+                            <h4>Dynamic Torque Control AWD (2020+ 2.5L only)</h4>
+                            <div class="variant-specs">
+                                <span>On-demand rear axle engagement</span>
+                                <span>Electromagnetic clutch coupling</span>
+                                <span>Up to 50% torque to rear</span>
+                            </div>
+                            <div class="common-issues">
+                                <h5>Common Issues</h5>
+                                <ul>
+                                    <li><span class="issue-tag">Info</span> Rear differential fluid change 30K miles</li>
+                                    <li><span class="issue-tag">Rare</span> Coupling engagement noise in cold weather</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <a href="#" class="view-all-link">View all Drivetrain threads →</a>
+                </div>
+
+                <!-- Interior -->
+                <div class="subsystem-category" id="interior">
+                    <div class="category-header">
+                        <div class="category-icon int-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="3" y="3" width="18" height="18" rx="2"/>
+                                <path d="M3 9h18M9 21V9"/>
+                            </svg>
+                        </div>
+                        <div class="category-info">
+                            <h3>Interior</h3>
+                            <p>Seats, trim, dashboard, gauges, accessories</p>
+                        </div>
+                        <div class="category-stats">
+                        </div>
+                    </div>
+                    <div class="thread-list">
+                        <a href="#" class="thread-item">
+                            <div class="thread-votes">
+                                <button class="vote-up">▲</button>
+                                <span class="vote-count">34</span>
+                                <button class="vote-down">▼</button>
+                            </div>
+                            <div class="thread-content">
+                                <h4>Dashboard rattle fix - passenger side</h4>
+                                <div class="thread-meta">
+                                    <span class="thread-author">QuietRideFan</span>
+                                    <span class="thread-replies"></span>
+                                    <span class="thread-time">8 hours ago</span>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    <a href="#" class="view-all-link">View all Interior threads →</a>
+                </div>
+
+                <!-- Exterior & Body -->
+                <div class="subsystem-category" id="exterior">
+                    <div class="category-header">
+                        <div class="category-icon ext-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M5 17H4a2 2 0 01-2-2V9a2 2 0 012-2h1"/>
+                                <path d="M19 17h1a2 2 0 002-2V9a2 2 0 00-2-2h-1"/>
+                                <path d="M5 17a2 2 0 01-2-2V9a2 2 0 012-2h14a2 2 0 012 2v6a2 2 0 01-2 2"/>
+                                <circle cx="7" cy="17" r="2"/>
+                                <circle cx="17" cy="17" r="2"/>
+                            </svg>
+                        </div>
+                        <div class="category-info">
+                            <h3>Exterior & Body</h3>
+                            <p>Paint, panels, glass, mirrors, weatherstripping</p>
+                        </div>
+                        <div class="category-stats">
+                        </div>
+                    </div>
+                    <div class="thread-list">
+                        <a href="#" class="thread-item">
+                            <div class="thread-votes">
+                                <button class="vote-up">▲</button>
+                                <span class="vote-count">52</span>
+                                <button class="vote-down">▼</button>
+                            </div>
+                            <div class="thread-content">
+                                <h4>Wind noise fix - door seal adjustment guide</h4>
+                                <div class="thread-meta">
+                                    <span class="thread-author">WindNoiseHater</span>
+                                    <span class="thread-replies"></span>
+                                    <span class="thread-time">5 hours ago</span>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    <a href="#" class="view-all-link">View all Exterior threads →</a>
+                </div>
+
+                <!-- Maintenance & DIY -->
+                <div class="subsystem-category" id="maintenance">
+                    <div class="category-header">
+                        <div class="category-icon maint-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/>
+                            </svg>
+                        </div>
+                        <div class="category-info">
+                            <h3>Maintenance & DIY</h3>
+                            <p>Service schedules, fluid specs, DIY guides, tools</p>
+                        </div>
+                        <div class="category-stats">
+                        </div>
+                    </div>
+
+                    <div class="variant-info" style="margin-top: 1rem;">
+                        <h4>Maintenance Schedule</h4>
+                        <div class="variant-specs">
+                            <span>Oil: 0W-16 (2.5L) / 0W-20 (V6)</span>
+                            <span>Oil Change: 10K miles / 12 months</span>
+                            <span>Coolant: Toyota SLLC (Pink)</span>
+                            <span>Brake Fluid: DOT 3</span>
+                        </div>
+                    </div>
+
+                    <div class="thread-list">
+                        <a href="#" class="thread-item">
+                            <div class="thread-votes">
+                                <button class="vote-up">▲</button>
+                                <span class="vote-count">89</span>
+                                <button class="vote-down">▼</button>
+                            </div>
+                            <div class="thread-content">
+                                <h4>[STICKY] Complete XV70 Maintenance Guide with Intervals</h4>
+                                <div class="thread-meta">
+                                    <span class="thread-author">Moderator</span>
+                                    <span class="thread-replies"></span>
+                                    <span class="thread-time">Pinned</span>
+                                </div>
+                            </div>
+                        </a>
+                        <a href="#" class="thread-item">
+                            <div class="thread-votes">
+                                <button class="vote-up">▲</button>
+                                <span class="vote-count">67</span>
+                                <button class="vote-down">▼</button>
+                            </div>
+                            <div class="thread-content">
+                                <h4>Oil change DIY with drain plug torque specs</h4>
+                                <div class="thread-meta">
+                                    <span class="thread-author">DIYOilChanger</span>
+                                    <span class="thread-replies"></span>
+                                    <span class="thread-time">2 days ago</span>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    <a href="#" class="view-all-link">View all Maintenance threads →</a>
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-bottom" style="border-top: none; padding-top: 0;">
+                <p>&copy; 2024 ODB+. All rights reserved.</p>
+                <div class="footer-legal"><a href="#">Privacy Policy</a><a href="#">Terms of Service</a></div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../../../js/main.js"></script>
+    <script>
+        // Variant tab switching
+        document.querySelectorAll('.variant-tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                const category = this.closest('.subsystem-category');
+                category.querySelectorAll('.variant-tab').forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+
+                const variant = this.dataset.variant;
+                category.querySelectorAll('.variant-content').forEach(content => {
+                    content.classList.remove('active');
+                });
+                const targetContent = category.querySelector(`#${variant}`) || category.querySelector(`.variant-content[id="${variant}"]`);
+                if (targetContent) targetContent.classList.add('active');
+            });
+        });
+    </script>
+    <style>
+        .forum-main { padding-top: 100px; padding-bottom: 4rem; }
+
+        /* Generation Header */
+        .gen-header { display: flex; justify-content: space-between; align-items: flex-start; background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 16px; padding: 2rem; margin-bottom: 2rem; }
+        .gen-badge { display: inline-block; background: var(--primary); color: white; padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.75rem; font-weight: 600; margin-bottom: 0.5rem; }
+        .gen-header h1 { font-size: 2rem; margin-bottom: 0.25rem; }
+        .gen-years { color: var(--text-secondary); font-size: 1.125rem; margin-bottom: 1rem; }
+        .gen-stats { display: flex; gap: 2rem; }
+        .stat { display: flex; flex-direction: column; }
+        .stat-value { font-size: 1.5rem; font-weight: 700; color: var(--primary); }
+        .stat-label { font-size: 0.75rem; color: var(--text-secondary); text-transform: uppercase; }
+        .gen-actions { display: flex; gap: 0.75rem; }
+
+        /* Specs Overview */
+        .specs-overview { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 16px; padding: 1.5rem; margin-bottom: 2rem; }
+        .specs-overview h2 { font-size: 1.25rem; margin-bottom: 1rem; }
+        .specs-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; }
+        .spec-card { background: var(--bg-secondary); border-radius: 12px; padding: 1rem; }
+        .spec-card h3 { font-size: 0.875rem; color: var(--primary); margin-bottom: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; }
+        .spec-card ul { list-style: none; padding: 0; margin: 0; }
+        .spec-card li { padding: 0.375rem 0; font-size: 0.875rem; border-bottom: 1px solid var(--border-color); }
+        .spec-card li:last-child { border-bottom: none; }
+        .spec-card strong { color: var(--text-primary); }
+
+        /* Subsystem Forums */
+        .subsystem-forums h2 { font-size: 1.5rem; margin-bottom: 1.5rem; }
+        .subsystem-category { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 16px; margin-bottom: 1.5rem; overflow: hidden; }
+
+        .category-header { display: flex; align-items: center; gap: 1rem; padding: 1.25rem 1.5rem; background: var(--bg-secondary); border-bottom: 1px solid var(--border-color); }
+        .category-icon { width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; }
+        .category-icon svg { width: 24px; height: 24px; }
+        .engine-icon { background: #fee2e2; color: #dc2626; }
+        .trans-icon { background: #fef3c7; color: #d97706; }
+        .susp-icon { background: #d1fae5; color: #059669; }
+        .elec-icon { background: #dbeafe; color: #2563eb; }
+        .brake-icon { background: #fce7f3; color: #db2777; }
+        .hvac-icon { background: #e0e7ff; color: #4f46e5; }
+        .drive-icon { background: #f3e8ff; color: #7c3aed; }
+        .int-icon { background: #fef9c3; color: #ca8a04; }
+        .ext-icon { background: #ccfbf1; color: #0d9488; }
+        .maint-icon { background: #f1f5f9; color: #475569; }
+
+        .category-info { flex: 1; }
+        .category-info h3 { font-size: 1.125rem; margin-bottom: 0.25rem; }
+        .category-info p { font-size: 0.875rem; color: var(--text-secondary); margin: 0; }
+        .category-stats { display: flex; gap: 1.5rem; font-size: 0.875rem; color: var(--text-secondary); }
+
+        /* Variant Tabs */
+        .variant-tabs { display: flex; gap: 0.5rem; padding: 1rem 1.5rem; border-bottom: 1px solid var(--border-color); flex-wrap: wrap; }
+        .variant-tab { padding: 0.5rem 1rem; border: 1px solid var(--border-color); border-radius: 20px; background: transparent; cursor: pointer; font-size: 0.875rem; transition: all 0.2s; }
+        .variant-tab:hover { border-color: var(--primary); }
+        .variant-tab.active { background: var(--primary); color: white; border-color: var(--primary); }
+
+        /* Variant Content */
+        .variant-content { display: none; padding: 1.5rem; }
+        .variant-content.active { display: block; }
+        .variant-info { margin-bottom: 1.5rem; }
+        .variant-info h4 { font-size: 1rem; margin-bottom: 0.75rem; }
+        .variant-specs { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1rem; }
+        .variant-specs span { background: var(--bg-secondary); padding: 0.375rem 0.75rem; border-radius: 6px; font-size: 0.8125rem; }
+
+        /* Common Issues */
+        .common-issues { background: var(--bg-secondary); border-radius: 12px; padding: 1rem; }
+        .common-issues h5 { font-size: 0.875rem; margin-bottom: 0.75rem; color: var(--warning); }
+        .common-issues ul { list-style: none; padding: 0; margin: 0; }
+        .common-issues li { padding: 0.375rem 0; font-size: 0.8125rem; display: flex; align-items: flex-start; gap: 0.5rem; }
+        .issue-tag { display: inline-block; padding: 0.125rem 0.5rem; border-radius: 4px; font-size: 0.6875rem; font-weight: 600; text-transform: uppercase; flex-shrink: 0; }
+        .issue-tag { background: #e5e7eb; color: #374151; }
+        .common-issues li:has(.issue-tag:contains("TSB")) .issue-tag { background: #fef3c7; color: #92400e; }
+        .common-issues li:has(.issue-tag:contains("Recall")) .issue-tag { background: #fee2e2; color: #991b1b; }
+        .common-issues li:has(.issue-tag:contains("Common")) .issue-tag { background: #dbeafe; color: #1e40af; }
+
+        /* Thread List */
+        .thread-list { border-top: 1px solid var(--border-color); }
+        .thread-item { display: flex; gap: 1rem; padding: 1rem 1.5rem; border-bottom: 1px solid var(--border-color); text-decoration: none; color: inherit; transition: background 0.2s; }
+        .thread-item:hover { background: var(--bg-secondary); }
+        .thread-item:last-child { border-bottom: none; }
+
+        .thread-votes { display: flex; flex-direction: column; align-items: center; gap: 0.25rem; min-width: 40px; }
+        .thread-votes button { background: none; border: none; cursor: pointer; color: var(--text-secondary); font-size: 0.75rem; padding: 0.25rem; }
+        .thread-votes button:hover { color: var(--primary); }
+        .vote-count { font-weight: 600; font-size: 0.875rem; }
+
+        .thread-content { flex: 1; }
+        .thread-content h4 { font-size: 0.9375rem; margin-bottom: 0.5rem; font-weight: 500; }
+        .thread-meta { display: flex; gap: 1rem; font-size: 0.75rem; color: var(--text-secondary); }
+        .thread-author { color: var(--primary); }
+
+        .view-all-link { display: block; padding: 1rem 1.5rem; text-align: center; color: var(--primary); text-decoration: none; font-weight: 500; font-size: 0.875rem; background: var(--bg-secondary); }
+        .view-all-link:hover { background: var(--border-color); }
+
+        @media (max-width: 768px) {
+            .gen-header { flex-direction: column; gap: 1.5rem; }
+            .gen-stats { gap: 1rem; }
+            .category-header { flex-wrap: wrap; }
+            .category-stats { width: 100%; margin-top: 0.5rem; }
+            .variant-tabs { gap: 0.375rem; }
+            .variant-tab { padding: 0.375rem 0.75rem; font-size: 0.8125rem; }
+        }
+    </style>
+</body>
+</html>

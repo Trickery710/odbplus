@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="ODB+ Vehicle Forums - Get help from experts for your specific make, model, and year. Join our community of mechanics and enthusiasts.">
+    <title>Vehicle Forums | ODB+</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../../css/styles.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="navbar-container">
+            <a href="../../index.html" class="navbar-brand">
+                <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="40" height="40" rx="8" fill="url(#gradient)"/>
+                    <path d="M12 20C12 15.5817 15.5817 12 20 12C24.4183 12 28 15.5817 28 20C28 24.4183 24.4183 28 20 28" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+                    <path d="M20 16V20L23 23" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    <circle cx="20" cy="20" r="2" fill="white"/>
+                    <defs>
+                        <linearGradient id="gradient" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse">
+                            <stop stop-color="#2563eb"/>
+                            <stop offset="1" stop-color="#10b981"/>
+                        </linearGradient>
+                    </defs>
+                </svg>
+                <span>ODB+</span>
+            </a>
+            <ul class="navbar-menu">
+                <li><a href="../../index.html">Home</a></li>
+                <li><a href="../codes/index.html">Error Codes</a></li>
+                <li><a href="index.html" class="active">Forums</a></li>
+                <li><a href="../sensors/index.html">Sensors</a></li>
+            </ul>
+            <div class="navbar-actions">
+                <a href="../auth/login.html" class="btn btn-secondary">Log In</a>
+                <a href="../auth/signup.html" class="btn btn-primary">Sign Up</a>
+            </div>
+        </div>
+    </nav>
+
+    <main style="padding-top: 100px; padding-bottom: 4rem;">
+        <div class="container">
+            <!-- Header -->
+            <div class="section-header" style="text-align: left; max-width: none; margin-bottom: 2rem;">
+                <h1>Vehicle Forums</h1>
+                <p class="section-description">Connect with experts and enthusiasts who know your exact make, model, and year</p>
+            </div>
+
+            <!-- Search -->
+            <div class="search-box mb-4" style="max-width: 100%;">
+                <svg class="search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="11" cy="11" r="8"/>
+                    <path d="M21 21l-4.35-4.35"/>
+                </svg>
+                <input type="text" class="search-input" id="forumSearch" placeholder="Search forums by make, model, or topic...">
+            </div>
+
+            <!-- Popular Makes -->
+            <h2 class="mb-3">Popular Makes</h2>
+            <div class="forum-grid mb-5">
+                <a href="toyota.html" class="forum-card">
+                    <div class="forum-icon">
+                        <img src="https://logo.clearbit.com/toyota.com" alt="Toyota" onerror="this.parentElement.innerHTML='<span style=font-size:1.5rem;font-weight:bold>T</span>'">
+                    </div>
+                    <div class="forum-info">
+                        <h3>Toyota</h3>
+                        <p>Camry, Corolla, RAV4, Tacoma, Tundra</p>
+                    </div>
+                </a>
+                <a href="honda.html" class="forum-card">
+                    <div class="forum-icon">
+                        <img src="https://logo.clearbit.com/honda.com" alt="Honda" onerror="this.parentElement.innerHTML='<span style=font-size:1.5rem;font-weight:bold>H</span>'">
+                    </div>
+                    <div class="forum-info">
+                        <h3>Honda</h3>
+                        <p>Civic, Accord, CR-V, Pilot, Odyssey</p>
+                    </div>
+                </a>
+                <a href="ford.html" class="forum-card">
+                    <div class="forum-icon">
+                        <img src="https://logo.clearbit.com/ford.com" alt="Ford" onerror="this.parentElement.innerHTML='<span style=font-size:1.5rem;font-weight:bold>F</span>'">
+                    </div>
+                    <div class="forum-info">
+                        <h3>Ford</h3>
+                        <p>F-150, Mustang, Explorer, Escape, Edge</p>
+                    </div>
+                </a>
+                <a href="chevrolet.html" class="forum-card">
+                    <div class="forum-icon">
+                        <img src="https://logo.clearbit.com/chevrolet.com" alt="Chevrolet" onerror="this.parentElement.innerHTML='<span style=font-size:1.5rem;font-weight:bold>C</span>'">
+                    </div>
+                    <div class="forum-info">
+                        <h3>Chevrolet</h3>
+                        <p>Silverado, Equinox, Malibu, Tahoe, Camaro</p>
+                    </div>
+                </a>
+                <a href="nissan.html" class="forum-card">
+                    <div class="forum-icon">
+                        <img src="https://logo.clearbit.com/nissan.com" alt="Nissan" onerror="this.parentElement.innerHTML='<span style=font-size:1.5rem;font-weight:bold>N</span>'">
+                    </div>
+                    <div class="forum-info">
+                        <h3>Nissan</h3>
+                        <p>Altima, Rogue, Sentra, Pathfinder, Frontier</p>
+                    </div>
+                </a>
+                <a href="jeep.html" class="forum-card">
+                    <div class="forum-icon">
+                        <img src="https://logo.clearbit.com/jeep.com" alt="Jeep" onerror="this.parentElement.innerHTML='<span style=font-size:1.5rem;font-weight:bold>J</span>'">
+                    </div>
+                    <div class="forum-info">
+                        <h3>Jeep</h3>
+                        <p>Wrangler, Grand Cherokee, Cherokee, Compass</p>
+                    </div>
+                </a>
+            </div>
+
+            <!-- All Makes -->
+            <h2 class="mb-3">All Makes (A-Z)</h2>
+            <div class="forum-grid">
+                <!-- A -->
+                <a href="acura.html" class="forum-card">
+                    <div class="forum-icon"><span style="font-size:1.5rem;font-weight:bold">A</span></div>
+                    <div class="forum-info">
+                        <h3>Acura</h3>
+                        <p>MDX, RDX, TLX, ILX</p>
+                    </div>
+                </a>
+                <a href="audi.html" class="forum-card">
+                    <div class="forum-icon"><span style="font-size:1.5rem;font-weight:bold">A</span></div>
+                    <div class="forum-info">
+                        <h3>Audi</h3>
+                        <p>A4, Q5, A6, Q7, A3</p>
+                    </div>
+                </a>
+                <!-- B -->
+                <a href="bmw.html" class="forum-card">
+                    <div class="forum-icon"><span style="font-size:1.5rem;font-weight:bold">B</span></div>
+                    <div class="forum-info">
+                        <h3>BMW</h3>
+                        <p>3 Series, 5 Series, X3, X5</p>
+                    </div>
+                </a>
+                <a href="buick.html" class="forum-card">
+                    <div class="forum-icon"><span style="font-size:1.5rem;font-weight:bold">B</span></div>
+                    <div class="forum-info">
+                        <h3>Buick</h3>
+                        <p>Enclave, Encore, Envision</p>
+                    </div>
+                </a>
+                <!-- C -->
+                <a href="cadillac.html" class="forum-card">
+                    <div class="forum-icon"><span style="font-size:1.5rem;font-weight:bold">C</span></div>
+                    <div class="forum-info">
+                        <h3>Cadillac</h3>
+                        <p>Escalade, XT5, CT5, XT4</p>
+                    </div>
+                </a>
+                <a href="chrysler.html" class="forum-card">
+                    <div class="forum-icon"><span style="font-size:1.5rem;font-weight:bold">C</span></div>
+                    <div class="forum-info">
+                        <h3>Chrysler</h3>
+                        <p>Pacifica, 300, Voyager</p>
+                    </div>
+                </a>
+                <!-- D -->
+                <a href="dodge.html" class="forum-card">
+                    <div class="forum-icon"><span style="font-size:1.5rem;font-weight:bold">D</span></div>
+                    <div class="forum-info">
+                        <h3>Dodge</h3>
+                        <p>Challenger, Charger, Durango</p>
+                    </div>
+                </a>
+                <!-- G -->
+                <a href="gmc.html" class="forum-card">
+                    <div class="forum-icon"><span style="font-size:1.5rem;font-weight:bold">G</span></div>
+                    <div class="forum-info">
+                        <h3>GMC</h3>
+                        <p>Sierra, Yukon, Acadia, Terrain</p>
+                    </div>
+                </a>
+                <!-- H -->
+                <a href="hyundai.html" class="forum-card">
+                    <div class="forum-icon"><span style="font-size:1.5rem;font-weight:bold">H</span></div>
+                    <div class="forum-info">
+                        <h3>Hyundai</h3>
+                        <p>Tucson, Santa Fe, Elantra, Sonata</p>
+                    </div>
+                </a>
+                <!-- K -->
+                <a href="kia.html" class="forum-card">
+                    <div class="forum-icon"><span style="font-size:1.5rem;font-weight:bold">K</span></div>
+                    <div class="forum-info">
+                        <h3>Kia</h3>
+                        <p>Telluride, Sportage, Sorento, Forte</p>
+                    </div>
+                </a>
+                <!-- L -->
+                <a href="lexus.html" class="forum-card">
+                    <div class="forum-icon"><span style="font-size:1.5rem;font-weight:bold">L</span></div>
+                    <div class="forum-info">
+                        <h3>Lexus</h3>
+                        <p>RX, ES, NX, GX, IS</p>
+                    </div>
+                </a>
+                <!-- M -->
+                <a href="mazda.html" class="forum-card">
+                    <div class="forum-icon"><span style="font-size:1.5rem;font-weight:bold">M</span></div>
+                    <div class="forum-info">
+                        <h3>Mazda</h3>
+                        <p>CX-5, Mazda3, CX-30, MX-5</p>
+                    </div>
+                </a>
+                <a href="mercedes.html" class="forum-card">
+                    <div class="forum-icon"><span style="font-size:1.5rem;font-weight:bold">M</span></div>
+                    <div class="forum-info">
+                        <h3>Mercedes-Benz</h3>
+                        <p>C-Class, E-Class, GLC, GLE</p>
+                    </div>
+                </a>
+                <!-- R -->
+                <a href="ram.html" class="forum-card">
+                    <div class="forum-icon"><span style="font-size:1.5rem;font-weight:bold">R</span></div>
+                    <div class="forum-info">
+                        <h3>RAM</h3>
+                        <p>1500, 2500, 3500, ProMaster</p>
+                    </div>
+                </a>
+                <!-- S -->
+                <a href="subaru.html" class="forum-card">
+                    <div class="forum-icon"><span style="font-size:1.5rem;font-weight:bold">S</span></div>
+                    <div class="forum-info">
+                        <h3>Subaru</h3>
+                        <p>Outback, Forester, Crosstrek, Impreza</p>
+                    </div>
+                </a>
+                <!-- T -->
+                <a href="tesla.html" class="forum-card">
+                    <div class="forum-icon"><span style="font-size:1.5rem;font-weight:bold">T</span></div>
+                    <div class="forum-info">
+                        <h3>Tesla</h3>
+                        <p>Model 3, Model Y, Model S, Model X</p>
+                    </div>
+                </a>
+                <!-- V -->
+                <a href="volkswagen.html" class="forum-card">
+                    <div class="forum-icon"><span style="font-size:1.5rem;font-weight:bold">V</span></div>
+                    <div class="forum-info">
+                        <h3>Volkswagen</h3>
+                        <p>Jetta, Tiguan, Atlas, Golf</p>
+                    </div>
+                </a>
+                <a href="volvo.html" class="forum-card">
+                    <div class="forum-icon"><span style="font-size:1.5rem;font-weight:bold">V</span></div>
+                    <div class="forum-info">
+                        <h3>Volvo</h3>
+                        <p>XC90, XC60, S60, XC40</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-bottom" style="border-top: none; padding-top: 0;">
+                <p>&copy; 2024 ODB+. All rights reserved.</p>
+                <div class="footer-legal">
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Terms of Service</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../../js/main.js"></script>
+</body>
+</html>

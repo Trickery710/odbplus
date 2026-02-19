@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Oxygen (O2) Sensor - Complete guide covering how O2 sensors work, failure symptoms, testing procedures, and replacement tips.">
+    <title>Oxygen (O2) Sensor Guide | ODB+</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../../css/styles.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="navbar-container">
+            <a href="../../index.html" class="navbar-brand">
+                <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="40" height="40" rx="8" fill="url(#gradient)"/>
+                    <path d="M12 20C12 15.5817 15.5817 12 20 12C24.4183 12 28 15.5817 28 20C28 24.4183 24.4183 28 20 28" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+                    <path d="M20 16V20L23 23" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    <circle cx="20" cy="20" r="2" fill="white"/>
+                    <defs>
+                        <linearGradient id="gradient" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse">
+                            <stop stop-color="#2563eb"/>
+                            <stop offset="1" stop-color="#10b981"/>
+                        </linearGradient>
+                    </defs>
+                </svg>
+                <span>ODB+</span>
+            </a>
+            <ul class="navbar-menu">
+                <li><a href="../../index.html">Home</a></li>
+                <li><a href="../codes/index.html">Error Codes</a></li>
+                <li><a href="../forums/index.html">Forums</a></li>
+                <li><a href="index.html" class="active">Sensors</a></li>
+            </ul>
+            <div class="navbar-actions">
+                <a href="../auth/login.html" class="btn btn-secondary">Log In</a>
+                <a href="../auth/signup.html" class="btn btn-primary">Sign Up</a>
+            </div>
+        </div>
+    </nav>
+
+    <main style="padding-top: 100px; padding-bottom: 4rem;">
+        <div class="container" style="max-width: 900px;">
+            <!-- Breadcrumb -->
+            <nav class="breadcrumb mb-4">
+                <a href="index.html">Sensors</a>
+                <span class="separator">/</span>
+                <a href="index.html#emissions">Emissions</a>
+                <span class="separator">/</span>
+                <span class="current">O2 Sensor</span>
+            </nav>
+
+            <!-- Sensor Header -->
+            <div class="sensor-detail-header mb-4">
+                <div class="sensor-icon-lg">
+                    <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="1.5">
+                        <circle cx="12" cy="12" r="10"/>
+                        <path d="M12 6v6l4 2"/>
+                    </svg>
+                </div>
+                <div class="sensor-detail-info">
+                    <h1>Oxygen (O2) Sensor</h1>
+                    <p class="sensor-subtitle">Also known as: Lambda Sensor, Exhaust Gas Oxygen Sensor</p>
+                    <div class="sensor-meta">
+                        <span class="badge badge-success">Emissions</span>
+                        <span class="badge badge-primary">Fuel Control</span>
+                        <span class="badge badge-secondary">Critical</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Facts -->
+            <div class="quick-info-grid mb-4">
+                <div class="quick-info-card">
+                    <h4>Location</h4>
+                    <p>Exhaust System (Before & After Cat)</p>
+                </div>
+                <div class="quick-info-card">
+                    <h4>Signal Type</h4>
+                    <p>0.1V - 0.9V (Narrowband)</p>
+                </div>
+                <div class="quick-info-card">
+                    <h4>Lifespan</h4>
+                    <p>60,000 - 100,000 miles</p>
+                </div>
+                <div class="quick-info-card">
+                    <h4>Replacement Cost</h4>
+                    <p>$50 - $250 per sensor</p>
+                </div>
+            </div>
+
+            <!-- Overview -->
+            <section class="content-section mb-4">
+                <h2>What Is an O2 Sensor?</h2>
+                <p>The oxygen sensor (O2 sensor) is one of the most important sensors in your vehicle's emission control system. It measures the amount of oxygen in the exhaust gases and sends this information to the engine control module (ECM). The ECM uses this data to adjust the air/fuel mixture for optimal combustion and minimal emissions.</p>
+
+                <p>Most vehicles have multiple O2 sensors:</p>
+                <ul>
+                    <li><strong>Upstream (Pre-Cat) Sensors:</strong> Located before the catalytic converter. These are the primary sensors used for fuel control.</li>
+                    <li><strong>Downstream (Post-Cat) Sensors:</strong> Located after the catalytic converter. These monitor catalytic converter efficiency.</li>
+                </ul>
+
+                <div class="info-box">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"/>
+                        <line x1="12" y1="16" x2="12" y2="12"/>
+                        <line x1="12" y1="8" x2="12.01" y2="8"/>
+                    </svg>
+                    <div>
+                        <strong>Sensor Locations:</strong> Bank 1 Sensor 1 (B1S1) is the upstream sensor on the side with cylinder #1. Bank 1 Sensor 2 (B1S2) is downstream on the same side. V6/V8 engines also have Bank 2 sensors on the opposite side.
+                    </div>
+                </div>
+            </section>
+
+            <!-- How It Works -->
+            <section class="content-section mb-4">
+                <h2>How O2 Sensors Work</h2>
+
+                <h4>Narrowband O2 Sensors (Most Common)</h4>
+                <p>Traditional narrowband O2 sensors use a zirconium dioxide (ZrO2) ceramic element that generates voltage based on the difference in oxygen levels between the exhaust gas and ambient air. The sensor produces:</p>
+                <ul>
+                    <li><strong>Low voltage (0.1-0.4V):</strong> Lean mixture (excess oxygen in exhaust)</li>
+                    <li><strong>High voltage (0.6-0.9V):</strong> Rich mixture (less oxygen in exhaust)</li>
+                    <li><strong>Switching point (~0.45V):</strong> Stoichiometric (14.7:1 air/fuel ratio)</li>
+                </ul>
+
+                <p>A properly functioning upstream O2 sensor should constantly switch between rich and lean several times per second as the ECM adjusts fuel delivery. This is called "cross-counting."</p>
+
+                <h4 class="mt-3">Wideband O2 Sensors (Air/Fuel Ratio Sensors)</h4>
+                <p>Newer vehicles often use wideband sensors (also called A/F sensors) that can measure a wider range of air/fuel ratios more precisely. These are essential for modern lean-burn and direct injection engines. Wideband sensors typically output a current signal rather than voltage.</p>
+
+                <h4 class="mt-3">Heated O2 Sensors</h4>
+                <p>Most modern O2 sensors include a heating element that brings the sensor up to operating temperature (600°F+) quickly. This allows the sensor to begin working within 20-30 seconds of engine start, improving cold-start emissions and fuel economy.</p>
+            </section>
+
+            <!-- Failure Symptoms -->
+            <section class="content-section mb-4">
+                <h2>Symptoms of a Failing O2 Sensor</h2>
+                <ul class="symptom-list">
+                    <li>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="2">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                        </svg>
+                        <div>
+                            <strong>Check Engine Light</strong>
+                            <p>O2 sensor codes (P0130-P0167) are among the most common reasons for a check engine light</p>
+                        </div>
+                    </li>
+                    <li>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="2">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                        </svg>
+                        <div>
+                            <strong>Poor Fuel Economy</strong>
+                            <p>A faulty sensor can cause the engine to run rich, wasting fuel</p>
+                        </div>
+                    </li>
+                    <li>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="2">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                        </svg>
+                        <div>
+                            <strong>Rough Idle</strong>
+                            <p>Engine may idle roughly or unevenly when sensor provides incorrect readings</p>
+                        </div>
+                    </li>
+                    <li>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="2">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                        </svg>
+                        <div>
+                            <strong>Hesitation or Surging</strong>
+                            <p>Inconsistent acceleration or engine surging at steady throttle</p>
+                        </div>
+                    </li>
+                    <li>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="2">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                        </svg>
+                        <div>
+                            <strong>Failed Emissions Test</strong>
+                            <p>Faulty O2 sensors often cause vehicles to fail emissions testing</p>
+                        </div>
+                    </li>
+                    <li>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="2">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                        </svg>
+                        <div>
+                            <strong>Rotten Egg Smell</strong>
+                            <p>Sulfur smell from exhaust indicates rich running condition (excess fuel)</p>
+                        </div>
+                    </li>
+                </ul>
+            </section>
+
+            <!-- Common Causes of Failure -->
+            <section class="content-section mb-4">
+                <h2>What Causes O2 Sensor Failure?</h2>
+                <div class="causes-grid">
+                    <div class="cause-category">
+                        <h4>Normal Wear</h4>
+                        <ul>
+                            <li>Age and mileage degradation</li>
+                            <li>Thermal cycling fatigue</li>
+                            <li>Gradual contamination buildup</li>
+                        </ul>
+                    </div>
+                    <div class="cause-category">
+                        <h4>Contamination</h4>
+                        <ul>
+                            <li>Silicone from RTV sealants</li>
+                            <li>Phosphorus from oil burning</li>
+                            <li>Lead (leaded fuel - rare now)</li>
+                            <li>Coolant (head gasket leak)</li>
+                        </ul>
+                    </div>
+                    <div class="cause-category">
+                        <h4>Physical Damage</h4>
+                        <ul>
+                            <li>Impact damage to sensor</li>
+                            <li>Damaged wiring or connector</li>
+                            <li>Corrosion from road salt</li>
+                            <li>Heat damage from exhaust leak</li>
+                        </ul>
+                    </div>
+                    <div class="cause-category">
+                        <h4>Engine Problems</h4>
+                        <ul>
+                            <li>Running excessively rich/lean</li>
+                            <li>Misfires sending unburned fuel</li>
+                            <li>Oil consumption coating sensor</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Testing Procedures -->
+            <section class="content-section mb-4">
+                <h2>How to Test an O2 Sensor</h2>
+
+                <div class="diagnostic-steps">
+                    <div class="step">
+                        <div class="step-number">1</div>
+                        <div class="step-content">
+                            <h4>Read Live Data with ODB+ Scanner</h4>
+                            <p>Monitor O2 sensor voltage in real-time. A healthy upstream sensor should oscillate between 0.1V and 0.9V several times per second at operating temperature. Watch for:</p>
+                            <ul>
+                                <li><strong>Stuck high (>0.6V):</strong> Indicates rich condition or sensor failure</li>
+                                <li><strong>Stuck low (<0.3V):</strong> Indicates lean condition or sensor failure</li>
+                                <li><strong>Slow response:</strong> Sensor should switch at least 6-8 times per 10 seconds</li>
+                                <li><strong>Lazy sensor:</strong> Voltage doesn't reach full high/low range</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">2</div>
+                        <div class="step-content">
+                            <h4>Check Heater Circuit</h4>
+                            <p>Most O2 sensor problems are actually heater circuit issues. With the engine off and sensor connector unplugged, measure heater resistance between the heater pins (usually same color wires). Should be 2-30 ohms depending on sensor type. Open circuit or very high resistance indicates failed heater.</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">3</div>
+                        <div class="step-content">
+                            <h4>Propane Enrichment Test</h4>
+                            <p>With engine running and sensor connected, briefly introduce propane near the intake. The upstream O2 sensor voltage should quickly jump high (>0.8V) in response to the rich mixture. Slow or no response indicates a faulty sensor.</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">4</div>
+                        <div class="step-content">
+                            <h4>Vacuum Leak Test</h4>
+                            <p>Create a lean condition by disconnecting a vacuum hose. O2 sensor voltage should drop low (<0.2V). If it doesn't respond, the sensor may be contaminated or failed.</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">5</div>
+                        <div class="step-content">
+                            <h4>Visual Inspection</h4>
+                            <p>Remove the sensor and examine the tip:</p>
+                            <ul>
+                                <li><strong>Black soot:</strong> Rich condition (too much fuel)</li>
+                                <li><strong>White/gray deposits:</strong> Coolant contamination (head gasket)</li>
+                                <li><strong>Oily residue:</strong> Oil burning (worn rings/seals)</li>
+                                <li><strong>Grainy white coating:</strong> Silicone contamination</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Replacement Tips -->
+            <section class="content-section mb-4">
+                <h2>Replacement Tips</h2>
+                <div class="tech-tips">
+                    <div class="tip">
+                        <h4>Use Anti-Seize Compound</h4>
+                        <p>Apply a small amount of anti-seize to the sensor threads (avoid getting any on the sensor tip). This makes future removal much easier, as sensors tend to seize in the exhaust.</p>
+                    </div>
+                    <div class="tip">
+                        <h4>Warm Engine for Removal</h4>
+                        <p>O2 sensors are much easier to remove when the exhaust is warm (but not too hot to touch). The heat expands the bung and helps break the sensor free.</p>
+                    </div>
+                    <div class="tip">
+                        <h4>Use Proper Socket</h4>
+                        <p>O2 sensor sockets have a slot for the wires. Using a regular socket can damage the connector. If the sensor is stuck, penetrating oil and patience work better than excessive force.</p>
+                    </div>
+                    <div class="tip">
+                        <h4>Don't Touch the Sensing Element</h4>
+                        <p>Oil from your skin can contaminate the sensor. Handle new sensors by the body only, never touch the tip or allow it to contact anything.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Related Codes -->
+            <section class="content-section mb-4">
+                <h2>Related Diagnostic Codes</h2>
+                <div class="related-codes-grid">
+                    <a href="../codes/index.html" class="related-code">
+                        <span class="code-badge-sm">P0130</span>
+                        <span>O2 Circuit Malfunction B1S1</span>
+                    </a>
+                    <a href="../codes/index.html" class="related-code">
+                        <span class="code-badge-sm">P0131</span>
+                        <span>O2 Low Voltage B1S1</span>
+                    </a>
+                    <a href="../codes/index.html" class="related-code">
+                        <span class="code-badge-sm">P0132</span>
+                        <span>O2 High Voltage B1S1</span>
+                    </a>
+                    <a href="../codes/index.html" class="related-code">
+                        <span class="code-badge-sm">P0133</span>
+                        <span>O2 Slow Response B1S1</span>
+                    </a>
+                    <a href="../codes/index.html" class="related-code">
+                        <span class="code-badge-sm">P0134</span>
+                        <span>O2 No Activity B1S1</span>
+                    </a>
+                    <a href="../codes/index.html" class="related-code">
+                        <span class="code-badge-sm">P0135</span>
+                        <span>O2 Heater Circuit B1S1</span>
+                    </a>
+                    <a href="../codes/P0171.html" class="related-code">
+                        <span class="code-badge-sm">P0171</span>
+                        <span>System Too Lean Bank 1</span>
+                    </a>
+                    <a href="../codes/P0420.html" class="related-code">
+                        <span class="code-badge-sm">P0420</span>
+                        <span>Catalyst Efficiency Low</span>
+                    </a>
+                </div>
+            </section>
+
+            <!-- Forum Discussion -->
+            <section class="content-section mb-4">
+                <h2>Community Discussion</h2>
+                <p class="mb-3">Have questions about O2 sensors? Get help from experienced mechanics and fellow car owners.</p>
+                <a href="../forums/index.html" class="btn btn-primary">Visit Forums</a>
+                <a href="../forums/index.html?search=O2+sensor" class="btn btn-outline" style="margin-left: 0.5rem;">Search O2 Sensor Threads</a>
+            </section>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-bottom" style="border-top: none; padding-top: 0;">
+                <p>&copy; 2024 ODB+. All rights reserved.</p>
+                <div class="footer-legal">
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Terms of Service</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../../js/main.js"></script>
+</body>
+</html>

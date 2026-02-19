@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="P0401 EGR Flow Insufficient Detected - Complete guide with causes, symptoms, diagnostic steps, and repair information.">
+    <title>P0401 - EGR Flow Insufficient | ODB+</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../../css/styles.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="navbar-container">
+            <a href="../../index.html" class="navbar-brand">
+                <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="40" height="40" rx="8" fill="url(#gradient)"/>
+                    <path d="M12 20C12 15.5817 15.5817 12 20 12C24.4183 12 28 15.5817 28 20C28 24.4183 24.4183 28 20 28" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+                    <path d="M20 16V20L23 23" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    <circle cx="20" cy="20" r="2" fill="white"/>
+                    <defs>
+                        <linearGradient id="gradient" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse">
+                            <stop stop-color="#2563eb"/>
+                            <stop offset="1" stop-color="#10b981"/>
+                        </linearGradient>
+                    </defs>
+                </svg>
+                <span>ODB+</span>
+            </a>
+            <ul class="navbar-menu">
+                <li><a href="../../index.html">Home</a></li>
+                <li><a href="index.html" class="active">Error Codes</a></li>
+                <li><a href="../forums/index.html">Forums</a></li>
+                <li><a href="../sensors/index.html">Sensors</a></li>
+            </ul>
+            <div class="navbar-actions">
+                <a href="../auth/login.html" class="btn btn-secondary">Log In</a>
+                <a href="../auth/signup.html" class="btn btn-primary">Sign Up</a>
+            </div>
+        </div>
+    </nav>
+
+    <main style="padding-top: 100px; padding-bottom: 4rem;">
+        <div class="container" style="max-width: 900px;">
+            <!-- Breadcrumb -->
+            <nav class="breadcrumb mb-4">
+                <a href="index.html">Error Codes</a>
+                <span class="separator">/</span>
+                <a href="index.html#powertrain">Powertrain</a>
+                <span class="separator">/</span>
+                <span class="current">P0401</span>
+            </nav>
+
+            <!-- Code Header -->
+            <div class="code-detail-header mb-4">
+                <div class="code-badge-lg">P0401</div>
+                <div class="code-detail-info">
+                    <h1>Exhaust Gas Recirculation (EGR) Flow Insufficient Detected</h1>
+                    <div class="code-meta">
+                        <span class="badge badge-warning">Emissions</span>
+                        <span class="badge badge-secondary">Generic (SAE)</span>
+                        <span class="severity-medium">Severity: Medium</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Info -->
+            <div class="quick-info-grid mb-4">
+                <div class="quick-info-card">
+                    <h4>System</h4>
+                    <p>EGR Emissions Control</p>
+                </div>
+                <div class="quick-info-card">
+                    <h4>Subsystem</h4>
+                    <p>Exhaust Gas Recirculation</p>
+                </div>
+                <div class="quick-info-card">
+                    <h4>Common Fix</h4>
+                    <p>Clean/Replace EGR Valve</p>
+                </div>
+                <div class="quick-info-card">
+                    <h4>Repair Cost</h4>
+                    <p>$100 - $400</p>
+                </div>
+            </div>
+
+            <!-- Description -->
+            <section class="content-section mb-4">
+                <h2>What Does P0401 Mean?</h2>
+                <p>The P0401 code indicates that the powertrain control module (PCM) has detected insufficient flow through the Exhaust Gas Recirculation (EGR) system. The EGR system reduces NOx (nitrogen oxide) emissions by recirculating a small amount of exhaust gas back into the intake manifold, which lowers combustion temperatures.</p>
+
+                <p>When the PCM commands the EGR valve to open but doesn't see the expected change in engine parameters (typically through a dedicated EGR position sensor, DPFE sensor, or by monitoring MAP/MAF changes), it sets this code indicating the EGR isn't flowing enough exhaust gas.</p>
+
+                <div class="info-box">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"/>
+                        <line x1="12" y1="16" x2="12" y2="12"/>
+                        <line x1="12" y1="8" x2="12.01" y2="8"/>
+                    </svg>
+                    <div>
+                        <strong>Carbon Buildup:</strong> The most common cause of P0401 is carbon deposits clogging the EGR valve or passages. Before replacing parts, try cleaning the EGR valve and passages - this often solves the problem.
+                    </div>
+                </div>
+            </section>
+
+            <!-- How the System Works -->
+            <section class="content-section mb-4">
+                <h2>How the EGR System Works</h2>
+                <p>The EGR system reduces harmful NOx emissions by diluting the fresh air/fuel mixture with inert exhaust gas:</p>
+
+                <div class="system-diagram">
+                    <h4>EGR System Components:</h4>
+                    <ul class="component-list">
+                        <li>
+                            <strong>EGR Valve:</strong> Opens and closes to control exhaust gas flow into intake. May be vacuum-operated or electrically controlled.
+                        </li>
+                        <li>
+                            <strong>EGR Passages:</strong> Channels that route exhaust from the exhaust manifold to the intake manifold
+                        </li>
+                        <li>
+                            <strong>EGR Position Sensor:</strong> Reports valve position to PCM (electronic EGR valves)
+                        </li>
+                        <li>
+                            <strong>DPFE Sensor (Ford):</strong> Measures pressure differential across EGR orifice to verify flow
+                        </li>
+                        <li>
+                            <strong>EGR Solenoid:</strong> Controls vacuum to vacuum-operated EGR valves
+                        </li>
+                        <li>
+                            <strong>Vacuum Lines:</strong> Supply vacuum to operate the EGR valve (older systems)
+                        </li>
+                    </ul>
+                </div>
+
+                <p class="mt-3"><strong>Operation:</strong> The PCM commands EGR during cruise and part-throttle conditions when NOx production is highest. EGR is typically disabled at idle, full throttle, and when the engine is cold.</p>
+            </section>
+
+            <!-- Symptoms -->
+            <section class="content-section mb-4">
+                <h2>Common Symptoms</h2>
+                <ul class="symptom-list">
+                    <li>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="2">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                        </svg>
+                        <div>
+                            <strong>Check Engine Light</strong>
+                            <p>P0401 code stored, often accompanied by other EGR-related codes</p>
+                        </div>
+                    </li>
+                    <li>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="2">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                        </svg>
+                        <div>
+                            <strong>Engine Knock or Ping Under Load</strong>
+                            <p>Without EGR, combustion temperatures rise, potentially causing knock</p>
+                        </div>
+                    </li>
+                    <li>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="2">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                        </svg>
+                        <div>
+                            <strong>Failed Emissions Test</strong>
+                            <p>High NOx readings at the tailpipe due to lack of EGR</p>
+                        </div>
+                    </li>
+                    <li>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="2">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                        </svg>
+                        <div>
+                            <strong>Slight Decrease in Fuel Economy</strong>
+                            <p>EGR also helps fuel efficiency during cruise conditions</p>
+                        </div>
+                    </li>
+                    <li>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="2">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                        </svg>
+                        <div>
+                            <strong>Often No Noticeable Symptoms</strong>
+                            <p>Many drivers notice nothing unusual other than the check engine light</p>
+                        </div>
+                    </li>
+                </ul>
+            </section>
+
+            <!-- Possible Causes -->
+            <section class="content-section mb-4">
+                <h2>Possible Causes</h2>
+
+                <div class="causes-grid">
+                    <div class="cause-category">
+                        <h4>Carbon Buildup (Most Common)</h4>
+                        <ul>
+                            <li>Carbon-clogged EGR valve</li>
+                            <li>Blocked EGR passages</li>
+                            <li>Carbon on EGR pintle/seat</li>
+                            <li>Clogged EGR tube/pipe</li>
+                            <li>Intake manifold passage buildup</li>
+                        </ul>
+                    </div>
+                    <div class="cause-category">
+                        <h4>EGR Valve Issues</h4>
+                        <ul>
+                            <li>EGR valve stuck closed</li>
+                            <li>Faulty EGR valve motor</li>
+                            <li>Damaged valve diaphragm</li>
+                            <li>EGR valve electrical failure</li>
+                        </ul>
+                    </div>
+                    <div class="cause-category">
+                        <h4>Sensor Problems</h4>
+                        <ul>
+                            <li>Failed DPFE sensor (Ford)</li>
+                            <li>EGR position sensor failure</li>
+                            <li>Corroded sensor connector</li>
+                            <li>MAP sensor issue affecting EGR test</li>
+                        </ul>
+                    </div>
+                    <div class="cause-category">
+                        <h4>Vacuum/Control Issues</h4>
+                        <ul>
+                            <li>Vacuum hose leak or disconnected</li>
+                            <li>Failed EGR control solenoid</li>
+                            <li>Electrical wiring problem</li>
+                            <li>PCM calibration issue</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Diagnostic Steps -->
+            <section class="content-section mb-4">
+                <h2>Diagnostic Steps</h2>
+                <div class="diagnostic-steps">
+                    <div class="step">
+                        <div class="step-number">1</div>
+                        <div class="step-content">
+                            <h4>Visual Inspection</h4>
+                            <p>Locate the EGR valve and inspect for obvious damage. Check all vacuum hoses for cracks, disconnection, or collapse. On electronic EGR valves, check the electrical connector for corrosion or damage.</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">2</div>
+                        <div class="step-content">
+                            <h4>Command EGR Activation</h4>
+                            <p>Use your ODB+ scanner to command the EGR valve open (if supported). With the engine running at idle, commanding EGR should cause a noticeable rough idle or stall. If the engine runs smoothly, the EGR isn't flowing.</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">3</div>
+                        <div class="step-content">
+                            <h4>Remove and Inspect EGR Valve</h4>
+                            <p>Remove the EGR valve and look inside. A clogged valve will have heavy carbon buildup. Check if the pintle moves freely. Inspect the passages in the intake manifold - shine a light through them to see if they're blocked.</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">4</div>
+                        <div class="step-content">
+                            <h4>Clean or Replace EGR Valve</h4>
+                            <p>Clean the valve with carburetor cleaner and a brush. Use a small wire or specialized tool to clean the passages. If carbon buildup is severe or the valve is damaged, replacement may be necessary.</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">5</div>
+                        <div class="step-content">
+                            <h4>Test DPFE or Position Sensor (If Equipped)</h4>
+                            <p>On Ford vehicles, the DPFE (differential pressure feedback EGR) sensor is a common failure point. Test its voltage readings according to manufacturer specs. Other vehicles may have an EGR position sensor to test.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Common Repairs -->
+            <section class="content-section mb-4">
+                <h2>Common Repairs</h2>
+                <div class="repair-list">
+                    <div class="repair-item">
+                        <div class="repair-info">
+                            <h4>Clean EGR Valve and Passages</h4>
+                            <p>Remove carbon buildup from valve and intake passages. Often resolves the problem.</p>
+                        </div>
+                        <div class="repair-cost">
+                            <span class="diy">DIY: $5-$20</span>
+                            <span class="shop">Shop: $100-$200</span>
+                        </div>
+                    </div>
+                    <div class="repair-item">
+                        <div class="repair-info">
+                            <h4>Replace EGR Valve</h4>
+                            <p>Replace if cleaning doesn't work or valve is mechanically failed.</p>
+                        </div>
+                        <div class="repair-cost">
+                            <span class="diy">DIY: $50-$200</span>
+                            <span class="shop">Shop: $200-$400</span>
+                        </div>
+                    </div>
+                    <div class="repair-item">
+                        <div class="repair-info">
+                            <h4>Replace DPFE Sensor (Ford)</h4>
+                            <p>Common failure point on Ford vehicles with this sensor type.</p>
+                        </div>
+                        <div class="repair-cost">
+                            <span class="diy">DIY: $30-$70</span>
+                            <span class="shop">Shop: $80-$150</span>
+                        </div>
+                    </div>
+                    <div class="repair-item">
+                        <div class="repair-info">
+                            <h4>Replace EGR Solenoid</h4>
+                            <p>Controls vacuum supply to vacuum-operated EGR valves.</p>
+                        </div>
+                        <div class="repair-cost">
+                            <span class="diy">DIY: $30-$80</span>
+                            <span class="shop">Shop: $100-$200</span>
+                        </div>
+                    </div>
+                    <div class="repair-item">
+                        <div class="repair-info">
+                            <h4>Repair Vacuum Lines</h4>
+                            <p>Replace cracked or disconnected vacuum hoses.</p>
+                        </div>
+                        <div class="repair-cost">
+                            <span class="diy">DIY: $5-$20</span>
+                            <span class="shop">Shop: $50-$100</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Related Codes -->
+            <section class="content-section mb-4">
+                <h2>Related Codes</h2>
+                <div class="related-codes-grid">
+                    <a href="index.html" class="related-code">
+                        <span class="code-badge-sm">P0400</span>
+                        <span>EGR Flow Malfunction</span>
+                    </a>
+                    <a href="index.html" class="related-code">
+                        <span class="code-badge-sm">P0402</span>
+                        <span>EGR Flow Excessive</span>
+                    </a>
+                    <a href="index.html" class="related-code">
+                        <span class="code-badge-sm">P0403</span>
+                        <span>EGR Circuit Malfunction</span>
+                    </a>
+                    <a href="index.html" class="related-code">
+                        <span class="code-badge-sm">P0404</span>
+                        <span>EGR Range/Performance</span>
+                    </a>
+                    <a href="index.html" class="related-code">
+                        <span class="code-badge-sm">P0405</span>
+                        <span>EGR Position Circuit Low</span>
+                    </a>
+                    <a href="index.html" class="related-code">
+                        <span class="code-badge-sm">P0406</span>
+                        <span>EGR Position Circuit High</span>
+                    </a>
+                </div>
+            </section>
+
+            <!-- Forum Discussion -->
+            <section class="content-section mb-4">
+                <h2>Community Discussion</h2>
+                <p class="mb-3">Have questions about P0401? Get help from experienced mechanics and fellow car owners.</p>
+                <a href="../forums/index.html" class="btn btn-primary">Visit Forums</a>
+                <a href="../forums/index.html?search=P0401" class="btn btn-outline" style="margin-left: 0.5rem;">Search P0401 Threads</a>
+            </section>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-bottom" style="border-top: none; padding-top: 0;">
+                <p>&copy; 2024 ODB+. All rights reserved.</p>
+                <div class="footer-legal">
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Terms of Service</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../../js/main.js"></script>
+</body>
+</html>

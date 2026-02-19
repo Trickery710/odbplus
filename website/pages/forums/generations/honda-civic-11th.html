@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Honda Civic 11th Gen (2022-Present) Forums - Subsystem discussions for FE/FL generation Civic owners.">
+    <title>Honda Civic 11th Gen (2022-Present) Forums | ODB+</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/styles.css">
+</head>
+<body>
+    <nav class="navbar" id="navbar">
+        <div class="navbar-container">
+            <a href="../../../index.html" class="navbar-brand">
+                <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="40" height="40" rx="8" fill="url(#gradient)"/>
+                    <path d="M12 20C12 15.5817 15.5817 12 20 12C24.4183 12 28 15.5817 28 20C28 24.4183 24.4183 28 20 28" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+                    <path d="M20 16V20L23 23" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    <circle cx="20" cy="20" r="2" fill="white"/>
+                    <defs><linearGradient id="gradient" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse"><stop stop-color="#2563eb"/><stop offset="1" stop-color="#10b981"/></linearGradient></defs>
+                </svg>
+                <span>ODB+</span>
+            </a>
+            <ul class="navbar-menu">
+                <li><a href="../../../index.html">Home</a></li>
+                <li><a href="../../codes/index.html">Error Codes</a></li>
+                <li><a href="../index.html" class="active">Forums</a></li>
+                <li><a href="../../sensors/index.html">Sensors</a></li>
+            </ul>
+            <div class="navbar-actions">
+                <a href="../../auth/login.html" class="btn btn-secondary">Log In</a>
+                <a href="../../auth/signup.html" class="btn btn-primary">Sign Up</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="forum-main">
+        <div class="container">
+            <nav class="breadcrumb">
+                <a href="../index.html">Forums</a>
+                <span class="separator">/</span>
+                <a href="../honda.html">Honda</a>
+                <span class="separator">/</span>
+                <a href="../honda-civic.html">Civic</a>
+                <span class="separator">/</span>
+                <span class="current">11th Gen (2022-Present)</span>
+            </nav>
+
+            <div class="gen-header">
+                <div class="gen-info">
+                    <div class="gen-badge">11th Generation</div>
+                    <h1>Honda Civic FE/FL</h1>
+                    <p class="gen-years">2022 - Present</p>
+                    <div class="gen-stats">
+                        <div class="stat"><span class="stat-value">1.8K</span><span class="stat-label">Members</span></div>
+                        <div class="stat"><span class="stat-value">5.6K</span><span class="stat-label">Threads</span></div>
+                        <div class="stat"><span class="stat-value">21K</span><span class="stat-label">Posts</span></div>
+                    </div>
+                </div>
+                <div class="gen-actions">
+                    <button class="btn btn-primary">New Thread</button>
+                    <button class="btn btn-outline">Subscribe</button>
+                </div>
+            </div>
+
+            <div class="specs-overview">
+                <h2>Available Configurations</h2>
+                <div class="specs-grid">
+                    <div class="spec-card">
+                        <h3>Engines</h3>
+                        <ul>
+                            <li><strong>L15CA</strong> - 2.0L I4 NA (158 hp)</li>
+                            <li><strong>L15CA</strong> - 1.5L Turbo (180 hp)</li>
+                            <li><strong>L15CA</strong> - 1.5L Turbo Si (200 hp)</li>
+                            <li><strong>K20C1</strong> - 2.0L Turbo Type R (315 hp)</li>
+                            <li><strong>LEB</strong> - 2.0L Hybrid (200 hp combined)</li>
+                        </ul>
+                    </div>
+                    <div class="spec-card">
+                        <h3>Transmissions</h3>
+                        <ul>
+                            <li><strong>CVT</strong> - Continuously Variable (2.0L NA, 1.5T)</li>
+                            <li><strong>6MT</strong> - 6-speed manual (Si, Type R)</li>
+                            <li><strong>e-CVT</strong> - Hybrid Direct Drive</li>
+                        </ul>
+                    </div>
+                    <div class="spec-card">
+                        <h3>Body Styles</h3>
+                        <ul>
+                            <li><strong>Sedan</strong> - FE chassis</li>
+                            <li><strong>Hatchback</strong> - FL chassis</li>
+                            <li><strong>Type R</strong> - FL5 chassis</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="subsystem-forums">
+                <h2>Subsystem Forums</h2>
+
+                <!-- Engine -->
+                <div class="subsystem-category" id="engine">
+                    <div class="category-header">
+                        <div class="category-icon engine-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="3"/></svg>
+                        </div>
+                        <div class="category-info">
+                            <h3>Engine</h3>
+                            <p>Engine internals, fuel system, cooling, exhaust, turbo</p>
+                        </div>
+                        <div class="category-stats"></div>
+                    </div>
+
+                    <div class="variant-tabs">
+                        <button class="variant-tab active" data-variant="20na">2.0L NA</button>
+                        <button class="variant-tab" data-variant="15t">1.5L Turbo</button>
+                        <button class="variant-tab" data-variant="15t-si">1.5L Turbo Si</button>
+                        <button class="variant-tab" data-variant="k20c1">2.0L Turbo Type R</button>
+                        <button class="variant-tab" data-variant="hybrid">2.0L Hybrid</button>
+                    </div>
+
+                    <div class="variant-content active" id="20na">
+                        <div class="variant-info">
+                            <h4>2.0L Naturally Aspirated I4</h4>
+                            <div class="variant-specs">
+                                <span>158 hp @ 6,500 rpm</span>
+                                <span>138 lb-ft @ 4,200 rpm</span>
+                                <span>i-VTEC</span>
+                                <span>Direct Injection</span>
+                            </div>
+                            <div class="common-issues">
+                                <h5>Common Issues</h5>
+                                <ul>
+                                    <li><span class="issue-tag">Normal</span> Fuel injector tick at idle (DI noise)</li>
+                                    <li><span class="issue-tag">Info</span> Very reliable base engine</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="variant-content" id="15t">
+                        <div class="variant-info">
+                            <h4>1.5L Turbo (Standard)</h4>
+                            <div class="variant-specs">
+                                <span>180 hp @ 6,000 rpm</span>
+                                <span>177 lb-ft @ 1,700-4,500 rpm</span>
+                                <span>Single-scroll turbo</span>
+                                <span>Direct Injection</span>
+                            </div>
+                            <div class="common-issues">
+                                <h5>Common Issues</h5>
+                                <ul>
+                                    <li><span class="issue-tag">TSB</span> Oil dilution in cold climates (improved vs 10th gen)</li>
+                                    <li><span class="issue-tag">Common</span> Turbo whistle on acceleration (normal)</li>
+                                    <li><span class="issue-tag">Maintenance</span> Carbon buildup on intake valves (DI engines)</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="thread-list">
+                            <a href="#" class="thread-item">
+                                <div class="thread-votes"><button class="vote-up">▲</button><span class="vote-count">45</span><button class="vote-down">▼</button></div>
+                                <div class="thread-content">
+                                    <h4>Oil dilution check guide - what to look for</h4>
+                                    <div class="thread-meta"><span class="thread-author">TurboOwner</span><span class="thread-replies"></span><span class="thread-time">3 hours ago</span></div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="variant-content" id="15t-si">
+                        <div class="variant-info">
+                            <h4>1.5L Turbo Si</h4>
+                            <div class="variant-specs">
+                                <span>200 hp @ 6,000 rpm</span>
+                                <span>192 lb-ft @ 1,800-5,000 rpm</span>
+                                <span>Larger turbo vs standard</span>
+                                <span>Sport-tuned ECU</span>
+                            </div>
+                            <div class="common-issues">
+                                <h5>Common Issues</h5>
+                                <ul>
+                                    <li><span class="issue-tag">TSB</span> Rev hang on manual downshifts</li>
+                                    <li><span class="issue-tag">Common</span> Heat soak on track days</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="variant-content" id="k20c1">
+                        <div class="variant-info">
+                            <h4>2.0L Turbo K20C1 (Type R)</h4>
+                            <div class="variant-specs">
+                                <span>315 hp @ 6,500 rpm</span>
+                                <span>310 lb-ft @ 2,600-4,000 rpm</span>
+                                <span>High-flow turbo</span>
+                                <span>Forged internals</span>
+                                <span>Rev limit: 7,000 rpm</span>
+                            </div>
+                            <div class="common-issues">
+                                <h5>Common Issues</h5>
+                                <ul>
+                                    <li><span class="issue-tag">Info</span> Highly reliable for the power output</li>
+                                    <li><span class="issue-tag">Common</span> Oil consumption on track use</li>
+                                    <li><span class="issue-tag">Maintenance</span> High-performance oil recommended (0W-20 or 0W-30)</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="thread-list">
+                            <a href="#" class="thread-item">
+                                <div class="thread-votes"><button class="vote-up">▲</button><span class="vote-count">89</span><button class="vote-down">▼</button></div>
+                                <div class="thread-content">
+                                    <h4>FL5 Type R track day prep checklist</h4>
+                                    <div class="thread-meta"><span class="thread-author">TypeRTracker</span><span class="thread-replies"></span><span class="thread-time">1 day ago</span></div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="variant-content" id="hybrid">
+                        <div class="variant-info">
+                            <h4>2.0L Hybrid (e:HEV)</h4>
+                            <div class="variant-specs">
+                                <span>200 hp combined</span>
+                                <span>Atkinson cycle engine</span>
+                                <span>2-motor hybrid system</span>
+                                <span>Lithium-ion battery</span>
+                            </div>
+                            <div class="common-issues">
+                                <h5>Common Issues</h5>
+                                <ul>
+                                    <li><span class="issue-tag">Normal</span> Engine cycles on/off frequently</li>
+                                    <li><span class="issue-tag">Info</span> Very new system, limited issues reported</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <a href="#" class="view-all-link">View all Engine threads →</a>
+                </div>
+
+                <!-- Transmission -->
+                <div class="subsystem-category" id="transmission">
+                    <div class="category-header">
+                        <div class="category-icon trans-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><circle cx="12" cy="12" r="8"/></svg>
+                        </div>
+                        <div class="category-info">
+                            <h3>Transmission</h3>
+                            <p>CVT, manual, clutch, fluid, shifter</p>
+                        </div>
+                        <div class="category-stats"></div>
+                    </div>
+
+                    <div class="variant-tabs">
+                        <button class="variant-tab active" data-variant="cvt">CVT</button>
+                        <button class="variant-tab" data-variant="6mt">6-Speed Manual</button>
+                        <button class="variant-tab" data-variant="ecvt">e-CVT Hybrid</button>
+                    </div>
+
+                    <div class="variant-content active" id="cvt">
+                        <div class="variant-info">
+                            <h4>CVT (Continuously Variable Transmission)</h4>
+                            <div class="variant-specs">
+                                <span>Honda HCF-2 Fluid</span>
+                                <span>Capacity: ~3.5 qt</span>
+                                <span>Service: 60K miles (severe)</span>
+                            </div>
+                            <div class="common-issues">
+                                <h5>Common Issues</h5>
+                                <ul>
+                                    <li><span class="issue-tag">Normal</span> CVT drone at highway speeds</li>
+                                    <li><span class="issue-tag">TSB</span> Shift quality software update available</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="variant-content" id="6mt">
+                        <div class="variant-info">
+                            <h4>6-Speed Manual (Si / Type R)</h4>
+                            <div class="variant-specs">
+                                <span>Rev-match control (Si)</span>
+                                <span>Triple-cone syncros 1-2-3</span>
+                                <span>Dual-mass flywheel (Type R)</span>
+                                <span>Honda MTF</span>
+                            </div>
+                            <div class="common-issues">
+                                <h5>Common Issues</h5>
+                                <ul>
+                                    <li><span class="issue-tag">Common</span> 2nd gear grind when cold (break-in)</li>
+                                    <li><span class="issue-tag">TSB</span> Clutch pedal squeak fix</li>
+                                    <li><span class="issue-tag">Mod</span> Shift knob swap popular modification</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="thread-list">
+                            <a href="#" class="thread-item">
+                                <div class="thread-votes"><button class="vote-up">▲</button><span class="vote-count">56</span><button class="vote-down">▼</button></div>
+                                <div class="thread-content">
+                                    <h4>Best shift knobs for Si/Type R - weighted vs standard</h4>
+                                    <div class="thread-meta"><span class="thread-author">ManualLover</span><span class="thread-replies"></span><span class="thread-time">6 hours ago</span></div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="variant-content" id="ecvt">
+                        <div class="variant-info">
+                            <h4>e-CVT Hybrid Direct Drive</h4>
+                            <div class="variant-specs">
+                                <span>Single fixed gear ratio</span>
+                                <span>Electric motor drive</span>
+                                <span>Engine as generator</span>
+                            </div>
+                            <div class="common-issues">
+                                <h5>Common Issues</h5>
+                                <ul>
+                                    <li><span class="issue-tag">Info</span> Very simple, reliable system</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <a href="#" class="view-all-link">View all Transmission threads →</a>
+                </div>
+
+                <!-- Additional categories abbreviated for space -->
+                <div class="subsystem-category" id="suspension">
+                    <div class="category-header">
+                        <div class="category-icon susp-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="5" r="2"/><circle cx="12" cy="19" r="2"/><path d="M12 7v10"/></svg></div>
+                        <div class="category-info"><h3>Suspension & Steering</h3><p>Shocks, struts, arms, steering</p></div>
+                        <div class="category-stats"></div>
+                    </div>
+                    <div class="variant-info" style="padding: 1.5rem;">
+                        <h4>Suspension Configuration</h4>
+                        <div class="variant-specs">
+                            <span>Front: MacPherson strut</span>
+                            <span>Rear: Multi-link</span>
+                            <span>Type R: Adaptive dampers</span>
+                        </div>
+                        <div class="common-issues">
+                            <h5>Common Issues</h5>
+                            <ul>
+                                <li><span class="issue-tag">Common</span> Rear suspension noise over bumps</li>
+                                <li><span class="issue-tag">TSB</span> Steering wheel off-center correction</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <a href="#" class="view-all-link">View all Suspension threads →</a>
+                </div>
+
+                <div class="subsystem-category" id="electrical">
+                    <div class="category-header">
+                        <div class="category-icon elec-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></div>
+                        <div class="category-info"><h3>Electrical & Electronics</h3><p>Battery, sensors, infotainment, Honda Sensing</p></div>
+                        <div class="category-stats"></div>
+                    </div>
+                    <div class="variant-info" style="padding: 1.5rem;">
+                        <div class="variant-specs">
+                            <span>9" Display Audio (Touring+)</span>
+                            <span>7" Display (base)</span>
+                            <span>Honda Sensing 2.0</span>
+                            <span>Wireless CarPlay/Android Auto</span>
+                        </div>
+                        <div class="common-issues">
+                            <h5>Common Issues</h5>
+                            <ul>
+                                <li><span class="issue-tag">Common</span> Wireless CarPlay disconnects</li>
+                                <li><span class="issue-tag">TSB</span> Lane Keep Assist calibration</li>
+                                <li><span class="issue-tag">Common</span> Adaptive cruise phantom braking</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <a href="#" class="view-all-link">View all Electrical threads →</a>
+                </div>
+
+                <div class="subsystem-category" id="maintenance">
+                    <div class="category-header">
+                        <div class="category-icon maint-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/></svg></div>
+                        <div class="category-info"><h3>Maintenance & DIY</h3><p>Service schedules, fluids, guides</p></div>
+                        <div class="category-stats"></div>
+                    </div>
+                    <div class="variant-info" style="padding: 1.5rem;">
+                        <h4>Maintenance Schedule</h4>
+                        <div class="variant-specs">
+                            <span>Oil: 0W-20 (all engines)</span>
+                            <span>Oil Change: Maintenance Minder system</span>
+                            <span>Coolant: Honda Type 2 (Blue)</span>
+                            <span>Brake Fluid: DOT 3</span>
+                        </div>
+                    </div>
+                    <div class="thread-list">
+                        <a href="#" class="thread-item">
+                            <div class="thread-votes"><button class="vote-up">▲</button><span class="vote-count">112</span><button class="vote-down">▼</button></div>
+                            <div class="thread-content">
+                                <h4>[STICKY] 11th Gen Civic Complete Maintenance Guide</h4>
+                                <div class="thread-meta"><span class="thread-author">Moderator</span><span class="thread-replies"></span><span class="thread-time">Pinned</span></div>
+                            </div>
+                        </a>
+                    </div>
+                    <a href="#" class="view-all-link">View all Maintenance threads →</a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-bottom" style="border-top: none; padding-top: 0;">
+                <p>&copy; 2024 ODB+. All rights reserved.</p>
+                <div class="footer-legal"><a href="#">Privacy Policy</a><a href="#">Terms of Service</a></div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../../../js/main.js"></script>
+    <script>
+        document.querySelectorAll('.variant-tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                const category = this.closest('.subsystem-category');
+                category.querySelectorAll('.variant-tab').forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+                const variant = this.dataset.variant;
+                category.querySelectorAll('.variant-content').forEach(content => content.classList.remove('active'));
+                const target = category.querySelector(`#${variant}`);
+                if (target) target.classList.add('active');
+            });
+        });
+    </script>
+    <style>
+        .forum-main { padding-top: 100px; padding-bottom: 4rem; }
+        .gen-header { display: flex; justify-content: space-between; align-items: flex-start; background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 16px; padding: 2rem; margin-bottom: 2rem; flex-wrap: wrap; gap: 1.5rem; }
+        .gen-badge { display: inline-block; background: var(--primary); color: white; padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.75rem; font-weight: 600; margin-bottom: 0.5rem; }
+        .gen-header h1 { font-size: 2rem; margin-bottom: 0.25rem; }
+        .gen-years { color: var(--text-secondary); font-size: 1.125rem; margin-bottom: 1rem; }
+        .gen-stats { display: flex; gap: 2rem; }
+        .stat { display: flex; flex-direction: column; }
+        .stat-value { font-size: 1.5rem; font-weight: 700; color: var(--primary); }
+        .stat-label { font-size: 0.75rem; color: var(--text-secondary); text-transform: uppercase; }
+        .gen-actions { display: flex; gap: 0.75rem; }
+        .specs-overview { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 16px; padding: 1.5rem; margin-bottom: 2rem; }
+        .specs-overview h2 { font-size: 1.25rem; margin-bottom: 1rem; }
+        .specs-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; }
+        .spec-card { background: var(--bg-secondary); border-radius: 12px; padding: 1rem; }
+        .spec-card h3 { font-size: 0.875rem; color: var(--primary); margin-bottom: 0.75rem; text-transform: uppercase; }
+        .spec-card ul { list-style: none; padding: 0; margin: 0; }
+        .spec-card li { padding: 0.375rem 0; font-size: 0.875rem; border-bottom: 1px solid var(--border-color); }
+        .spec-card li:last-child { border-bottom: none; }
+        .subsystem-forums h2 { font-size: 1.5rem; margin-bottom: 1.5rem; }
+        .subsystem-category { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 16px; margin-bottom: 1.5rem; overflow: hidden; }
+        .category-header { display: flex; align-items: center; gap: 1rem; padding: 1.25rem 1.5rem; background: var(--bg-secondary); border-bottom: 1px solid var(--border-color); flex-wrap: wrap; }
+        .category-icon { width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+        .category-icon svg { width: 24px; height: 24px; }
+        .engine-icon { background: #fee2e2; color: #dc2626; }
+        .trans-icon { background: #fef3c7; color: #d97706; }
+        .susp-icon { background: #d1fae5; color: #059669; }
+        .elec-icon { background: #dbeafe; color: #2563eb; }
+        .maint-icon { background: #f1f5f9; color: #475569; }
+        .category-info { flex: 1; min-width: 200px; }
+        .category-info h3 { font-size: 1.125rem; margin-bottom: 0.25rem; }
+        .category-info p { font-size: 0.875rem; color: var(--text-secondary); margin: 0; }
+        .category-stats { display: flex; gap: 1.5rem; font-size: 0.875rem; color: var(--text-secondary); }
+        .variant-tabs { display: flex; gap: 0.5rem; padding: 1rem 1.5rem; border-bottom: 1px solid var(--border-color); flex-wrap: wrap; }
+        .variant-tab { padding: 0.5rem 1rem; border: 1px solid var(--border-color); border-radius: 20px; background: transparent; cursor: pointer; font-size: 0.875rem; transition: all 0.2s; }
+        .variant-tab:hover { border-color: var(--primary); }
+        .variant-tab.active { background: var(--primary); color: white; border-color: var(--primary); }
+        .variant-content { display: none; padding: 1.5rem; }
+        .variant-content.active { display: block; }
+        .variant-info { margin-bottom: 1.5rem; }
+        .variant-info h4 { font-size: 1rem; margin-bottom: 0.75rem; }
+        .variant-specs { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1rem; }
+        .variant-specs span { background: var(--bg-secondary); padding: 0.375rem 0.75rem; border-radius: 6px; font-size: 0.8125rem; }
+        .common-issues { background: var(--bg-secondary); border-radius: 12px; padding: 1rem; }
+        .common-issues h5 { font-size: 0.875rem; margin-bottom: 0.75rem; color: var(--warning); }
+        .common-issues ul { list-style: none; padding: 0; margin: 0; }
+        .common-issues li { padding: 0.375rem 0; font-size: 0.8125rem; display: flex; align-items: flex-start; gap: 0.5rem; }
+        .issue-tag { display: inline-block; padding: 0.125rem 0.5rem; border-radius: 4px; font-size: 0.6875rem; font-weight: 600; text-transform: uppercase; background: #e5e7eb; color: #374151; flex-shrink: 0; }
+        .thread-list { border-top: 1px solid var(--border-color); }
+        .thread-item { display: flex; gap: 1rem; padding: 1rem 1.5rem; border-bottom: 1px solid var(--border-color); text-decoration: none; color: inherit; transition: background 0.2s; }
+        .thread-item:hover { background: var(--bg-secondary); }
+        .thread-votes { display: flex; flex-direction: column; align-items: center; gap: 0.25rem; min-width: 40px; }
+        .thread-votes button { background: none; border: none; cursor: pointer; color: var(--text-secondary); }
+        .vote-count { font-weight: 600; font-size: 0.875rem; }
+        .thread-content { flex: 1; }
+        .thread-content h4 { font-size: 0.9375rem; margin-bottom: 0.5rem; }
+        .thread-meta { display: flex; gap: 1rem; font-size: 0.75rem; color: var(--text-secondary); flex-wrap: wrap; }
+        .thread-author { color: var(--primary); }
+        .view-all-link { display: block; padding: 1rem 1.5rem; text-align: center; color: var(--primary); text-decoration: none; font-weight: 500; font-size: 0.875rem; background: var(--bg-secondary); }
+    </style>
+</body>
+</html>

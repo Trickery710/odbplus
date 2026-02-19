@@ -1,10 +1,12 @@
 package com.odbplus.app.ui
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
@@ -16,15 +18,19 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.odbplus.app.connect.ConnectViewModel
+import com.odbplus.app.ui.theme.*
 import com.odbplus.core.transport.ConnectionState
 import kotlinx.coroutines.launch
 
@@ -47,31 +53,48 @@ fun TerminalScreen(
     }
 
     Scaffold(
+        containerColor = DarkBackground,
         topBar = {
             TopAppBar(
-                title = { Text("Custom Commands") },
+                title = {
+                    Text(
+                        "Terminal",
+                        fontWeight = FontWeight.Bold,
+                        color = TextPrimary
+                    )
+                },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                        Icon(
+                            Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = "Back",
+                            tint = TextSecondary
+                        )
                     }
                 },
                 actions = {
-                    // Copy logs button
                     IconButton(
                         onClick = {
                             val logsText = logLines.joinToString("\n")
                             clipboardManager.setText(AnnotatedString(logsText))
                         }
                     ) {
-                        Icon(Icons.Filled.ContentCopy, contentDescription = "Copy Logs")
+                        Icon(
+                            Icons.Filled.ContentCopy,
+                            contentDescription = "Copy Logs",
+                            tint = TextSecondary
+                        )
                     }
-                    // Clear logs button
                     IconButton(onClick = { viewModel.clearLogs() }) {
-                        Icon(Icons.Filled.Clear, contentDescription = "Clear Logs")
+                        Icon(
+                            Icons.Filled.Clear,
+                            contentDescription = "Clear Logs",
+                            tint = TextSecondary
+                        )
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.surfaceVariant
+                    containerColor = DarkSurface
                 )
             )
         }
@@ -84,40 +107,61 @@ fun TerminalScreen(
             // Connection status banner
             if (connectionState != ConnectionState.CONNECTED) {
                 Surface(
-                    color = MaterialTheme.colorScheme.errorContainer,
-                    modifier = Modifier.fillMaxWidth()
+                    color = RedContainer,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .border(
+                            width = 1.dp,
+                            color = RedError.copy(alpha = 0.2f),
+                            shape = RoundedCornerShape(0.dp)
+                        )
                 ) {
                     Text(
-                        text = "Not connected - Terminal requires active connection",
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onErrorContainer,
+                        text = "Not connected -- Terminal requires active connection",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = RedOnContainer,
+                        fontWeight = FontWeight.Medium,
                         modifier = Modifier.padding(12.dp)
                     )
                 }
             }
 
-            // Log display
+            // Terminal log display -- dark hacker aesthetic
             LazyColumn(
                 state = lazyListState,
                 modifier = Modifier
                     .fillMaxWidth()
                     .weight(1f)
-                    .background(Color(0xFF1E1E1E))
-                    .padding(horizontal = 8.dp, vertical = 4.dp)
+                    .background(TerminalBg)
+                    .padding(horizontal = 12.dp, vertical = 8.dp)
             ) {
                 items(logLines) { line ->
                     val color = when {
-                        line.startsWith(">>") -> Color(0xFF4FC3F7) // Light blue for sent
-                        line.startsWith("<<") -> Color(0xFF81C784) // Light green for received
-                        line.startsWith("!!") -> Color(0xFFE57373) // Light red for errors
-                        line.startsWith("--") -> Color(0xFFFFB74D) // Orange for info
-                        else -> Color(0xFFB0B0B0) // Gray for other
+                        line.startsWith(">>") -> TerminalSent      // Cyan for sent
+                        line.startsWith("<<") -> TerminalReceived   // Green for received
+                        line.startsWith("!!") -> TerminalError      // Red for errors
+                        line.startsWith("--") -> TerminalInfo       // Amber for info
+                        else -> TerminalMuted                        // Gray for other
+                    }
+                    // Prefix marker styling
+                    val prefix = when {
+                        line.startsWith(">>") -> "> "
+                        line.startsWith("<<") -> "< "
+                        line.startsWith("!!") -> "! "
+                        line.startsWith("--") -> "- "
+                        else -> "  "
+                    }
+                    val content = when {
+                        line.startsWith(">>") || line.startsWith("<<") ||
+                        line.startsWith("!!") || line.startsWith("--") -> line.substring(2).trimStart()
+                        else -> line
                     }
                     Text(
-                        text = line,
+                        text = "$prefix$content",
                         color = color,
                         fontFamily = FontFamily.Monospace,
-                        style = MaterialTheme.typography.bodySmall,
+                        fontSize = 13.sp,
+                        lineHeight = 18.sp,
                         modifier = Modifier.padding(vertical = 1.dp)
                     )
                 }
@@ -133,9 +177,10 @@ fun TerminalScreen(
                         ) {
                             Text(
                                 text = "No log data yet.\nConnect to a vehicle and send commands.",
-                                color = Color(0xFF808080),
+                                color = TerminalMuted,
                                 fontFamily = FontFamily.Monospace,
-                                style = MaterialTheme.typography.bodyMedium
+                                fontSize = 13.sp,
+                                lineHeight = 20.sp
                             )
                         }
                     }
@@ -170,14 +215,14 @@ fun TerminalCommandInput(
     }
 
     Surface(
-        shadowElevation = 8.dp,
-        color = MaterialTheme.colorScheme.surface
+        color = DarkSurface,
+        shadowElevation = 8.dp
     ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
                 .imePadding()
-                .padding(8.dp)
+                .padding(10.dp)
         ) {
             // Quick command chips
             Row(
@@ -197,7 +242,13 @@ fun TerminalCommandInput(
                 onValueChange = { command = it.uppercase() },
                 modifier = Modifier.fillMaxWidth(),
                 enabled = enabled,
-                placeholder = { Text("Enter OBD command (e.g., 010C)") },
+                placeholder = {
+                    Text(
+                        "Enter OBD command (e.g., 010C)",
+                        color = TextTertiary,
+                        fontFamily = FontFamily.Monospace
+                    )
+                },
                 trailingIcon = {
                     IconButton(
                         onClick = { send() },
@@ -205,14 +256,28 @@ fun TerminalCommandInput(
                     ) {
                         Icon(
                             Icons.AutoMirrored.Filled.Send,
-                            contentDescription = "Send Command"
+                            contentDescription = "Send Command",
+                            tint = if (enabled && command.isNotBlank()) CyanPrimary else TextTertiary
                         )
                     }
                 },
                 keyboardOptions = KeyboardOptions(imeAction = ImeAction.Send),
                 keyboardActions = KeyboardActions(onSend = { send() }),
                 singleLine = true,
-                textStyle = LocalTextStyle.current.copy(fontFamily = FontFamily.Monospace)
+                textStyle = LocalTextStyle.current.copy(
+                    fontFamily = FontFamily.Monospace,
+                    color = TextPrimary
+                ),
+                shape = RoundedCornerShape(12.dp),
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedBorderColor = CyanPrimary,
+                    unfocusedBorderColor = DarkBorder,
+                    focusedContainerColor = DarkSurfaceVariant,
+                    unfocusedContainerColor = DarkSurfaceVariant,
+                    cursorColor = CyanPrimary,
+                    disabledBorderColor = DarkBorder.copy(alpha = 0.5f),
+                    disabledContainerColor = DarkSurfaceVariant.copy(alpha = 0.5f)
+                )
             )
         }
     }
@@ -231,8 +296,21 @@ fun QuickCommandChip(
             Text(
                 text = label,
                 fontFamily = FontFamily.Monospace,
-                style = MaterialTheme.typography.labelSmall
+                style = MaterialTheme.typography.labelSmall,
+                fontWeight = FontWeight.Medium,
+                color = if (enabled) CyanPrimary else TextTertiary
             )
-        }
+        },
+        shape = RoundedCornerShape(8.dp),
+        border = AssistChipDefaults.assistChipBorder(
+            enabled = enabled,
+            borderColor = if (enabled) CyanPrimary.copy(alpha = 0.3f) else DarkBorder
+        ),
+        colors = AssistChipDefaults.assistChipColors(
+            containerColor = if (enabled) CyanContainer else DarkSurfaceVariant,
+            labelColor = if (enabled) CyanPrimary else TextTertiary,
+            disabledContainerColor = DarkSurfaceVariant.copy(alpha = 0.5f),
+            disabledLabelColor = TextTertiary
+        )
     )
 }

@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Flex Fuel Sensor Guide - Learn how fuel composition sensors work to detect ethanol content, enabling E85 flex fuel operation and automatic fuel mixture adjustment.">
+    <title>Flex Fuel Sensor Guide | ODB+</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../../css/styles.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="navbar-container">
+            <a href="../../index.html" class="navbar-brand">
+                <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="40" height="40" rx="8" fill="url(#gradient)"/>
+                    <path d="M12 20C12 15.5817 15.5817 12 20 12C24.4183 12 28 15.5817 28 20C28 24.4183 24.4183 28 20 28" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+                    <path d="M20 16V20L23 23" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    <circle cx="20" cy="20" r="2" fill="white"/>
+                    <defs>
+                        <linearGradient id="gradient" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse">
+                            <stop stop-color="#2563eb"/>
+                            <stop offset="1" stop-color="#10b981"/>
+                        </linearGradient>
+                    </defs>
+                </svg>
+                <span>ODB+</span>
+            </a>
+            <ul class="navbar-menu">
+                <li><a href="../../index.html">Home</a></li>
+                <li><a href="../codes/index.html">Error Codes</a></li>
+                <li><a href="../forums/index.html">Forums</a></li>
+                <li><a href="index.html" class="active">Sensors</a></li>
+            </ul>
+            <div class="navbar-actions">
+                <a href="../auth/login.html" class="btn btn-secondary">Log In</a>
+                <a href="../auth/signup.html" class="btn btn-primary">Sign Up</a>
+            </div>
+        </div>
+    </nav>
+
+    <main style="padding-top: 100px; padding-bottom: 4rem;">
+        <div class="container" style="max-width: 900px;">
+            <!-- Breadcrumb -->
+            <nav class="breadcrumb mb-4">
+                <a href="index.html">Sensors</a>
+                <span class="separator">/</span>
+                <a href="index.html#fuel">Fuel System</a>
+                <span class="separator">/</span>
+                <span class="current">Flex Fuel Sensor</span>
+            </nav>
+
+            <!-- Sensor Header -->
+            <div class="sensor-detail-header mb-4">
+                <div class="sensor-icon-lg">
+                    <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="1.5">
+                        <path d="M8 3v18"/>
+                        <path d="M16 3v18"/>
+                        <path d="M3 8h18"/>
+                        <path d="M3 16h18"/>
+                    </svg>
+                </div>
+                <div class="sensor-detail-info">
+                    <h1>Flex Fuel Sensor</h1>
+                    <p class="sensor-subtitle">Also known as: Fuel Composition Sensor, Ethanol Content Sensor, FFV Sensor</p>
+                    <div class="sensor-meta">
+                        <span class="badge badge-primary">Fuel System</span>
+                        <span class="badge badge-success">E85/Flex Fuel</span>
+                        <span class="badge badge-secondary">Specialized</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Facts -->
+            <div class="quick-info-grid mb-4">
+                <div class="quick-info-card">
+                    <h4>Location</h4>
+                    <p>Fuel Line (to engine)</p>
+                </div>
+                <div class="quick-info-card">
+                    <h4>Signal Type</h4>
+                    <p>Frequency/PWM + Temp</p>
+                </div>
+                <div class="quick-info-card">
+                    <h4>Lifespan</h4>
+                    <p>150,000+ miles</p>
+                </div>
+                <div class="quick-info-card">
+                    <h4>Replacement Cost</h4>
+                    <p>$50 - $150</p>
+                </div>
+            </div>
+
+            <!-- Overview -->
+            <section class="content-section mb-4">
+                <h2>What Is a Flex Fuel Sensor?</h2>
+                <p>The flex fuel sensor (also called a fuel composition sensor) measures the ethanol content and temperature of the fuel being delivered to the engine. This allows flex fuel vehicles (FFVs) to automatically adjust fuel injection and ignition timing to run optimally on any blend of gasoline and ethanol, from E0 (pure gasoline) to E85 (85% ethanol).</p>
+
+                <p>Ethanol has different combustion characteristics than gasoline - it has less energy per gallon but higher octane. The ECM uses the flex fuel sensor data to inject more fuel when using high-ethanol blends and to advance timing to take advantage of ethanol's higher knock resistance.</p>
+
+                <div class="info-box">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"/>
+                        <line x1="12" y1="16" x2="12" y2="12"/>
+                        <line x1="12" y1="8" x2="12.01" y2="8"/>
+                    </svg>
+                    <div>
+                        <strong>Virtual Flex Fuel:</strong> Some modern vehicles don't have a physical flex fuel sensor. Instead, they use "virtual" flex fuel sensing that estimates ethanol content from O2 sensor feedback and fuel trim values. These systems may adapt more slowly to fuel changes.
+                    </div>
+                </div>
+            </section>
+
+            <!-- How It Works -->
+            <section class="content-section mb-4">
+                <h2>How Flex Fuel Sensors Work</h2>
+
+                <h4>Capacitance Measurement</h4>
+                <p>Flex fuel sensors use the dielectric properties of fuel to measure ethanol content. Ethanol has a much higher dielectric constant than gasoline. The sensor uses two electrodes with fuel between them as a capacitor. Higher ethanol content means higher capacitance, which the sensor converts to a frequency signal.</p>
+
+                <h4 class="mt-3">Output Signals</h4>
+                <ul>
+                    <li><strong>Ethanol Content:</strong> Output as a frequency or PWM signal (typically 50-150 Hz), where frequency corresponds to ethanol percentage</li>
+                    <li><strong>Fuel Temperature:</strong> Separate analog voltage output for fuel temperature compensation</li>
+                </ul>
+
+                <h4 class="mt-3">ECM Calibration Adjustments</h4>
+                <p>Based on ethanol content, the ECM adjusts:</p>
+                <ul>
+                    <li><strong>Injector pulse width:</strong> ~30-40% more fuel needed for E85 vs. gasoline</li>
+                    <li><strong>Ignition timing:</strong> More advance possible due to ethanol's high octane</li>
+                    <li><strong>Cold start enrichment:</strong> More fuel needed for cold starts with ethanol</li>
+                    <li><strong>Fuel pressure:</strong> May increase rail pressure on some systems</li>
+                </ul>
+            </section>
+
+            <!-- Normal Values -->
+            <section class="content-section mb-4">
+                <h2>Typical Flex Fuel Sensor Readings</h2>
+
+                <div class="data-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Ethanol Content</th>
+                                <th>Typical Frequency</th>
+                                <th>Notes</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>0% (E0 - pure gasoline)</td>
+                                <td>50 Hz</td>
+                                <td>Regular gasoline</td>
+                            </tr>
+                            <tr>
+                                <td>10% (E10 - most pump gas)</td>
+                                <td>~60 Hz</td>
+                                <td>Standard pump gasoline</td>
+                            </tr>
+                            <tr>
+                                <td>50%</td>
+                                <td>~100 Hz</td>
+                                <td>Mixed fuel</td>
+                            </tr>
+                            <tr>
+                                <td>85% (E85)</td>
+                                <td>~135-150 Hz</td>
+                                <td>Flex fuel blend</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <p class="mt-3"><strong>Fuel Temperature:</strong> The temperature output is typically a standard thermistor signal (0.5-4.5V) similar to other temperature sensors. This helps the ECM compensate for fuel density changes with temperature.</p>
+            </section>
+
+            <!-- Failure Symptoms -->
+            <section class="content-section mb-4">
+                <h2>Symptoms of a Failing Flex Fuel Sensor</h2>
+                <ul class="symptom-list">
+                    <li>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="2">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                        </svg>
+                        <div>
+                            <strong>Check Engine Light with P0175-P0182 or P0178 Codes</strong>
+                            <p>Fuel composition sensor circuit malfunction codes</p>
+                        </div>
+                    </li>
+                    <li>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="2">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                        </svg>
+                        <div>
+                            <strong>Hard Starting with E85</strong>
+                            <p>ECM can't properly enrich for cold starts with high ethanol content</p>
+                        </div>
+                    </li>
+                    <li>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="2">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                        </svg>
+                        <div>
+                            <strong>Engine Running Rich or Lean</strong>
+                            <p>Incorrect ethanol reading causes wrong fuel calculation</p>
+                        </div>
+                    </li>
+                    <li>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="2">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                        </svg>
+                        <div>
+                            <strong>Significant Loss of Power on E85</strong>
+                            <p>ECM not adding enough fuel for high ethanol blend</p>
+                        </div>
+                    </li>
+                    <li>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="2">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                        </svg>
+                        <div>
+                            <strong>Worse Than Expected MPG</strong>
+                            <p>Fuel economy doesn't match expected values for fuel blend</p>
+                        </div>
+                    </li>
+                    <li>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="2">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                        </svg>
+                        <div>
+                            <strong>Engine Knock on E85</strong>
+                            <p>ECM not advancing timing to take advantage of ethanol's octane</p>
+                        </div>
+                    </li>
+                </ul>
+            </section>
+
+            <!-- Common Causes -->
+            <section class="content-section mb-4">
+                <h2>What Causes Flex Fuel Sensor Problems?</h2>
+                <div class="causes-grid">
+                    <div class="cause-category">
+                        <h4>Sensor Failure</h4>
+                        <ul>
+                            <li>Internal circuit failure</li>
+                            <li>Electrode contamination</li>
+                            <li>Temperature sensor failure</li>
+                            <li>Age and wear</li>
+                        </ul>
+                    </div>
+                    <div class="cause-category">
+                        <h4>Contamination</h4>
+                        <ul>
+                            <li>Water in fuel system</li>
+                            <li>Dirt or debris</li>
+                            <li>Fuel additive residue</li>
+                            <li>Phase separation</li>
+                        </ul>
+                    </div>
+                    <div class="cause-category">
+                        <h4>Wiring Issues</h4>
+                        <ul>
+                            <li>Damaged connector</li>
+                            <li>Corroded terminals</li>
+                            <li>Wiring damage from heat</li>
+                            <li>Poor ground connection</li>
+                        </ul>
+                    </div>
+                    <div class="cause-category">
+                        <h4>Fuel System Issues</h4>
+                        <ul>
+                            <li>Incorrect fuel blend</li>
+                            <li>Old/degraded ethanol</li>
+                            <li>Leaks around sensor</li>
+                            <li>Blocked sensor inlet</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="warning-box mt-3">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+                        <line x1="12" y1="9" x2="12" y2="13"/>
+                        <line x1="12" y1="17" x2="12.01" y2="17"/>
+                    </svg>
+                    <div>
+                        <strong>Phase Separation:</strong> E85 is hygroscopic (absorbs water from air). If the fuel sits too long or absorbs too much moisture, it can phase separate, leaving a water/ethanol layer that damages fuel system components. Use E85 promptly and keep your tank at least half full.
+                    </div>
+                </div>
+            </section>
+
+            <!-- Testing Procedures -->
+            <section class="content-section mb-4">
+                <h2>How to Test a Flex Fuel Sensor</h2>
+
+                <div class="diagnostic-steps">
+                    <div class="step">
+                        <div class="step-number">1</div>
+                        <div class="step-content">
+                            <h4>Check Ethanol Content Reading</h4>
+                            <p>Use your ODB+ scanner to view the ethanol content percentage. Fill up with known fuel (E10 or E85) and verify the reading matches expected values. Most standard pump gas is E10 (10% ethanol).</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">2</div>
+                        <div class="step-content">
+                            <h4>Monitor Fuel Trim</h4>
+                            <p>Watch fuel trim values after changing fuel types. With a working sensor, the ECM should quickly adjust fuel trims to near-zero. If trims stay significantly positive or negative, the sensor may not be accurately reporting.</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">3</div>
+                        <div class="step-content">
+                            <h4>Compare Fuel Temperature</h4>
+                            <p>Monitor fuel temperature reading and compare to ambient/IAT. Fuel temp should be reasonable and responsive to conditions. A reading stuck at extreme values indicates a temperature circuit problem.</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">4</div>
+                        <div class="step-content">
+                            <h4>Check Frequency Signal</h4>
+                            <p>With a frequency counter or oscilloscope, measure the sensor output frequency. It should match expected values for the fuel type and respond to fuel changes.</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">5</div>
+                        <div class="step-content">
+                            <h4>Visual Inspection</h4>
+                            <p>Check for fuel leaks around the sensor, damaged connector, or debris in the sensor inlet. Ensure the sensor is properly installed and seated.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Related Codes -->
+            <section class="content-section mb-4">
+                <h2>Related Diagnostic Codes</h2>
+                <div class="related-codes-grid">
+                    <a href="../codes/index.html" class="related-code">
+                        <span class="code-badge-sm">P0176</span>
+                        <span>Fuel Composition Circuit</span>
+                    </a>
+                    <a href="../codes/index.html" class="related-code">
+                        <span class="code-badge-sm">P0177</span>
+                        <span>Fuel Comp. Range/Performance</span>
+                    </a>
+                    <a href="../codes/index.html" class="related-code">
+                        <span class="code-badge-sm">P0178</span>
+                        <span>Fuel Comp. Circuit Low</span>
+                    </a>
+                    <a href="../codes/index.html" class="related-code">
+                        <span class="code-badge-sm">P0179</span>
+                        <span>Fuel Comp. Circuit High</span>
+                    </a>
+                    <a href="../codes/index.html" class="related-code">
+                        <span class="code-badge-sm">P0180</span>
+                        <span>Fuel Temp Sensor A Circuit</span>
+                    </a>
+                    <a href="../codes/P0171.html" class="related-code">
+                        <span class="code-badge-sm">P0171</span>
+                        <span>System Too Lean Bank 1</span>
+                    </a>
+                </div>
+            </section>
+
+            <!-- Forum Discussion -->
+            <section class="content-section mb-4">
+                <h2>Community Discussion</h2>
+                <p class="mb-3">Have questions about flex fuel sensors? Get help from experienced mechanics and fellow car owners.</p>
+                <a href="../forums/index.html" class="btn btn-primary">Visit Forums</a>
+                <a href="../forums/index.html?search=flex+fuel+E85" class="btn btn-outline" style="margin-left: 0.5rem;">Search Flex Fuel Threads</a>
+            </section>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-bottom" style="border-top: none; padding-top: 0;">
+                <p>&copy; 2024 ODB+. All rights reserved.</p>
+                <div class="footer-legal">
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Terms of Service</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../../js/main.js"></script>
+</body>
+</html>

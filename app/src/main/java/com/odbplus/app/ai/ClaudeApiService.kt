@@ -141,6 +141,7 @@ class ClaudeApiService @Inject constructor() {
 
         // Gemini
         private const val GEMINI_API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent"
+        private const val GEMINI_OAUTH_API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent"
 
         // Groq
         private const val GROQ_API_URL = "https://api.groq.com/openai/v1/chat/completions"
@@ -156,11 +157,18 @@ class ClaudeApiService @Inject constructor() {
         provider: AiProvider,
         apiKey: String,
         systemPrompt: String,
-        messages: List<ClaudeMessage>
+        messages: List<ClaudeMessage>,
+        useOAuth: Boolean = false
     ): ApiResult<AiResponse> {
         return when (provider) {
             AiProvider.CLAUDE -> sendToClaude(apiKey, systemPrompt, messages)
-            AiProvider.GEMINI -> sendToGemini(apiKey, systemPrompt, messages)
+            AiProvider.GEMINI -> {
+                if (useOAuth) {
+                    sendToGeminiWithOAuth(apiKey, systemPrompt, messages)
+                } else {
+                    sendToGemini(apiKey, systemPrompt, messages)
+                }
+            }
             AiProvider.GROQ -> sendToGroq(apiKey, systemPrompt, messages)
         }
     }
@@ -293,6 +301,72 @@ class ClaudeApiService @Inject constructor() {
         }
     }
 
+    // ==================== Gemini OAuth Implementation ====================
+
+    /**
+     * Send message to Gemini using OAuth (Google Sign-In ID token).
+     * Uses the OAuth-enabled endpoint with Bearer token authentication.
+     */
+    private suspend fun sendToGeminiWithOAuth(
+        idToken: String,
+        systemPrompt: String,
+        messages: List<ClaudeMessage>
+    ): ApiResult<AiResponse> {
+        return try {
+            // Convert messages to Gemini format
+            val geminiContents = messages.map { msg ->
+                GeminiContent(
+                    role = if (msg.role == "user") "user" else "model",
+                    parts = listOf(GeminiPart(msg.content))
+                )
+            }
+
+            val request = GeminiRequest(
+                contents = geminiContents,
+                systemInstruction = GeminiContent(parts = listOf(GeminiPart(systemPrompt))),
+                generationConfig = GeminiGenerationConfig(maxOutputTokens = DEFAULT_MAX_TOKENS)
+            )
+
+            // Use OAuth endpoint with Bearer token
+            val response: HttpResponse = client.post(GEMINI_OAUTH_API_URL) {
+                contentType(ContentType.Application.Json)
+                headers {
+                    append("Authorization", "Bearer $idToken")
+                }
+                setBody(request)
+            }
+
+            when (response.status) {
+                HttpStatusCode.OK -> {
+                    val geminiResponse = response.body<GeminiResponse>()
+                    val content = geminiResponse.candidates
+                        ?.firstOrNull()
+                        ?.content
+                        ?.parts
+                        ?.firstOrNull()
+                        ?.text
+                        ?: "No response generated"
+                    ApiResult.Success(AiResponse(content, AiProvider.GEMINI))
+                }
+                HttpStatusCode.Unauthorized -> {
+                    ApiResult.Error("Google Sign-In expired. Please sign in again.", 401)
+                }
+                HttpStatusCode.Forbidden -> {
+                    ApiResult.Error("Access denied. Please sign in with Google again.", 403)
+                }
+                HttpStatusCode.TooManyRequests -> {
+                    ApiResult.Error("Gemini rate limit exceeded. Please wait and try again.", 429)
+                }
+                else -> {
+                    val errorBody = tryParseGeminiError(response)
+                    ApiResult.Error(errorBody ?: "Gemini request failed: ${response.status.value}", response.status.value)
+                }
+            }
+        } catch (e: Exception) {
+            ApiResult.Error(parseNetworkError(e))
+        }
+    }
+
     // ==================== Groq Implementation ====================
 
     private suspend fun sendToGroq(
@@ -381,9 +455,9 @@ class ClaudeApiService @Inject constructor() {
     /**
      * Test the API key for a specific provider.
      */
-    suspend fun testApiKey(provider: AiProvider, apiKey: String): ApiResult<Boolean> {
+    suspend fun testApiKey(provider: AiProvider, apiKey: String, useOAuth: Boolean = false): ApiResult<Boolean> {
         val testMessages = listOf(ClaudeMessage(role = "user", content = "Hi"))
-        return when (val result = sendMessage(provider, apiKey, "Reply with just 'ok'", testMessages)) {
+        return when (val result = sendMessage(provider, apiKey, "Reply with just 'ok'", testMessages, useOAuth)) {
             is ApiResult.Success -> ApiResult.Success(true)
             is ApiResult.Error -> ApiResult.Error(result.message, result.code)
         }

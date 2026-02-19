@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Fuel Pressure Sensor Guide - Learn how fuel rail pressure sensors work, their role in GDI and diesel systems, common failure symptoms, and testing procedures.">
+    <title>Fuel Pressure Sensor Guide | ODB+</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../../css/styles.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="navbar-container">
+            <a href="../../index.html" class="navbar-brand">
+                <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="40" height="40" rx="8" fill="url(#gradient)"/>
+                    <path d="M12 20C12 15.5817 15.5817 12 20 12C24.4183 12 28 15.5817 28 20C28 24.4183 24.4183 28 20 28" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+                    <path d="M20 16V20L23 23" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    <circle cx="20" cy="20" r="2" fill="white"/>
+                    <defs>
+                        <linearGradient id="gradient" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse">
+                            <stop stop-color="#2563eb"/>
+                            <stop offset="1" stop-color="#10b981"/>
+                        </linearGradient>
+                    </defs>
+                </svg>
+                <span>ODB+</span>
+            </a>
+            <ul class="navbar-menu">
+                <li><a href="../../index.html">Home</a></li>
+                <li><a href="../codes/index.html">Error Codes</a></li>
+                <li><a href="../forums/index.html">Forums</a></li>
+                <li><a href="index.html" class="active">Sensors</a></li>
+            </ul>
+            <div class="navbar-actions">
+                <a href="../auth/login.html" class="btn btn-secondary">Log In</a>
+                <a href="../auth/signup.html" class="btn btn-primary">Sign Up</a>
+            </div>
+        </div>
+    </nav>
+
+    <main style="padding-top: 100px; padding-bottom: 4rem;">
+        <div class="container" style="max-width: 900px;">
+            <!-- Breadcrumb -->
+            <nav class="breadcrumb mb-4">
+                <a href="index.html">Sensors</a>
+                <span class="separator">/</span>
+                <a href="index.html#fuel">Fuel System</a>
+                <span class="separator">/</span>
+                <span class="current">Fuel Pressure Sensor</span>
+            </nav>
+
+            <!-- Sensor Header -->
+            <div class="sensor-detail-header mb-4">
+                <div class="sensor-icon-lg">
+                    <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="1.5">
+                        <circle cx="12" cy="12" r="10"/>
+                        <path d="M12 8v8"/>
+                        <path d="M8 12h8"/>
+                    </svg>
+                </div>
+                <div class="sensor-detail-info">
+                    <h1>Fuel Pressure Sensor</h1>
+                    <p class="sensor-subtitle">Also known as: Fuel Rail Pressure Sensor (FRPS), FRP Sensor</p>
+                    <div class="sensor-meta">
+                        <span class="badge badge-primary">Fuel System</span>
+                        <span class="badge badge-success">GDI/Diesel</span>
+                        <span class="badge badge-secondary">Critical</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Facts -->
+            <div class="quick-info-grid mb-4">
+                <div class="quick-info-card">
+                    <h4>Location</h4>
+                    <p>Fuel Rail</p>
+                </div>
+                <div class="quick-info-card">
+                    <h4>Signal Type</h4>
+                    <p>0.5-4.5V Analog</p>
+                </div>
+                <div class="quick-info-card">
+                    <h4>Lifespan</h4>
+                    <p>100,000+ miles</p>
+                </div>
+                <div class="quick-info-card">
+                    <h4>Replacement Cost</h4>
+                    <p>$50 - $200</p>
+                </div>
+            </div>
+
+            <!-- Overview -->
+            <section class="content-section mb-4">
+                <h2>What Is a Fuel Pressure Sensor?</h2>
+                <p>The fuel pressure sensor (also called fuel rail pressure sensor) monitors the pressure of fuel in the fuel rail. This is critical information for the Engine Control Module (ECM) to calculate precise fuel injection timing and duration, especially on Gasoline Direct Injection (GDI) and diesel engines where fuel pressures can exceed 2,000 PSI.</p>
+
+                <p>On traditional port fuel injection systems, the fuel pressure is regulated mechanically and rarely needs ECM monitoring. However, modern GDI and diesel common rail systems use electronically controlled fuel pumps that actively adjust pressure based on driving conditions - making the fuel pressure sensor essential.</p>
+
+                <div class="info-box">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"/>
+                        <line x1="12" y1="16" x2="12" y2="12"/>
+                        <line x1="12" y1="8" x2="12.01" y2="8"/>
+                    </svg>
+                    <div>
+                        <strong>High vs. Low Pressure:</strong> GDI vehicles have two fuel pressure sensors - one for the low-pressure (tank pump) side (~50-75 PSI) and one for the high-pressure side (~500-3000 PSI). Diesel common rail systems operate at even higher pressures (up to 30,000+ PSI).
+                    </div>
+                </div>
+            </section>
+
+            <!-- How It Works -->
+            <section class="content-section mb-4">
+                <h2>How Fuel Pressure Sensors Work</h2>
+
+                <h4>Strain Gauge Technology</h4>
+                <p>Most fuel pressure sensors use a strain gauge design. Fuel pressure acts on a metal diaphragm, causing it to flex. Strain gauges bonded to the diaphragm change resistance as they stretch. This resistance change is converted to a voltage signal (typically 0.5V to 4.5V) proportional to pressure.</p>
+
+                <h4 class="mt-3">Pressure Control Loop</h4>
+                <p>The ECM uses fuel pressure data in a closed-loop control system:</p>
+                <ol>
+                    <li>ECM determines desired fuel pressure based on engine load, RPM, and temperature</li>
+                    <li>FRP sensor reports actual fuel pressure</li>
+                    <li>ECM adjusts high-pressure fuel pump duty cycle to achieve target pressure</li>
+                    <li>ECM calculates injector pulse width based on actual rail pressure</li>
+                </ol>
+
+                <h4 class="mt-3">Why Pressure Varies</h4>
+                <p>Unlike traditional fuel injection, GDI systems vary fuel pressure dramatically. Low pressure at idle reduces injector noise and fuel pump wear. High pressure during acceleration ensures proper fuel atomization despite very short injection windows.</p>
+            </section>
+
+            <!-- Normal Values -->
+            <section class="content-section mb-4">
+                <h2>Normal Fuel Pressure Readings</h2>
+
+                <div class="data-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>System Type</th>
+                                <th>Idle Pressure</th>
+                                <th>Full Load Pressure</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Port Fuel Injection</td>
+                                <td>35-45 PSI</td>
+                                <td>40-60 PSI</td>
+                            </tr>
+                            <tr>
+                                <td>GDI Low-Pressure</td>
+                                <td>50-75 PSI</td>
+                                <td>60-90 PSI</td>
+                            </tr>
+                            <tr>
+                                <td>GDI High-Pressure</td>
+                                <td>500-1500 PSI</td>
+                                <td>2000-3000 PSI</td>
+                            </tr>
+                            <tr>
+                                <td>Diesel Common Rail</td>
+                                <td>5000-8000 PSI</td>
+                                <td>20000-30000 PSI</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <p class="mt-3"><strong>Note:</strong> Actual values vary significantly by manufacturer. Always reference factory specifications for your specific vehicle.</p>
+            </section>
+
+            <!-- Failure Symptoms -->
+            <section class="content-section mb-4">
+                <h2>Symptoms of a Failing Fuel Pressure Sensor</h2>
+                <ul class="symptom-list">
+                    <li>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="2">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                        </svg>
+                        <div>
+                            <strong>Check Engine Light with P0190-P0194 Codes</strong>
+                            <p>Fuel rail pressure circuit malfunction, range, or performance codes</p>
+                        </div>
+                    </li>
+                    <li>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="2">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                        </svg>
+                        <div>
+                            <strong>Hard Starting or No Start</strong>
+                            <p>ECM can't determine correct fuel quantity without pressure data</p>
+                        </div>
+                    </li>
+                    <li>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="2">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                        </svg>
+                        <div>
+                            <strong>Engine Stalling</strong>
+                            <p>Incorrect pressure reading causes improper fuel delivery</p>
+                        </div>
+                    </li>
+                    <li>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="2">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                        </svg>
+                        <div>
+                            <strong>Hesitation or Power Loss</strong>
+                            <p>Fuel pressure control becomes erratic during acceleration</p>
+                        </div>
+                    </li>
+                    <li>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="2">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                        </svg>
+                        <div>
+                            <strong>Poor Fuel Economy</strong>
+                            <p>Incorrect fuel pressure affects combustion efficiency</p>
+                        </div>
+                    </li>
+                    <li>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="2">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                        </svg>
+                        <div>
+                            <strong>Reduced Engine Power Mode (Limp Mode)</strong>
+                            <p>ECM limits power to protect engine without accurate pressure data</p>
+                        </div>
+                    </li>
+                </ul>
+            </section>
+
+            <!-- Common Causes -->
+            <section class="content-section mb-4">
+                <h2>What Causes Fuel Pressure Sensor Problems?</h2>
+                <div class="causes-grid">
+                    <div class="cause-category">
+                        <h4>Sensor Failure</h4>
+                        <ul>
+                            <li>Internal circuit failure</li>
+                            <li>Diaphragm damage</li>
+                            <li>Contamination from fuel</li>
+                            <li>Age/wear</li>
+                        </ul>
+                    </div>
+                    <div class="cause-category">
+                        <h4>Fuel Quality Issues</h4>
+                        <ul>
+                            <li>Water in fuel</li>
+                            <li>Contaminated fuel</li>
+                            <li>Debris in fuel system</li>
+                            <li>Fuel additive damage</li>
+                        </ul>
+                    </div>
+                    <div class="cause-category">
+                        <h4>Wiring Problems</h4>
+                        <ul>
+                            <li>Damaged connector</li>
+                            <li>Corroded pins</li>
+                            <li>Chafed wiring</li>
+                            <li>Poor ground</li>
+                        </ul>
+                    </div>
+                    <div class="cause-category">
+                        <h4>System Issues</h4>
+                        <ul>
+                            <li>Fuel pump failure</li>
+                            <li>Clogged fuel filter</li>
+                            <li>Leaking fuel line</li>
+                            <li>Faulty pressure regulator</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="warning-box mt-3">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+                        <line x1="12" y1="9" x2="12" y2="13"/>
+                        <line x1="12" y1="17" x2="12.01" y2="17"/>
+                    </svg>
+                    <div>
+                        <strong>High Pressure Safety:</strong> Never work on GDI or diesel fuel systems without properly relieving fuel pressure first. High-pressure fuel can penetrate skin and cause serious injury. Follow manufacturer procedures for fuel system service.
+                    </div>
+                </div>
+            </section>
+
+            <!-- Testing Procedures -->
+            <section class="content-section mb-4">
+                <h2>How to Test a Fuel Pressure Sensor</h2>
+
+                <div class="diagnostic-steps">
+                    <div class="step">
+                        <div class="step-number">1</div>
+                        <div class="step-content">
+                            <h4>Monitor Live Data</h4>
+                            <p>Use your ODB+ scanner to monitor fuel rail pressure. With the engine running, pressure should be stable at idle and increase smoothly with throttle. Erratic readings or values stuck at minimum/maximum indicate a problem.</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">2</div>
+                        <div class="step-content">
+                            <h4>Compare Actual vs. Commanded</h4>
+                            <p>Monitor both "actual" and "desired" fuel pressure PIDs. On a properly working system, actual should closely track desired. A large gap indicates a fuel system problem - possibly the sensor, pump, or regulator.</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">3</div>
+                        <div class="step-content">
+                            <h4>Key-On Engine-Off Test</h4>
+                            <p>With key on but engine off, the low-pressure pump should prime and you should see pressure build. On GDI systems, high-pressure rail will read low until the engine starts (cam-driven pump).</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">4</div>
+                        <div class="step-content">
+                            <h4>Check for Fuel Leaks</h4>
+                            <p>Low pressure readings may be caused by leaks rather than sensor failure. Inspect fuel lines, injector seals, and the fuel rail for signs of leakage. Smell for fuel odors.</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">5</div>
+                        <div class="step-content">
+                            <h4>Verify with Mechanical Gauge</h4>
+                            <p>If available, connect a mechanical fuel pressure gauge to verify the sensor reading. If the mechanical gauge shows correct pressure but the sensor doesn't match, the sensor has failed.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Related Codes -->
+            <section class="content-section mb-4">
+                <h2>Related Diagnostic Codes</h2>
+                <div class="related-codes-grid">
+                    <a href="../codes/index.html" class="related-code">
+                        <span class="code-badge-sm">P0190</span>
+                        <span>FRP Circuit Malfunction</span>
+                    </a>
+                    <a href="../codes/index.html" class="related-code">
+                        <span class="code-badge-sm">P0191</span>
+                        <span>FRP Range/Performance</span>
+                    </a>
+                    <a href="../codes/index.html" class="related-code">
+                        <span class="code-badge-sm">P0192</span>
+                        <span>FRP Circuit Low</span>
+                    </a>
+                    <a href="../codes/index.html" class="related-code">
+                        <span class="code-badge-sm">P0193</span>
+                        <span>FRP Circuit High</span>
+                    </a>
+                    <a href="../codes/index.html" class="related-code">
+                        <span class="code-badge-sm">P0087</span>
+                        <span>Fuel Rail Pressure Too Low</span>
+                    </a>
+                    <a href="../codes/index.html" class="related-code">
+                        <span class="code-badge-sm">P0088</span>
+                        <span>Fuel Rail Pressure Too High</span>
+                    </a>
+                </div>
+            </section>
+
+            <!-- Forum Discussion -->
+            <section class="content-section mb-4">
+                <h2>Community Discussion</h2>
+                <p class="mb-3">Have questions about fuel pressure sensors? Get help from experienced mechanics and fellow car owners.</p>
+                <a href="../forums/index.html" class="btn btn-primary">Visit Forums</a>
+                <a href="../forums/index.html?search=fuel+pressure" class="btn btn-outline" style="margin-left: 0.5rem;">Search Fuel Pressure Threads</a>
+            </section>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-bottom" style="border-top: none; padding-top: 0;">
+                <p>&copy; 2024 ODB+. All rights reserved.</p>
+                <div class="footer-legal">
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Terms of Service</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../../js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="P0420 Catalyst System Efficiency Below Threshold Bank 1 - Complete guide with causes, symptoms, diagnostic steps, and repair information.">
+    <title>P0420 - Catalyst Efficiency Below Threshold | ODB+</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../../css/styles.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="navbar-container">
+            <a href="../../index.html" class="navbar-brand">
+                <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="40" height="40" rx="8" fill="url(#gradient)"/>
+                    <path d="M12 20C12 15.5817 15.5817 12 20 12C24.4183 12 28 15.5817 28 20C28 24.4183 24.4183 28 20 28" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+                    <path d="M20 16V20L23 23" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    <circle cx="20" cy="20" r="2" fill="white"/>
+                    <defs>
+                        <linearGradient id="gradient" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse">
+                            <stop stop-color="#2563eb"/>
+                            <stop offset="1" stop-color="#10b981"/>
+                        </linearGradient>
+                    </defs>
+                </svg>
+                <span>ODB+</span>
+            </a>
+            <ul class="navbar-menu">
+                <li><a href="../../index.html">Home</a></li>
+                <li><a href="index.html" class="active">Error Codes</a></li>
+                <li><a href="../forums/index.html">Forums</a></li>
+                <li><a href="../sensors/index.html">Sensors</a></li>
+            </ul>
+            <div class="navbar-actions">
+                <a href="../auth/login.html" class="btn btn-secondary">Log In</a>
+                <a href="../auth/signup.html" class="btn btn-primary">Sign Up</a>
+            </div>
+        </div>
+    </nav>
+
+    <main style="padding-top: 100px; padding-bottom: 4rem;">
+        <div class="container" style="max-width: 900px;">
+            <!-- Breadcrumb -->
+            <nav class="breadcrumb mb-4">
+                <a href="index.html">Error Codes</a>
+                <span class="separator">/</span>
+                <a href="index.html#powertrain">Powertrain</a>
+                <span class="separator">/</span>
+                <span class="current">P0420</span>
+            </nav>
+
+            <!-- Code Header -->
+            <div class="code-detail-header mb-4">
+                <div class="code-badge-lg">P0420</div>
+                <div class="code-detail-info">
+                    <h1>Catalyst System Efficiency Below Threshold (Bank 1)</h1>
+                    <div class="code-meta">
+                        <span class="badge badge-danger">Powertrain</span>
+                        <span class="badge badge-secondary">Generic (SAE)</span>
+                        <span class="severity-medium">Severity: Medium</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Info -->
+            <div class="quick-info-grid mb-4">
+                <div class="quick-info-card">
+                    <h4>System</h4>
+                    <p>Emissions / Exhaust</p>
+                </div>
+                <div class="quick-info-card">
+                    <h4>Subsystem</h4>
+                    <p>Catalytic Converter</p>
+                </div>
+                <div class="quick-info-card">
+                    <h4>Common Fix</h4>
+                    <p>Replace Catalytic Converter</p>
+                </div>
+                <div class="quick-info-card">
+                    <h4>Repair Cost</h4>
+                    <p>$100 - $2,500</p>
+                </div>
+            </div>
+
+            <!-- Description -->
+            <section class="content-section mb-4">
+                <h2>What Does P0420 Mean?</h2>
+                <p>The P0420 code indicates that the catalytic converter on Bank 1 (the side with cylinder #1) is not working efficiently enough to meet emissions standards. The Engine Control Module (ECM) monitors catalyst efficiency by comparing the signals from the upstream (pre-cat) and downstream (post-cat) oxygen sensors.</p>
+
+                <p>A healthy catalytic converter stores and releases oxygen as exhaust gases pass through it. This causes the downstream O2 sensor to have a relatively steady voltage, while the upstream sensor switches rapidly between rich and lean. When the downstream sensor starts switching similarly to the upstream sensor, it indicates the catalyst isn't storing oxygen properly - it's "worn out."</p>
+
+                <div class="info-box">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"/>
+                        <line x1="12" y1="16" x2="12" y2="12"/>
+                        <line x1="12" y1="8" x2="12.01" y2="8"/>
+                    </svg>
+                    <div>
+                        <strong>Don't Immediately Replace the Cat:</strong> While a failed catalytic converter is the most common cause of P0420, other issues like exhaust leaks, faulty O2 sensors, or engine problems can trigger this code. Always diagnose before replacing expensive parts.
+                    </div>
+                </div>
+            </section>
+
+            <!-- How the System Works -->
+            <section class="content-section mb-4">
+                <h2>How the Catalytic Converter Works</h2>
+                <p>The catalytic converter is an emissions control device that converts harmful pollutants in exhaust gas into less harmful substances through chemical reactions:</p>
+
+                <ul>
+                    <li><strong>Carbon Monoxide (CO)</strong> → Carbon Dioxide (CO2)</li>
+                    <li><strong>Hydrocarbons (HC)</strong> → Water (H2O) + Carbon Dioxide (CO2)</li>
+                    <li><strong>Nitrogen Oxides (NOx)</strong> → Nitrogen (N2) + Oxygen (O2)</li>
+                </ul>
+
+                <h4 class="mt-3">Catalyst Efficiency Monitoring</h4>
+                <p>The ECM monitors catalyst efficiency by watching the downstream O2 sensor:</p>
+                <ul>
+                    <li><strong>Good catalyst:</strong> Downstream O2 sensor voltage is relatively flat/stable (0.5-0.7V)</li>
+                    <li><strong>Failing catalyst:</strong> Downstream sensor switches similarly to upstream sensor</li>
+                    <li><strong>Monitor conditions:</strong> Runs after engine is warm, steady cruise, no other faults present</li>
+                </ul>
+
+                <p>The ECM compares the "switching ratio" of both sensors. When the downstream sensor switches too frequently (indicating the cat isn't buffering oxygen properly), P0420 is set.</p>
+            </section>
+
+            <!-- Symptoms -->
+            <section class="content-section mb-4">
+                <h2>Common Symptoms</h2>
+                <ul class="symptom-list">
+                    <li>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="2">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                        </svg>
+                        <div>
+                            <strong>Check Engine Light</strong>
+                            <p>Usually steady (not flashing) check engine light</p>
+                        </div>
+                    </li>
+                    <li>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="2">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                        </svg>
+                        <div>
+                            <strong>Failed Emissions Test</strong>
+                            <p>Vehicle will fail emissions/smog testing with this code</p>
+                        </div>
+                    </li>
+                    <li>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="2">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                        </svg>
+                        <div>
+                            <strong>Often No Driveability Issues</strong>
+                            <p>Many drivers notice no change in how the vehicle runs</p>
+                        </div>
+                    </li>
+                    <li>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="2">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                        </svg>
+                        <div>
+                            <strong>Slight Power Loss (Severe Cases)</strong>
+                            <p>If the catalyst is clogged, you may notice reduced power</p>
+                        </div>
+                    </li>
+                    <li>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="2">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                        </svg>
+                        <div>
+                            <strong>Rotten Egg Smell (Sometimes)</strong>
+                            <p>Sulfur smell may indicate a failing or overwhelmed catalyst</p>
+                        </div>
+                    </li>
+                </ul>
+            </section>
+
+            <!-- Possible Causes -->
+            <section class="content-section mb-4">
+                <h2>Possible Causes</h2>
+                <div class="causes-grid">
+                    <div class="cause-category">
+                        <h4>Catalytic Converter Issues</h4>
+                        <ul>
+                            <li>Worn/degraded catalyst (most common)</li>
+                            <li>Catalyst contaminated by oil or coolant</li>
+                            <li>Catalyst damaged by overheating</li>
+                            <li>Physical damage to catalyst substrate</li>
+                        </ul>
+                    </div>
+                    <div class="cause-category">
+                        <h4>O2 Sensor Problems</h4>
+                        <ul>
+                            <li>Faulty downstream O2 sensor</li>
+                            <li>Lazy/slow responding O2 sensor</li>
+                            <li>O2 sensor wiring issues</li>
+                            <li>Incorrect O2 sensor installed</li>
+                        </ul>
+                    </div>
+                    <div class="cause-category">
+                        <h4>Exhaust Leaks</h4>
+                        <ul>
+                            <li>Exhaust leak before downstream sensor</li>
+                            <li>Cracked exhaust manifold</li>
+                            <li>Leaking exhaust gaskets</li>
+                            <li>Holes in exhaust pipes</li>
+                        </ul>
+                    </div>
+                    <div class="cause-category">
+                        <h4>Engine Issues</h4>
+                        <ul>
+                            <li>Misfires sending unburned fuel to cat</li>
+                            <li>Rich running condition</li>
+                            <li>Oil burning (contaminating cat)</li>
+                            <li>Coolant leak into combustion</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="warning-box mt-3">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+                        <line x1="12" y1="9" x2="12" y2="13"/>
+                        <line x1="12" y1="17" x2="12.01" y2="17"/>
+                    </svg>
+                    <div>
+                        <strong>Fix Root Causes First:</strong> If your engine has been running rich, misfiring, or burning oil, fix those issues BEFORE replacing the catalytic converter. Otherwise, the new cat will be damaged by the same problems.
+                    </div>
+                </div>
+            </section>
+
+            <!-- Diagnostic Steps -->
+            <section class="content-section mb-4">
+                <h2>Diagnostic Steps</h2>
+                <div class="diagnostic-steps">
+                    <div class="step">
+                        <div class="step-number">1</div>
+                        <div class="step-content">
+                            <h4>Check for Other Codes</h4>
+                            <p>Before diagnosing P0420, check for and repair any other codes, especially misfires (P0300-P0308), fuel system codes (P0171/P0172), or O2 sensor codes. These issues can cause false P0420 codes or damage the catalyst.</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">2</div>
+                        <div class="step-content">
+                            <h4>Monitor O2 Sensor Data</h4>
+                            <p>Use your ODB+ scanner to graph both O2 sensor signals simultaneously. The upstream sensor should switch rapidly (crossing 0.45V multiple times per second). The downstream sensor should be relatively stable. If downstream mirrors upstream, the catalyst is likely bad.</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">3</div>
+                        <div class="step-content">
+                            <h4>Check Exhaust for Leaks</h4>
+                            <p>Inspect the exhaust system from the manifold to beyond the downstream O2 sensor. Look for rust holes, loose connections, or damaged gaskets. An exhaust leak can introduce oxygen that affects the downstream sensor reading.</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">4</div>
+                        <div class="step-content">
+                            <h4>Test O2 Sensor Response</h4>
+                            <p>With engine warm and running, create a lean condition (disconnect vacuum hose) - upstream sensor should go low quickly. Then create rich condition (propane enrichment) - sensor should go high quickly. A slow-responding sensor can cause false P0420.</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">5</div>
+                        <div class="step-content">
+                            <h4>Check Catalyst Temperature</h4>
+                            <p>Using an infrared thermometer, check the temperature at the inlet and outlet of the catalytic converter during steady operation. The outlet should be hotter than the inlet (50-100°F higher) if the cat is working. Similar temps or cooler outlet may indicate a dead catalyst.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Common Repairs -->
+            <section class="content-section mb-4">
+                <h2>Common Repairs</h2>
+                <div class="repair-list">
+                    <div class="repair-item">
+                        <div class="repair-info">
+                            <h4>Replace Downstream O2 Sensor</h4>
+                            <p>Try this first if the sensor is old or responding slowly.</p>
+                        </div>
+                        <div class="repair-cost">
+                            <span class="diy">DIY: $30-$100</span>
+                            <span class="shop">Shop: $100-$200</span>
+                        </div>
+                    </div>
+                    <div class="repair-item">
+                        <div class="repair-info">
+                            <h4>Repair Exhaust Leak</h4>
+                            <p>Fix any leaks between the engine and downstream sensor.</p>
+                        </div>
+                        <div class="repair-cost">
+                            <span class="diy">DIY: $20-$50</span>
+                            <span class="shop">Shop: $100-$300</span>
+                        </div>
+                    </div>
+                    <div class="repair-item">
+                        <div class="repair-info">
+                            <h4>Replace Catalytic Converter (Aftermarket)</h4>
+                            <p>Aftermarket catalysts are less expensive but may not last as long.</p>
+                        </div>
+                        <div class="repair-cost">
+                            <span class="diy">DIY: $150-$400</span>
+                            <span class="shop">Shop: $400-$800</span>
+                        </div>
+                    </div>
+                    <div class="repair-item">
+                        <div class="repair-info">
+                            <h4>Replace Catalytic Converter (OEM)</h4>
+                            <p>OEM catalysts are more expensive but typically last longer and work better.</p>
+                        </div>
+                        <div class="repair-cost">
+                            <span class="diy">DIY: $500-$1,500</span>
+                            <span class="shop">Shop: $1,000-$2,500</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="info-box mt-3">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"/>
+                        <line x1="12" y1="16" x2="12" y2="12"/>
+                        <line x1="12" y1="8" x2="12.01" y2="8"/>
+                    </svg>
+                    <div>
+                        <strong>California & CARB States:</strong> In California and other states that follow CARB regulations, you must use a CARB-compliant catalytic converter. These are more expensive but required by law.
+                    </div>
+                </div>
+            </section>
+
+            <!-- Related Codes -->
+            <section class="content-section mb-4">
+                <h2>Related Codes</h2>
+                <div class="related-codes-grid">
+                    <a href="#" class="related-code">
+                        <span class="code-badge-sm">P0421</span>
+                        <span>Warm Up Catalyst Efficiency Low</span>
+                    </a>
+                    <a href="#" class="related-code">
+                        <span class="code-badge-sm">P0430</span>
+                        <span>Catalyst Efficiency Low Bank 2</span>
+                    </a>
+                    <a href="P0171.html" class="related-code">
+                        <span class="code-badge-sm">P0171</span>
+                        <span>System Too Lean Bank 1</span>
+                    </a>
+                    <a href="#" class="related-code">
+                        <span class="code-badge-sm">P0136</span>
+                        <span>O2 Sensor Circuit Bank 1 Sensor 2</span>
+                    </a>
+                    <a href="P0300.html" class="related-code">
+                        <span class="code-badge-sm">P0300</span>
+                        <span>Random Misfire Detected</span>
+                    </a>
+                </div>
+            </section>
+
+            <!-- Forum Discussion -->
+            <section class="content-section mb-4">
+                <h2>Community Discussion</h2>
+                <p class="mb-3">Have questions about P0420? Get help from experienced mechanics and fellow car owners.</p>
+                <a href="../forums/index.html" class="btn btn-primary">Visit Forums</a>
+                <a href="../forums/index.html?search=P0420" class="btn btn-outline" style="margin-left: 0.5rem;">Search P0420 Threads</a>
+            </section>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-bottom" style="border-top: none; padding-top: 0;">
+                <p>&copy; 2024 ODB+. All rights reserved.</p>
+                <div class="footer-legal">
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Terms of Service</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../../js/main.js"></script>
+</body>
+</html>

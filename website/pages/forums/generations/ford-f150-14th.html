@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Ford F-150 14th Gen (2021+) Forums - P702 generation discussions, common issues, and DIY repair guides organized by subsystem.">
+    <title>Ford F-150 14th Gen (2021+) Forums | ODB+</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../../../css/styles.css">
+</head>
+<body>
+    <nav class="navbar" id="navbar">
+        <div class="navbar-container">
+            <a href="../../../index.html" class="navbar-brand">
+                <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="40" height="40" rx="8" fill="url(#gradient)"/>
+                    <path d="M12 20C12 15.5817 15.5817 12 20 12C24.4183 12 28 15.5817 28 20C28 24.4183 24.4183 28 20 28" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+                    <path d="M20 16V20L23 23" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    <circle cx="20" cy="20" r="2" fill="white"/>
+                    <defs><linearGradient id="gradient" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse"><stop stop-color="#2563eb"/><stop offset="1" stop-color="#10b981"/></linearGradient></defs>
+                </svg>
+                <span>ODB+</span>
+            </a>
+            <ul class="navbar-menu">
+                <li><a href="../../../index.html">Home</a></li>
+                <li><a href="../../codes/index.html">Error Codes</a></li>
+                <li><a href="../index.html" class="active">Forums</a></li>
+                <li><a href="../../sensors/index.html">Sensors</a></li>
+            </ul>
+            <div class="navbar-actions">
+                <a href="../../auth/login.html" class="btn btn-secondary">Log In</a>
+                <a href="../../auth/signup.html" class="btn btn-primary">Sign Up</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="gen-forum-main">
+        <div class="container">
+            <nav class="breadcrumb mb-4">
+                <a href="../index.html">Forums</a>
+                <span class="separator">/</span>
+                <a href="../ford.html">Ford</a>
+                <span class="separator">/</span>
+                <a href="../ford-f150.html">F-150</a>
+                <span class="separator">/</span>
+                <span class="current">14th Gen (2021+)</span>
+            </nav>
+
+            <div class="gen-header">
+                <div class="gen-header-content">
+                    <div class="gen-badge">14th Generation</div>
+                    <h1>Ford F-150 (P702)</h1>
+                    <p class="gen-years">2021 - Present</p>
+                    <p class="gen-description">The latest generation F-150 featuring the hybrid PowerBoost option, Pro Power Onboard generator, and available over-the-air updates. Includes the all-electric F-150 Lightning variant.</p>
+                    <div class="gen-stats">
+                        <div class="stat">
+                            <span class="stat-value">5.6K</span>
+                            <span class="stat-label">Members</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-value">2.3K</span>
+                            <span class="stat-label">Threads</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-value">18.9K</span>
+                            <span class="stat-label">Posts</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="gen-specs-overview">
+                <h2>Available Configurations</h2>
+                <div class="specs-grid">
+                    <div class="spec-card">
+                        <h3>Engines</h3>
+                        <ul>
+                            <li><strong>3.3L Ti-VCT V6</strong> - 290hp</li>
+                            <li><strong>2.7L EcoBoost V6</strong> - 325hp</li>
+                            <li><strong>5.0L Coyote V8</strong> - 400hp</li>
+                            <li><strong>3.5L EcoBoost V6</strong> - 400hp</li>
+                            <li><strong>3.5L PowerBoost</strong> - 430hp Hybrid</li>
+                            <li><strong>3.5L HO EcoBoost</strong> - 450hp Raptor</li>
+                        </ul>
+                    </div>
+                    <div class="spec-card">
+                        <h3>Transmissions</h3>
+                        <ul>
+                            <li><strong>10R80</strong> - 10-Speed Auto (All)</li>
+                        </ul>
+                    </div>
+                    <div class="spec-card">
+                        <h3>Drivetrain</h3>
+                        <ul>
+                            <li>Rear-Wheel Drive (2WD)</li>
+                            <li>Four-Wheel Drive (4WD)</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <h2 class="section-title">Subsystem Forums</h2>
+            <p class="section-subtitle">Select a category to view issues and discussions specific to each variant</p>
+
+            <div class="subsystem-grid">
+                <!-- Engine -->
+                <div class="subsystem-category" id="engine">
+                    <div class="subsystem-header">
+                        <div class="subsystem-icon engine">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="8" width="16" height="10" rx="1"/><path d="M8 8V6a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="12" y1="12" x2="12" y2="14"/></svg>
+                        </div>
+                        <div class="subsystem-info">
+                            <h3>Engine</h3>
+                        </div>
+                    </div>
+                    <div class="variant-tabs">
+                        <button class="variant-tab active" data-variant="engine-27eb">2.7L EcoBoost</button>
+                        <button class="variant-tab" data-variant="engine-35eb">3.5L EcoBoost</button>
+                        <button class="variant-tab" data-variant="engine-50">5.0L V8</button>
+                        <button class="variant-tab" data-variant="engine-pb">3.5L PowerBoost</button>
+                        <button class="variant-tab" data-variant="engine-33">3.3L V6</button>
+                    </div>
+                    <div class="variant-content active" id="engine-27eb">
+                        <div class="variant-specs">
+                            <span><strong>Power:</strong> 325 hp @ 5000 RPM</span>
+                            <span><strong>Torque:</strong> 400 lb-ft @ 3000 RPM</span>
+                            <span><strong>Oil:</strong> 5W-30 (6.0 qt)</span>
+                        </div>
+                        <div class="common-issues">
+                            <h4>Common Issues</h4>
+                            <ul>
+                                <li class="issue-item">
+                                    <span class="issue-tag normal">Normal</span>
+                                    <span class="issue-name">Reliable engine</span>
+                                    <span class="issue-desc">Second-gen EcoBoost very refined - fewer issues than earlier versions</span>
+                                </li>
+                                <li class="issue-item">
+                                    <span class="issue-tag common">Common</span>
+                                    <span class="issue-name">Carbon buildup</span>
+                                    <span class="issue-desc">Direct injection causes intake valve deposits over time</span>
+                                </li>
+                                <li class="issue-item">
+                                    <span class="issue-tag maintenance">Service</span>
+                                    <span class="issue-name">Spark plug interval</span>
+                                    <span class="issue-desc">Replace at 60k miles - critical for turbo engines</span>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="category-threads">
+                            <h4>Recent Discussions</h4>
+                            <a href="#" class="thread-row">
+                                <div class="thread-votes">
+                                    <button class="vote-btn up">&#9650;</button>
+                                    <span class="vote-count">89</span>
+                                    <button class="vote-btn down">&#9660;</button>
+                                </div>
+                                <div class="thread-info">
+                                    <h5>2.7L EcoBoost long-term reliability report</h5>
+                                    <p>4 hours ago</p>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="variant-content" id="engine-35eb">
+                        <div class="variant-specs">
+                            <span><strong>Power:</strong> 400 hp @ 5000 RPM</span>
+                            <span><strong>Torque:</strong> 500 lb-ft @ 3500 RPM</span>
+                            <span><strong>Oil:</strong> 5W-30 (6.0 qt)</span>
+                        </div>
+                        <div class="common-issues">
+                            <h4>Common Issues</h4>
+                            <ul>
+                                <li class="issue-item">
+                                    <span class="issue-tag normal">Normal</span>
+                                    <span class="issue-name">Proven powerplant</span>
+                                    <span class="issue-desc">Third generation 3.5L EB - most refined version yet</span>
+                                </li>
+                                <li class="issue-item">
+                                    <span class="issue-tag common">Common</span>
+                                    <span class="issue-name">Oil pan gasket</span>
+                                    <span class="issue-desc">Minor seepage possible at high mileage</span>
+                                </li>
+                                <li class="issue-item">
+                                    <span class="issue-tag maintenance">Service</span>
+                                    <span class="issue-name">Turbo maintenance</span>
+                                    <span class="issue-desc">Use quality oil and let engine idle before shutdown after towing</span>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="category-threads">
+                            <h4>Recent Discussions</h4>
+                            <a href="#" class="thread-row">
+                                <div class="thread-votes">
+                                    <button class="vote-btn up">&#9650;</button>
+                                    <span class="vote-count">156</span>
+                                    <button class="vote-btn down">&#9660;</button>
+                                </div>
+                                <div class="thread-info">
+                                    <h5>Towing with 3.5L EB - real-world MPG</h5>
+                                    <p>6 hours ago</p>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="variant-content" id="engine-50">
+                        <div class="variant-specs">
+                            <span><strong>Power:</strong> 400 hp @ 6000 RPM</span>
+                            <span><strong>Torque:</strong> 410 lb-ft @ 4250 RPM</span>
+                            <span><strong>Oil:</strong> 5W-20 (8.0 qt)</span>
+                        </div>
+                        <div class="common-issues">
+                            <h4>Common Issues</h4>
+                            <ul>
+                                <li class="issue-item">
+                                    <span class="issue-tag normal">Normal</span>
+                                    <span class="issue-name">Coyote reliability</span>
+                                    <span class="issue-desc">Gen 4 Coyote very reliable - simpler than turbocharged engines</span>
+                                </li>
+                                <li class="issue-item">
+                                    <span class="issue-tag common">Common</span>
+                                    <span class="issue-name">Oil consumption</span>
+                                    <span class="issue-desc">Some V8s consume oil - check level between changes</span>
+                                </li>
+                                <li class="issue-item">
+                                    <span class="issue-tag common">Common</span>
+                                    <span class="issue-name">Tick at startup</span>
+                                    <span class="issue-desc">Brief valve train tick on cold start - normal for Coyote</span>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="category-threads">
+                            <h4>Recent Discussions</h4>
+                            <a href="#" class="thread-row">
+                                <div class="thread-votes">
+                                    <button class="vote-btn up">&#9650;</button>
+                                    <span class="vote-count">234</span>
+                                    <button class="vote-btn down">&#9660;</button>
+                                </div>
+                                <div class="thread-info">
+                                    <h5>5.0L vs 3.5L EcoBoost - which to choose?</h5>
+                                    <p>2 hours ago</p>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="variant-content" id="engine-pb">
+                        <div class="variant-specs">
+                            <span><strong>System Power:</strong> 430 hp combined</span>
+                            <span><strong>Torque:</strong> 570 lb-ft combined</span>
+                            <span><strong>Features:</strong> Pro Power Onboard (up to 7.2kW)</span>
+                        </div>
+                        <div class="common-issues">
+                            <h4>Common Issues</h4>
+                            <ul>
+                                <li class="issue-item">
+                                    <span class="issue-tag common">Common</span>
+                                    <span class="issue-name">Hybrid system quirks</span>
+                                    <span class="issue-desc">Learning curve for hybrid operation - regenerative braking feel</span>
+                                </li>
+                                <li class="issue-item">
+                                    <span class="issue-tag tsb">TSB</span>
+                                    <span class="issue-name">Software updates</span>
+                                    <span class="issue-desc">Multiple software updates for hybrid calibration available</span>
+                                </li>
+                                <li class="issue-item">
+                                    <span class="issue-tag normal">Normal</span>
+                                    <span class="issue-name">Excellent fuel economy</span>
+                                    <span class="issue-desc">24+ MPG combined achievable with proper driving</span>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="category-threads">
+                            <h4>Recent Discussions</h4>
+                            <a href="#" class="thread-row">
+                                <div class="thread-votes">
+                                    <button class="vote-btn up">&#9650;</button>
+                                    <span class="vote-count">312</span>
+                                    <button class="vote-btn down">&#9660;</button>
+                                </div>
+                                <div class="thread-info">
+                                    <h5>PowerBoost owner long-term review</h5>
+                                    <p>1 day ago</p>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="variant-content" id="engine-33">
+                        <div class="variant-specs">
+                            <span><strong>Power:</strong> 290 hp @ 6500 RPM</span>
+                            <span><strong>Torque:</strong> 265 lb-ft @ 4000 RPM</span>
+                            <span><strong>Oil:</strong> 5W-20 (6.0 qt)</span>
+                        </div>
+                        <div class="common-issues">
+                            <h4>Common Issues</h4>
+                            <ul>
+                                <li class="issue-item">
+                                    <span class="issue-tag normal">Normal</span>
+                                    <span class="issue-name">Simple and reliable</span>
+                                    <span class="issue-desc">Naturally aspirated V6 - fewer potential issues</span>
+                                </li>
+                                <li class="issue-item">
+                                    <span class="issue-tag normal">Normal</span>
+                                    <span class="issue-name">Adequate power</span>
+                                    <span class="issue-desc">Good for light duty - not recommended for heavy towing</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Transmission -->
+                <div class="subsystem-category" id="transmission">
+                    <div class="subsystem-header">
+                        <div class="subsystem-icon transmission">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><circle cx="12" cy="5" r="2"/><circle cx="12" cy="19" r="2"/><line x1="12" y1="7" x2="12" y2="9"/><line x1="12" y1="15" x2="12" y2="17"/></svg>
+                        </div>
+                        <div class="subsystem-info">
+                            <h3>Transmission (10R80)</h3>
+                        </div>
+                    </div>
+                    <div class="variant-tabs">
+                        <button class="variant-tab active" data-variant="trans-10r80">10R80 10-Speed</button>
+                    </div>
+                    <div class="variant-content active" id="trans-10r80">
+                        <div class="variant-specs">
+                            <span><strong>Type:</strong> 10-Speed Automatic</span>
+                            <span><strong>Fluid:</strong> Mercon ULV</span>
+                            <span><strong>Capacity:</strong> 13.1 qt total</span>
+                        </div>
+                        <div class="common-issues">
+                            <h4>Common Issues</h4>
+                            <ul>
+                                <li class="issue-item">
+                                    <span class="issue-tag common">Common</span>
+                                    <span class="issue-name">Harsh shifts when cold</span>
+                                    <span class="issue-desc">Firm 1-2 and 2-3 shifts until transmission warms up</span>
+                                </li>
+                                <li class="issue-item">
+                                    <span class="issue-tag common">Common</span>
+                                    <span class="issue-name">Hunting for gears</span>
+                                    <span class="issue-desc">Excessive gear hunting on hills - drive mode helps</span>
+                                </li>
+                                <li class="issue-item">
+                                    <span class="issue-tag tsb">TSB</span>
+                                    <span class="issue-name">Software updates</span>
+                                    <span class="issue-desc">Multiple TSBs for shift quality improvements available</span>
+                                </li>
+                                <li class="issue-item">
+                                    <span class="issue-tag maintenance">Service</span>
+                                    <span class="issue-name">Fluid change</span>
+                                    <span class="issue-desc">Change every 60k miles for longevity</span>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="category-threads">
+                            <h4>Recent Discussions</h4>
+                            <a href="#" class="thread-row">
+                                <div class="thread-votes">
+                                    <button class="vote-btn up">&#9650;</button>
+                                    <span class="vote-count">189</span>
+                                    <button class="vote-btn down">&#9660;</button>
+                                </div>
+                                <div class="thread-info">
+                                    <h5>10R80 shift improvement tips</h5>
+                                    <p>8 hours ago</p>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 4WD System -->
+                <div class="subsystem-category" id="drivetrain">
+                    <div class="subsystem-header">
+                        <div class="subsystem-icon suspension">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3"/><path d="M12 4v4M12 16v4M4 12h4M16 12h4"/></svg>
+                        </div>
+                        <div class="subsystem-info">
+                            <h3>4WD / Drivetrain</h3>
+                        </div>
+                    </div>
+                    <div class="variant-tabs">
+                        <button class="variant-tab active" data-variant="drive-4x4">4WD System</button>
+                        <button class="variant-tab" data-variant="drive-2wd">2WD</button>
+                    </div>
+                    <div class="variant-content active" id="drive-4x4">
+                        <div class="variant-specs">
+                            <span><strong>Transfer Case:</strong> Electronic shift-on-the-fly</span>
+                            <span><strong>Modes:</strong> 2H, 4A, 4H, 4L</span>
+                            <span><strong>Rear Axle:</strong> Electronic locking available</span>
+                        </div>
+                        <div class="common-issues">
+                            <h4>Common Issues</h4>
+                            <ul>
+                                <li class="issue-item">
+                                    <span class="issue-tag common">Common</span>
+                                    <span class="issue-name">4WD engagement clunk</span>
+                                    <span class="issue-desc">Normal noise when engaging/disengaging 4WD</span>
+                                </li>
+                                <li class="issue-item">
+                                    <span class="issue-tag normal">Normal</span>
+                                    <span class="issue-name">IWE noise</span>
+                                    <span class="issue-desc">Integrated Wheel End clicking - vacuum actuator issue</span>
+                                </li>
+                                <li class="issue-item">
+                                    <span class="issue-tag maintenance">Service</span>
+                                    <span class="issue-name">Differential fluid</span>
+                                    <span class="issue-desc">Change front and rear diff fluid every 60k miles</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="variant-content" id="drive-2wd">
+                        <div class="variant-specs">
+                            <span><strong>Drive:</strong> Rear-Wheel Drive</span>
+                            <span><strong>Rear Axle:</strong> Electronic locking available</span>
+                        </div>
+                        <div class="common-issues">
+                            <h4>Common Issues</h4>
+                            <ul>
+                                <li class="issue-item">
+                                    <span class="issue-tag normal">Normal</span>
+                                    <span class="issue-name">Simple drivetrain</span>
+                                    <span class="issue-desc">Fewer components - less potential for issues</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Electrical/SYNC -->
+                <div class="subsystem-category" id="electrical">
+                    <div class="subsystem-header">
+                        <div class="subsystem-icon electrical">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+                        </div>
+                        <div class="subsystem-info">
+                            <h3>Electrical & SYNC 4</h3>
+                        </div>
+                    </div>
+                    <div class="variant-tabs">
+                        <button class="variant-tab active" data-variant="elec-all">All Variants</button>
+                    </div>
+                    <div class="variant-content active" id="elec-all">
+                        <div class="variant-specs">
+                            <span><strong>Screen:</strong> 8" or 12" touchscreen</span>
+                            <span><strong>System:</strong> SYNC 4 / SYNC 4A</span>
+                            <span><strong>Features:</strong> OTA updates, wireless CarPlay/AA</span>
+                        </div>
+                        <div class="common-issues">
+                            <h4>Common Issues</h4>
+                            <ul>
+                                <li class="issue-item">
+                                    <span class="issue-tag common">Common</span>
+                                    <span class="issue-name">SYNC freezes</span>
+                                    <span class="issue-desc">Infotainment screen freezes or reboots - updates help</span>
+                                </li>
+                                <li class="issue-item">
+                                    <span class="issue-tag common">Common</span>
+                                    <span class="issue-name">Wireless CarPlay drops</span>
+                                    <span class="issue-desc">Connection drops intermittently - use wired as backup</span>
+                                </li>
+                                <li class="issue-item">
+                                    <span class="issue-tag common">Common</span>
+                                    <span class="issue-name">Backup camera delay</span>
+                                    <span class="issue-desc">Camera takes a moment to display when in reverse</span>
+                                </li>
+                                <li class="issue-item">
+                                    <span class="issue-tag tsb">TSB</span>
+                                    <span class="issue-name">OTA updates</span>
+                                    <span class="issue-desc">Keep software updated via FordPass or WiFi</span>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="category-threads">
+                            <h4>Recent Discussions</h4>
+                            <a href="#" class="thread-row">
+                                <div class="thread-votes">
+                                    <button class="vote-btn up">&#9650;</button>
+                                    <span class="vote-count">156</span>
+                                    <button class="vote-btn down">&#9660;</button>
+                                </div>
+                                <div class="thread-info">
+                                    <h5>SYNC 4 tips and tricks</h5>
+                                    <p>3 hours ago</p>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Brakes -->
+                <div class="subsystem-category" id="brakes">
+                    <div class="subsystem-header">
+                        <div class="subsystem-icon brakes">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4"/><path d="M12 6v2M12 16v2M6 12h2M16 12h2"/></svg>
+                        </div>
+                        <div class="subsystem-info">
+                            <h3>Brakes</h3>
+                        </div>
+                    </div>
+                    <div class="variant-tabs">
+                        <button class="variant-tab active" data-variant="brakes-all">All Variants</button>
+                    </div>
+                    <div class="variant-content active" id="brakes-all">
+                        <div class="variant-specs">
+                            <span><strong>Front:</strong> 13.8" ventilated discs</span>
+                            <span><strong>Rear:</strong> 13.6" ventilated discs</span>
+                            <span><strong>Features:</strong> ABS, EBD, Brake Assist</span>
+                        </div>
+                        <div class="common-issues">
+                            <h4>Common Issues</h4>
+                            <ul>
+                                <li class="issue-item">
+                                    <span class="issue-tag common">Common</span>
+                                    <span class="issue-name">Brake squeal</span>
+                                    <span class="issue-desc">Light brake squeal in morning - moisture-related</span>
+                                </li>
+                                <li class="issue-item">
+                                    <span class="issue-tag normal">Normal</span>
+                                    <span class="issue-name">Pedal feel</span>
+                                    <span class="issue-desc">Electric brake booster provides consistent feel</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Maintenance -->
+                <div class="subsystem-category" id="maintenance">
+                    <div class="subsystem-header">
+                        <div class="subsystem-icon maintenance">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+                        </div>
+                        <div class="subsystem-info">
+                            <h3>Maintenance</h3>
+                        </div>
+                    </div>
+                    <div class="variant-tabs">
+                        <button class="variant-tab active" data-variant="maint-all">All Variants</button>
+                    </div>
+                    <div class="variant-content active" id="maint-all">
+                        <div class="common-issues">
+                            <h4>Service Intervals</h4>
+                            <ul>
+                                <li class="issue-item">
+                                    <span class="issue-tag maintenance">Service</span>
+                                    <span class="issue-name">Oil change</span>
+                                    <span class="issue-desc">Every 7,500-10,000 miles (per Intelligent Oil Life Monitor)</span>
+                                </li>
+                                <li class="issue-item">
+                                    <span class="issue-tag maintenance">Service</span>
+                                    <span class="issue-name">Transmission fluid</span>
+                                    <span class="issue-desc">Every 60,000 miles (severe duty: 30k)</span>
+                                </li>
+                                <li class="issue-item">
+                                    <span class="issue-tag maintenance">Service</span>
+                                    <span class="issue-name">Spark plugs</span>
+                                    <span class="issue-desc">Every 60,000 miles (EcoBoost) or 100,000 miles (V8)</span>
+                                </li>
+                                <li class="issue-item">
+                                    <span class="issue-tag maintenance">Service</span>
+                                    <span class="issue-name">Coolant</span>
+                                    <span class="issue-desc">Every 100,000 miles or 6 years</span>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="category-threads">
+                            <h4>Recent Discussions</h4>
+                            <a href="#" class="thread-row">
+                                <div class="thread-votes">
+                                    <button class="vote-btn up">&#9650;</button>
+                                    <span class="vote-count">345</span>
+                                    <button class="vote-btn down">&#9660;</button>
+                                </div>
+                                <div class="thread-info">
+                                    <h5>Complete 14th gen maintenance guide</h5>
+                                    <p>2 days ago</p>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-bottom" style="border-top: none; padding-top: 0;">
+                <p>&copy; 2024 ODB+. All rights reserved.</p>
+                <div class="footer-legal"><a href="#">Privacy Policy</a><a href="#">Terms of Service</a></div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../../../js/main.js"></script>
+    <script>
+        document.querySelectorAll('.variant-tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                const category = this.closest('.subsystem-category');
+                category.querySelectorAll('.variant-tab').forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+                const variant = this.dataset.variant;
+                category.querySelectorAll('.variant-content').forEach(content => content.classList.remove('active'));
+                const target = category.querySelector(`#${variant}`);
+                if (target) target.classList.add('active');
+            });
+        });
+    </script>
+    <style>
+        .gen-forum-main { padding-top: 100px; padding-bottom: 4rem; }
+        .gen-header { background: linear-gradient(135deg, var(--primary) 0%, #10b981 100%); border-radius: 16px; padding: 2.5rem; margin-bottom: 2rem; color: white; }
+        .gen-badge { display: inline-block; background: rgba(255,255,255,0.2); padding: 0.25rem 0.75rem; border-radius: 50px; font-size: 0.875rem; font-weight: 600; margin-bottom: 0.5rem; }
+        .gen-header h1 { font-size: 2rem; font-weight: 800; margin-bottom: 0.25rem; }
+        .gen-years { font-size: 1.25rem; opacity: 0.9; margin-bottom: 0.75rem; }
+        .gen-description { opacity: 0.9; margin-bottom: 1.5rem; max-width: 600px; }
+        .gen-stats { display: flex; gap: 2rem; }
+        .gen-stats .stat { text-align: center; }
+        .stat-value { display: block; font-size: 1.5rem; font-weight: 700; }
+        .stat-label { font-size: 0.875rem; opacity: 0.8; }
+        .gen-specs-overview { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 1.5rem; margin-bottom: 2rem; }
+        .gen-specs-overview h2 { font-size: 1.25rem; margin-bottom: 1rem; }
+        .specs-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; }
+        .spec-card { background: var(--bg-secondary); padding: 1rem; border-radius: 8px; }
+        .spec-card h3 { font-size: 0.875rem; color: var(--primary); margin-bottom: 0.5rem; }
+        .spec-card ul { list-style: none; padding: 0; margin: 0; font-size: 0.875rem; }
+        .spec-card li { padding: 0.25rem 0; }
+        .section-title { font-size: 1.5rem; margin-bottom: 0.5rem; }
+        .section-subtitle { color: var(--text-secondary); margin-bottom: 1.5rem; }
+        .subsystem-grid { display: flex; flex-direction: column; gap: 1rem; }
+        .subsystem-category { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; overflow: hidden; }
+        .subsystem-header { display: flex; align-items: center; gap: 1rem; padding: 1.25rem; border-bottom: 1px solid var(--border-color); }
+        .subsystem-icon { width: 48px; height: 48px; border-radius: 10px; display: flex; align-items: center; justify-content: center; }
+        .subsystem-icon svg { width: 24px; height: 24px; }
+        .subsystem-icon.engine { background: #fee2e2; color: #dc2626; }
+        .subsystem-icon.transmission { background: #fef3c7; color: #d97706; }
+        .subsystem-icon.suspension { background: #dbeafe; color: #2563eb; }
+        .subsystem-icon.electrical { background: #fae8ff; color: #a855f7; }
+        .subsystem-icon.brakes { background: #fce7f3; color: #db2777; }
+        .subsystem-icon.maintenance { background: #dcfce7; color: #16a34a; }
+        .subsystem-info h3 { font-size: 1.125rem; font-weight: 600; margin-bottom: 0.25rem; }
+        .subsystem-info .thread-count { font-size: 0.875rem; color: var(--text-secondary); }
+        .variant-tabs { display: flex; gap: 0.5rem; padding: 0.75rem 1.25rem; background: var(--bg-secondary); flex-wrap: wrap; }
+        .variant-tab { padding: 0.5rem 1rem; border: 1px solid var(--border-color); background: var(--card-bg); border-radius: 6px; font-size: 0.875rem; cursor: pointer; transition: all 0.2s; }
+        .variant-tab:hover { border-color: var(--primary); }
+        .variant-tab.active { background: var(--primary); color: white; border-color: var(--primary); }
+        .variant-content { display: none; padding: 1.25rem; }
+        .variant-content.active { display: block; }
+        .variant-specs { display: flex; flex-wrap: wrap; gap: 1rem; padding: 0.75rem 1rem; background: var(--bg-secondary); border-radius: 8px; margin-bottom: 1rem; font-size: 0.875rem; }
+        .common-issues h4, .category-threads h4 { font-size: 1rem; font-weight: 600; margin-bottom: 0.75rem; }
+        .common-issues ul { list-style: none; padding: 0; margin: 0 0 1.5rem 0; }
+        .issue-item { display: flex; align-items: flex-start; gap: 0.75rem; padding: 0.75rem 0; border-bottom: 1px solid var(--border-color); }
+        .issue-item:last-child { border-bottom: none; }
+        .issue-tag { padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.75rem; font-weight: 600; white-space: nowrap; }
+        .issue-tag.critical { background: #fee2e2; color: #dc2626; }
+        .issue-tag.tsb { background: #fef3c7; color: #d97706; }
+        .issue-tag.common { background: #fff7ed; color: #ea580c; }
+        .issue-tag.normal { background: #f0fdf4; color: #16a34a; }
+        .issue-tag.maintenance { background: #eff6ff; color: #2563eb; }
+        .issue-name { font-weight: 600; min-width: 150px; }
+        .issue-desc { color: var(--text-secondary); font-size: 0.875rem; }
+        .thread-row { display: flex; align-items: center; gap: 1rem; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 8px; margin-bottom: 0.5rem; text-decoration: none; color: inherit; transition: all 0.2s; }
+        .thread-row:hover { border-color: var(--primary); background: var(--bg-secondary); }
+        .thread-votes { display: flex; flex-direction: column; align-items: center; min-width: 50px; }
+        .vote-btn { background: none; border: none; color: var(--text-secondary); cursor: pointer; padding: 0; font-size: 0.875rem; }
+        .vote-btn:hover { color: var(--primary); }
+        .vote-count { font-weight: 600; font-size: 0.875rem; }
+        .thread-info h5 { font-size: 0.9375rem; font-weight: 600; margin-bottom: 0.25rem; }
+        .thread-info p { font-size: 0.8125rem; color: var(--text-secondary); }
+        @media (max-width: 768px) {
+            .gen-header { padding: 1.5rem; }
+            .gen-header h1 { font-size: 1.5rem; }
+            .gen-stats { gap: 1rem; }
+            .issue-item { flex-direction: column; align-items: flex-start; }
+            .issue-name { min-width: auto; }
+        }
+    </style>
+</body>
+</html>

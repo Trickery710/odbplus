@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Audi Forums - Get help with Audi A4, Q5, A6, Q7, A3, RS models and more. Expert advice for all Audi models and years.">
+    <title>Audi Forums | ODB+</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../../css/styles.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="navbar-container">
+            <a href="../../index.html" class="navbar-brand">
+                <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="40" height="40" rx="8" fill="url(#gradient)"/>
+                    <path d="M12 20C12 15.5817 15.5817 12 20 12C24.4183 12 28 15.5817 28 20C28 24.4183 24.4183 28 20 28" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+                    <path d="M20 16V20L23 23" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    <circle cx="20" cy="20" r="2" fill="white"/>
+                    <defs>
+                        <linearGradient id="gradient" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse">
+                            <stop stop-color="#2563eb"/>
+                            <stop offset="1" stop-color="#10b981"/>
+                        </linearGradient>
+                    </defs>
+                </svg>
+                <span>ODB+</span>
+            </a>
+            <ul class="navbar-menu">
+                <li><a href="../../index.html">Home</a></li>
+                <li><a href="../codes/index.html">Error Codes</a></li>
+                <li><a href="index.html" class="active">Forums</a></li>
+                <li><a href="../sensors/index.html">Sensors</a></li>
+            </ul>
+            <div class="navbar-actions">
+                <a href="../auth/login.html" class="btn btn-secondary">Log In</a>
+                <a href="../auth/signup.html" class="btn btn-primary">Sign Up</a>
+            </div>
+        </div>
+    </nav>
+
+    <main style="padding-top: 100px; padding-bottom: 4rem;">
+        <div class="container">
+            <!-- Breadcrumb -->
+            <nav class="breadcrumb mb-4">
+                <a href="index.html">Forums</a>
+                <span class="separator">/</span>
+                <span class="current">Audi</span>
+            </nav>
+
+            <!-- Header -->
+            <div class="make-header mb-4">
+                <div class="make-logo">
+                    <img src="https://logo.clearbit.com/audi.com" alt="Audi" onerror="this.parentElement.innerHTML='<span style=font-size:2rem;font-weight:bold>A</span>'">
+                </div>
+                <div class="make-info">
+                    <h1>Audi Forums</h1>
+                    <p>Get expert help for your Audi. Select your model below or browse recent discussions.</p>
+                </div>
+            </div>
+
+            <!-- Search -->
+            <div class="search-box mb-4" style="max-width: 100%;">
+                <svg class="search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="11" cy="11" r="8"/>
+                    <path d="M21 21l-4.35-4.35"/>
+                </svg>
+                <input type="text" class="search-input" id="modelSearch" placeholder="Search Audi models...">
+            </div>
+
+            <!-- Popular Models -->
+            <h2 class="mb-3">Popular Models</h2>
+            <div class="model-grid mb-5">
+                <a href="audi-a4.html" class="model-card">
+                    <div class="model-image">
+                        <svg viewBox="0 0 100 60" fill="none">
+                            <rect x="10" y="25" width="80" height="25" rx="5" fill="var(--primary)"/>
+                            <rect x="20" y="15" width="50" height="15" rx="3" fill="var(--primary)"/>
+                            <circle cx="25" cy="50" r="8" fill="#333"/>
+                            <circle cx="75" cy="50" r="8" fill="#333"/>
+                        </svg>
+                    </div>
+                    <div class="model-info">
+                        <h3>A4</h3>
+                        <p>1994 - Present</p>
+                    </div>
+                </a>
+                <a href="audi-q5.html" class="model-card">
+                    <div class="model-image">
+                        <svg viewBox="0 0 100 60" fill="none">
+                            <rect x="8" y="20" width="84" height="30" rx="5" fill="var(--primary)"/>
+                            <rect x="16" y="8" width="58" height="18" rx="3" fill="var(--primary)"/>
+                            <circle cx="25" cy="50" r="9" fill="#333"/>
+                            <circle cx="75" cy="50" r="9" fill="#333"/>
+                        </svg>
+                    </div>
+                    <div class="model-info">
+                        <h3>Q5</h3>
+                        <p>2008 - Present</p>
+                    </div>
+                </a>
+                <a href="audi-a6.html" class="model-card">
+                    <div class="model-image">
+                        <svg viewBox="0 0 100 60" fill="none">
+                            <rect x="8" y="24" width="84" height="26" rx="5" fill="var(--primary)"/>
+                            <rect x="18" y="14" width="54" height="15" rx="3" fill="var(--primary)"/>
+                            <circle cx="25" cy="50" r="8" fill="#333"/>
+                            <circle cx="75" cy="50" r="8" fill="#333"/>
+                        </svg>
+                    </div>
+                    <div class="model-info">
+                        <h3>A6</h3>
+                        <p>1994 - Present</p>
+                    </div>
+                </a>
+                <a href="audi-q7.html" class="model-card">
+                    <div class="model-image">
+                        <svg viewBox="0 0 100 60" fill="none">
+                            <rect x="5" y="18" width="90" height="32" rx="5" fill="var(--primary)"/>
+                            <rect x="14" y="6" width="62" height="18" rx="3" fill="var(--primary)"/>
+                            <circle cx="25" cy="50" r="9" fill="#333"/>
+                            <circle cx="75" cy="50" r="9" fill="#333"/>
+                        </svg>
+                    </div>
+                    <div class="model-info">
+                        <h3>Q7</h3>
+                        <p>2005 - Present</p>
+                    </div>
+                </a>
+                <a href="audi-a3.html" class="model-card">
+                    <div class="model-image">
+                        <svg viewBox="0 0 100 60" fill="none">
+                            <rect x="12" y="26" width="76" height="24" rx="5" fill="var(--primary)"/>
+                            <rect x="22" y="16" width="46" height="14" rx="3" fill="var(--primary)"/>
+                            <circle cx="28" cy="50" r="8" fill="#333"/>
+                            <circle cx="72" cy="50" r="8" fill="#333"/>
+                        </svg>
+                    </div>
+                    <div class="model-info">
+                        <h3>A3</h3>
+                        <p>1996 - Present</p>
+                    </div>
+                </a>
+                <a href="audi-q3.html" class="model-card">
+                    <div class="model-image">
+                        <svg viewBox="0 0 100 60" fill="none">
+                            <rect x="10" y="22" width="80" height="28" rx="5" fill="var(--primary)"/>
+                            <rect x="18" y="12" width="52" height="16" rx="3" fill="var(--primary)"/>
+                            <circle cx="25" cy="50" r="8" fill="#333"/>
+                            <circle cx="75" cy="50" r="8" fill="#333"/>
+                        </svg>
+                    </div>
+                    <div class="model-info">
+                        <h3>Q3</h3>
+                        <p>2011 - Present</p>
+                    </div>
+                </a>
+            </div>
+
+            <!-- All Models A-Z -->
+            <h2 class="mb-3">All Models</h2>
+            <div class="model-list mb-5">
+                <div class="model-list-section">
+                    <h3 class="model-list-letter">A</h3>
+                    <ul>
+                        <li><a href="audi-a3.html">A3</a></li>
+                        <li><a href="audi-a4.html">A4</a></li>
+                        <li><a href="#">A5</a></li>
+                        <li><a href="audi-a6.html">A6</a></li>
+                        <li><a href="#">A7</a></li>
+                        <li><a href="#">A8</a></li>
+                    </ul>
+                </div>
+                <div class="model-list-section">
+                    <h3 class="model-list-letter">E</h3>
+                    <ul>
+                        <li><a href="#">e-tron</a></li>
+                        <li><a href="#">e-tron GT</a></li>
+                    </ul>
+                </div>
+                <div class="model-list-section">
+                    <h3 class="model-list-letter">Q</h3>
+                    <ul>
+                        <li><a href="audi-q3.html">Q3</a></li>
+                        <li><a href="#">Q4 e-tron</a></li>
+                        <li><a href="audi-q5.html">Q5</a></li>
+                        <li><a href="audi-q7.html">Q7</a></li>
+                        <li><a href="#">Q8</a></li>
+                    </ul>
+                </div>
+                <div class="model-list-section">
+                    <h3 class="model-list-letter">R</h3>
+                    <ul>
+                        <li><a href="#">R8</a></li>
+                        <li><a href="#">RS3</a></li>
+                        <li><a href="#">RS4</a></li>
+                        <li><a href="#">RS5</a></li>
+                        <li><a href="#">RS6</a></li>
+                        <li><a href="#">RS7</a></li>
+                        <li><a href="#">RS Q8</a></li>
+                    </ul>
+                </div>
+                <div class="model-list-section">
+                    <h3 class="model-list-letter">S</h3>
+                    <ul>
+                        <li><a href="#">S3</a></li>
+                        <li><a href="#">S4</a></li>
+                        <li><a href="#">S5</a></li>
+                        <li><a href="#">S6</a></li>
+                        <li><a href="#">S7</a></li>
+                        <li><a href="#">SQ5</a></li>
+                        <li><a href="#">SQ7</a></li>
+                    </ul>
+                </div>
+                <div class="model-list-section">
+                    <h3 class="model-list-letter">T</h3>
+                    <ul>
+                        <li><a href="#">TT</a></li>
+                        <li><a href="#">TT RS</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Recent Discussions -->
+            <h2 class="mb-3">Recent Discussions</h2>
+            <div class="thread-list">
+                <a href="#" class="thread-item">
+                    <div class="thread-content">
+                        <h4>2.0T timing chain tensioner failure symptoms - 2013 A4</h4>
+                        <p class="thread-meta">
+                            <span class="thread-author">AudiTechB8</span>
+                            <span class="thread-model">2013 A4 Premium Plus 2.0T</span>
+                            <span class="thread-time">1 hour ago</span>
+                        </p>
+                    </div>
+                </a>
+                <a href="#" class="thread-item">
+                    <div class="thread-content">
+                        <h4>MMI screen flickering and rebooting - 2020 Q5</h4>
+                        <p class="thread-meta">
+                            <span class="thread-author">Q5Quattro</span>
+                            <span class="thread-model">2020 Q5 Premium Plus 2.0T</span>
+                            <span class="thread-time">3 hours ago</span>
+                        </p>
+                    </div>
+                </a>
+                <a href="#" class="thread-item">
+                    <div class="thread-content">
+                        <h4>P0299 Turbo Underboost after tune - 2018 S3</h4>
+                        <p class="thread-meta">
+                            <span class="thread-author">S3Modder</span>
+                            <span class="thread-model">2018 S3 Premium Plus 2.0T</span>
+                            <span class="thread-time">6 hours ago</span>
+                        </p>
+                    </div>
+                </a>
+                <a href="#" class="thread-item">
+                    <div class="thread-content">
+                        <h4>Oil consumption check procedure - 2016 A6 3.0T</h4>
+                        <p class="thread-meta">
+                            <span class="thread-author">A6Supercharged</span>
+                            <span class="thread-model">2016 A6 Prestige 3.0T</span>
+                            <span class="thread-time">9 hours ago</span>
+                        </p>
+                    </div>
+                </a>
+                <a href="#" class="thread-item">
+                    <div class="thread-content">
+                        <h4>Virtual Cockpit display issues after battery replacement</h4>
+                        <p class="thread-meta">
+                            <span class="thread-author">Q7Owner2019</span>
+                            <span class="thread-model">2019 Q7 Premium 3.0T</span>
+                            <span class="thread-time">14 hours ago</span>
+                        </p>
+                    </div>
+                </a>
+            </div>
+
+            <div style="text-align: center; margin-top: 2rem;">
+                <button class="btn btn-outline">Load More Discussions</button>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-bottom" style="border-top: none; padding-top: 0;">
+                <p>&copy; 2024 ODB+. All rights reserved.</p>
+                <div class="footer-legal">
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Terms of Service</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../../js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="P0128 Coolant Thermostat Below Regulating Temperature - Complete guide with causes, symptoms, diagnostic steps, and repair information.">
+    <title>P0128 - Thermostat Below Regulating Temperature | ODB+</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../../css/styles.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="navbar-container">
+            <a href="../../index.html" class="navbar-brand">
+                <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="40" height="40" rx="8" fill="url(#gradient)"/>
+                    <path d="M12 20C12 15.5817 15.5817 12 20 12C24.4183 12 28 15.5817 28 20C28 24.4183 24.4183 28 20 28" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+                    <path d="M20 16V20L23 23" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    <circle cx="20" cy="20" r="2" fill="white"/>
+                    <defs>
+                        <linearGradient id="gradient" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse">
+                            <stop stop-color="#2563eb"/>
+                            <stop offset="1" stop-color="#10b981"/>
+                        </linearGradient>
+                    </defs>
+                </svg>
+                <span>ODB+</span>
+            </a>
+            <ul class="navbar-menu">
+                <li><a href="../../index.html">Home</a></li>
+                <li><a href="index.html" class="active">Error Codes</a></li>
+                <li><a href="../forums/index.html">Forums</a></li>
+                <li><a href="../sensors/index.html">Sensors</a></li>
+            </ul>
+            <div class="navbar-actions">
+                <a href="../auth/login.html" class="btn btn-secondary">Log In</a>
+                <a href="../auth/signup.html" class="btn btn-primary">Sign Up</a>
+            </div>
+        </div>
+    </nav>
+
+    <main style="padding-top: 100px; padding-bottom: 4rem;">
+        <div class="container" style="max-width: 900px;">
+            <!-- Breadcrumb -->
+            <nav class="breadcrumb mb-4">
+                <a href="index.html">Error Codes</a>
+                <span class="separator">/</span>
+                <a href="index.html#powertrain">Powertrain</a>
+                <span class="separator">/</span>
+                <span class="current">P0128</span>
+            </nav>
+
+            <!-- Code Header -->
+            <div class="code-detail-header mb-4">
+                <div class="code-badge-lg">P0128</div>
+                <div class="code-detail-info">
+                    <h1>Coolant Thermostat (Coolant Temperature Below Thermostat Regulating Temperature)</h1>
+                    <div class="code-meta">
+                        <span class="badge badge-primary">Cooling System</span>
+                        <span class="badge badge-secondary">Generic (SAE)</span>
+                        <span class="severity-medium">Severity: Low-Medium</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Info -->
+            <div class="quick-info-grid mb-4">
+                <div class="quick-info-card">
+                    <h4>System</h4>
+                    <p>Engine Cooling</p>
+                </div>
+                <div class="quick-info-card">
+                    <h4>Subsystem</h4>
+                    <p>Thermostat Control</p>
+                </div>
+                <div class="quick-info-card">
+                    <h4>Common Fix</h4>
+                    <p>Replace Thermostat</p>
+                </div>
+                <div class="quick-info-card">
+                    <h4>Repair Cost</h4>
+                    <p>$75 - $250</p>
+                </div>
+            </div>
+
+            <!-- Description -->
+            <section class="content-section mb-4">
+                <h2>What Does P0128 Mean?</h2>
+                <p>The P0128 code indicates that the engine is not reaching its expected operating temperature within a specified time period. The powertrain control module (PCM) monitors coolant temperature during warm-up and expects it to reach a certain threshold (typically around 160-180°F) within a certain time based on ambient conditions.</p>
+
+                <p>When the engine stays too cool, the PCM sets this code. The most common cause is a stuck-open thermostat, which allows coolant to flow to the radiator constantly instead of letting the engine warm up properly.</p>
+
+                <div class="info-box">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"/>
+                        <line x1="12" y1="16" x2="12" y2="12"/>
+                        <line x1="12" y1="8" x2="12.01" y2="8"/>
+                    </svg>
+                    <div>
+                        <strong>Why It Matters:</strong> A cool-running engine burns more fuel, produces more emissions, and experiences more wear. The engine is designed to operate at a specific temperature range for optimal efficiency and longevity.
+                    </div>
+                </div>
+            </section>
+
+            <!-- How the System Works -->
+            <section class="content-section mb-4">
+                <h2>How the Cooling System Works</h2>
+                <p>The cooling system maintains optimal engine temperature through a carefully controlled balance of coolant flow:</p>
+
+                <div class="system-diagram">
+                    <h4>Cooling System Components:</h4>
+                    <ul class="component-list">
+                        <li>
+                            <strong>Thermostat:</strong> A temperature-controlled valve that regulates coolant flow. Stays closed when cold, opens when engine reaches operating temperature.
+                        </li>
+                        <li>
+                            <strong>Water Pump:</strong> Circulates coolant through the engine and radiator
+                        </li>
+                        <li>
+                            <strong>Radiator:</strong> Transfers heat from the coolant to the outside air
+                        </li>
+                        <li>
+                            <strong>Coolant Temperature Sensor (ECT):</strong> Reports coolant temperature to the PCM
+                        </li>
+                        <li>
+                            <strong>Cooling Fan:</strong> Provides additional airflow through radiator when needed
+                        </li>
+                    </ul>
+                </div>
+
+                <p class="mt-3"><strong>Normal Operation:</strong> When you start a cold engine, the thermostat is closed. Coolant circulates only through the engine block, allowing it to warm up quickly. Once the coolant reaches the thermostat's rated temperature (typically 195-205°F), the thermostat opens and allows coolant to flow through the radiator.</p>
+            </section>
+
+            <!-- Symptoms -->
+            <section class="content-section mb-4">
+                <h2>Common Symptoms</h2>
+                <ul class="symptom-list">
+                    <li>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="2">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                        </svg>
+                        <div>
+                            <strong>Temperature Gauge Never Reaches Normal</strong>
+                            <p>Gauge stays below the normal operating range, especially in cold weather</p>
+                        </div>
+                    </li>
+                    <li>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="2">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                        </svg>
+                        <div>
+                            <strong>Poor Heater Performance</strong>
+                            <p>Cabin heater blows lukewarm air even after extended driving</p>
+                        </div>
+                    </li>
+                    <li>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="2">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                        </svg>
+                        <div>
+                            <strong>Decreased Fuel Economy</strong>
+                            <p>Cold engine requires richer fuel mixture, wasting fuel</p>
+                        </div>
+                    </li>
+                    <li>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="2">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                        </svg>
+                        <div>
+                            <strong>Check Engine Light</strong>
+                            <p>P0128 code stored, may take several drive cycles to set</p>
+                        </div>
+                    </li>
+                    <li>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="2">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                        </svg>
+                        <div>
+                            <strong>Extended Warm-up Time</strong>
+                            <p>Takes much longer than normal for engine to warm up</p>
+                        </div>
+                    </li>
+                    <li>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="2">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                        </svg>
+                        <div>
+                            <strong>Higher Emissions</strong>
+                            <p>Cold engines produce more pollutants, may fail emissions test</p>
+                        </div>
+                    </li>
+                </ul>
+            </section>
+
+            <!-- Possible Causes -->
+            <section class="content-section mb-4">
+                <h2>Possible Causes</h2>
+
+                <div class="causes-grid">
+                    <div class="cause-category">
+                        <h4>Thermostat Issues (Most Common)</h4>
+                        <ul>
+                            <li>Thermostat stuck open</li>
+                            <li>Thermostat opening too early</li>
+                            <li>Thermostat missing (removed)</li>
+                            <li>Wrong thermostat rating installed</li>
+                            <li>Thermostat installed incorrectly</li>
+                        </ul>
+                    </div>
+                    <div class="cause-category">
+                        <h4>Coolant Temperature Sensor</h4>
+                        <ul>
+                            <li>Faulty ECT sensor reading low</li>
+                            <li>Poor sensor connection</li>
+                            <li>Corroded sensor terminals</li>
+                            <li>Wrong sensor for application</li>
+                        </ul>
+                    </div>
+                    <div class="cause-category">
+                        <h4>Cooling System Problems</h4>
+                        <ul>
+                            <li>Low coolant level</li>
+                            <li>Air pockets in cooling system</li>
+                            <li>Cooling fan running constantly</li>
+                            <li>Radiator hose collapsed internally</li>
+                        </ul>
+                    </div>
+                    <div class="cause-category">
+                        <h4>Other Causes</h4>
+                        <ul>
+                            <li>PCM software issue</li>
+                            <li>Extreme cold weather operation</li>
+                            <li>Wiring problem to ECT sensor</li>
+                            <li>Engine running too lean (rare)</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Diagnostic Steps -->
+            <section class="content-section mb-4">
+                <h2>Diagnostic Steps</h2>
+                <div class="diagnostic-steps">
+                    <div class="step">
+                        <div class="step-number">1</div>
+                        <div class="step-content">
+                            <h4>Check Coolant Level and Condition</h4>
+                            <p>Verify coolant is at the proper level when cold. Low coolant can affect temperature readings. Check for contamination (oil, rust) that could affect cooling system operation.</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">2</div>
+                        <div class="step-content">
+                            <h4>Monitor ECT with Scanner</h4>
+                            <p>Start with a cold engine and use your ODB+ scanner to monitor coolant temperature. It should start at approximately ambient temperature (matching IAT if cold soaked) and rise steadily to 195-220°F. If it never reaches normal or rises very slowly, suspect the thermostat.</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">3</div>
+                        <div class="step-content">
+                            <h4>Feel the Radiator Hoses</h4>
+                            <p>During warm-up, feel the upper radiator hose. It should remain cool/cold until the thermostat opens (around 195°F). If it gets hot immediately, the thermostat is stuck open. Caution: components get hot!</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">4</div>
+                        <div class="step-content">
+                            <h4>Check Cooling Fan Operation</h4>
+                            <p>The cooling fan should not run during warm-up on a cold day unless A/C is on. A constantly running fan will prevent the engine from reaching operating temperature. Check fan relay and temperature switch.</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">5</div>
+                        <div class="step-content">
+                            <h4>Test the ECT Sensor</h4>
+                            <p>Compare scanner ECT reading to actual coolant temperature using an infrared thermometer on the thermostat housing. If readings differ significantly, the ECT sensor may be faulty.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Common Repairs -->
+            <section class="content-section mb-4">
+                <h2>Common Repairs</h2>
+                <div class="repair-list">
+                    <div class="repair-item">
+                        <div class="repair-info">
+                            <h4>Replace Thermostat</h4>
+                            <p>Most common fix. Use OEM or quality aftermarket thermostat with correct temperature rating.</p>
+                        </div>
+                        <div class="repair-cost">
+                            <span class="diy">DIY: $20-$50</span>
+                            <span class="shop">Shop: $150-$300</span>
+                        </div>
+                    </div>
+                    <div class="repair-item">
+                        <div class="repair-info">
+                            <h4>Replace ECT Sensor</h4>
+                            <p>If sensor is reading inaccurately, replacement is straightforward.</p>
+                        </div>
+                        <div class="repair-cost">
+                            <span class="diy">DIY: $15-$40</span>
+                            <span class="shop">Shop: $75-$150</span>
+                        </div>
+                    </div>
+                    <div class="repair-item">
+                        <div class="repair-info">
+                            <h4>Repair Wiring/Connector</h4>
+                            <p>Fix corroded or damaged wiring to ECT sensor.</p>
+                        </div>
+                        <div class="repair-cost">
+                            <span class="diy">DIY: $5-$20</span>
+                            <span class="shop">Shop: $50-$150</span>
+                        </div>
+                    </div>
+                    <div class="repair-item">
+                        <div class="repair-info">
+                            <h4>Cooling System Flush and Fill</h4>
+                            <p>May be needed along with thermostat replacement.</p>
+                        </div>
+                        <div class="repair-cost">
+                            <span class="diy">DIY: $30-$50</span>
+                            <span class="shop">Shop: $100-$200</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Related Codes -->
+            <section class="content-section mb-4">
+                <h2>Related Codes</h2>
+                <div class="related-codes-grid">
+                    <a href="index.html" class="related-code">
+                        <span class="code-badge-sm">P0115</span>
+                        <span>ECT Circuit Malfunction</span>
+                    </a>
+                    <a href="index.html" class="related-code">
+                        <span class="code-badge-sm">P0116</span>
+                        <span>ECT Range/Performance</span>
+                    </a>
+                    <a href="index.html" class="related-code">
+                        <span class="code-badge-sm">P0117</span>
+                        <span>ECT Circuit Low</span>
+                    </a>
+                    <a href="index.html" class="related-code">
+                        <span class="code-badge-sm">P0118</span>
+                        <span>ECT Circuit High</span>
+                    </a>
+                    <a href="index.html" class="related-code">
+                        <span class="code-badge-sm">P0125</span>
+                        <span>Insufficient Temp for Closed Loop</span>
+                    </a>
+                    <a href="P0171.html" class="related-code">
+                        <span class="code-badge-sm">P0171</span>
+                        <span>System Too Lean Bank 1</span>
+                    </a>
+                </div>
+            </section>
+
+            <!-- Forum Discussion -->
+            <section class="content-section mb-4">
+                <h2>Community Discussion</h2>
+                <p class="mb-3">Have questions about P0128? Get help from experienced mechanics and fellow car owners.</p>
+                <a href="../forums/index.html" class="btn btn-primary">Visit Forums</a>
+                <a href="../forums/index.html?search=P0128" class="btn btn-outline" style="margin-left: 0.5rem;">Search P0128 Threads</a>
+            </section>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-bottom" style="border-top: none; padding-top: 0;">
+                <p>&copy; 2024 ODB+. All rights reserved.</p>
+                <div class="footer-legal">
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Terms of Service</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../../js/main.js"></script>
+</body>
+</html>

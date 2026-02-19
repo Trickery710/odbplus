@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Mass Airflow (MAF) Sensor - Complete guide covering how MAF sensors work, failure symptoms, testing procedures, and cleaning tips.">
+    <title>Mass Airflow (MAF) Sensor Guide | ODB+</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../../css/styles.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="navbar-container">
+            <a href="../../index.html" class="navbar-brand">
+                <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="40" height="40" rx="8" fill="url(#gradient)"/>
+                    <path d="M12 20C12 15.5817 15.5817 12 20 12C24.4183 12 28 15.5817 28 20C28 24.4183 24.4183 28 20 28" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+                    <path d="M20 16V20L23 23" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    <circle cx="20" cy="20" r="2" fill="white"/>
+                    <defs>
+                        <linearGradient id="gradient" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse">
+                            <stop stop-color="#2563eb"/>
+                            <stop offset="1" stop-color="#10b981"/>
+                        </linearGradient>
+                    </defs>
+                </svg>
+                <span>ODB+</span>
+            </a>
+            <ul class="navbar-menu">
+                <li><a href="../../index.html">Home</a></li>
+                <li><a href="../codes/index.html">Error Codes</a></li>
+                <li><a href="../forums/index.html">Forums</a></li>
+                <li><a href="index.html" class="active">Sensors</a></li>
+            </ul>
+            <div class="navbar-actions">
+                <a href="../auth/login.html" class="btn btn-secondary">Log In</a>
+                <a href="../auth/signup.html" class="btn btn-primary">Sign Up</a>
+            </div>
+        </div>
+    </nav>
+
+    <main style="padding-top: 100px; padding-bottom: 4rem;">
+        <div class="container" style="max-width: 900px;">
+            <!-- Breadcrumb -->
+            <nav class="breadcrumb mb-4">
+                <a href="index.html">Sensors</a>
+                <span class="separator">/</span>
+                <a href="index.html#engine">Engine Management</a>
+                <span class="separator">/</span>
+                <span class="current">MAF Sensor</span>
+            </nav>
+
+            <!-- Sensor Header -->
+            <div class="sensor-detail-header mb-4">
+                <div class="sensor-icon-lg">
+                    <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="1.5">
+                        <path d="M12 2v20"/>
+                        <path d="M2 12h20"/>
+                        <circle cx="12" cy="12" r="4"/>
+                    </svg>
+                </div>
+                <div class="sensor-detail-info">
+                    <h1>Mass Airflow (MAF) Sensor</h1>
+                    <p class="sensor-subtitle">Also known as: Air Mass Meter, Air Flow Sensor</p>
+                    <div class="sensor-meta">
+                        <span class="badge badge-primary">Engine Management</span>
+                        <span class="badge badge-success">Fuel Control</span>
+                        <span class="badge badge-secondary">Critical</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Facts -->
+            <div class="quick-info-grid mb-4">
+                <div class="quick-info-card">
+                    <h4>Location</h4>
+                    <p>Air Intake (After Air Filter)</p>
+                </div>
+                <div class="quick-info-card">
+                    <h4>Signal Type</h4>
+                    <p>0-5V Analog or Digital Hz</p>
+                </div>
+                <div class="quick-info-card">
+                    <h4>Lifespan</h4>
+                    <p>100,000+ miles (often longer)</p>
+                </div>
+                <div class="quick-info-card">
+                    <h4>Replacement Cost</h4>
+                    <p>$80 - $300</p>
+                </div>
+            </div>
+
+            <!-- Overview -->
+            <section class="content-section mb-4">
+                <h2>What Is a MAF Sensor?</h2>
+                <p>The Mass Airflow (MAF) sensor measures the amount of air entering the engine. This is one of the most critical inputs the engine computer (ECM) uses to calculate how much fuel to inject. The ECM aims for an ideal air/fuel ratio of 14.7:1 by weight, so accurate air mass measurement is essential.</p>
+
+                <p>The MAF sensor is typically located in the air intake tube between the air filter box and the throttle body. Some vehicles integrate the MAF sensor with the Intake Air Temperature (IAT) sensor in a single housing.</p>
+
+                <div class="info-box">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"/>
+                        <line x1="12" y1="16" x2="12" y2="12"/>
+                        <line x1="12" y1="8" x2="12.01" y2="8"/>
+                    </svg>
+                    <div>
+                        <strong>MAF vs. MAP:</strong> Some vehicles use a Manifold Absolute Pressure (MAP) sensor instead of or in addition to a MAF sensor. MAP sensors measure intake manifold vacuum/pressure. Speed-density systems calculate air mass using MAP + IAT + RPM data. MAF systems directly measure air mass and are generally more accurate.
+                    </div>
+                </div>
+            </section>
+
+            <!-- How It Works -->
+            <section class="content-section mb-4">
+                <h2>How MAF Sensors Work</h2>
+
+                <h4>Hot Wire MAF (Most Common)</h4>
+                <p>The hot wire MAF sensor uses a heated platinum wire or film element in the airflow path. The wire is maintained at a constant temperature above ambient (typically 200°C above IAT). As air flows past the wire, it cools it down. The sensor's electronics increase current to maintain the target temperature. This current is proportional to air mass flow and is converted to a voltage signal for the ECM.</p>
+
+                <h4 class="mt-3">Hot Film MAF</h4>
+                <p>Similar to hot wire, but uses a heated film element instead of a wire. These are more resistant to contamination and are common on modern vehicles. The operating principle is the same - more airflow requires more current to maintain temperature.</p>
+
+                <h4 class="mt-3">Vane Airflow Meter (Older Vehicles)</h4>
+                <p>Found on older fuel-injected vehicles (1980s-early 1990s). Uses a spring-loaded flap that is pushed open by incoming air. A potentiometer attached to the flap sends a variable voltage signal to the ECM. These are less accurate and create intake restriction.</p>
+
+                <h4 class="mt-3">Karman Vortex MAF</h4>
+                <p>Uses the frequency of vortices created by air flowing past a specially shaped pillar. Less common but found on some Toyota, Mitsubishi, and Lexus vehicles.</p>
+            </section>
+
+            <!-- Normal Values -->
+            <section class="content-section mb-4">
+                <h2>Normal MAF Readings</h2>
+                <p>MAF sensor output varies significantly by engine size and load. Here are general guidelines:</p>
+
+                <div class="data-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Condition</th>
+                                <th>4-Cylinder</th>
+                                <th>V6</th>
+                                <th>V8</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Idle</td>
+                                <td>2-5 g/s</td>
+                                <td>4-8 g/s</td>
+                                <td>6-12 g/s</td>
+                            </tr>
+                            <tr>
+                                <td>2500 RPM (no load)</td>
+                                <td>8-15 g/s</td>
+                                <td>15-25 g/s</td>
+                                <td>20-35 g/s</td>
+                            </tr>
+                            <tr>
+                                <td>Wide Open Throttle</td>
+                                <td>80-120 g/s</td>
+                                <td>120-180 g/s</td>
+                                <td>180-280 g/s</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <p class="mt-3"><strong>Quick Rule:</strong> At idle, MAF should read approximately 1 gram per second per liter of engine displacement. A 2.0L engine should read around 2-3 g/s at idle.</p>
+            </section>
+
+            <!-- Failure Symptoms -->
+            <section class="content-section mb-4">
+                <h2>Symptoms of a Failing MAF Sensor</h2>
+                <ul class="symptom-list">
+                    <li>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="2">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                        </svg>
+                        <div>
+                            <strong>Check Engine Light with P0100-P0104 Codes</strong>
+                            <p>MAF circuit malfunction, range/performance, or out of range codes</p>
+                        </div>
+                    </li>
+                    <li>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="2">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                        </svg>
+                        <div>
+                            <strong>Lean Codes (P0171, P0174)</strong>
+                            <p>A contaminated MAF often under-reports airflow, causing lean fuel trim</p>
+                        </div>
+                    </li>
+                    <li>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="2">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                        </svg>
+                        <div>
+                            <strong>Hard Starting or Stalling</strong>
+                            <p>Engine may be difficult to start or stall shortly after starting</p>
+                        </div>
+                    </li>
+                    <li>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="2">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                        </svg>
+                        <div>
+                            <strong>Hesitation or Surging</strong>
+                            <p>Engine hesitates during acceleration or surges at steady throttle</p>
+                        </div>
+                    </li>
+                    <li>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="2">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                        </svg>
+                        <div>
+                            <strong>Rough Idle</strong>
+                            <p>Engine runs rough at idle due to incorrect fuel metering</p>
+                        </div>
+                    </li>
+                    <li>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="2">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                        </svg>
+                        <div>
+                            <strong>Poor Fuel Economy</strong>
+                            <p>Incorrect air metering leads to improper fuel mixture</p>
+                        </div>
+                    </li>
+                    <li>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="2">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                        </svg>
+                        <div>
+                            <strong>Black Smoke from Exhaust</strong>
+                            <p>May indicate MAF over-reporting air, causing rich condition</p>
+                        </div>
+                    </li>
+                </ul>
+            </section>
+
+            <!-- Common Causes -->
+            <section class="content-section mb-4">
+                <h2>What Causes MAF Sensor Problems?</h2>
+                <div class="causes-grid">
+                    <div class="cause-category">
+                        <h4>Contamination (Most Common)</h4>
+                        <ul>
+                            <li>Dirt/dust from dirty air filter</li>
+                            <li>Oil from oiled aftermarket air filters</li>
+                            <li>Oil mist from PCV system</li>
+                            <li>Spider webs or insects</li>
+                        </ul>
+                    </div>
+                    <div class="cause-category">
+                        <h4>Air Leaks</h4>
+                        <ul>
+                            <li>Cracked air intake tube</li>
+                            <li>Loose clamps after MAF</li>
+                            <li>Torn intake boot</li>
+                            <li>Vacuum leaks</li>
+                        </ul>
+                    </div>
+                    <div class="cause-category">
+                        <h4>Electrical Issues</h4>
+                        <ul>
+                            <li>Damaged connector pins</li>
+                            <li>Corroded terminals</li>
+                            <li>Chafed wiring</li>
+                            <li>Poor ground connection</li>
+                        </ul>
+                    </div>
+                    <div class="cause-category">
+                        <h4>Sensor Failure</h4>
+                        <ul>
+                            <li>Burned out heating element</li>
+                            <li>Internal circuit failure</li>
+                            <li>Physical damage to element</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="warning-box mt-3">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+                        <line x1="12" y1="9" x2="12" y2="13"/>
+                        <line x1="12" y1="17" x2="12.01" y2="17"/>
+                    </svg>
+                    <div>
+                        <strong>Oiled Air Filters:</strong> Over-oiled aftermarket air filters (K&N, etc.) are a leading cause of MAF contamination. If using an oiled filter, allow the oil to fully absorb before installing, and avoid over-oiling.
+                    </div>
+                </div>
+            </section>
+
+            <!-- Testing Procedures -->
+            <section class="content-section mb-4">
+                <h2>How to Test a MAF Sensor</h2>
+
+                <div class="diagnostic-steps">
+                    <div class="step">
+                        <div class="step-number">1</div>
+                        <div class="step-content">
+                            <h4>Check Live Data</h4>
+                            <p>Use your ODB+ scanner to monitor MAF readings at idle and compare to expected values for your engine size. Watch for:</p>
+                            <ul>
+                                <li>Zero reading (sensor not responding)</li>
+                                <li>Erratic/jumping values</li>
+                                <li>Values significantly lower than expected (contaminated)</li>
+                                <li>Values that don't increase smoothly with RPM</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">2</div>
+                        <div class="step-content">
+                            <h4>Monitor Fuel Trim</h4>
+                            <p>Check Long Term Fuel Trim (LTFT) at idle and at 2500 RPM. If fuel trim is significantly positive (+10% or more) at idle but normal at higher RPM, the MAF may be contaminated and under-reporting at low airflow.</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">3</div>
+                        <div class="step-content">
+                            <h4>Visual Inspection</h4>
+                            <p>Remove the MAF sensor and inspect the sensing element. It should be clean with no visible contamination. Look for oil residue, dust buildup, or debris. Do NOT touch the sensing element.</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">4</div>
+                        <div class="step-content">
+                            <h4>Clean and Retest</h4>
+                            <p>If contamination is visible, clean the sensor with MAF sensor cleaner and retest. Cleaning often resolves the issue and is worth trying before replacement.</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">5</div>
+                        <div class="step-content">
+                            <h4>Check for Air Leaks</h4>
+                            <p>Inspect the air intake tube between the MAF and throttle body for cracks, loose clamps, or damage. Any unmetered air entering after the MAF will cause lean conditions.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Cleaning Instructions -->
+            <section class="content-section mb-4">
+                <h2>How to Clean a MAF Sensor</h2>
+                <div class="diagnostic-steps">
+                    <div class="step">
+                        <div class="step-number">1</div>
+                        <div class="step-content">
+                            <h4>Remove the Sensor</h4>
+                            <p>Disconnect the electrical connector and remove the MAF sensor from the air intake tube. Most are held in with two screws or bolts.</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">2</div>
+                        <div class="step-content">
+                            <h4>Spray with MAF Cleaner</h4>
+                            <p>Hold the sensor at an angle and spray the sensing elements (thin wires or film) with MAF sensor cleaner from about 4 inches away. Use 10-15 short sprays to thoroughly flush contaminants.</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">3</div>
+                        <div class="step-content">
+                            <h4>Allow to Dry Completely</h4>
+                            <p>Let the sensor air dry completely before reinstalling. MAF cleaner evaporates quickly but allow at least 10-15 minutes to ensure no residue remains.</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">4</div>
+                        <div class="step-content">
+                            <h4>Reinstall and Clear Codes</h4>
+                            <p>Reinstall the sensor, reconnect the connector, and clear any stored codes. Drive the vehicle and monitor fuel trim values to verify improvement.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="warning-box mt-3">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+                        <line x1="12" y1="9" x2="12" y2="13"/>
+                        <line x1="12" y1="17" x2="12.01" y2="17"/>
+                    </svg>
+                    <div>
+                        <strong>Use Only MAF Cleaner!</strong> Never use carburetor cleaner, brake cleaner, throttle body cleaner, or any other solvent on a MAF sensor. These can damage the delicate sensing element. Only use spray specifically labeled for MAF sensors.
+                    </div>
+                </div>
+            </section>
+
+            <!-- Related Codes -->
+            <section class="content-section mb-4">
+                <h2>Related Diagnostic Codes</h2>
+                <div class="related-codes-grid">
+                    <a href="../codes/index.html" class="related-code">
+                        <span class="code-badge-sm">P0100</span>
+                        <span>MAF Circuit Malfunction</span>
+                    </a>
+                    <a href="../codes/index.html" class="related-code">
+                        <span class="code-badge-sm">P0101</span>
+                        <span>MAF Range/Performance</span>
+                    </a>
+                    <a href="../codes/index.html" class="related-code">
+                        <span class="code-badge-sm">P0102</span>
+                        <span>MAF Circuit Low Input</span>
+                    </a>
+                    <a href="../codes/index.html" class="related-code">
+                        <span class="code-badge-sm">P0103</span>
+                        <span>MAF Circuit High Input</span>
+                    </a>
+                    <a href="../codes/index.html" class="related-code">
+                        <span class="code-badge-sm">P0104</span>
+                        <span>MAF Circuit Intermittent</span>
+                    </a>
+                    <a href="../codes/P0171.html" class="related-code">
+                        <span class="code-badge-sm">P0171</span>
+                        <span>System Too Lean Bank 1</span>
+                    </a>
+                    <a href="../codes/index.html" class="related-code">
+                        <span class="code-badge-sm">P0174</span>
+                        <span>System Too Lean Bank 2</span>
+                    </a>
+                </div>
+            </section>
+
+            <!-- Forum Discussion -->
+            <section class="content-section mb-4">
+                <h2>Community Discussion</h2>
+                <p class="mb-3">Have questions about MAF sensors? Get help from experienced mechanics and fellow car owners.</p>
+                <a href="../forums/index.html" class="btn btn-primary">Visit Forums</a>
+                <a href="../forums/index.html?search=MAF+sensor" class="btn btn-outline" style="margin-left: 0.5rem;">Search MAF Sensor Threads</a>
+            </section>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-bottom" style="border-top: none; padding-top: 0;">
+                <p>&copy; 2024 ODB+. All rights reserved.</p>
+                <div class="footer-legal">
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Terms of Service</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../../js/main.js"></script>
+</body>
+</html>

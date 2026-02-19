@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Exhaust Gas Temperature (EGT) Sensor Guide - Learn how EGT sensors work, their critical role in diesel DPF systems, common failure symptoms, and testing procedures.">
+    <title>Exhaust Gas Temperature (EGT) Sensor Guide | ODB+</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../../css/styles.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="navbar-container">
+            <a href="../../index.html" class="navbar-brand">
+                <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="40" height="40" rx="8" fill="url(#gradient)"/>
+                    <path d="M12 20C12 15.5817 15.5817 12 20 12C24.4183 12 28 15.5817 28 20C28 24.4183 24.4183 28 20 28" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+                    <path d="M20 16V20L23 23" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    <circle cx="20" cy="20" r="2" fill="white"/>
+                    <defs>
+                        <linearGradient id="gradient" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse">
+                            <stop stop-color="#2563eb"/>
+                            <stop offset="1" stop-color="#10b981"/>
+                        </linearGradient>
+                    </defs>
+                </svg>
+                <span>ODB+</span>
+            </a>
+            <ul class="navbar-menu">
+                <li><a href="../../index.html">Home</a></li>
+                <li><a href="../codes/index.html">Error Codes</a></li>
+                <li><a href="../forums/index.html">Forums</a></li>
+                <li><a href="index.html" class="active">Sensors</a></li>
+            </ul>
+            <div class="navbar-actions">
+                <a href="../auth/login.html" class="btn btn-secondary">Log In</a>
+                <a href="../auth/signup.html" class="btn btn-primary">Sign Up</a>
+            </div>
+        </div>
+    </nav>
+
+    <main style="padding-top: 100px; padding-bottom: 4rem;">
+        <div class="container" style="max-width: 900px;">
+            <!-- Breadcrumb -->
+            <nav class="breadcrumb mb-4">
+                <a href="index.html">Sensors</a>
+                <span class="separator">/</span>
+                <a href="index.html#temperature">Temperature</a>
+                <span class="separator">/</span>
+                <span class="current">Exhaust Gas Temperature Sensor</span>
+            </nav>
+
+            <!-- Sensor Header -->
+            <div class="sensor-detail-header mb-4">
+                <div class="sensor-icon-lg">
+                    <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="1.5">
+                        <path d="M14 14.76V3.5a2.5 2.5 0 0 0-5 0v11.26a4.5 4.5 0 1 0 5 0z"/>
+                        <path d="M18 4l2 2-2 2"/>
+                    </svg>
+                </div>
+                <div class="sensor-detail-info">
+                    <h1>Exhaust Gas Temperature (EGT) Sensor</h1>
+                    <p class="sensor-subtitle">Also known as: Exhaust Temperature Sensor, EGTS, Pre-Cat/Post-Cat Temp Sensor</p>
+                    <div class="sensor-meta">
+                        <span class="badge badge-primary">Temperature</span>
+                        <span class="badge badge-success">DPF/Catalyst</span>
+                        <span class="badge badge-secondary">Critical (Diesel)</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Facts -->
+            <div class="quick-info-grid mb-4">
+                <div class="quick-info-card">
+                    <h4>Location</h4>
+                    <p>Exhaust Manifold/DPF/Turbo</p>
+                </div>
+                <div class="quick-info-card">
+                    <h4>Signal Type</h4>
+                    <p>Variable Resistance (PTC/NTC)</p>
+                </div>
+                <div class="quick-info-card">
+                    <h4>Lifespan</h4>
+                    <p>80,000 - 120,000 miles</p>
+                </div>
+                <div class="quick-info-card">
+                    <h4>Replacement Cost</h4>
+                    <p>$80 - $250</p>
+                </div>
+            </div>
+
+            <!-- Overview -->
+            <section class="content-section mb-4">
+                <h2>What Is an EGT Sensor?</h2>
+                <p>The Exhaust Gas Temperature (EGT) sensor measures the temperature of exhaust gases at various points in the exhaust system. This data is critical for managing emissions control systems, particularly the Diesel Particulate Filter (DPF) on diesel engines and catalytic converters on gas engines.</p>
+
+                <p>Modern diesel vehicles typically have multiple EGT sensors - before and after the turbocharger, and before and after the DPF. Gasoline vehicles with turbos or advanced emissions systems may also have EGT sensors to protect components and optimize catalyst operation.</p>
+
+                <div class="info-box">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"/>
+                        <line x1="12" y1="16" x2="12" y2="12"/>
+                        <line x1="12" y1="8" x2="12.01" y2="8"/>
+                    </svg>
+                    <div>
+                        <strong>DPF Regeneration:</strong> On diesel vehicles, EGT sensors are essential for DPF regeneration. The ECM monitors exhaust temperature to determine when the DPF needs cleaning and whether conditions are suitable for regeneration (exhaust temps typically need to reach 1000-1100°F / 540-600°C).
+                    </div>
+                </div>
+            </section>
+
+            <!-- How It Works -->
+            <section class="content-section mb-4">
+                <h2>How EGT Sensors Work</h2>
+
+                <h4>Sensor Types</h4>
+                <p><strong>NTC (Negative Temperature Coefficient):</strong> Used for lower temperature ranges (up to ~1000°F). Resistance decreases as temperature increases.</p>
+                <p><strong>PTC (Positive Temperature Coefficient):</strong> Used for higher temperature ranges. Resistance increases with temperature. Common in extreme-temperature locations like turbo outlets.</p>
+                <p><strong>Thermocouple:</strong> Found on some performance applications. Generates a voltage based on temperature difference, can measure very high temperatures.</p>
+
+                <h4 class="mt-3">Typical EGT Sensor Locations</h4>
+                <ul>
+                    <li><strong>EGT 1:</strong> Before turbocharger (monitors exhaust manifold temps)</li>
+                    <li><strong>EGT 2:</strong> After turbocharger (monitors turbo outlet)</li>
+                    <li><strong>EGT 3:</strong> Before DPF/catalyst (determines if regen is possible)</li>
+                    <li><strong>EGT 4:</strong> After DPF/catalyst (confirms regen effectiveness)</li>
+                </ul>
+            </section>
+
+            <!-- Normal Values -->
+            <section class="content-section mb-4">
+                <h2>Normal EGT Sensor Readings</h2>
+
+                <div class="data-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Condition</th>
+                                <th>Pre-Turbo</th>
+                                <th>Post-DPF</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Idle (Warm)</td>
+                                <td>300-450°F (150-230°C)</td>
+                                <td>250-400°F (120-200°C)</td>
+                            </tr>
+                            <tr>
+                                <td>Light Load</td>
+                                <td>500-700°F (260-370°C)</td>
+                                <td>400-600°F (200-315°C)</td>
+                            </tr>
+                            <tr>
+                                <td>Heavy Load</td>
+                                <td>900-1200°F (480-650°C)</td>
+                                <td>700-1000°F (370-540°C)</td>
+                            </tr>
+                            <tr>
+                                <td>DPF Regeneration</td>
+                                <td>1000-1300°F (540-700°C)</td>
+                                <td>1000-1200°F (540-650°C)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <p class="mt-3"><strong>Temperature Drop:</strong> EGT should decrease as exhaust flows through the system (turbo extracts heat, DPF absorbs heat). If post-DPF temp is higher than pre-DPF, regeneration may be occurring.</p>
+            </section>
+
+            <!-- Failure Symptoms -->
+            <section class="content-section mb-4">
+                <h2>Symptoms of a Failing EGT Sensor</h2>
+                <ul class="symptom-list">
+                    <li>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="2">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                        </svg>
+                        <div>
+                            <strong>Check Engine Light with P0544-P0549 or P2031-P2034</strong>
+                            <p>EGT sensor circuit codes indicating malfunction</p>
+                        </div>
+                    </li>
+                    <li>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="2">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                        </svg>
+                        <div>
+                            <strong>DPF Warning Light (Diesel)</strong>
+                            <p>System cannot verify regeneration temperature is reached</p>
+                        </div>
+                    </li>
+                    <li>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="2">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                        </svg>
+                        <div>
+                            <strong>Frequent DPF Regeneration Attempts</strong>
+                            <p>ECM keeps initiating regen due to incorrect temperature data</p>
+                        </div>
+                    </li>
+                    <li>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="2">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                        </svg>
+                        <div>
+                            <strong>Reduced Engine Power / Limp Mode</strong>
+                            <p>ECM limits power to protect exhaust components</p>
+                        </div>
+                    </li>
+                    <li>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="2">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                        </svg>
+                        <div>
+                            <strong>Poor Fuel Economy (Diesel)</strong>
+                            <p>Incomplete regeneration cycles waste fuel</p>
+                        </div>
+                    </li>
+                    <li>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="2">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                        </svg>
+                        <div>
+                            <strong>Turbo Protection Issues</strong>
+                            <p>ECM can't protect turbo from overheating without accurate EGT data</p>
+                        </div>
+                    </li>
+                </ul>
+            </section>
+
+            <!-- Common Causes -->
+            <section class="content-section mb-4">
+                <h2>What Causes EGT Sensor Problems?</h2>
+                <div class="causes-grid">
+                    <div class="cause-category">
+                        <h4>Extreme Heat Exposure</h4>
+                        <ul>
+                            <li>Repeated high-temperature cycles</li>
+                            <li>DPF regeneration heat stress</li>
+                            <li>Turbo overboost conditions</li>
+                            <li>Material fatigue from thermal cycling</li>
+                        </ul>
+                    </div>
+                    <div class="cause-category">
+                        <h4>Contamination</h4>
+                        <ul>
+                            <li>Soot buildup on sensor tip</li>
+                            <li>Oil contamination from turbo</li>
+                            <li>Coolant contamination (head gasket)</li>
+                            <li>Carbon deposits</li>
+                        </ul>
+                    </div>
+                    <div class="cause-category">
+                        <h4>Physical Damage</h4>
+                        <ul>
+                            <li>Cracked sensor from thermal shock</li>
+                            <li>Vibration damage</li>
+                            <li>Impact damage during service</li>
+                            <li>Corrosion from exhaust chemicals</li>
+                        </ul>
+                    </div>
+                    <div class="cause-category">
+                        <h4>Wiring Issues</h4>
+                        <ul>
+                            <li>Heat-damaged wiring insulation</li>
+                            <li>Corroded connector from heat cycling</li>
+                            <li>Broken wires from vibration</li>
+                            <li>Water intrusion in connector</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="warning-box mt-3">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+                        <line x1="12" y1="9" x2="12" y2="13"/>
+                        <line x1="12" y1="17" x2="12.01" y2="17"/>
+                    </svg>
+                    <div>
+                        <strong>Burn Hazard:</strong> EGT sensors and surrounding components can reach temperatures over 1000°F during operation and remain hot long after shutdown. Never touch exhaust components without verifying they have cooled. Allow several hours for complete cooling.
+                    </div>
+                </div>
+            </section>
+
+            <!-- Testing Procedures -->
+            <section class="content-section mb-4">
+                <h2>How to Test an EGT Sensor</h2>
+
+                <div class="diagnostic-steps">
+                    <div class="step">
+                        <div class="step-number">1</div>
+                        <div class="step-content">
+                            <h4>Compare Multiple EGT Readings</h4>
+                            <p>Using your ODB+ scanner, compare readings from all EGT sensors. At idle, all sensors should read within a reasonable range of each other (accounting for position). One sensor reading drastically different suggests a problem with that specific sensor.</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">2</div>
+                        <div class="step-content">
+                            <h4>Cold Start Comparison</h4>
+                            <p>On a cold engine, all EGT sensors should read approximately ambient temperature. A sensor reading very high or very low on a cold engine has failed.</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">3</div>
+                        <div class="step-content">
+                            <h4>Monitor During Warm-up</h4>
+                            <p>Watch EGT values as the engine warms up and under varying loads. All sensors should respond consistently to changes. Erratic or non-responsive readings indicate a failing sensor.</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">4</div>
+                        <div class="step-content">
+                            <h4>Visual Inspection (Engine Cold)</h4>
+                            <p>Inspect the sensor, wiring, and connector for damage, corrosion, or heat damage. Check that the sensor is properly installed and the connector is fully seated.</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">5</div>
+                        <div class="step-content">
+                            <h4>Resistance Test (Engine Cold)</h4>
+                            <p>With the sensor at room temperature, measure resistance and compare to specifications. NTC sensors typically read 500-1500 ohms at room temp. Open or shorted readings indicate failure.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Related Codes -->
+            <section class="content-section mb-4">
+                <h2>Related Diagnostic Codes</h2>
+                <div class="related-codes-grid">
+                    <a href="../codes/index.html" class="related-code">
+                        <span class="code-badge-sm">P0544</span>
+                        <span>EGT Sensor 1 Circuit</span>
+                    </a>
+                    <a href="../codes/index.html" class="related-code">
+                        <span class="code-badge-sm">P0546</span>
+                        <span>EGT Sensor 1 High</span>
+                    </a>
+                    <a href="../codes/index.html" class="related-code">
+                        <span class="code-badge-sm">P2031</span>
+                        <span>EGT Sensor 1 Circuit Bank 1</span>
+                    </a>
+                    <a href="../codes/index.html" class="related-code">
+                        <span class="code-badge-sm">P2032</span>
+                        <span>EGT Sensor 1 Low Bank 1</span>
+                    </a>
+                    <a href="../codes/index.html" class="related-code">
+                        <span class="code-badge-sm">P244A</span>
+                        <span>DPF Differential Pressure</span>
+                    </a>
+                    <a href="../codes/index.html" class="related-code">
+                        <span class="code-badge-sm">P2463</span>
+                        <span>DPF Soot Accumulation</span>
+                    </a>
+                </div>
+            </section>
+
+            <!-- Forum Discussion -->
+            <section class="content-section mb-4">
+                <h2>Community Discussion</h2>
+                <p class="mb-3">Have questions about EGT sensors? Get help from experienced mechanics and fellow car owners.</p>
+                <a href="../forums/index.html" class="btn btn-primary">Visit Forums</a>
+                <a href="../forums/index.html?search=exhaust+temperature" class="btn btn-outline" style="margin-left: 0.5rem;">Search EGT Sensor Threads</a>
+            </section>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-bottom" style="border-top: none; padding-top: 0;">
+                <p>&copy; 2024 ODB+. All rights reserved.</p>
+                <div class="footer-legal">
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Terms of Service</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../../js/main.js"></script>
+</body>
+</html>

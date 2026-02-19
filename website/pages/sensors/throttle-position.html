@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Throttle Position Sensor (TPS) - Complete guide covering how TPS works, failure symptoms, testing procedures, and replacement tips.">
+    <title>Throttle Position Sensor (TPS) Guide | ODB+</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../../css/styles.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="navbar-container">
+            <a href="../../index.html" class="navbar-brand">
+                <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="40" height="40" rx="8" fill="url(#gradient)"/>
+                    <path d="M12 20C12 15.5817 15.5817 12 20 12C24.4183 12 28 15.5817 28 20C28 24.4183 24.4183 28 20 28" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+                    <path d="M20 16V20L23 23" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    <circle cx="20" cy="20" r="2" fill="white"/>
+                    <defs>
+                        <linearGradient id="gradient" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse">
+                            <stop stop-color="#2563eb"/>
+                            <stop offset="1" stop-color="#10b981"/>
+                        </linearGradient>
+                    </defs>
+                </svg>
+                <span>ODB+</span>
+            </a>
+            <ul class="navbar-menu">
+                <li><a href="../../index.html">Home</a></li>
+                <li><a href="../codes/index.html">Error Codes</a></li>
+                <li><a href="../forums/index.html">Forums</a></li>
+                <li><a href="index.html" class="active">Sensors</a></li>
+            </ul>
+            <div class="navbar-actions">
+                <a href="../auth/login.html" class="btn btn-secondary">Log In</a>
+                <a href="../auth/signup.html" class="btn btn-primary">Sign Up</a>
+            </div>
+        </div>
+    </nav>
+
+    <main style="padding-top: 100px; padding-bottom: 4rem;">
+        <div class="container" style="max-width: 900px;">
+            <!-- Breadcrumb -->
+            <nav class="breadcrumb mb-4">
+                <a href="index.html">Sensors</a>
+                <span class="separator">/</span>
+                <a href="index.html#engine">Engine Management</a>
+                <span class="separator">/</span>
+                <span class="current">TPS</span>
+            </nav>
+
+            <!-- Sensor Header -->
+            <div class="sensor-detail-header mb-4">
+                <div class="sensor-icon-lg">
+                    <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="1.5">
+                        <circle cx="12" cy="12" r="10"/>
+                        <path d="M12 12l6-4"/>
+                        <circle cx="12" cy="12" r="2"/>
+                    </svg>
+                </div>
+                <div class="sensor-detail-info">
+                    <h1>Throttle Position Sensor (TPS)</h1>
+                    <p class="sensor-subtitle">Also known as: Accelerator Position Sensor, Throttle Angle Sensor</p>
+                    <div class="sensor-meta">
+                        <span class="badge badge-primary">Engine Management</span>
+                        <span class="badge badge-success">Fuel Control</span>
+                        <span class="badge badge-secondary">Critical</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Facts -->
+            <div class="quick-info-grid mb-4">
+                <div class="quick-info-card">
+                    <h4>Location</h4>
+                    <p>Throttle Body</p>
+                </div>
+                <div class="quick-info-card">
+                    <h4>Signal Type</h4>
+                    <p>0.5V - 4.5V (Position)</p>
+                </div>
+                <div class="quick-info-card">
+                    <h4>Lifespan</h4>
+                    <p>100,000+ miles</p>
+                </div>
+                <div class="quick-info-card">
+                    <h4>Replacement Cost</h4>
+                    <p>$50 - $200</p>
+                </div>
+            </div>
+
+            <!-- Overview -->
+            <section class="content-section mb-4">
+                <h2>What Is a Throttle Position Sensor?</h2>
+                <p>The Throttle Position Sensor (TPS) monitors the position of the throttle plate (butterfly valve) in the throttle body. It tells the Engine Control Module (ECM) how far you're pressing the accelerator pedal, allowing the ECM to adjust fuel injection, ignition timing, and transmission shift points accordingly.</p>
+
+                <p>Modern vehicles with electronic throttle control (drive-by-wire) have multiple position sensors - typically two on the accelerator pedal (APP sensors) and two in the throttle body (TPS). This redundancy allows the ECM to verify readings and detect faults.</p>
+
+                <div class="info-box">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"/>
+                        <line x1="12" y1="16" x2="12" y2="12"/>
+                        <line x1="12" y1="8" x2="12.01" y2="8"/>
+                    </svg>
+                    <div>
+                        <strong>Electronic Throttle:</strong> On modern vehicles with electronic throttle control, the TPS doesn't directly connect to the accelerator pedal. Instead, APP sensors read pedal position, and the ECM commands the throttle motor. The TPS confirms the throttle position matches what was commanded.
+                    </div>
+                </div>
+            </section>
+
+            <!-- How It Works -->
+            <section class="content-section mb-4">
+                <h2>How the TPS Works</h2>
+
+                <h4>Potentiometer Type (Traditional)</h4>
+                <p>Traditional TPS uses a potentiometer - a variable resistor with a wiper that moves along a resistive track as the throttle opens. The ECM supplies a 5V reference voltage, and the TPS returns a signal voltage proportional to throttle angle:</p>
+                <ul>
+                    <li><strong>Closed throttle (idle):</strong> ~0.5V</li>
+                    <li><strong>Part throttle (cruising):</strong> ~1.5V - 3.0V</li>
+                    <li><strong>Wide open throttle (WOT):</strong> ~4.5V</li>
+                </ul>
+
+                <h4 class="mt-3">Hall Effect Type (Modern)</h4>
+                <p>Modern TPS often uses Hall effect sensors instead of potentiometers. These are non-contact sensors that measure the position of a magnet attached to the throttle shaft. Hall effect sensors are more durable because there's no physical contact to wear out.</p>
+
+                <h4 class="mt-3">What the ECM Does with TPS Data:</h4>
+                <ul>
+                    <li><strong>Fuel delivery:</strong> Calculates appropriate fuel pulse width based on throttle angle and engine speed</li>
+                    <li><strong>Acceleration enrichment:</strong> Adds extra fuel during rapid throttle opening</li>
+                    <li><strong>Deceleration fuel cut:</strong> Cuts fuel during closed-throttle deceleration</li>
+                    <li><strong>Transmission shifts:</strong> Adjusts shift points based on throttle position</li>
+                    <li><strong>Traction control:</strong> Monitors driver demand for traction management</li>
+                </ul>
+            </section>
+
+            <!-- Normal Values -->
+            <section class="content-section mb-4">
+                <h2>Normal TPS Readings</h2>
+                <div class="data-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Throttle Position</th>
+                                <th>Typical Voltage</th>
+                                <th>Typical Percentage</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Closed (Idle)</td>
+                                <td>0.4V - 0.8V</td>
+                                <td>0% - 5%</td>
+                            </tr>
+                            <tr>
+                                <td>Light Cruise</td>
+                                <td>1.0V - 2.0V</td>
+                                <td>15% - 25%</td>
+                            </tr>
+                            <tr>
+                                <td>Moderate Accel</td>
+                                <td>2.0V - 3.5V</td>
+                                <td>30% - 60%</td>
+                            </tr>
+                            <tr>
+                                <td>Wide Open Throttle</td>
+                                <td>4.0V - 4.8V</td>
+                                <td>95% - 100%</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p class="mt-3"><strong>Important:</strong> The voltage should change smoothly and continuously as you slowly press the accelerator. Any "dead spots" or sudden voltage jumps indicate a worn sensor.</p>
+            </section>
+
+            <!-- Symptoms -->
+            <section class="content-section mb-4">
+                <h2>Symptoms of a Failing TPS</h2>
+                <ul class="symptom-list">
+                    <li>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="2">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                        </svg>
+                        <div>
+                            <strong>Check Engine Light</strong>
+                            <p>TPS codes (P0120-P0124) indicate circuit or performance problems</p>
+                        </div>
+                    </li>
+                    <li>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="2">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                        </svg>
+                        <div>
+                            <strong>Hesitation or Stumbling</strong>
+                            <p>Engine hesitates or stumbles when accelerating, especially from a stop</p>
+                        </div>
+                    </li>
+                    <li>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="2">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                        </svg>
+                        <div>
+                            <strong>Surging or Bucking</strong>
+                            <p>Vehicle surges forward or bucks at steady throttle due to erratic signal</p>
+                        </div>
+                    </li>
+                    <li>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="2">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                        </svg>
+                        <div>
+                            <strong>Rough or Unstable Idle</strong>
+                            <p>Idle speed fluctuates or engine runs rough at idle</p>
+                        </div>
+                    </li>
+                    <li>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="2">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                        </svg>
+                        <div>
+                            <strong>Lack of Power</strong>
+                            <p>Vehicle feels sluggish or won't accelerate properly</p>
+                        </div>
+                    </li>
+                    <li>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="2">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                        </svg>
+                        <div>
+                            <strong>Transmission Shifting Issues</strong>
+                            <p>Erratic or harsh shifts due to incorrect throttle position data</p>
+                        </div>
+                    </li>
+                    <li>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="2">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                        </svg>
+                        <div>
+                            <strong>Limp Mode</strong>
+                            <p>Vehicle enters reduced power mode (especially with electronic throttle)</p>
+                        </div>
+                    </li>
+                </ul>
+            </section>
+
+            <!-- Testing -->
+            <section class="content-section mb-4">
+                <h2>How to Test a TPS</h2>
+                <div class="diagnostic-steps">
+                    <div class="step">
+                        <div class="step-number">1</div>
+                        <div class="step-content">
+                            <h4>Monitor Live Data</h4>
+                            <p>Use your ODB+ scanner to view TPS voltage or percentage in real-time. With the engine off and key on, slowly press the accelerator from closed to wide open throttle. The reading should increase smoothly without any sudden jumps or dropouts.</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">2</div>
+                        <div class="step-content">
+                            <h4>Check for Dead Spots</h4>
+                            <p>A worn potentiometer-type TPS often has "dead spots" where the wiper doesn't make good contact. Graph the TPS voltage while slowly moving the throttle - look for any sudden spikes or flat spots in the graph.</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">3</div>
+                        <div class="step-content">
+                            <h4>Voltage Test with Multimeter</h4>
+                            <p>Backprobe the TPS signal wire and measure voltage to ground while slowly opening the throttle. Voltage should increase smoothly from ~0.5V to ~4.5V. Tap on the sensor while monitoring - if voltage jumps, the sensor has internal wear.</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">4</div>
+                        <div class="step-content">
+                            <h4>Check Reference Voltage</h4>
+                            <p>Verify the ECM is supplying 5V reference to the TPS. With the sensor unplugged, measure voltage between the 5V reference and ground wires in the connector. Should read very close to 5.0V.</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">5</div>
+                        <div class="step-content">
+                            <h4>Inspect Wiring and Connector</h4>
+                            <p>Check for corroded pins, damaged wires, or loose connections. The TPS connector is exposed to engine heat and can deteriorate over time.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Replacement Tips -->
+            <section class="content-section mb-4">
+                <h2>Replacement Tips</h2>
+                <div class="tech-tips">
+                    <div class="tip">
+                        <h4>Check for Adjustment</h4>
+                        <p>Some older TPS units are adjustable - loosen the screws and rotate the sensor to set the correct idle voltage. Most modern sensors are non-adjustable and must be positioned correctly during installation.</p>
+                    </div>
+                    <div class="tip">
+                        <h4>Use OEM or Quality Parts</h4>
+                        <p>Cheap aftermarket TPS units often have poor accuracy or fail quickly. For electronic throttle systems, always use OEM or OEM-equivalent quality sensors.</p>
+                    </div>
+                    <div class="tip">
+                        <h4>Relearn Procedure</h4>
+                        <p>Many vehicles require a throttle body or TPS relearn procedure after replacement. This can often be done with a scan tool, or by following a specific key-on sequence in the owner's manual.</p>
+                    </div>
+                    <div class="tip">
+                        <h4>Clean Throttle Body</h4>
+                        <p>While the TPS is removed, clean the throttle body and throttle plate. Carbon buildup can affect idle quality and throttle response.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Related Codes -->
+            <section class="content-section mb-4">
+                <h2>Related Diagnostic Codes</h2>
+                <div class="related-codes-grid">
+                    <a href="../codes/index.html" class="related-code">
+                        <span class="code-badge-sm">P0120</span>
+                        <span>TPS Circuit Malfunction</span>
+                    </a>
+                    <a href="../codes/index.html" class="related-code">
+                        <span class="code-badge-sm">P0121</span>
+                        <span>TPS Range/Performance</span>
+                    </a>
+                    <a href="../codes/index.html" class="related-code">
+                        <span class="code-badge-sm">P0122</span>
+                        <span>TPS Circuit Low Input</span>
+                    </a>
+                    <a href="../codes/index.html" class="related-code">
+                        <span class="code-badge-sm">P0123</span>
+                        <span>TPS Circuit High Input</span>
+                    </a>
+                    <a href="../codes/index.html" class="related-code">
+                        <span class="code-badge-sm">P0124</span>
+                        <span>TPS Circuit Intermittent</span>
+                    </a>
+                    <a href="../codes/index.html" class="related-code">
+                        <span class="code-badge-sm">P2135</span>
+                        <span>TPS Correlation Error</span>
+                    </a>
+                </div>
+            </section>
+
+            <!-- Forum -->
+            <section class="content-section mb-4">
+                <h2>Community Discussion</h2>
+                <p class="mb-3">Have questions about TPS? Get help from experienced mechanics and fellow car owners.</p>
+                <a href="../forums/index.html" class="btn btn-primary">Visit Forums</a>
+                <a href="../forums/index.html?search=throttle+position" class="btn btn-outline" style="margin-left: 0.5rem;">Search TPS Threads</a>
+            </section>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-bottom" style="border-top: none; padding-top: 0;">
+                <p>&copy; 2024 ODB+. All rights reserved.</p>
+                <div class="footer-legal">
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Terms of Service</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../../js/main.js"></script>
+</body>
+</html>

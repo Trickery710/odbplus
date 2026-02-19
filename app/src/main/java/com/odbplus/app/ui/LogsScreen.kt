@@ -1,5 +1,7 @@
 package com.odbplus.app.ui
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -11,9 +13,11 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
@@ -22,6 +26,7 @@ import androidx.compose.material.icons.filled.History
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -32,6 +37,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -47,6 +53,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.odbplus.app.live.LogSession
 import com.odbplus.app.live.LogsViewModel
+import com.odbplus.app.ui.theme.*
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -63,20 +70,30 @@ fun LogsScreen(
     var sessionToReplay by remember { mutableStateOf<LogSession?>(null) }
 
     Scaffold(
+        containerColor = DarkBackground,
         topBar = {
             TopAppBar(
-                title = { Text("Saved Logs") },
+                title = {
+                    Text(
+                        "Saved Logs",
+                        fontWeight = FontWeight.Bold,
+                        color = TextPrimary
+                    )
+                },
                 actions = {
                     if (sessions.isNotEmpty()) {
                         IconButton(onClick = { showClearConfirmation = true }) {
                             Icon(
                                 Icons.Default.DeleteSweep,
                                 contentDescription = "Clear All",
-                                tint = MaterialTheme.colorScheme.error
+                                tint = RedError
                             )
                         }
                     }
-                }
+                },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = DarkSurface
+                )
             )
         }
     ) { padding ->
@@ -105,8 +122,15 @@ fun LogsScreen(
     if (showClearConfirmation) {
         AlertDialog(
             onDismissRequest = { showClearConfirmation = false },
-            title = { Text("Clear All Logs?") },
-            text = { Text("This will permanently delete all ${sessions.size} saved log sessions. This action cannot be undone.") },
+            containerColor = DarkSurface,
+            titleContentColor = TextPrimary,
+            title = { Text("Clear All Logs?", fontWeight = FontWeight.Bold) },
+            text = {
+                Text(
+                    "This will permanently delete all ${sessions.size} saved log sessions. This action cannot be undone.",
+                    color = TextSecondary
+                )
+            },
             confirmButton = {
                 TextButton(
                     onClick = {
@@ -114,12 +138,12 @@ fun LogsScreen(
                         showClearConfirmation = false
                     }
                 ) {
-                    Text("Delete All", color = MaterialTheme.colorScheme.error)
+                    Text("Delete All", color = RedError, fontWeight = FontWeight.Bold)
                 }
             },
             dismissButton = {
                 TextButton(onClick = { showClearConfirmation = false }) {
-                    Text("Cancel")
+                    Text("Cancel", color = TextSecondary)
                 }
             }
         )
@@ -129,8 +153,15 @@ fun LogsScreen(
     sessionToDelete?.let { session ->
         AlertDialog(
             onDismissRequest = { sessionToDelete = null },
-            title = { Text("Delete Log?") },
-            text = { Text("Delete this log session with ${session.dataPointCount} data points?") },
+            containerColor = DarkSurface,
+            titleContentColor = TextPrimary,
+            title = { Text("Delete Log?", fontWeight = FontWeight.Bold) },
+            text = {
+                Text(
+                    "Delete this log session with ${session.dataPointCount} data points?",
+                    color = TextSecondary
+                )
+            },
             confirmButton = {
                 TextButton(
                     onClick = {
@@ -138,12 +169,12 @@ fun LogsScreen(
                         sessionToDelete = null
                     }
                 ) {
-                    Text("Delete", color = MaterialTheme.colorScheme.error)
+                    Text("Delete", color = RedError, fontWeight = FontWeight.Bold)
                 }
             },
             dismissButton = {
                 TextButton(onClick = { sessionToDelete = null }) {
-                    Text("Cancel")
+                    Text("Cancel", color = TextSecondary)
                 }
             }
         )
@@ -153,15 +184,17 @@ fun LogsScreen(
     sessionToReplay?.let { session ->
         AlertDialog(
             onDismissRequest = { sessionToReplay = null },
-            title = { Text("Replay Log?") },
+            containerColor = DarkSurface,
+            titleContentColor = TextPrimary,
+            title = { Text("Replay Log?", fontWeight = FontWeight.Bold) },
             text = {
                 Column {
-                    Text("Replay this log session?")
+                    Text("Replay this log session?", color = TextPrimary)
                     Spacer(Modifier.height(8.dp))
                     Text(
                         "This will switch to the Live tab and play back the recorded data.",
                         style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                        color = TextSecondary
                     )
                 }
             },
@@ -170,14 +203,19 @@ fun LogsScreen(
                     onClick = {
                         onReplaySession(session)
                         sessionToReplay = null
-                    }
+                    },
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = CyanPrimary,
+                        contentColor = TextOnAccent
+                    ),
+                    shape = RoundedCornerShape(10.dp)
                 ) {
-                    Text("Replay")
+                    Text("Replay", fontWeight = FontWeight.SemiBold)
                 }
             },
             dismissButton = {
                 TextButton(onClick = { sessionToReplay = null }) {
-                    Text("Cancel")
+                    Text("Cancel", color = TextSecondary)
                 }
             }
         )
@@ -194,22 +232,32 @@ private fun EmptyLogsState(modifier: Modifier = Modifier) {
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            Icon(
-                Icons.Default.History,
-                contentDescription = null,
-                modifier = Modifier.padding(16.dp),
-                tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
-            )
+            Box(
+                modifier = Modifier
+                    .size(72.dp)
+                    .clip(CircleShape)
+                    .background(CyanPrimary.copy(alpha = 0.1f)),
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(
+                    Icons.Default.History,
+                    contentDescription = null,
+                    modifier = Modifier.size(36.dp),
+                    tint = CyanPrimary.copy(alpha = 0.5f)
+                )
+            }
+            Spacer(Modifier.height(20.dp))
             Text(
                 text = "No Saved Logs",
                 style = MaterialTheme.typography.headlineSmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
+                color = TextPrimary,
+                fontWeight = FontWeight.Bold
             )
             Spacer(Modifier.height(8.dp))
             Text(
                 text = "Record live data sessions from the\nLive tab to save them here",
                 style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                color = TextSecondary,
                 textAlign = TextAlign.Center
             )
         }
@@ -231,12 +279,10 @@ private fun LogSessionCard(
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .clip(RoundedCornerShape(12.dp))
+            .border(1.dp, DarkBorder, RoundedCornerShape(14.dp))
             .clickable { onReplay() },
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceVariant
-        ),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+        colors = CardDefaults.cardColors(containerColor = DarkSurfaceVariant),
+        shape = RoundedCornerShape(14.dp)
     ) {
         Column(
             modifier = Modifier
@@ -253,12 +299,13 @@ private fun LogSessionCard(
                     Text(
                         text = dateFormat.format(Date(session.startTime)),
                         style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.Bold
+                        fontWeight = FontWeight.Bold,
+                        color = TextPrimary
                     )
                     Text(
                         text = timeFormat.format(Date(session.startTime)),
                         style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                        color = TextTertiary
                     )
                 }
 
@@ -267,20 +314,20 @@ private fun LogSessionCard(
                         Icon(
                             Icons.Default.PlayArrow,
                             contentDescription = "Replay",
-                            tint = MaterialTheme.colorScheme.primary
+                            tint = CyanPrimary
                         )
                     }
                     IconButton(onClick = onDelete) {
                         Icon(
                             Icons.Default.Delete,
                             contentDescription = "Delete",
-                            tint = MaterialTheme.colorScheme.error
+                            tint = RedError.copy(alpha = 0.7f)
                         )
                     }
                 }
             }
 
-            Spacer(Modifier.height(12.dp))
+            Spacer(Modifier.height(14.dp))
 
             // Stats row
             Row(
@@ -303,12 +350,12 @@ private fun LogSessionCard(
 
             // PIDs list
             if (session.selectedPids.isNotEmpty()) {
-                Spacer(Modifier.height(12.dp))
+                Spacer(Modifier.height(14.dp))
                 Text(
                     text = session.selectedPids.take(5).joinToString(", ") { it.description } +
                             if (session.selectedPids.size > 5) " +${session.selectedPids.size - 5} more" else "",
                     style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    color = TextTertiary,
                     maxLines = 2
                 )
             }
@@ -323,12 +370,12 @@ private fun StatItem(label: String, value: String) {
             text = value,
             style = MaterialTheme.typography.titleLarge,
             fontWeight = FontWeight.Bold,
-            color = MaterialTheme.colorScheme.primary
+            color = CyanPrimary
         )
         Text(
             text = label,
             style = MaterialTheme.typography.labelSmall,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
+            color = TextTertiary
         )
     }
 }

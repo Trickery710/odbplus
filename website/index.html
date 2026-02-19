@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="ODB+ - Professional automotive diagnostics made accessible. Decode error codes, diagnose vehicle issues, and connect with experts.">
+    <meta name="keywords" content="OBD2, automotive diagnostics, error codes, DTC, car repair, vehicle diagnostics">
+    <title>ODB+ | Professional Automotive Diagnostics</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="navbar-container">
+            <a href="index.html" class="navbar-brand">
+                <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="40" height="40" rx="8" fill="url(#gradient)"/>
+                    <path d="M12 20C12 15.5817 15.5817 12 20 12C24.4183 12 28 15.5817 28 20C28 24.4183 24.4183 28 20 28" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+                    <path d="M20 16V20L23 23" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    <circle cx="20" cy="20" r="2" fill="white"/>
+                    <defs>
+                        <linearGradient id="gradient" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse">
+                            <stop stop-color="#2563eb"/>
+                            <stop offset="1" stop-color="#10b981"/>
+                        </linearGradient>
+                    </defs>
+                </svg>
+                <span>ODB+</span>
+            </a>
+
+            <ul class="navbar-menu" id="navMenu">
+                <li><a href="index.html" class="active">Home</a></li>
+                <li><a href="pages/codes/index.html">Error Codes</a></li>
+                <li><a href="pages/forums/index.html">Forums</a></li>
+                <li><a href="pages/sensors/index.html">Sensors</a></li>
+                <li><a href="#download">Download App</a></li>
+            </ul>
+
+            <div class="navbar-actions">
+                <a href="pages/auth/login.html" class="btn btn-secondary">Log In</a>
+                <a href="pages/auth/signup.html" class="btn btn-primary">Sign Up Free</a>
+            </div>
+
+            <button class="navbar-toggle" id="navToggle" aria-label="Toggle navigation">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <div class="hero-badge">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+                    </svg>
+                    AI-Powered Diagnostics
+                </div>
+                <h1 class="hero-title">
+                    Understand Your Vehicle Like a <span>Professional</span>
+                </h1>
+                <p class="hero-description">
+                    Decode check engine lights, diagnose issues with AI assistance, and access the most comprehensive database of automotive error codes and repair guides.
+                </p>
+                <div class="hero-actions">
+                    <a href="pages/auth/signup.html" class="btn btn-primary btn-lg">
+                        Get Started Free
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M5 12h14M12 5l7 7-7 7"/>
+                        </svg>
+                    </a>
+                    <a href="pages/codes/index.html" class="btn btn-outline btn-lg">
+                        Browse Error Codes
+                    </a>
+                </div>
+                <div class="hero-stats">
+                    <div class="hero-stat">
+                        <div class="hero-stat-value">18,000+</div>
+                        <div class="hero-stat-label">Error Codes</div>
+                    </div>
+                    <div class="hero-stat">
+                        <div class="hero-stat-value">500+</div>
+                        <div class="hero-stat-label">Vehicle Models</div>
+                    </div>
+                    <div class="hero-stat">
+                        <div class="hero-stat-value">50+</div>
+                        <div class="hero-stat-label">Sensor Guides</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Search Section -->
+    <section class="py-5 bg-secondary">
+        <div class="container">
+            <div class="section-header">
+                <h2>Quick Code Lookup</h2>
+                <p class="section-description">Enter an error code to get instant explanations and repair guidance</p>
+            </div>
+            <div class="search-box">
+                <svg class="search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="11" cy="11" r="8"/>
+                    <path d="M21 21l-4.35-4.35"/>
+                </svg>
+                <input type="text" class="search-input" id="codeSearch" placeholder="Enter code (e.g., P0300, P0171, B0001)">
+                <div class="search-results" id="searchResults"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features" id="features">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-label">Features</span>
+                <h2 class="section-title">Everything You Need for Vehicle Diagnostics</h2>
+                <p class="section-description">Professional-grade tools and resources accessible to everyone</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/>
+                            <rect x="9" y="3" width="6" height="4" rx="1"/>
+                            <path d="M9 12l2 2 4-4"/>
+                        </svg>
+                    </div>
+                    <h3 class="feature-title">Comprehensive Code Database</h3>
+                    <p class="feature-description">Access over 18,000 OBD-II and manufacturer-specific error codes with detailed explanations, causes, and solutions.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 2a10 10 0 110 20 10 10 0 010-20z"/>
+                            <path d="M12 6v6l4 2"/>
+                        </svg>
+                    </div>
+                    <h3 class="feature-title">AI-Powered Diagnostics</h3>
+                    <p class="feature-description">Our intelligent assistant analyzes your symptoms, codes, and sensor data to provide accurate diagnoses and repair recommendations.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/>
+                            <circle cx="9" cy="7" r="4"/>
+                            <path d="M23 21v-2a4 4 0 00-3-3.87"/>
+                            <path d="M16 3.13a4 4 0 010 7.75"/>
+                        </svg>
+                    </div>
+                    <h3 class="feature-title">Expert Community</h3>
+                    <p class="feature-description">Connect with professional mechanics and enthusiasts in vehicle-specific forums. Get answers from people who know your exact model.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="2" y="3" width="20" height="14" rx="2"/>
+                            <path d="M8 21h8"/>
+                            <path d="M12 17v4"/>
+                        </svg>
+                    </div>
+                    <h3 class="feature-title">Live Data Monitoring</h3>
+                    <p class="feature-description">View real-time sensor data from your vehicle. Monitor RPM, temperatures, fuel trim, and hundreds of other parameters.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
+                            <path d="M14 2v6h6"/>
+                            <path d="M16 13H8"/>
+                            <path d="M16 17H8"/>
+                            <path d="M10 9H8"/>
+                        </svg>
+                    </div>
+                    <h3 class="feature-title">Detailed Repair Guides</h3>
+                    <p class="feature-description">Step-by-step instructions for diagnosing and repairing common issues. Includes tool requirements and difficulty ratings.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"/>
+                            <path d="M12 16v-4"/>
+                            <path d="M12 8h.01"/>
+                        </svg>
+                    </div>
+                    <h3 class="feature-title">Sensor Reference Library</h3>
+                    <p class="feature-description">Learn how every sensor in your vehicle works, how to test them, and recognize failure symptoms before they become problems.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section class="py-5 bg-secondary">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-label">How It Works</span>
+                <h2 class="section-title">Diagnose Issues in 3 Simple Steps</h2>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card" style="text-align: center;">
+                    <div style="font-size: 3rem; font-weight: 800; color: var(--primary); margin-bottom: 1rem;">1</div>
+                    <h3 class="feature-title">Connect Your Scanner</h3>
+                    <p class="feature-description">Plug any ELM327 Bluetooth or WiFi OBD-II adapter into your vehicle's diagnostic port.</p>
+                </div>
+                <div class="feature-card" style="text-align: center;">
+                    <div style="font-size: 3rem; font-weight: 800; color: var(--primary); margin-bottom: 1rem;">2</div>
+                    <h3 class="feature-title">Read Your Codes</h3>
+                    <p class="feature-description">The app automatically reads all stored trouble codes and live sensor data from your vehicle.</p>
+                </div>
+                <div class="feature-card" style="text-align: center;">
+                    <div style="font-size: 3rem; font-weight: 800; color: var(--primary); margin-bottom: 1rem;">3</div>
+                    <h3 class="feature-title">Get Expert Guidance</h3>
+                    <p class="feature-description">AI explains what's wrong, suggests fixes, and connects you with community experts for your specific vehicle.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Popular Codes Section -->
+    <section class="py-5">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-label">Popular Codes</span>
+                <h2 class="section-title">Most Searched Error Codes</h2>
+                <p class="section-description">Quick access to the most common diagnostic trouble codes</p>
+            </div>
+            <div class="features-grid">
+                <a href="pages/codes/P0300.html" class="card card-clickable code-card powertrain">
+                    <div class="card-body">
+                        <div class="code-header">
+                            <span class="code-badge">P0300</span>
+                            <span class="code-system">Powertrain</span>
+                        </div>
+                        <h3 class="code-title mt-2">Random/Multiple Cylinder Misfire Detected</h3>
+                        <p class="code-description">One of the most common codes indicating engine misfires across multiple cylinders.</p>
+                    </div>
+                </a>
+                <a href="pages/codes/P0171.html" class="card card-clickable code-card powertrain">
+                    <div class="card-body">
+                        <div class="code-header">
+                            <span class="code-badge">P0171</span>
+                            <span class="code-system">Fuel System</span>
+                        </div>
+                        <h3 class="code-title mt-2">System Too Lean (Bank 1)</h3>
+                        <p class="code-description">Indicates the fuel mixture is too lean. Often caused by vacuum leaks or faulty sensors.</p>
+                    </div>
+                </a>
+                <a href="pages/codes/P0420.html" class="card card-clickable code-card powertrain">
+                    <div class="card-body">
+                        <div class="code-header">
+                            <span class="code-badge">P0420</span>
+                            <span class="code-system">Emissions</span>
+                        </div>
+                        <h3 class="code-title mt-2">Catalyst System Efficiency Below Threshold</h3>
+                        <p class="code-description">Catalytic converter efficiency is below acceptable levels. May require replacement.</p>
+                    </div>
+                </a>
+                <a href="pages/codes/P0442.html" class="card card-clickable code-card powertrain">
+                    <div class="card-body">
+                        <div class="code-header">
+                            <span class="code-badge">P0442</span>
+                            <span class="code-system">EVAP</span>
+                        </div>
+                        <h3 class="code-title mt-2">EVAP System Small Leak Detected</h3>
+                        <p class="code-description">Small leak detected in the evaporative emission system. Often a loose gas cap.</p>
+                    </div>
+                </a>
+                <a href="pages/codes/P0401.html" class="card card-clickable code-card powertrain">
+                    <div class="card-body">
+                        <div class="code-header">
+                            <span class="code-badge">P0401</span>
+                            <span class="code-system">EGR</span>
+                        </div>
+                        <h3 class="code-title mt-2">EGR Flow Insufficient Detected</h3>
+                        <p class="code-description">Exhaust Gas Recirculation flow is below expected levels. Check EGR valve and passages.</p>
+                    </div>
+                </a>
+                <a href="pages/codes/P0128.html" class="card card-clickable code-card powertrain">
+                    <div class="card-body">
+                        <div class="code-header">
+                            <span class="code-badge">P0128</span>
+                            <span class="code-system">Cooling</span>
+                        </div>
+                        <h3 class="code-title mt-2">Coolant Thermostat Below Regulating Temperature</h3>
+                        <p class="code-description">Engine is not reaching proper operating temperature. Usually indicates a stuck-open thermostat.</p>
+                    </div>
+                </a>
+            </div>
+            <div class="text-center mt-4">
+                <a href="pages/codes/index.html" class="btn btn-primary btn-lg">View All Error Codes</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Vehicle Forums Preview -->
+    <section class="py-5 bg-secondary">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-label">Community</span>
+                <h2 class="section-title">Vehicle-Specific Forums</h2>
+                <p class="section-description">Get help from experts who know your exact make and model</p>
+            </div>
+            <div class="forum-grid">
+                <a href="pages/forums/toyota.html" class="forum-card">
+                    <div class="forum-icon">
+                        <img src="https://logo.clearbit.com/toyota.com" alt="Toyota" onerror="this.style.display='none'">
+                    </div>
+                    <div class="forum-info">
+                        <h3>Toyota</h3>
+                        <p>Camry, Corolla, RAV4, Tacoma & more</p>
+                    </div>
+                </a>
+                <a href="pages/forums/honda.html" class="forum-card">
+                    <div class="forum-icon">
+                        <img src="https://logo.clearbit.com/honda.com" alt="Honda" onerror="this.style.display='none'">
+                    </div>
+                    <div class="forum-info">
+                        <h3>Honda</h3>
+                        <p>Civic, Accord, CR-V, Pilot & more</p>
+                    </div>
+                </a>
+                <a href="pages/forums/ford.html" class="forum-card">
+                    <div class="forum-icon">
+                        <img src="https://logo.clearbit.com/ford.com" alt="Ford" onerror="this.style.display='none'">
+                    </div>
+                    <div class="forum-info">
+                        <h3>Ford</h3>
+                        <p>F-150, Mustang, Explorer, Escape & more</p>
+                    </div>
+                </a>
+                <a href="pages/forums/chevrolet.html" class="forum-card">
+                    <div class="forum-icon">
+                        <img src="https://logo.clearbit.com/chevrolet.com" alt="Chevrolet" onerror="this.style.display='none'">
+                    </div>
+                    <div class="forum-info">
+                        <h3>Chevrolet</h3>
+                        <p>Silverado, Equinox, Malibu, Tahoe & more</p>
+                    </div>
+                </a>
+                <a href="pages/forums/bmw.html" class="forum-card">
+                    <div class="forum-icon">
+                        <img src="https://logo.clearbit.com/bmw.com" alt="BMW" onerror="this.style.display='none'">
+                    </div>
+                    <div class="forum-info">
+                        <h3>BMW</h3>
+                        <p>3 Series, 5 Series, X3, X5 & more</p>
+                    </div>
+                </a>
+                <a href="pages/forums/index.html" class="forum-card" style="background: var(--primary); color: white;">
+                    <div class="forum-icon" style="background: rgba(255,255,255,0.2);">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                            <path d="M12 5v14M5 12h14"/>
+                        </svg>
+                    </div>
+                    <div class="forum-info">
+                        <h3 style="color: white;">View All Makes</h3>
+                        <p style="color: rgba(255,255,255,0.8);">Browse 50+ vehicle manufacturers</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sensor Library Preview -->
+    <section class="py-5">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-label">Reference</span>
+                <h2 class="section-title">Sensor Reference Library</h2>
+                <p class="section-description">Learn how vehicle sensors work, how to test them, and recognize failure symptoms</p>
+            </div>
+            <div class="features-grid">
+                <a href="pages/sensors/o2-sensor.html" class="card card-clickable">
+                    <div class="card-body">
+                        <h3>Oxygen (O2) Sensor</h3>
+                        <p class="text-secondary">Monitors exhaust oxygen content for fuel mixture control. Critical for fuel economy and emissions.</p>
+                        <span class="badge badge-primary">Emissions</span>
+                    </div>
+                </a>
+                <a href="pages/sensors/maf-sensor.html" class="card card-clickable">
+                    <div class="card-body">
+                        <h3>Mass Air Flow (MAF) Sensor</h3>
+                        <p class="text-secondary">Measures incoming air volume for precise fuel injection calculations.</p>
+                        <span class="badge badge-primary">Air/Fuel</span>
+                    </div>
+                </a>
+                <a href="pages/sensors/map-sensor.html" class="card card-clickable">
+                    <div class="card-body">
+                        <h3>Manifold Absolute Pressure (MAP)</h3>
+                        <p class="text-secondary">Measures intake manifold pressure to determine engine load and adjust fuel delivery.</p>
+                        <span class="badge badge-primary">Air/Fuel</span>
+                    </div>
+                </a>
+                <a href="pages/sensors/crankshaft-sensor.html" class="card card-clickable">
+                    <div class="card-body">
+                        <h3>Crankshaft Position Sensor</h3>
+                        <p class="text-secondary">Monitors crankshaft rotation for ignition timing and fuel injection synchronization.</p>
+                        <span class="badge badge-warning">Ignition</span>
+                    </div>
+                </a>
+                <a href="pages/sensors/camshaft-sensor.html" class="card card-clickable">
+                    <div class="card-body">
+                        <h3>Camshaft Position Sensor</h3>
+                        <p class="text-secondary">Tracks camshaft position for sequential fuel injection and variable valve timing.</p>
+                        <span class="badge badge-warning">Ignition</span>
+                    </div>
+                </a>
+                <a href="pages/sensors/coolant-temp-sensor.html" class="card card-clickable">
+                    <div class="card-body">
+                        <h3>Engine Coolant Temperature (ECT)</h3>
+                        <p class="text-secondary">Monitors coolant temperature for cold start enrichment and cooling fan control.</p>
+                        <span class="badge badge-danger">Cooling</span>
+                    </div>
+                </a>
+            </div>
+            <div class="text-center mt-4">
+                <a href="pages/sensors/index.html" class="btn btn-primary btn-lg">View All Sensors</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Download Section -->
+    <section class="py-5 bg-secondary" id="download">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-label">Mobile App</span>
+                <h2 class="section-title">Download ODB+ for Android</h2>
+                <p class="section-description">Take professional diagnostics with you. Connect to your vehicle anywhere.</p>
+            </div>
+            <div class="text-center">
+                <a href="#" class="btn btn-primary btn-lg">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M17.523 2.047a.5.5 0 0 0-.27-.047H6.747a.5.5 0 0 0-.27.047L3.02 4.477A.5.5 0 0 0 3 4.727v14.546a.5.5 0 0 0 .02.25l3.457 2.43a.5.5 0 0 0 .27.047h10.506a.5.5 0 0 0 .27-.047l3.457-2.43a.5.5 0 0 0 .02-.25V4.727a.5.5 0 0 0-.02-.25l-3.457-2.43zM12 18a6 6 0 1 1 0-12 6 6 0 0 1 0 12z"/>
+                    </svg>
+                    Download for Android
+                </a>
+                <p class="text-muted mt-3">Requires Android 8.0+ and Bluetooth/WiFi OBD-II adapter</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="hero" style="padding: var(--spacing-3xl) 0;">
+        <div class="container">
+            <div class="hero-content">
+                <h2 class="hero-title" style="font-size: 2.5rem;">Ready to Understand Your Vehicle?</h2>
+                <p class="hero-description">Professional-grade diagnostics tools and expert community, all in one place.</p>
+                <div class="hero-actions">
+                    <a href="pages/auth/signup.html" class="btn btn-primary btn-lg">Create Free Account</a>
+                    <a href="pages/codes/index.html" class="btn btn-outline btn-lg" style="border-color: white; color: white;">Browse Error Codes</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div>
+                    <div class="footer-brand">ODB+</div>
+                    <p class="footer-description">Professional automotive diagnostics made accessible to everyone. Understand your vehicle, save money on repairs.</p>
+                    <div class="footer-social">
+                        <a href="#" aria-label="Twitter">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/>
+                            </svg>
+                        </a>
+                        <a href="#" aria-label="GitHub">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                            </svg>
+                        </a>
+                        <a href="#" aria-label="YouTube">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"/>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+                <div class="footer-column">
+                    <h4>Resources</h4>
+                    <ul class="footer-links">
+                        <li><a href="pages/codes/index.html">Error Codes</a></li>
+                        <li><a href="pages/sensors/index.html">Sensor Library</a></li>
+                        <li><a href="pages/forums/index.html">Forums</a></li>
+                        <li><a href="#">Repair Guides</a></li>
+                        <li><a href="#">OBD-II Basics</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h4>Community</h4>
+                    <ul class="footer-links">
+                        <li><a href="pages/forums/index.html">Vehicle Forums</a></li>
+                        <li><a href="#">Ask a Question</a></li>
+                        <li><a href="#">Contribute</a></li>
+                        <li><a href="#">Discord</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h4>Company</h4>
+                    <ul class="footer-links">
+                        <li><a href="#">About Us</a></li>
+                        <li><a href="#">Contact</a></li>
+                        <li><a href="#">Careers</a></li>
+                        <li><a href="#">Press Kit</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 ODB+. All rights reserved.</p>
+                <div class="footer-legal">
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Terms of Service</a>
+                    <a href="#">Cookie Policy</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/main.js"></script>
+</body>
+</html>

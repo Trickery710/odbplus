@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="P0507 Idle Air Control System RPM Higher Than Expected - Complete guide with causes, symptoms, diagnostic steps, and repair information.">
+    <title>P0507 - Idle Control System RPM High | ODB+</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../../css/styles.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="navbar-container">
+            <a href="../../index.html" class="navbar-brand">
+                <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="40" height="40" rx="8" fill="url(#gradient)"/>
+                    <path d="M12 20C12 15.5817 15.5817 12 20 12C24.4183 12 28 15.5817 28 20C28 24.4183 24.4183 28 20 28" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+                    <path d="M20 16V20L23 23" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    <circle cx="20" cy="20" r="2" fill="white"/>
+                    <defs>
+                        <linearGradient id="gradient" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse">
+                            <stop stop-color="#2563eb"/>
+                            <stop offset="1" stop-color="#10b981"/>
+                        </linearGradient>
+                    </defs>
+                </svg>
+                <span>ODB+</span>
+            </a>
+            <ul class="navbar-menu">
+                <li><a href="../../index.html">Home</a></li>
+                <li><a href="index.html" class="active">Error Codes</a></li>
+                <li><a href="../forums/index.html">Forums</a></li>
+                <li><a href="../sensors/index.html">Sensors</a></li>
+            </ul>
+            <div class="navbar-actions">
+                <a href="../auth/login.html" class="btn btn-secondary">Log In</a>
+                <a href="../auth/signup.html" class="btn btn-primary">Sign Up</a>
+            </div>
+        </div>
+    </nav>
+
+    <main style="padding-top: 100px; padding-bottom: 4rem;">
+        <div class="container" style="max-width: 900px;">
+            <!-- Breadcrumb -->
+            <nav class="breadcrumb mb-4">
+                <a href="index.html">Error Codes</a>
+                <span class="separator">/</span>
+                <a href="index.html#powertrain">Powertrain</a>
+                <span class="separator">/</span>
+                <span class="current">P0507</span>
+            </nav>
+
+            <!-- Code Header -->
+            <div class="code-detail-header mb-4">
+                <div class="code-badge-lg">P0507</div>
+                <div class="code-detail-info">
+                    <h1>Idle Air Control System RPM Higher Than Expected</h1>
+                    <div class="code-meta">
+                        <span class="badge badge-primary">Fuel/Air Metering</span>
+                        <span class="badge badge-secondary">Generic (SAE)</span>
+                        <span class="severity-medium">Severity: Medium</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Info -->
+            <div class="quick-info-grid mb-4">
+                <div class="quick-info-card">
+                    <h4>System</h4>
+                    <p>Idle Speed Control</p>
+                </div>
+                <div class="quick-info-card">
+                    <h4>Subsystem</h4>
+                    <p>Air Metering</p>
+                </div>
+                <div class="quick-info-card">
+                    <h4>Common Fix</h4>
+                    <p>Find/Fix Vacuum Leak</p>
+                </div>
+                <div class="quick-info-card">
+                    <h4>Repair Cost</h4>
+                    <p>$50 - $400</p>
+                </div>
+            </div>
+
+            <!-- Description -->
+            <section class="content-section mb-4">
+                <h2>What Does P0507 Mean?</h2>
+                <p>The P0507 code indicates that the engine idle speed is higher than the PCM (powertrain control module) expects. The PCM monitors idle speed and attempts to maintain it within a specific range (typically 600-900 RPM for most vehicles). When the actual idle exceeds the target by more than a calibrated amount (often 200+ RPM) despite the PCM's attempts to lower it, this code is set.</p>
+
+                <p>In other words, something is causing the engine to get more air than it should at idle, and the PCM can't compensate enough to bring the RPM back down to normal.</p>
+
+                <div class="info-box">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"/>
+                        <line x1="12" y1="16" x2="12" y2="12"/>
+                        <line x1="12" y1="8" x2="12.01" y2="8"/>
+                    </svg>
+                    <div>
+                        <strong>Vacuum Leaks:</strong> The most common cause of P0507 is a vacuum leak that allows unmetered air to enter the engine. The PCM doesn't know about this extra air, causing a lean condition that raises idle speed.
+                    </div>
+                </div>
+            </section>
+
+            <!-- How the System Works -->
+            <section class="content-section mb-4">
+                <h2>How the Idle Control System Works</h2>
+                <p>Modern vehicles use different methods to control idle speed, but the principle is the same - regulate the amount of air bypassing the throttle plate:</p>
+
+                <div class="system-diagram">
+                    <h4>Idle Control Methods:</h4>
+                    <ul class="component-list">
+                        <li>
+                            <strong>Electronic Throttle Body (Drive-by-Wire):</strong> PCM controls the throttle plate position directly via an electric motor. Most common on 2005+ vehicles.
+                        </li>
+                        <li>
+                            <strong>Idle Air Control (IAC) Valve:</strong> A stepper motor or solenoid that opens/closes an air passage around the throttle plate. Common on older vehicles.
+                        </li>
+                        <li>
+                            <strong>Throttle Body Idle Adjustment:</strong> Some systems adjust the throttle plate's minimum position using a motor or adjustment screw.
+                        </li>
+                    </ul>
+                </div>
+
+                <p class="mt-3"><strong>How It Works:</strong> The PCM continuously monitors engine RPM and adjusts idle air flow to maintain target speed. If RPM drops (from A/C compressor engaging, for example), the PCM increases air flow. If RPM is too high, it reduces air flow. P0507 sets when RPM stays high despite the PCM minimizing idle air.</p>
+            </section>
+
+            <!-- Symptoms -->
+            <section class="content-section mb-4">
+                <h2>Common Symptoms</h2>
+                <ul class="symptom-list">
+                    <li>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="2">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                        </svg>
+                        <div>
+                            <strong>High Idle Speed</strong>
+                            <p>Engine idles noticeably faster than normal (often 1000-1500+ RPM)</p>
+                        </div>
+                    </li>
+                    <li>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="2">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                        </svg>
+                        <div>
+                            <strong>Check Engine Light</strong>
+                            <p>P0507 code stored, may also see lean codes (P0171, P0174)</p>
+                        </div>
+                    </li>
+                    <li>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="2">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                        </svg>
+                        <div>
+                            <strong>Hissing or Whistling Sound</strong>
+                            <p>Audible vacuum leak noise from under the hood</p>
+                        </div>
+                    </li>
+                    <li>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="2">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                        </svg>
+                        <div>
+                            <strong>Rough or Surging Idle</strong>
+                            <p>Engine RPM may fluctuate up and down as PCM tries to compensate</p>
+                        </div>
+                    </li>
+                    <li>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="2">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                        </svg>
+                        <div>
+                            <strong>Vehicle Creeps Forward in Gear</strong>
+                            <p>High idle can cause automatic transmission to push vehicle forward when stopped</p>
+                        </div>
+                    </li>
+                    <li>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="2">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                        </svg>
+                        <div>
+                            <strong>Hard Engagement When Shifting</strong>
+                            <p>Shifting from Park/Neutral into gear may feel harsh due to high RPM</p>
+                        </div>
+                    </li>
+                </ul>
+            </section>
+
+            <!-- Possible Causes -->
+            <section class="content-section mb-4">
+                <h2>Possible Causes</h2>
+
+                <div class="causes-grid">
+                    <div class="cause-category">
+                        <h4>Vacuum Leaks (Most Common)</h4>
+                        <ul>
+                            <li>Cracked or disconnected vacuum hoses</li>
+                            <li>Leaking intake manifold gasket</li>
+                            <li>Brake booster vacuum leak</li>
+                            <li>PCV valve or hose leak</li>
+                            <li>Cracked intake manifold</li>
+                            <li>Throttle body gasket leak</li>
+                        </ul>
+                    </div>
+                    <div class="cause-category">
+                        <h4>Throttle Body Issues</h4>
+                        <ul>
+                            <li>Carbon buildup on throttle plate</li>
+                            <li>Throttle body needs cleaning</li>
+                            <li>Throttle body motor malfunction</li>
+                            <li>Sticking throttle plate</li>
+                            <li>Incorrect throttle body relearn</li>
+                        </ul>
+                    </div>
+                    <div class="cause-category">
+                        <h4>IAC Valve Problems</h4>
+                        <ul>
+                            <li>IAC valve stuck open</li>
+                            <li>IAC valve carbon buildup</li>
+                            <li>IAC electrical failure</li>
+                            <li>IAC passage blocked or leaking</li>
+                        </ul>
+                    </div>
+                    <div class="cause-category">
+                        <h4>Other Causes</h4>
+                        <ul>
+                            <li>Faulty TPS (throttle position sensor)</li>
+                            <li>EGR valve stuck open</li>
+                            <li>PCM needs reprogramming</li>
+                            <li>Incorrect idle air adjustment</li>
+                            <li>Alternator overcharging</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Diagnostic Steps -->
+            <section class="content-section mb-4">
+                <h2>Diagnostic Steps</h2>
+                <div class="diagnostic-steps">
+                    <div class="step">
+                        <div class="step-number">1</div>
+                        <div class="step-content">
+                            <h4>Check for Vacuum Leaks</h4>
+                            <p>With engine running, listen for hissing sounds. Spray carburetor cleaner around vacuum hoses, intake manifold gasket, and throttle body gasket - if idle changes when sprayed, you've found a leak. Alternatively, use a smoke machine for easier detection.</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">2</div>
+                        <div class="step-content">
+                            <h4>Monitor Scanner Data</h4>
+                            <p>Use your ODB+ scanner to check actual idle RPM vs. desired idle. Also check:</p>
+                            <ul>
+                                <li>Long-term fuel trim (positive values indicate lean/vacuum leak)</li>
+                                <li>Throttle position at idle (should be near 0%)</li>
+                                <li>IAC duty cycle or counts (if equipped)</li>
+                                <li>MAF sensor readings</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">3</div>
+                        <div class="step-content">
+                            <h4>Inspect Throttle Body</h4>
+                            <p>Remove the air intake hose and visually inspect the throttle body. Look for carbon buildup around the throttle plate edges and idle air passages. If dirty, cleaning may solve the problem.</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">4</div>
+                        <div class="step-content">
+                            <h4>Test IAC Valve (If Equipped)</h4>
+                            <p>On vehicles with a separate IAC valve, unplug it while the engine is running. If idle drops significantly and the valve is commanding closed but allowing air, the IAC is stuck open or bypassed.</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">5</div>
+                        <div class="step-content">
+                            <h4>Perform Throttle Body Relearn</h4>
+                            <p>After repairs or throttle body cleaning, many vehicles require an idle relearn procedure. This can often be done with a scanner or by following a specific sequence (consult service manual).</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Common Repairs -->
+            <section class="content-section mb-4">
+                <h2>Common Repairs</h2>
+                <div class="repair-list">
+                    <div class="repair-item">
+                        <div class="repair-info">
+                            <h4>Repair Vacuum Leak</h4>
+                            <p>Replace cracked hoses, gaskets, or PCV valve causing the leak.</p>
+                        </div>
+                        <div class="repair-cost">
+                            <span class="diy">DIY: $10-$50</span>
+                            <span class="shop">Shop: $75-$250</span>
+                        </div>
+                    </div>
+                    <div class="repair-item">
+                        <div class="repair-info">
+                            <h4>Clean Throttle Body</h4>
+                            <p>Remove carbon buildup from throttle plate and bore using throttle body cleaner.</p>
+                        </div>
+                        <div class="repair-cost">
+                            <span class="diy">DIY: $5-$15</span>
+                            <span class="shop">Shop: $75-$150</span>
+                        </div>
+                    </div>
+                    <div class="repair-item">
+                        <div class="repair-info">
+                            <h4>Replace IAC Valve</h4>
+                            <p>Replace stuck or malfunctioning idle air control valve.</p>
+                        </div>
+                        <div class="repair-cost">
+                            <span class="diy">DIY: $40-$100</span>
+                            <span class="shop">Shop: $150-$300</span>
+                        </div>
+                    </div>
+                    <div class="repair-item">
+                        <div class="repair-info">
+                            <h4>Replace Intake Manifold Gasket</h4>
+                            <p>Seal vacuum leak at intake manifold to cylinder head joint.</p>
+                        </div>
+                        <div class="repair-cost">
+                            <span class="diy">DIY: $30-$100</span>
+                            <span class="shop">Shop: $200-$500</span>
+                        </div>
+                    </div>
+                    <div class="repair-item">
+                        <div class="repair-info">
+                            <h4>Perform Idle Relearn Procedure</h4>
+                            <p>Reset throttle body adaptive values after repairs or cleaning.</p>
+                        </div>
+                        <div class="repair-cost">
+                            <span class="diy">DIY: $0</span>
+                            <span class="shop">Shop: $50-$100</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Related Codes -->
+            <section class="content-section mb-4">
+                <h2>Related Codes</h2>
+                <div class="related-codes-grid">
+                    <a href="index.html" class="related-code">
+                        <span class="code-badge-sm">P0505</span>
+                        <span>Idle Control System</span>
+                    </a>
+                    <a href="index.html" class="related-code">
+                        <span class="code-badge-sm">P0506</span>
+                        <span>Idle RPM Lower Than Expected</span>
+                    </a>
+                    <a href="P0171.html" class="related-code">
+                        <span class="code-badge-sm">P0171</span>
+                        <span>System Too Lean Bank 1</span>
+                    </a>
+                    <a href="index.html" class="related-code">
+                        <span class="code-badge-sm">P0174</span>
+                        <span>System Too Lean Bank 2</span>
+                    </a>
+                    <a href="index.html" class="related-code">
+                        <span class="code-badge-sm">P2111</span>
+                        <span>Throttle Actuator Stuck Open</span>
+                    </a>
+                    <a href="index.html" class="related-code">
+                        <span class="code-badge-sm">P2119</span>
+                        <span>Throttle Body Range/Performance</span>
+                    </a>
+                </div>
+            </section>
+
+            <!-- Forum Discussion -->
+            <section class="content-section mb-4">
+                <h2>Community Discussion</h2>
+                <p class="mb-3">Have questions about P0507? Get help from experienced mechanics and fellow car owners.</p>
+                <a href="../forums/index.html" class="btn btn-primary">Visit Forums</a>
+                <a href="../forums/index.html?search=P0507" class="btn btn-outline" style="margin-left: 0.5rem;">Search P0507 Threads</a>
+            </section>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-bottom" style="border-top: none; padding-top: 0;">
+                <p>&copy; 2024 ODB+. All rights reserved.</p>
+                <div class="footer-legal">
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Terms of Service</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../../js/main.js"></script>
+</body>
+</html>

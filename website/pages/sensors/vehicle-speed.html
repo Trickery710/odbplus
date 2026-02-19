@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Vehicle Speed Sensor (VSS) Guide - Learn how speed sensors work, common failure symptoms, testing procedures, and their role in speedometer and transmission control.">
+    <title>Vehicle Speed Sensor (VSS) Guide | ODB+</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../../css/styles.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="navbar-container">
+            <a href="../../index.html" class="navbar-brand">
+                <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="40" height="40" rx="8" fill="url(#gradient)"/>
+                    <path d="M12 20C12 15.5817 15.5817 12 20 12C24.4183 12 28 15.5817 28 20C28 24.4183 24.4183 28 20 28" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+                    <path d="M20 16V20L23 23" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    <circle cx="20" cy="20" r="2" fill="white"/>
+                    <defs>
+                        <linearGradient id="gradient" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse">
+                            <stop stop-color="#2563eb"/>
+                            <stop offset="1" stop-color="#10b981"/>
+                        </linearGradient>
+                    </defs>
+                </svg>
+                <span>ODB+</span>
+            </a>
+            <ul class="navbar-menu">
+                <li><a href="../../index.html">Home</a></li>
+                <li><a href="../codes/index.html">Error Codes</a></li>
+                <li><a href="../forums/index.html">Forums</a></li>
+                <li><a href="index.html" class="active">Sensors</a></li>
+            </ul>
+            <div class="navbar-actions">
+                <a href="../auth/login.html" class="btn btn-secondary">Log In</a>
+                <a href="../auth/signup.html" class="btn btn-primary">Sign Up</a>
+            </div>
+        </div>
+    </nav>
+
+    <main style="padding-top: 100px; padding-bottom: 4rem;">
+        <div class="container" style="max-width: 900px;">
+            <!-- Breadcrumb -->
+            <nav class="breadcrumb mb-4">
+                <a href="index.html">Sensors</a>
+                <span class="separator">/</span>
+                <a href="index.html#engine">Engine Management</a>
+                <span class="separator">/</span>
+                <span class="current">Vehicle Speed Sensor</span>
+            </nav>
+
+            <!-- Sensor Header -->
+            <div class="sensor-detail-header mb-4">
+                <div class="sensor-icon-lg">
+                    <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="1.5">
+                        <circle cx="12" cy="12" r="10"/>
+                        <path d="M12 6v6"/>
+                        <path d="M16 16l-4-4"/>
+                    </svg>
+                </div>
+                <div class="sensor-detail-info">
+                    <h1>Vehicle Speed Sensor (VSS)</h1>
+                    <p class="sensor-subtitle">Also known as: Speed Sensor, Output Shaft Speed Sensor, Speedometer Sensor</p>
+                    <div class="sensor-meta">
+                        <span class="badge badge-primary">Transmission</span>
+                        <span class="badge badge-success">ABS/Stability</span>
+                        <span class="badge badge-secondary">Important</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Facts -->
+            <div class="quick-info-grid mb-4">
+                <div class="quick-info-card">
+                    <h4>Location</h4>
+                    <p>Transmission/Transfer Case/Wheel Hub</p>
+                </div>
+                <div class="quick-info-card">
+                    <h4>Signal Type</h4>
+                    <p>Hall Effect or Magnetic AC</p>
+                </div>
+                <div class="quick-info-card">
+                    <h4>Lifespan</h4>
+                    <p>100,000+ miles</p>
+                </div>
+                <div class="quick-info-card">
+                    <h4>Replacement Cost</h4>
+                    <p>$30 - $150</p>
+                </div>
+            </div>
+
+            <!-- Overview -->
+            <section class="content-section mb-4">
+                <h2>What Is a Vehicle Speed Sensor?</h2>
+                <p>The Vehicle Speed Sensor (VSS) measures how fast the vehicle is moving and sends this information to multiple control modules. This data is critical for the speedometer display, transmission shift points, cruise control, ABS operation, and many other vehicle systems.</p>
+
+                <p>Modern vehicles typically have multiple speed sensors - a transmission output shaft sensor, individual wheel speed sensors for ABS, and sometimes an input shaft sensor. The term "VSS" traditionally refers to the transmission-mounted sensor that provides overall vehicle speed data.</p>
+
+                <div class="info-box">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"/>
+                        <line x1="12" y1="16" x2="12" y2="12"/>
+                        <line x1="12" y1="8" x2="12.01" y2="8"/>
+                    </svg>
+                    <div>
+                        <strong>VSS vs. Wheel Speed Sensors:</strong> The VSS measures drivetrain speed at the transmission, while wheel speed sensors (WSS) measure individual wheel rotation for ABS/traction control. Many modern vehicles calculate vehicle speed from wheel sensors rather than a dedicated VSS.
+                    </div>
+                </div>
+            </section>
+
+            <!-- How It Works -->
+            <section class="content-section mb-4">
+                <h2>How Vehicle Speed Sensors Work</h2>
+
+                <h4>Hall Effect Sensors</h4>
+                <p>Most modern VSS use Hall effect technology. A toothed reluctor ring attached to the transmission output shaft passes by the sensor. The sensor produces a digital square wave signal with frequency proportional to speed. These sensors require power and ground to operate.</p>
+
+                <h4 class="mt-3">Magnetic (Variable Reluctance) Sensors</h4>
+                <p>Older vehicles use magnetic sensors that generate their own AC voltage as the reluctor passes. The signal amplitude and frequency both increase with speed. These are passive sensors requiring no external power but have weaker output at low speeds.</p>
+
+                <h4 class="mt-3">Signal Processing</h4>
+                <p>The ECM or TCM counts the pulses from the VSS to calculate vehicle speed. A typical sensor produces 4,000-8,000 pulses per mile, depending on the gear tooth count and final drive ratio. The system calibrates this to convert pulses to actual speed.</p>
+            </section>
+
+            <!-- Normal Values -->
+            <section class="content-section mb-4">
+                <h2>Normal VSS Readings</h2>
+                <p>VSS output varies by sensor type and vehicle design:</p>
+
+                <div class="data-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Condition</th>
+                                <th>Hall Effect Output</th>
+                                <th>Magnetic Output</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Stopped</td>
+                                <td>0 Hz (steady state)</td>
+                                <td>No signal</td>
+                            </tr>
+                            <tr>
+                                <td>25 MPH</td>
+                                <td>~300-500 Hz</td>
+                                <td>0.5-1.5V AC @ same Hz</td>
+                            </tr>
+                            <tr>
+                                <td>60 MPH</td>
+                                <td>~700-1200 Hz</td>
+                                <td>2-5V AC @ same Hz</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <p class="mt-3"><strong>Scanner Reading:</strong> When monitoring VSS via ODB+, you should see 0 MPH when stopped and speed that closely matches your actual speedometer reading while driving.</p>
+            </section>
+
+            <!-- Failure Symptoms -->
+            <section class="content-section mb-4">
+                <h2>Symptoms of a Failing VSS</h2>
+                <ul class="symptom-list">
+                    <li>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="2">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                        </svg>
+                        <div>
+                            <strong>Speedometer Not Working</strong>
+                            <p>Speedometer reads 0 or displays erratic readings while driving</p>
+                        </div>
+                    </li>
+                    <li>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="2">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                        </svg>
+                        <div>
+                            <strong>Transmission Shift Problems</strong>
+                            <p>Hard shifts, no upshifts, or stuck in one gear (limp mode)</p>
+                        </div>
+                    </li>
+                    <li>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="2">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                        </svg>
+                        <div>
+                            <strong>Cruise Control Inoperative</strong>
+                            <p>Cruise control won't engage or maintain speed</p>
+                        </div>
+                    </li>
+                    <li>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="2">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                        </svg>
+                        <div>
+                            <strong>Check Engine Light with P0500-P0503</strong>
+                            <p>VSS circuit malfunction, range/performance, or intermittent codes</p>
+                        </div>
+                    </li>
+                    <li>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="2">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                        </svg>
+                        <div>
+                            <strong>ABS/Traction Control Light</strong>
+                            <p>Safety systems may deactivate due to missing speed data</p>
+                        </div>
+                    </li>
+                    <li>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="2">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                        </svg>
+                        <div>
+                            <strong>Torque Converter Clutch Issues</strong>
+                            <p>TCC may not engage or engage at wrong times</p>
+                        </div>
+                    </li>
+                </ul>
+            </section>
+
+            <!-- Common Causes -->
+            <section class="content-section mb-4">
+                <h2>What Causes VSS Problems?</h2>
+                <div class="causes-grid">
+                    <div class="cause-category">
+                        <h4>Sensor Failure</h4>
+                        <ul>
+                            <li>Internal circuit failure</li>
+                            <li>Heat damage</li>
+                            <li>Physical damage</li>
+                            <li>Age-related wear</li>
+                        </ul>
+                    </div>
+                    <div class="cause-category">
+                        <h4>Mechanical Issues</h4>
+                        <ul>
+                            <li>Damaged drive gear</li>
+                            <li>Worn reluctor teeth</li>
+                            <li>Incorrect air gap</li>
+                            <li>Gear oil contamination</li>
+                        </ul>
+                    </div>
+                    <div class="cause-category">
+                        <h4>Wiring Problems</h4>
+                        <ul>
+                            <li>Damaged wiring harness</li>
+                            <li>Corroded connector</li>
+                            <li>Poor ground connection</li>
+                            <li>Broken wires from vibration</li>
+                        </ul>
+                    </div>
+                    <div class="cause-category">
+                        <h4>Contamination</h4>
+                        <ul>
+                            <li>Metal debris on sensor tip</li>
+                            <li>Transmission fluid leak</li>
+                            <li>Road salt/dirt intrusion</li>
+                            <li>Water damage</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Testing Procedures -->
+            <section class="content-section mb-4">
+                <h2>How to Test a Vehicle Speed Sensor</h2>
+
+                <div class="diagnostic-steps">
+                    <div class="step">
+                        <div class="step-number">1</div>
+                        <div class="step-content">
+                            <h4>Check Scanner Speed Data</h4>
+                            <p>Use your ODB+ scanner to monitor vehicle speed. With wheels off the ground (safely supported), rotate the drive wheels by hand. You should see speed increase on the scanner. No reading indicates a sensor or circuit problem.</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">2</div>
+                        <div class="step-content">
+                            <h4>Compare to Speedometer</h4>
+                            <p>While driving, compare scanner speed to speedometer. If they don't match, the issue may be in the speedometer itself. If both read zero, the VSS circuit is likely at fault.</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">3</div>
+                        <div class="step-content">
+                            <h4>Visual Inspection</h4>
+                            <p>Inspect the sensor, connector, and wiring for damage. Check for metal debris on the sensor tip (magnetic sensors attract metal). Look for gear oil leaks around the sensor mounting area.</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">4</div>
+                        <div class="step-content">
+                            <h4>Check Power and Ground (Hall Effect)</h4>
+                            <p>With ignition on, verify 5V or 12V (depending on type) on the supply wire and good ground. If power is missing, check fuses and wiring back to the module.</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">5</div>
+                        <div class="step-content">
+                            <h4>Test Signal Output</h4>
+                            <p>Using a multimeter or oscilloscope, check for signal output while rotating the drive wheels. Hall effect sensors should produce a square wave; magnetic sensors should produce AC voltage.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Related Codes -->
+            <section class="content-section mb-4">
+                <h2>Related Diagnostic Codes</h2>
+                <div class="related-codes-grid">
+                    <a href="../codes/index.html" class="related-code">
+                        <span class="code-badge-sm">P0500</span>
+                        <span>VSS Circuit Malfunction</span>
+                    </a>
+                    <a href="../codes/index.html" class="related-code">
+                        <span class="code-badge-sm">P0501</span>
+                        <span>VSS Range/Performance</span>
+                    </a>
+                    <a href="../codes/index.html" class="related-code">
+                        <span class="code-badge-sm">P0502</span>
+                        <span>VSS Circuit Low</span>
+                    </a>
+                    <a href="../codes/index.html" class="related-code">
+                        <span class="code-badge-sm">P0503</span>
+                        <span>VSS Intermittent/High</span>
+                    </a>
+                    <a href="../codes/index.html" class="related-code">
+                        <span class="code-badge-sm">P0720</span>
+                        <span>Output Shaft Speed Circuit</span>
+                    </a>
+                    <a href="../codes/index.html" class="related-code">
+                        <span class="code-badge-sm">P0722</span>
+                        <span>Output Shaft Speed No Signal</span>
+                    </a>
+                </div>
+            </section>
+
+            <!-- Forum Discussion -->
+            <section class="content-section mb-4">
+                <h2>Community Discussion</h2>
+                <p class="mb-3">Have questions about vehicle speed sensors? Get help from experienced mechanics and fellow car owners.</p>
+                <a href="../forums/index.html" class="btn btn-primary">Visit Forums</a>
+                <a href="../forums/index.html?search=speed+sensor" class="btn btn-outline" style="margin-left: 0.5rem;">Search Speed Sensor Threads</a>
+            </section>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-bottom" style="border-top: none; padding-top: 0;">
+                <p>&copy; 2024 ODB+. All rights reserved.</p>
+                <div class="footer-legal">
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Terms of Service</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../../js/main.js"></script>
+</body>
+</html>

@@ -36,7 +36,13 @@ data class AiChatUiState(
     val messages: List<ChatMessage> = emptyList(),
     val suggestedPrompts: List<String> = emptyList(),
     val errorMessage: String? = null,
-    val apiKeyError: String? = null
+    val apiKeyError: String? = null,
+    // Google Auth state
+    val isGoogleSignedIn: Boolean = false,
+    val googleUserEmail: String? = null,
+    val googleUserName: String? = null,
+    val isGoogleSignInConfigured: Boolean = false,
+    val googleSignInError: String? = null
 )
 
 @HiltViewModel
@@ -47,7 +53,8 @@ class AiChatViewModel @Inject constructor(
     private val obdService: ObdService,
     private val logSessionRepository: LogSessionRepository,
     private val vehicleInfoRepository: VehicleInfoRepository,
-    private val partsRepository: PartsRepository
+    private val partsRepository: PartsRepository,
+    private val googleAuthManager: GoogleAuthManager
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(AiChatUiState())
@@ -133,6 +140,34 @@ class AiChatViewModel @Inject constructor(
                 logSessionRepository.sessions.collect { sessions ->
                     currentVehicleContext = currentVehicleContext.copy(recentSessions = sessions)
                 }
+            }
+
+            // Collect Google auth state
+            launch {
+                googleAuthManager.authState.collect { authState ->
+                    _uiState.update {
+                        it.copy(
+                            isGoogleSignedIn = authState.isSignedIn,
+                            googleUserEmail = authState.userEmail,
+                            googleUserName = authState.userName
+                        )
+                    }
+                    // Update hasApiKey for Gemini when signed in with Google
+                    if (authState.isSignedIn && _uiState.value.selectedProvider == AiProvider.GEMINI) {
+                        _uiState.update { it.copy(hasApiKey = true) }
+                    }
+                }
+            }
+
+            // Check if Google Sign-In is configured
+            _uiState.update {
+                it.copy(isGoogleSignInConfigured = googleAuthManager.isConfigured())
+            }
+
+            // Restore Google auth state from saved data
+            val (savedToken, savedEmail, savedName) = aiSettingsRepository.getSavedGoogleAuth()
+            if (!savedToken.isNullOrBlank()) {
+                googleAuthManager.restoreAuthState(savedToken, savedEmail, savedName)
             }
 
             _uiState.update { it.copy(isLoading = false) }
@@ -243,9 +278,22 @@ class AiChatViewModel @Inject constructor(
 
             _uiState.update { it.copy(isSending = true, errorMessage = null) }
 
-            // Get current provider and API key
+            // Get current provider
             val provider = _uiState.value.selectedProvider
-            val apiKey = aiSettingsRepository.getApiKeyForProvider(provider).first()
+
+            // Check for Google Sign-In for Gemini
+            val useGoogleAuth = provider == AiProvider.GEMINI && _uiState.value.isGoogleSignedIn
+            val googleToken = if (useGoogleAuth) {
+                googleAuthManager.authState.value.idToken
+            } else null
+
+            // Get API key (either Google token or manual API key)
+            val apiKey = if (useGoogleAuth && !googleToken.isNullOrBlank()) {
+                googleToken
+            } else {
+                aiSettingsRepository.getApiKeyForProvider(provider).first()
+            }
+
             if (apiKey == null) {
                 _uiState.update {
                     it.copy(
@@ -264,7 +312,13 @@ class AiChatViewModel @Inject constructor(
             val systemPrompt = AutomotiveSystemPrompt.generate(currentVehicleContext)
 
             // Send to selected AI provider
-            when (val result = claudeApiService.sendMessage(provider, apiKey, systemPrompt, claudeMessages)) {
+            when (val result = claudeApiService.sendMessage(
+                provider = provider,
+                apiKey = apiKey,
+                systemPrompt = systemPrompt,
+                messages = claudeMessages,
+                useOAuth = useGoogleAuth
+            )) {
                 is ApiResult.Success -> {
                     val responseText = result.data.content
                     if (responseText.isNotBlank()) {
@@ -281,6 +335,11 @@ class AiChatViewModel @Inject constructor(
                     _uiState.update { it.copy(isSending = false) }
                 }
                 is ApiResult.Error -> {
+                    // Check if it's an auth error and clear Google auth
+                    if (useGoogleAuth && (result.code == 401 || result.code == 403)) {
+                        googleSignOut()
+                    }
+
                     val errorMessage = ChatMessage.errorMessage(result.message)
                     chatRepository.addMessage(errorMessage)
 
@@ -292,6 +351,69 @@ class AiChatViewModel @Inject constructor(
                     }
                 }
             }
+        }
+    }
+
+    /**
+     * Initiate Google Sign-In.
+     * Must be called from Activity context.
+     */
+    suspend fun googleSignIn(activityContext: android.content.Context): GoogleSignInResult {
+        _uiState.update { it.copy(isLoading = true, googleSignInError = null) }
+
+        val result = googleAuthManager.signIn(activityContext)
+
+        when (result) {
+            is GoogleSignInResult.Success -> {
+                // Save auth state
+                result.state.idToken?.let { token ->
+                    aiSettingsRepository.saveGoogleAuth(
+                        idToken = token,
+                        email = result.state.userEmail,
+                        name = result.state.userName
+                    )
+                }
+                _uiState.update {
+                    it.copy(
+                        isLoading = false,
+                        hasApiKey = true,
+                        showApiKeyDialog = false
+                    )
+                }
+            }
+            is GoogleSignInResult.Error -> {
+                _uiState.update {
+                    it.copy(
+                        isLoading = false,
+                        googleSignInError = result.message
+                    )
+                }
+            }
+            GoogleSignInResult.Cancelled -> {
+                _uiState.update { it.copy(isLoading = false) }
+            }
+        }
+
+        return result
+    }
+
+    /**
+     * Sign out from Google.
+     */
+    fun googleSignOut() {
+        viewModelScope.launch {
+            googleAuthManager.signOut()
+            aiSettingsRepository.clearGoogleAuth()
+            _uiState.update {
+                it.copy(
+                    isGoogleSignedIn = false,
+                    googleUserEmail = null,
+                    googleUserName = null
+                )
+            }
+            // Re-check if we still have an API key (manual key)
+            val hasManualKey = aiSettingsRepository.getApiKeyForProvider(AiProvider.GEMINI).first() != null
+            _uiState.update { it.copy(hasApiKey = hasManualKey) }
         }
     }
 

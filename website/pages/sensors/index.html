@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="ODB+ Sensor Library - Learn about automotive sensors, how they work, common failure symptoms, and testing procedures.">
+    <title>Sensor Library | ODB+</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../../css/styles.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="navbar-container">
+            <a href="../../index.html" class="navbar-brand">
+                <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="40" height="40" rx="8" fill="url(#gradient)"/>
+                    <path d="M12 20C12 15.5817 15.5817 12 20 12C24.4183 12 28 15.5817 28 20C28 24.4183 24.4183 28 20 28" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+                    <path d="M20 16V20L23 23" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    <circle cx="20" cy="20" r="2" fill="white"/>
+                    <defs>
+                        <linearGradient id="gradient" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse">
+                            <stop stop-color="#2563eb"/>
+                            <stop offset="1" stop-color="#10b981"/>
+                        </linearGradient>
+                    </defs>
+                </svg>
+                <span>ODB+</span>
+            </a>
+            <ul class="navbar-menu">
+                <li><a href="../../index.html">Home</a></li>
+                <li><a href="../codes/index.html">Error Codes</a></li>
+                <li><a href="../forums/index.html">Forums</a></li>
+                <li><a href="index.html" class="active">Sensors</a></li>
+            </ul>
+            <div class="navbar-actions">
+                <a href="../auth/login.html" class="btn btn-secondary">Log In</a>
+                <a href="../auth/signup.html" class="btn btn-primary">Sign Up</a>
+            </div>
+        </div>
+    </nav>
+
+    <main style="padding-top: 100px; padding-bottom: 4rem;">
+        <div class="container">
+            <!-- Header -->
+            <div class="section-header" style="text-align: left; max-width: none; margin-bottom: 2rem;">
+                <h1>Sensor Library</h1>
+                <p class="section-description">Learn how automotive sensors work, recognize failure symptoms, and understand testing procedures</p>
+            </div>
+
+            <!-- Search -->
+            <div class="search-box mb-5" style="max-width: 100%;">
+                <svg class="search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="11" cy="11" r="8"/>
+                    <path d="M21 21l-4.35-4.35"/>
+                </svg>
+                <input type="text" class="search-input" id="sensorSearch" placeholder="Search sensors (e.g., O2 sensor, MAF, coolant temp)...">
+            </div>
+
+            <!-- Sensor Categories -->
+            <h2 class="mb-3">Browse by Category</h2>
+            <div class="sensor-categories mb-5">
+                <a href="#engine" class="category-card">
+                    <div class="category-icon" style="background: linear-gradient(135deg, #ef4444, #dc2626);">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                            <rect x="2" y="7" width="20" height="14" rx="2"/>
+                            <path d="M16 3v4"/>
+                            <path d="M8 3v4"/>
+                            <path d="M12 14v3"/>
+                            <path d="M12 11h.01"/>
+                        </svg>
+                    </div>
+                    <h3>Engine Management</h3>
+                    <p>MAF, MAP, TPS, CKP, CMP sensors</p>
+                    <span class="sensor-count">12 sensors</span>
+                </a>
+                <a href="#fuel" class="category-card">
+                    <div class="category-icon" style="background: linear-gradient(135deg, #f59e0b, #d97706);">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                            <path d="M3 22h12"/>
+                            <path d="M5 22V9l5-7 5 7v13"/>
+                            <path d="M9 22v-4"/>
+                            <path d="M19 6v10"/>
+                            <path d="M19 6l3-3"/>
+                        </svg>
+                    </div>
+                    <h3>Fuel System</h3>
+                    <p>Fuel pressure, injector, rail sensors</p>
+                    <span class="sensor-count">6 sensors</span>
+                </a>
+                <a href="#emissions" class="category-card">
+                    <div class="category-icon" style="background: linear-gradient(135deg, #10b981, #059669);">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                            <path d="M8 4h8l4 8-4 8H8l-4-8z"/>
+                            <circle cx="12" cy="12" r="3"/>
+                        </svg>
+                    </div>
+                    <h3>Emissions Control</h3>
+                    <p>O2, NOx, EGR, EVAP sensors</p>
+                    <span class="sensor-count">8 sensors</span>
+                </a>
+                <a href="#temperature" class="category-card">
+                    <div class="category-icon" style="background: linear-gradient(135deg, #3b82f6, #2563eb);">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                            <path d="M14 14.76V3.5a2.5 2.5 0 0 0-5 0v11.26a4.5 4.5 0 1 0 5 0z"/>
+                        </svg>
+                    </div>
+                    <h3>Temperature</h3>
+                    <p>ECT, IAT, CHT, oil temp sensors</p>
+                    <span class="sensor-count">5 sensors</span>
+                </a>
+            </div>
+
+            <!-- Engine Management Sensors -->
+            <h2 class="mb-3" id="engine">Engine Management Sensors</h2>
+            <div class="sensor-grid mb-5">
+                <a href="o2-sensor.html" class="sensor-card">
+                    <div class="sensor-icon">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="1.5">
+                            <circle cx="12" cy="12" r="10"/>
+                            <path d="M12 6v6l4 2"/>
+                        </svg>
+                    </div>
+                    <h3>Oxygen (O2) Sensor</h3>
+                    <p>Measures oxygen content in exhaust to determine air/fuel ratio</p>
+                    <div class="sensor-tags">
+                        <span class="tag">Emissions</span>
+                        <span class="tag">Fuel Trim</span>
+                    </div>
+                </a>
+                <a href="maf-sensor.html" class="sensor-card">
+                    <div class="sensor-icon">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="1.5">
+                            <path d="M12 2v20"/>
+                            <path d="M2 12h20"/>
+                            <circle cx="12" cy="12" r="4"/>
+                        </svg>
+                    </div>
+                    <h3>Mass Airflow (MAF) Sensor</h3>
+                    <p>Measures the mass of air entering the engine for fuel calculation</p>
+                    <div class="sensor-tags">
+                        <span class="tag">Air Intake</span>
+                        <span class="tag">Fuel Metering</span>
+                    </div>
+                </a>
+                <a href="map-sensor.html" class="sensor-card">
+                    <div class="sensor-icon">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="1.5">
+                            <rect x="3" y="3" width="18" height="18" rx="2"/>
+                            <path d="M3 12h18"/>
+                            <path d="M12 3v18"/>
+                        </svg>
+                    </div>
+                    <h3>Manifold Absolute Pressure (MAP)</h3>
+                    <p>Measures intake manifold vacuum/pressure for load calculation</p>
+                    <div class="sensor-tags">
+                        <span class="tag">Engine Load</span>
+                        <span class="tag">Timing</span>
+                    </div>
+                </a>
+                <a href="throttle-position.html" class="sensor-card">
+                    <div class="sensor-icon">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="1.5">
+                            <circle cx="12" cy="12" r="10"/>
+                            <path d="M12 12l6-4"/>
+                            <circle cx="12" cy="12" r="2"/>
+                        </svg>
+                    </div>
+                    <h3>Throttle Position Sensor (TPS)</h3>
+                    <p>Reports throttle plate angle to determine driver demand</p>
+                    <div class="sensor-tags">
+                        <span class="tag">Acceleration</span>
+                        <span class="tag">Fuel Control</span>
+                    </div>
+                </a>
+                <a href="crankshaft-position.html" class="sensor-card">
+                    <div class="sensor-icon">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="1.5">
+                            <circle cx="12" cy="12" r="10"/>
+                            <path d="M12 6v12"/>
+                            <path d="M8 10l4 2 4-2"/>
+                        </svg>
+                    </div>
+                    <h3>Crankshaft Position (CKP)</h3>
+                    <p>Monitors crankshaft rotation for ignition and fuel timing</p>
+                    <div class="sensor-tags">
+                        <span class="tag">Ignition</span>
+                        <span class="tag">RPM</span>
+                    </div>
+                </a>
+                <a href="camshaft-position.html" class="sensor-card">
+                    <div class="sensor-icon">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="1.5">
+                            <circle cx="12" cy="12" r="10"/>
+                            <ellipse cx="12" cy="12" rx="3" ry="6"/>
+                        </svg>
+                    </div>
+                    <h3>Camshaft Position (CMP)</h3>
+                    <p>Identifies cylinder stroke for sequential fuel injection</p>
+                    <div class="sensor-tags">
+                        <span class="tag">Timing</span>
+                        <span class="tag">VVT</span>
+                    </div>
+                </a>
+                <a href="knock-sensor.html" class="sensor-card">
+                    <div class="sensor-icon">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="1.5">
+                            <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+                        </svg>
+                    </div>
+                    <h3>Knock Sensor</h3>
+                    <p>Detects engine detonation (knock) to protect engine</p>
+                    <div class="sensor-tags">
+                        <span class="tag">Timing</span>
+                        <span class="tag">Protection</span>
+                    </div>
+                </a>
+                <a href="vehicle-speed.html" class="sensor-card">
+                    <div class="sensor-icon">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="1.5">
+                            <circle cx="12" cy="12" r="10"/>
+                            <path d="M12 6v6"/>
+                            <path d="M16 16l-4-4"/>
+                        </svg>
+                    </div>
+                    <h3>Vehicle Speed Sensor (VSS)</h3>
+                    <p>Reports vehicle speed for speedometer and transmission control</p>
+                    <div class="sensor-tags">
+                        <span class="tag">Transmission</span>
+                        <span class="tag">ABS</span>
+                    </div>
+                </a>
+            </div>
+
+            <!-- Temperature Sensors -->
+            <h2 class="mb-3" id="temperature">Temperature Sensors</h2>
+            <div class="sensor-grid mb-5">
+                <a href="coolant-temp.html" class="sensor-card">
+                    <div class="sensor-icon">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="1.5">
+                            <path d="M14 14.76V3.5a2.5 2.5 0 0 0-5 0v11.26a4.5 4.5 0 1 0 5 0z"/>
+                        </svg>
+                    </div>
+                    <h3>Engine Coolant Temperature (ECT)</h3>
+                    <p>Monitors coolant temperature for fuel mixture and fan control</p>
+                    <div class="sensor-tags">
+                        <span class="tag">Fuel Trim</span>
+                        <span class="tag">Cooling</span>
+                    </div>
+                </a>
+                <a href="intake-air-temp.html" class="sensor-card">
+                    <div class="sensor-icon">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="1.5">
+                            <path d="M14 14.76V3.5a2.5 2.5 0 0 0-5 0v11.26a4.5 4.5 0 1 0 5 0z"/>
+                            <path d="M17 8h2"/>
+                            <path d="M17 12h4"/>
+                        </svg>
+                    </div>
+                    <h3>Intake Air Temperature (IAT)</h3>
+                    <p>Measures incoming air temperature for air density calculation</p>
+                    <div class="sensor-tags">
+                        <span class="tag">Air Intake</span>
+                        <span class="tag">Fuel Calc</span>
+                    </div>
+                </a>
+                <a href="oil-temp.html" class="sensor-card">
+                    <div class="sensor-icon">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="1.5">
+                            <path d="M2 12c0-3.5 2.5-6 6-6 4 0 5 4 9 4 3.5 0 5-2 5-5"/>
+                            <path d="M2 19c0-3.5 2.5-6 6-6 4 0 5 4 9 4 3.5 0 5-2 5-5"/>
+                        </svg>
+                    </div>
+                    <h3>Oil Temperature Sensor</h3>
+                    <p>Monitors engine oil temperature for protection and oil life</p>
+                    <div class="sensor-tags">
+                        <span class="tag">Lubrication</span>
+                        <span class="tag">Protection</span>
+                    </div>
+                </a>
+                <a href="exhaust-temp.html" class="sensor-card">
+                    <div class="sensor-icon">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="1.5">
+                            <path d="M14 14.76V3.5a2.5 2.5 0 0 0-5 0v11.26a4.5 4.5 0 1 0 5 0z"/>
+                            <path d="M18 4l2 2-2 2"/>
+                        </svg>
+                    </div>
+                    <h3>Exhaust Gas Temperature (EGT)</h3>
+                    <p>Monitors exhaust temperature for DPF regeneration and protection</p>
+                    <div class="sensor-tags">
+                        <span class="tag">Diesel</span>
+                        <span class="tag">Turbo</span>
+                    </div>
+                </a>
+            </div>
+
+            <!-- Fuel System Sensors -->
+            <h2 class="mb-3" id="fuel">Fuel System Sensors</h2>
+            <div class="sensor-grid mb-5">
+                <a href="fuel-pressure.html" class="sensor-card">
+                    <div class="sensor-icon">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="1.5">
+                            <circle cx="12" cy="12" r="10"/>
+                            <path d="M12 8v8"/>
+                            <path d="M8 12h8"/>
+                        </svg>
+                    </div>
+                    <h3>Fuel Pressure Sensor</h3>
+                    <p>Monitors fuel rail pressure for precise injector control</p>
+                    <div class="sensor-tags">
+                        <span class="tag">GDI</span>
+                        <span class="tag">Diesel</span>
+                    </div>
+                </a>
+                <a href="fuel-level.html" class="sensor-card">
+                    <div class="sensor-icon">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="1.5">
+                            <rect x="3" y="4" width="18" height="16" rx="2"/>
+                            <path d="M3 14h18"/>
+                            <path d="M7 10h2"/>
+                        </svg>
+                    </div>
+                    <h3>Fuel Level Sensor</h3>
+                    <p>Reports fuel tank level for gauge and low fuel warning</p>
+                    <div class="sensor-tags">
+                        <span class="tag">Fuel Tank</span>
+                        <span class="tag">Gauge</span>
+                    </div>
+                </a>
+                <a href="fuel-composition.html" class="sensor-card">
+                    <div class="sensor-icon">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="1.5">
+                            <path d="M8 3v18"/>
+                            <path d="M16 3v18"/>
+                            <path d="M3 8h18"/>
+                            <path d="M3 16h18"/>
+                        </svg>
+                    </div>
+                    <h3>Flex Fuel Sensor</h3>
+                    <p>Detects ethanol content for E85/flex fuel vehicles</p>
+                    <div class="sensor-tags">
+                        <span class="tag">Ethanol</span>
+                        <span class="tag">Flex Fuel</span>
+                    </div>
+                </a>
+            </div>
+
+            <!-- Emissions Sensors -->
+            <h2 class="mb-3" id="emissions">Emissions Control Sensors</h2>
+            <div class="sensor-grid mb-5">
+                <a href="o2-sensor.html" class="sensor-card">
+                    <div class="sensor-icon">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="1.5">
+                            <circle cx="12" cy="12" r="10"/>
+                            <path d="M8 12h8"/>
+                            <path d="M12 8v8"/>
+                        </svg>
+                    </div>
+                    <h3>Wideband O2 / Air-Fuel Ratio</h3>
+                    <p>Precise air/fuel measurement for modern fuel control</p>
+                    <div class="sensor-tags">
+                        <span class="tag">Fuel Trim</span>
+                        <span class="tag">Emissions</span>
+                    </div>
+                </a>
+                <a href="nox-sensor.html" class="sensor-card">
+                    <div class="sensor-icon">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="1.5">
+                            <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+                            <path d="M2 17l10 5 10-5"/>
+                            <path d="M2 12l10 5 10-5"/>
+                        </svg>
+                    </div>
+                    <h3>NOx Sensor</h3>
+                    <p>Monitors nitrogen oxide levels for diesel SCR systems</p>
+                    <div class="sensor-tags">
+                        <span class="tag">Diesel</span>
+                        <span class="tag">DEF</span>
+                    </div>
+                </a>
+                <a href="egr-position.html" class="sensor-card">
+                    <div class="sensor-icon">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="1.5">
+                            <circle cx="12" cy="12" r="10"/>
+                            <path d="M15 9l-6 6"/>
+                            <path d="M9 9l6 6"/>
+                        </svg>
+                    </div>
+                    <h3>EGR Position Sensor</h3>
+                    <p>Monitors EGR valve position for exhaust recirculation control</p>
+                    <div class="sensor-tags">
+                        <span class="tag">EGR</span>
+                        <span class="tag">NOx</span>
+                    </div>
+                </a>
+                <a href="evap-pressure.html" class="sensor-card">
+                    <div class="sensor-icon">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="1.5">
+                            <path d="M12 2v4"/>
+                            <path d="M12 18v4"/>
+                            <path d="M4.93 4.93l2.83 2.83"/>
+                            <path d="M16.24 16.24l2.83 2.83"/>
+                            <path d="M2 12h4"/>
+                            <path d="M18 12h4"/>
+                        </svg>
+                    </div>
+                    <h3>EVAP Pressure Sensor</h3>
+                    <p>Tests fuel tank and EVAP system for leak detection</p>
+                    <div class="sensor-tags">
+                        <span class="tag">EVAP</span>
+                        <span class="tag">Fuel Vapor</span>
+                    </div>
+                </a>
+            </div>
+
+            <!-- Sensor Basics -->
+            <div class="info-card mb-4">
+                <h3>Understanding Automotive Sensors</h3>
+                <p>Modern vehicles contain dozens of sensors that monitor everything from engine temperature to wheel speed. These sensors send electrical signals to the vehicle's computer (ECM/PCM), which uses this data to control engine operation, transmission shifting, emissions systems, and more.</p>
+
+                <h4 class="mt-3">Common Sensor Types:</h4>
+                <ul style="columns: 2; column-gap: 2rem;">
+                    <li><strong>Thermistors:</strong> Change resistance with temperature (ECT, IAT)</li>
+                    <li><strong>Potentiometers:</strong> Variable resistors that measure position (TPS)</li>
+                    <li><strong>Hall Effect:</strong> Magnetic sensors for speed/position (CKP, CMP, VSS)</li>
+                    <li><strong>Piezoelectric:</strong> Generate voltage from pressure/vibration (knock sensor)</li>
+                    <li><strong>Zirconia:</strong> Generate voltage from oxygen difference (O2 sensor)</li>
+                    <li><strong>Strain Gauge:</strong> Measure pressure through material deformation (MAP, fuel pressure)</li>
+                </ul>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-bottom" style="border-top: none; padding-top: 0;">
+                <p>&copy; 2024 ODB+. All rights reserved.</p>
+                <div class="footer-legal">
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Terms of Service</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../../js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Hyundai Forums - Get help with Hyundai Tucson, Santa Fe, Elantra, Sonata, Palisade and more. Expert advice for all Hyundai models and years.">
+    <title>Hyundai Forums | ODB+</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../../css/styles.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="navbar-container">
+            <a href="../../index.html" class="navbar-brand">
+                <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="40" height="40" rx="8" fill="url(#gradient)"/>
+                    <path d="M12 20C12 15.5817 15.5817 12 20 12C24.4183 12 28 15.5817 28 20C28 24.4183 24.4183 28 20 28" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+                    <path d="M20 16V20L23 23" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    <circle cx="20" cy="20" r="2" fill="white"/>
+                    <defs>
+                        <linearGradient id="gradient" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse">
+                            <stop stop-color="#2563eb"/>
+                            <stop offset="1" stop-color="#10b981"/>
+                        </linearGradient>
+                    </defs>
+                </svg>
+                <span>ODB+</span>
+            </a>
+            <ul class="navbar-menu">
+                <li><a href="../../index.html">Home</a></li>
+                <li><a href="../codes/index.html">Error Codes</a></li>
+                <li><a href="index.html" class="active">Forums</a></li>
+                <li><a href="../sensors/index.html">Sensors</a></li>
+            </ul>
+            <div class="navbar-actions">
+                <a href="../auth/login.html" class="btn btn-secondary">Log In</a>
+                <a href="../auth/signup.html" class="btn btn-primary">Sign Up</a>
+            </div>
+        </div>
+    </nav>
+
+    <main style="padding-top: 100px; padding-bottom: 4rem;">
+        <div class="container">
+            <!-- Breadcrumb -->
+            <nav class="breadcrumb mb-4">
+                <a href="index.html">Forums</a>
+                <span class="separator">/</span>
+                <span class="current">Hyundai</span>
+            </nav>
+
+            <!-- Header -->
+            <div class="make-header mb-4">
+                <div class="make-logo">
+                    <img src="https://logo.clearbit.com/hyundai.com" alt="Hyundai" onerror="this.parentElement.innerHTML='<span style=font-size:2rem;font-weight:bold>H</span>'">
+                </div>
+                <div class="make-info">
+                    <h1>Hyundai Forums</h1>
+                    <p>Get expert help for your Hyundai. Select your model below or browse recent discussions.</p>
+                </div>
+            </div>
+
+            <!-- Search -->
+            <div class="search-box mb-4" style="max-width: 100%;">
+                <svg class="search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="11" cy="11" r="8"/>
+                    <path d="M21 21l-4.35-4.35"/>
+                </svg>
+                <input type="text" class="search-input" id="modelSearch" placeholder="Search Hyundai models...">
+            </div>
+
+            <!-- Popular Models -->
+            <h2 class="mb-3">Popular Models</h2>
+            <div class="model-grid mb-5">
+                <a href="hyundai-tucson.html" class="model-card">
+                    <div class="model-image">
+                        <svg viewBox="0 0 100 60" fill="none">
+                            <rect x="10" y="22" width="80" height="28" rx="5" fill="var(--primary)"/>
+                            <rect x="18" y="10" width="52" height="17" rx="3" fill="var(--primary)"/>
+                            <circle cx="25" cy="50" r="8" fill="#333"/>
+                            <circle cx="75" cy="50" r="8" fill="#333"/>
+                        </svg>
+                    </div>
+                    <div class="model-info">
+                        <h3>Tucson</h3>
+                        <p>2004 - Present</p>
+                    </div>
+                </a>
+                <a href="hyundai-santa-fe.html" class="model-card">
+                    <div class="model-image">
+                        <svg viewBox="0 0 100 60" fill="none">
+                            <rect x="8" y="20" width="84" height="30" rx="5" fill="var(--primary)"/>
+                            <rect x="16" y="8" width="58" height="18" rx="3" fill="var(--primary)"/>
+                            <circle cx="25" cy="50" r="9" fill="#333"/>
+                            <circle cx="75" cy="50" r="9" fill="#333"/>
+                        </svg>
+                    </div>
+                    <div class="model-info">
+                        <h3>Santa Fe</h3>
+                        <p>2000 - Present</p>
+                    </div>
+                </a>
+                <a href="hyundai-elantra.html" class="model-card">
+                    <div class="model-image">
+                        <svg viewBox="0 0 100 60" fill="none">
+                            <rect x="10" y="25" width="80" height="25" rx="5" fill="var(--primary)"/>
+                            <rect x="20" y="15" width="50" height="15" rx="3" fill="var(--primary)"/>
+                            <circle cx="25" cy="50" r="8" fill="#333"/>
+                            <circle cx="75" cy="50" r="8" fill="#333"/>
+                        </svg>
+                    </div>
+                    <div class="model-info">
+                        <h3>Elantra</h3>
+                        <p>1990 - Present</p>
+                    </div>
+                </a>
+                <a href="hyundai-sonata.html" class="model-card">
+                    <div class="model-image">
+                        <svg viewBox="0 0 100 60" fill="none">
+                            <rect x="8" y="24" width="84" height="26" rx="5" fill="var(--primary)"/>
+                            <rect x="18" y="14" width="54" height="15" rx="3" fill="var(--primary)"/>
+                            <circle cx="25" cy="50" r="8" fill="#333"/>
+                            <circle cx="75" cy="50" r="8" fill="#333"/>
+                        </svg>
+                    </div>
+                    <div class="model-info">
+                        <h3>Sonata</h3>
+                        <p>1985 - Present</p>
+                    </div>
+                </a>
+                <a href="hyundai-palisade.html" class="model-card">
+                    <div class="model-image">
+                        <svg viewBox="0 0 100 60" fill="none">
+                            <rect x="5" y="18" width="90" height="32" rx="5" fill="var(--primary)"/>
+                            <rect x="14" y="6" width="62" height="18" rx="3" fill="var(--primary)"/>
+                            <circle cx="25" cy="50" r="9" fill="#333"/>
+                            <circle cx="75" cy="50" r="9" fill="#333"/>
+                        </svg>
+                    </div>
+                    <div class="model-info">
+                        <h3>Palisade</h3>
+                        <p>2018 - Present</p>
+                    </div>
+                </a>
+                <a href="hyundai-kona.html" class="model-card">
+                    <div class="model-image">
+                        <svg viewBox="0 0 100 60" fill="none">
+                            <rect x="12" y="24" width="76" height="26" rx="5" fill="var(--primary)"/>
+                            <rect x="20" y="14" width="48" height="15" rx="3" fill="var(--primary)"/>
+                            <circle cx="28" cy="50" r="8" fill="#333"/>
+                            <circle cx="72" cy="50" r="8" fill="#333"/>
+                        </svg>
+                    </div>
+                    <div class="model-info">
+                        <h3>Kona</h3>
+                        <p>2017 - Present</p>
+                    </div>
+                </a>
+            </div>
+
+            <!-- All Models A-Z -->
+            <h2 class="mb-3">All Models</h2>
+            <div class="model-list mb-5">
+                <div class="model-list-section">
+                    <h3 class="model-list-letter">A</h3>
+                    <ul>
+                        <li><a href="#">Accent</a></li>
+                        <li><a href="#">Azera</a></li>
+                    </ul>
+                </div>
+                <div class="model-list-section">
+                    <h3 class="model-list-letter">E</h3>
+                    <ul>
+                        <li><a href="hyundai-elantra.html">Elantra</a></li>
+                        <li><a href="#">Elantra GT</a></li>
+                        <li><a href="#">Elantra N</a></li>
+                    </ul>
+                </div>
+                <div class="model-list-section">
+                    <h3 class="model-list-letter">G</h3>
+                    <ul>
+                        <li><a href="#">Genesis Coupe</a></li>
+                    </ul>
+                </div>
+                <div class="model-list-section">
+                    <h3 class="model-list-letter">I</h3>
+                    <ul>
+                        <li><a href="#">Ioniq</a></li>
+                        <li><a href="#">Ioniq 5</a></li>
+                        <li><a href="#">Ioniq 6</a></li>
+                    </ul>
+                </div>
+                <div class="model-list-section">
+                    <h3 class="model-list-letter">K</h3>
+                    <ul>
+                        <li><a href="hyundai-kona.html">Kona</a></li>
+                        <li><a href="#">Kona Electric</a></li>
+                        <li><a href="#">Kona N</a></li>
+                    </ul>
+                </div>
+                <div class="model-list-section">
+                    <h3 class="model-list-letter">P</h3>
+                    <ul>
+                        <li><a href="hyundai-palisade.html">Palisade</a></li>
+                    </ul>
+                </div>
+                <div class="model-list-section">
+                    <h3 class="model-list-letter">S</h3>
+                    <ul>
+                        <li><a href="hyundai-santa-fe.html">Santa Fe</a></li>
+                        <li><a href="#">Santa Cruz</a></li>
+                        <li><a href="hyundai-sonata.html">Sonata</a></li>
+                        <li><a href="#">Sonata N Line</a></li>
+                    </ul>
+                </div>
+                <div class="model-list-section">
+                    <h3 class="model-list-letter">T</h3>
+                    <ul>
+                        <li><a href="#">Tiburon</a></li>
+                        <li><a href="hyundai-tucson.html">Tucson</a></li>
+                        <li><a href="#">Tucson Hybrid</a></li>
+                    </ul>
+                </div>
+                <div class="model-list-section">
+                    <h3 class="model-list-letter">V</h3>
+                    <ul>
+                        <li><a href="#">Veloster</a></li>
+                        <li><a href="#">Veloster N</a></li>
+                        <li><a href="#">Venue</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Recent Discussions -->
+            <h2 class="mb-3">Recent Discussions</h2>
+            <div class="thread-list">
+                <a href="#" class="thread-item">
+                    <div class="thread-content">
+                        <h4>2.5L engine recall update - 2021 Tucson</h4>
+                        <p class="thread-meta">
+                            <span class="thread-author">TucsonOwner21</span>
+                            <span class="thread-model">2021 Tucson Limited 2.5L</span>
+                            <span class="thread-time">1 hour ago</span>
+                        </p>
+                    </div>
+                </a>
+                <a href="#" class="thread-item">
+                    <div class="thread-content">
+                        <h4>DCT transmission shudder - 2019 Elantra</h4>
+                        <p class="thread-meta">
+                            <span class="thread-author">ElantraDCT</span>
+                            <span class="thread-model">2019 Elantra Sport 1.6T</span>
+                            <span class="thread-time">4 hours ago</span>
+                        </p>
+                    </div>
+                </a>
+                <a href="#" class="thread-item">
+                    <div class="thread-content">
+                        <h4>Theta II engine knocking - settlement claim process</h4>
+                        <p class="thread-meta">
+                            <span class="thread-author">SonataOwner2015</span>
+                            <span class="thread-model">2015 Sonata SE 2.4L</span>
+                            <span class="thread-time">7 hours ago</span>
+                        </p>
+                    </div>
+                </a>
+                <a href="#" class="thread-item">
+                    <div class="thread-content">
+                        <h4>Ioniq 5 charging speed dropping at 80%</h4>
+                        <p class="thread-meta">
+                            <span class="thread-author">Ioniq5EV</span>
+                            <span class="thread-model">2022 Ioniq 5 Limited AWD</span>
+                            <span class="thread-time">10 hours ago</span>
+                        </p>
+                    </div>
+                </a>
+                <a href="#" class="thread-item">
+                    <div class="thread-content">
+                        <h4>Palisade oil dilution issue - 3.8L V6</h4>
+                        <p class="thread-meta">
+                            <span class="thread-author">PalisadeFamily</span>
+                            <span class="thread-model">2020 Palisade Calligraphy 3.8L</span>
+                            <span class="thread-time">1 day ago</span>
+                        </p>
+                    </div>
+                </a>
+            </div>
+
+            <div style="text-align: center; margin-top: 2rem;">
+                <button class="btn btn-outline">Load More Discussions</button>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-bottom" style="border-top: none; padding-top: 0;">
+                <p>&copy; 2024 ODB+. All rights reserved.</p>
+                <div class="footer-legal">
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Terms of Service</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../../js/main.js"></script>
+</body>
+</html>

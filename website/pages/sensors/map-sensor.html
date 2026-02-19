@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Manifold Absolute Pressure (MAP) Sensor - Complete guide covering how MAP sensors work, failure symptoms, testing procedures, and replacement tips.">
+    <title>Manifold Absolute Pressure (MAP) Sensor Guide | ODB+</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../../css/styles.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="navbar-container">
+            <a href="../../index.html" class="navbar-brand">
+                <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="40" height="40" rx="8" fill="url(#gradient)"/>
+                    <path d="M12 20C12 15.5817 15.5817 12 20 12C24.4183 12 28 15.5817 28 20C28 24.4183 24.4183 28 20 28" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+                    <path d="M20 16V20L23 23" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    <circle cx="20" cy="20" r="2" fill="white"/>
+                    <defs>
+                        <linearGradient id="gradient" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse">
+                            <stop stop-color="#2563eb"/>
+                            <stop offset="1" stop-color="#10b981"/>
+                        </linearGradient>
+                    </defs>
+                </svg>
+                <span>ODB+</span>
+            </a>
+            <ul class="navbar-menu">
+                <li><a href="../../index.html">Home</a></li>
+                <li><a href="../codes/index.html">Error Codes</a></li>
+                <li><a href="../forums/index.html">Forums</a></li>
+                <li><a href="index.html" class="active">Sensors</a></li>
+            </ul>
+            <div class="navbar-actions">
+                <a href="../auth/login.html" class="btn btn-secondary">Log In</a>
+                <a href="../auth/signup.html" class="btn btn-primary">Sign Up</a>
+            </div>
+        </div>
+    </nav>
+
+    <main style="padding-top: 100px; padding-bottom: 4rem;">
+        <div class="container" style="max-width: 900px;">
+            <!-- Breadcrumb -->
+            <nav class="breadcrumb mb-4">
+                <a href="index.html">Sensors</a>
+                <span class="separator">/</span>
+                <a href="index.html#engine">Engine Management</a>
+                <span class="separator">/</span>
+                <span class="current">MAP Sensor</span>
+            </nav>
+
+            <!-- Sensor Header -->
+            <div class="sensor-detail-header mb-4">
+                <div class="sensor-icon-lg">
+                    <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="1.5">
+                        <rect x="3" y="3" width="18" height="18" rx="2"/>
+                        <path d="M3 12h18"/>
+                        <path d="M12 3v18"/>
+                    </svg>
+                </div>
+                <div class="sensor-detail-info">
+                    <h1>Manifold Absolute Pressure (MAP) Sensor</h1>
+                    <p class="sensor-subtitle">Also known as: Intake Manifold Pressure Sensor, Vacuum Sensor, BARO Sensor (some types)</p>
+                    <div class="sensor-meta">
+                        <span class="badge badge-primary">Engine Management</span>
+                        <span class="badge badge-success">Fuel Control</span>
+                        <span class="badge badge-secondary">Critical</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Facts -->
+            <div class="quick-info-grid mb-4">
+                <div class="quick-info-card">
+                    <h4>Location</h4>
+                    <p>Intake Manifold or Throttle Body</p>
+                </div>
+                <div class="quick-info-card">
+                    <h4>Signal Type</h4>
+                    <p>0.5V - 4.5V (Analog)</p>
+                </div>
+                <div class="quick-info-card">
+                    <h4>Lifespan</h4>
+                    <p>150,000+ miles</p>
+                </div>
+                <div class="quick-info-card">
+                    <h4>Replacement Cost</h4>
+                    <p>$30 - $150</p>
+                </div>
+            </div>
+
+            <!-- Overview -->
+            <section class="content-section mb-4">
+                <h2>What Is a MAP Sensor?</h2>
+                <p>The Manifold Absolute Pressure (MAP) sensor measures the pressure (or vacuum) inside the intake manifold. This information tells the Engine Control Module (ECM) how much load the engine is under, which is essential for calculating the correct amount of fuel and spark timing.</p>
+
+                <p>The term "absolute pressure" means the sensor measures pressure relative to a perfect vacuum (0 pressure), rather than relative to atmospheric pressure. This allows the ECM to account for changes in altitude and weather conditions.</p>
+
+                <div class="info-box">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"/>
+                        <line x1="12" y1="16" x2="12" y2="12"/>
+                        <line x1="12" y1="8" x2="12.01" y2="8"/>
+                    </svg>
+                    <div>
+                        <strong>MAP vs. MAF:</strong> Some vehicles use MAP sensors as the primary air measurement (speed-density systems), while others use MAF sensors. Many modern vehicles use both - the MAF for primary fuel calculation and the MAP for barometric pressure compensation, EGR monitoring, and backup calculations.
+                    </div>
+                </div>
+            </section>
+
+            <!-- How It Works -->
+            <section class="content-section mb-4">
+                <h2>How the MAP Sensor Works</h2>
+                <p>The MAP sensor contains a silicon chip with piezoresistive elements that change resistance when flexed. A reference chamber at a known vacuum is on one side of the chip, and manifold pressure is on the other. As manifold pressure changes, the chip flexes, changing the resistance and thus the output voltage.</p>
+
+                <h4>Understanding Manifold Pressure:</h4>
+                <ul>
+                    <li><strong>Engine off:</strong> Manifold pressure equals atmospheric pressure (~14.7 psi at sea level, ~101 kPa)</li>
+                    <li><strong>Idle (closed throttle):</strong> High vacuum (low absolute pressure) - typically 15-22" Hg vacuum (~7-10 psi absolute)</li>
+                    <li><strong>Cruise (part throttle):</strong> Moderate vacuum - varies with load</li>
+                    <li><strong>Wide Open Throttle:</strong> Near atmospheric pressure (low vacuum) - approaches 14.7 psi absolute</li>
+                    <li><strong>Turbocharged/Boosted:</strong> Above atmospheric pressure - can exceed 30 psi absolute</li>
+                </ul>
+
+                <h4 class="mt-3">Typical MAP Sensor Readings:</h4>
+                <div class="data-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Condition</th>
+                                <th>Pressure (kPa)</th>
+                                <th>Typical Voltage</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Key On, Engine Off</td>
+                                <td>95-105 kPa (atmospheric)</td>
+                                <td>4.0V - 4.8V</td>
+                            </tr>
+                            <tr>
+                                <td>Idle</td>
+                                <td>25-45 kPa</td>
+                                <td>1.0V - 2.0V</td>
+                            </tr>
+                            <tr>
+                                <td>Cruise</td>
+                                <td>40-70 kPa</td>
+                                <td>1.5V - 3.0V</td>
+                            </tr>
+                            <tr>
+                                <td>Wide Open Throttle</td>
+                                <td>90-105 kPa</td>
+                                <td>3.8V - 4.8V</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h4 class="mt-3">What the ECM Does with MAP Data:</h4>
+                <ul>
+                    <li><strong>Fuel calculation:</strong> Combined with RPM and IAT to calculate air mass (speed-density)</li>
+                    <li><strong>Ignition timing:</strong> Advances timing at low loads, retards at high loads</li>
+                    <li><strong>EGR monitoring:</strong> Monitors pressure changes when EGR is commanded</li>
+                    <li><strong>Barometric compensation:</strong> Adjusts for altitude changes</li>
+                    <li><strong>Turbo boost:</strong> Monitors boost pressure on turbocharged engines</li>
+                </ul>
+            </section>
+
+            <!-- Symptoms -->
+            <section class="content-section mb-4">
+                <h2>Symptoms of a Failing MAP Sensor</h2>
+                <ul class="symptom-list">
+                    <li>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="2">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                        </svg>
+                        <div>
+                            <strong>Check Engine Light</strong>
+                            <p>MAP sensor codes (P0105-P0109) indicate circuit or performance issues</p>
+                        </div>
+                    </li>
+                    <li>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="2">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                        </svg>
+                        <div>
+                            <strong>Poor Fuel Economy</strong>
+                            <p>Incorrect pressure readings cause improper fuel mixture</p>
+                        </div>
+                    </li>
+                    <li>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="2">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                        </svg>
+                        <div>
+                            <strong>Rough Idle</strong>
+                            <p>Engine idles roughly or stalls due to incorrect air/fuel mixture</p>
+                        </div>
+                    </li>
+                    <li>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="2">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                        </svg>
+                        <div>
+                            <strong>Hesitation on Acceleration</strong>
+                            <p>Engine stumbles or hesitates when accelerating</p>
+                        </div>
+                    </li>
+                    <li>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="2">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                        </svg>
+                        <div>
+                            <strong>Hard Starting</strong>
+                            <p>Difficulty starting, especially when engine is hot or cold</p>
+                        </div>
+                    </li>
+                    <li>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="2">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                        </svg>
+                        <div>
+                            <strong>Lack of Power</strong>
+                            <p>Engine feels sluggish, especially under load</p>
+                        </div>
+                    </li>
+                    <li>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="2">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                        </svg>
+                        <div>
+                            <strong>Rich or Lean Codes</strong>
+                            <p>P0171/P0172 codes may accompany MAP sensor issues</p>
+                        </div>
+                    </li>
+                </ul>
+            </section>
+
+            <!-- Testing -->
+            <section class="content-section mb-4">
+                <h2>How to Test a MAP Sensor</h2>
+                <div class="diagnostic-steps">
+                    <div class="step">
+                        <div class="step-number">1</div>
+                        <div class="step-content">
+                            <h4>Check Live Data</h4>
+                            <p>Use your ODB+ scanner to view MAP sensor readings in kPa or voltage. With the key on and engine off, the reading should be close to atmospheric pressure (~100 kPa or ~4.5V at sea level). At idle, it should drop significantly (30-50 kPa or ~1.5V).</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">2</div>
+                        <div class="step-content">
+                            <h4>Compare to Barometric Pressure</h4>
+                            <p>If your scanner shows BARO pressure, compare it to MAP with the engine off. They should be nearly identical. If MAP reads significantly different, the sensor may be faulty.</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">3</div>
+                        <div class="step-content">
+                            <h4>Voltage Test</h4>
+                            <p>With the sensor connected, backprobe the signal wire. Key on/engine off should read ~4.5V. At idle, should read ~1.0-2.0V. Snap the throttle open and voltage should quickly rise toward 4.5V, then fall back as vacuum increases.</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">4</div>
+                        <div class="step-content">
+                            <h4>Vacuum Test</h4>
+                            <p>Remove the sensor and apply vacuum with a hand pump. As vacuum increases, voltage should decrease smoothly. The sensor should hold vacuum - if it bleeds off, the internal diaphragm is leaking.</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">5</div>
+                        <div class="step-content">
+                            <h4>Check Vacuum Hose</h4>
+                            <p>If the MAP sensor uses a hose (rather than being mounted directly on the manifold), check the hose for cracks, kinks, or disconnections. A leaking hose will cause incorrect readings.</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">6</div>
+                        <div class="step-content">
+                            <h4>Check Reference Voltage</h4>
+                            <p>Verify 5V reference from the ECM with the sensor unplugged. Measure between the 5V reference and ground wires in the connector.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Common Causes -->
+            <section class="content-section mb-4">
+                <h2>Common Causes of Failure</h2>
+                <div class="causes-grid">
+                    <div class="cause-category">
+                        <h4>Sensor Issues</h4>
+                        <ul>
+                            <li>Internal diaphragm failure</li>
+                            <li>Electrical circuit damage</li>
+                            <li>Contamination from oil or carbon</li>
+                            <li>Heat damage</li>
+                        </ul>
+                    </div>
+                    <div class="cause-category">
+                        <h4>Vacuum System</h4>
+                        <ul>
+                            <li>Cracked or disconnected vacuum hose</li>
+                            <li>Clogged vacuum port</li>
+                            <li>Vacuum leak in manifold</li>
+                        </ul>
+                    </div>
+                    <div class="cause-category">
+                        <h4>Electrical Problems</h4>
+                        <ul>
+                            <li>Corroded connector</li>
+                            <li>Damaged wiring</li>
+                            <li>Poor ground connection</li>
+                            <li>ECM reference voltage issue</li>
+                        </ul>
+                    </div>
+                    <div class="cause-category">
+                        <h4>Other Causes</h4>
+                        <ul>
+                            <li>Water intrusion</li>
+                            <li>Physical damage</li>
+                            <li>Wrong sensor for application</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Replacement Tips -->
+            <section class="content-section mb-4">
+                <h2>Replacement Tips</h2>
+                <div class="tech-tips">
+                    <div class="tip">
+                        <h4>Clean the Port</h4>
+                        <p>Before installing a new sensor, clean the vacuum port on the manifold with carburetor cleaner. Carbon buildup can affect pressure readings.</p>
+                    </div>
+                    <div class="tip">
+                        <h4>Check the O-Ring</h4>
+                        <p>Many MAP sensors use an O-ring seal. Make sure the new sensor includes one, or transfer the old one if it's in good condition. A leaking seal causes incorrect readings.</p>
+                    </div>
+                    <div class="tip">
+                        <h4>Use OEM or Quality Parts</h4>
+                        <p>Cheap aftermarket MAP sensors may not have the same accuracy or calibration as OEM. Consider quality brands for reliable operation.</p>
+                    </div>
+                    <div class="tip">
+                        <h4>Clear Codes After Install</h4>
+                        <p>Clear any stored codes after replacing the sensor. Some vehicles may need a brief drive cycle for the ECM to relearn the new sensor's baseline.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Related Codes -->
+            <section class="content-section mb-4">
+                <h2>Related Diagnostic Codes</h2>
+                <div class="related-codes-grid">
+                    <a href="../codes/index.html" class="related-code">
+                        <span class="code-badge-sm">P0105</span>
+                        <span>MAP Circuit Malfunction</span>
+                    </a>
+                    <a href="../codes/index.html" class="related-code">
+                        <span class="code-badge-sm">P0106</span>
+                        <span>MAP Range/Performance</span>
+                    </a>
+                    <a href="../codes/index.html" class="related-code">
+                        <span class="code-badge-sm">P0107</span>
+                        <span>MAP Circuit Low Input</span>
+                    </a>
+                    <a href="../codes/index.html" class="related-code">
+                        <span class="code-badge-sm">P0108</span>
+                        <span>MAP Circuit High Input</span>
+                    </a>
+                    <a href="../codes/index.html" class="related-code">
+                        <span class="code-badge-sm">P0109</span>
+                        <span>MAP Circuit Intermittent</span>
+                    </a>
+                    <a href="../codes/P0171.html" class="related-code">
+                        <span class="code-badge-sm">P0171</span>
+                        <span>System Too Lean Bank 1</span>
+                    </a>
+                </div>
+            </section>
+
+            <!-- Forum -->
+            <section class="content-section mb-4">
+                <h2>Community Discussion</h2>
+                <p class="mb-3">Have questions about MAP sensors? Get help from experienced mechanics and fellow car owners.</p>
+                <a href="../forums/index.html" class="btn btn-primary">Visit Forums</a>
+                <a href="../forums/index.html?search=MAP+sensor" class="btn btn-outline" style="margin-left: 0.5rem;">Search MAP Sensor Threads</a>
+            </section>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-bottom" style="border-top: none; padding-top: 0;">
+                <p>&copy; 2024 ODB+. All rights reserved.</p>
+                <div class="footer-legal">
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Terms of Service</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../../js/main.js"></script>
+</body>
+</html>

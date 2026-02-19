@@ -1,6 +1,7 @@
 package com.odbplus.app.ui
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -47,6 +48,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.odbplus.app.diagnostics.DiagnosticsUiState
 import com.odbplus.app.diagnostics.DiagnosticsViewModel
+import com.odbplus.app.ui.theme.*
 import com.odbplus.core.protocol.DiagnosticTroubleCode
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -56,7 +58,11 @@ import java.util.Locale
 fun CodesScreen(viewModel: DiagnosticsViewModel = hiltViewModel()) {
     val uiState by viewModel.uiState.collectAsState()
 
-    Box(modifier = Modifier.fillMaxSize()) {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(DarkBackground)
+    ) {
         Column(modifier = Modifier.fillMaxSize()) {
             // Header with buttons
             CodesHeader(
@@ -65,7 +71,7 @@ fun CodesScreen(viewModel: DiagnosticsViewModel = hiltViewModel()) {
                 onClearCodes = { viewModel.clearCodes() }
             )
 
-            HorizontalDivider()
+            HorizontalDivider(color = DarkBorder, thickness = 1.dp)
 
             // Content
             if (uiState.isLoading) {
@@ -92,13 +98,14 @@ fun CodesScreen(viewModel: DiagnosticsViewModel = hiltViewModel()) {
                     .padding(16.dp),
                 action = {
                     TextButton(onClick = { viewModel.dismissMessage() }) {
-                        Text("Dismiss")
+                        Text("Dismiss", color = Color.White)
                     }
                 },
                 containerColor = if (uiState.clearSuccess == true)
-                    Color(0xFF4CAF50)
+                    GreenSuccess
                 else
-                    MaterialTheme.colorScheme.error
+                    RedError,
+                contentColor = Color.White
             ) {
                 Text(
                     text = uiState.errorMessage
@@ -118,6 +125,7 @@ private fun CodesHeader(
     Column(
         modifier = Modifier
             .fillMaxWidth()
+            .background(DarkSurface)
             .padding(16.dp)
     ) {
         // Connection status
@@ -131,12 +139,14 @@ private fun CodesHeader(
                     modifier = Modifier
                         .size(12.dp)
                         .clip(CircleShape)
-                        .background(if (uiState.isConnected) Color(0xFF4CAF50) else Color.Gray)
+                        .background(if (uiState.isConnected) GreenSuccess else TextTertiary)
                 )
                 Spacer(Modifier.width(8.dp))
                 Text(
                     text = if (uiState.isConnected) "Connected" else "Disconnected",
-                    style = MaterialTheme.typography.bodyMedium
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = if (uiState.isConnected) GreenSuccess else TextSecondary,
+                    fontWeight = FontWeight.Medium
                 )
             }
 
@@ -145,8 +155,8 @@ private fun CodesHeader(
                 val timeFormat = SimpleDateFormat("HH:mm:ss", Locale.getDefault())
                 Text(
                     text = "Last read: ${timeFormat.format(Date(uiState.lastReadTime))}",
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    style = MaterialTheme.typography.labelSmall,
+                    color = TextTertiary
                 )
             }
         }
@@ -161,7 +171,14 @@ private fun CodesHeader(
             Button(
                 onClick = onReadCodes,
                 enabled = uiState.isConnected && !uiState.isLoading,
-                modifier = Modifier.weight(1f)
+                modifier = Modifier.weight(1f),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = CyanPrimary,
+                    contentColor = TextOnAccent,
+                    disabledContainerColor = DarkSurfaceVariant,
+                    disabledContentColor = TextTertiary
+                ),
+                shape = RoundedCornerShape(12.dp)
             ) {
                 Icon(
                     Icons.Default.Refresh,
@@ -169,15 +186,22 @@ private fun CodesHeader(
                     modifier = Modifier.size(18.dp)
                 )
                 Spacer(Modifier.width(8.dp))
-                Text("Read Codes")
+                Text("Read Codes", fontWeight = FontWeight.SemiBold)
             }
 
             OutlinedButton(
                 onClick = onClearCodes,
                 enabled = uiState.isConnected && !uiState.isLoading,
                 modifier = Modifier.weight(1f),
+                shape = RoundedCornerShape(12.dp),
+                border = ButtonDefaults.outlinedButtonBorder(enabled = true).copy(
+                    brush = androidx.compose.ui.graphics.SolidColor(
+                        if (uiState.isConnected) RedError.copy(alpha = 0.5f) else DarkBorder
+                    )
+                ),
                 colors = ButtonDefaults.outlinedButtonColors(
-                    contentColor = MaterialTheme.colorScheme.error
+                    contentColor = RedError,
+                    disabledContentColor = TextTertiary
                 )
             ) {
                 Icon(
@@ -186,41 +210,65 @@ private fun CodesHeader(
                     modifier = Modifier.size(18.dp)
                 )
                 Spacer(Modifier.width(8.dp))
-                Text("Erase Codes")
+                Text("Erase Codes", fontWeight = FontWeight.Medium)
             }
         }
 
         // Code count summary
         if (uiState.storedCodes.isNotEmpty() || uiState.pendingCodes.isNotEmpty()) {
-            Spacer(Modifier.height(12.dp))
+            Spacer(Modifier.height(14.dp))
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.Center
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically
             ) {
                 if (uiState.storedCodes.isNotEmpty()) {
-                    Text(
-                        text = "${uiState.storedCodes.size} stored",
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.error
-                    )
+                    Surface(
+                        shape = RoundedCornerShape(8.dp),
+                        color = RedError.copy(alpha = 0.12f)
+                    ) {
+                        Text(
+                            text = "${uiState.storedCodes.size} stored",
+                            modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp),
+                            style = MaterialTheme.typography.labelMedium,
+                            color = RedError,
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
                 }
                 if (uiState.storedCodes.isNotEmpty() && uiState.pendingCodes.isNotEmpty()) {
-                    Text(
-                        text = " • ",
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
+                    Spacer(Modifier.width(8.dp))
                 }
                 if (uiState.pendingCodes.isNotEmpty()) {
-                    Text(
-                        text = "${uiState.pendingCodes.size} pending",
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = Color(0xFFFFA000)
-                    )
+                    Surface(
+                        shape = RoundedCornerShape(8.dp),
+                        color = AmberSecondary.copy(alpha = 0.12f)
+                    ) {
+                        Text(
+                            text = "${uiState.pendingCodes.size} pending",
+                            modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp),
+                            style = MaterialTheme.typography.labelMedium,
+                            color = AmberSecondary,
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
                 }
             }
         }
     }
+}
+
+@Composable
+private fun Surface(
+    shape: RoundedCornerShape,
+    color: Color,
+    content: @Composable () -> Unit
+) {
+    androidx.compose.material3.Surface(
+        shape = shape,
+        color = color,
+        content = content
+    )
 }
 
 @Composable
@@ -232,12 +280,12 @@ private fun LoadingState() {
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        CircularProgressIndicator()
+        CircularProgressIndicator(color = CyanPrimary)
         Spacer(Modifier.height(16.dp))
         Text(
             text = "Reading codes...",
             style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
+            color = TextSecondary
         )
     }
 }
@@ -251,17 +299,26 @@ private fun InitialState(isConnected: Boolean) {
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Icon(
-            Icons.Default.Warning,
-            contentDescription = null,
-            modifier = Modifier.size(64.dp),
-            tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
-        )
-        Spacer(Modifier.height(16.dp))
+        Box(
+            modifier = Modifier
+                .size(72.dp)
+                .clip(CircleShape)
+                .background(AmberSecondary.copy(alpha = 0.1f)),
+            contentAlignment = Alignment.Center
+        ) {
+            Icon(
+                Icons.Default.Warning,
+                contentDescription = null,
+                modifier = Modifier.size(36.dp),
+                tint = AmberSecondary.copy(alpha = 0.6f)
+            )
+        }
+        Spacer(Modifier.height(20.dp))
         Text(
             text = "Diagnostic Trouble Codes",
             style = MaterialTheme.typography.headlineSmall,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
+            color = TextPrimary,
+            fontWeight = FontWeight.Bold
         )
         Spacer(Modifier.height(8.dp))
         Text(
@@ -270,7 +327,7 @@ private fun InitialState(isConnected: Boolean) {
             else
                 "Connect to a vehicle first",
             style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            color = TextSecondary,
             textAlign = TextAlign.Center
         )
     }
@@ -289,26 +346,28 @@ private fun NoCodesState() {
             modifier = Modifier
                 .size(80.dp)
                 .clip(CircleShape)
-                .background(Color(0xFF4CAF50).copy(alpha = 0.1f)),
+                .background(GreenSuccess.copy(alpha = 0.1f)),
             contentAlignment = Alignment.Center
         ) {
             Text(
-                text = "✓",
-                fontSize = 40.sp,
-                color = Color(0xFF4CAF50)
+                text = "OK",
+                fontSize = 28.sp,
+                color = GreenSuccess,
+                fontWeight = FontWeight.ExtraBold
             )
         }
-        Spacer(Modifier.height(16.dp))
+        Spacer(Modifier.height(20.dp))
         Text(
             text = "No Codes Found",
             style = MaterialTheme.typography.headlineSmall,
-            color = Color(0xFF4CAF50)
+            color = GreenSuccess,
+            fontWeight = FontWeight.Bold
         )
         Spacer(Modifier.height(8.dp))
         Text(
             text = "No diagnostic trouble codes detected",
             style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
+            color = TextSecondary
         )
     }
 }
@@ -321,17 +380,27 @@ private fun CodesList(
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
         contentPadding = androidx.compose.foundation.layout.PaddingValues(16.dp),
-        verticalArrangement = Arrangement.spacedBy(8.dp)
+        verticalArrangement = Arrangement.spacedBy(10.dp)
     ) {
         // Stored codes section
         if (storedCodes.isNotEmpty()) {
             item {
-                Text(
-                    text = "STORED CODES",
-                    style = MaterialTheme.typography.labelMedium,
-                    color = MaterialTheme.colorScheme.error,
-                    fontWeight = FontWeight.Bold
-                )
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Box(
+                        modifier = Modifier
+                            .size(8.dp)
+                            .clip(CircleShape)
+                            .background(RedError)
+                    )
+                    Spacer(Modifier.width(8.dp))
+                    Text(
+                        text = "STORED CODES",
+                        style = MaterialTheme.typography.labelMedium,
+                        color = RedError,
+                        fontWeight = FontWeight.Bold,
+                        letterSpacing = 1.sp
+                    )
+                }
                 Spacer(Modifier.height(8.dp))
             }
 
@@ -339,18 +408,28 @@ private fun CodesList(
                 DtcCodeCard(code = code, isPending = false)
             }
 
-            item { Spacer(Modifier.height(16.dp)) }
+            item { Spacer(Modifier.height(12.dp)) }
         }
 
         // Pending codes section
         if (pendingCodes.isNotEmpty()) {
             item {
-                Text(
-                    text = "PENDING CODES",
-                    style = MaterialTheme.typography.labelMedium,
-                    color = Color(0xFFFFA000),
-                    fontWeight = FontWeight.Bold
-                )
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Box(
+                        modifier = Modifier
+                            .size(8.dp)
+                            .clip(CircleShape)
+                            .background(AmberSecondary)
+                    )
+                    Spacer(Modifier.width(8.dp))
+                    Text(
+                        text = "PENDING CODES",
+                        style = MaterialTheme.typography.labelMedium,
+                        color = AmberSecondary,
+                        fontWeight = FontWeight.Bold,
+                        letterSpacing = 1.sp
+                    )
+                }
                 Spacer(Modifier.height(8.dp))
             }
 
@@ -366,15 +445,20 @@ private fun DtcCodeCard(
     code: DiagnosticTroubleCode,
     isPending: Boolean
 ) {
+    val accentColor = if (isPending) AmberSecondary else RedError
+
     Card(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier
+            .fillMaxWidth()
+            .border(
+                width = 1.dp,
+                color = accentColor.copy(alpha = 0.2f),
+                shape = RoundedCornerShape(12.dp)
+            ),
         colors = CardDefaults.cardColors(
-            containerColor = if (isPending)
-                Color(0xFFFFA000).copy(alpha = 0.1f)
-            else
-                MaterialTheme.colorScheme.errorContainer.copy(alpha = 0.3f)
+            containerColor = if (isPending) AmberContainer else RedContainer
         ),
-        shape = RoundedCornerShape(8.dp)
+        shape = RoundedCornerShape(12.dp)
     ) {
         Row(
             modifier = Modifier
@@ -383,26 +467,29 @@ private fun DtcCodeCard(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            // Code display
+            // Code display -- large monospace for that diagnostic feel
             Text(
                 text = code.code,
                 style = MaterialTheme.typography.headlineMedium,
                 fontFamily = FontFamily.Monospace,
                 fontWeight = FontWeight.Bold,
-                color = if (isPending) Color(0xFFFFA000) else MaterialTheme.colorScheme.error
+                color = accentColor
             )
 
             // System type badge
-            Box(
-                modifier = Modifier
-                    .clip(RoundedCornerShape(4.dp))
-                    .background(MaterialTheme.colorScheme.surfaceVariant)
-                    .padding(horizontal = 8.dp, vertical = 4.dp)
+            androidx.compose.material3.Surface(
+                shape = RoundedCornerShape(8.dp),
+                color = accentColor.copy(alpha = 0.15f),
+                border = androidx.compose.foundation.BorderStroke(
+                    1.dp, accentColor.copy(alpha = 0.2f)
+                )
             ) {
                 Text(
                     text = code.system.displayName,
+                    modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp),
                     style = MaterialTheme.typography.labelSmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    color = if (isPending) AmberOnContainer else RedOnContainer,
+                    fontWeight = FontWeight.Medium
                 )
             }
         }

@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="NOx Sensor Guide - Learn how nitrogen oxide sensors work in diesel emissions systems, their role in SCR/DEF systems, common failure symptoms, and testing procedures.">
+    <title>NOx Sensor Guide | ODB+</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../../css/styles.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="navbar-container">
+            <a href="../../index.html" class="navbar-brand">
+                <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="40" height="40" rx="8" fill="url(#gradient)"/>
+                    <path d="M12 20C12 15.5817 15.5817 12 20 12C24.4183 12 28 15.5817 28 20C28 24.4183 24.4183 28 20 28" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+                    <path d="M20 16V20L23 23" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    <circle cx="20" cy="20" r="2" fill="white"/>
+                    <defs>
+                        <linearGradient id="gradient" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse">
+                            <stop stop-color="#2563eb"/>
+                            <stop offset="1" stop-color="#10b981"/>
+                        </linearGradient>
+                    </defs>
+                </svg>
+                <span>ODB+</span>
+            </a>
+            <ul class="navbar-menu">
+                <li><a href="../../index.html">Home</a></li>
+                <li><a href="../codes/index.html">Error Codes</a></li>
+                <li><a href="../forums/index.html">Forums</a></li>
+                <li><a href="index.html" class="active">Sensors</a></li>
+            </ul>
+            <div class="navbar-actions">
+                <a href="../auth/login.html" class="btn btn-secondary">Log In</a>
+                <a href="../auth/signup.html" class="btn btn-primary">Sign Up</a>
+            </div>
+        </div>
+    </nav>
+
+    <main style="padding-top: 100px; padding-bottom: 4rem;">
+        <div class="container" style="max-width: 900px;">
+            <!-- Breadcrumb -->
+            <nav class="breadcrumb mb-4">
+                <a href="index.html">Sensors</a>
+                <span class="separator">/</span>
+                <a href="index.html#emissions">Emissions Control</a>
+                <span class="separator">/</span>
+                <span class="current">NOx Sensor</span>
+            </nav>
+
+            <!-- Sensor Header -->
+            <div class="sensor-detail-header mb-4">
+                <div class="sensor-icon-lg">
+                    <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="1.5">
+                        <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+                        <path d="M2 17l10 5 10-5"/>
+                        <path d="M2 12l10 5 10-5"/>
+                    </svg>
+                </div>
+                <div class="sensor-detail-info">
+                    <h1>NOx Sensor</h1>
+                    <p class="sensor-subtitle">Also known as: Nitrogen Oxide Sensor, NOx Catalyst Sensor, SCR Sensor</p>
+                    <div class="sensor-meta">
+                        <span class="badge badge-primary">Emissions Control</span>
+                        <span class="badge badge-success">Diesel/SCR</span>
+                        <span class="badge badge-secondary">Critical</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Facts -->
+            <div class="quick-info-grid mb-4">
+                <div class="quick-info-card">
+                    <h4>Location</h4>
+                    <p>Before and/or After SCR Catalyst</p>
+                </div>
+                <div class="quick-info-card">
+                    <h4>Signal Type</h4>
+                    <p>CAN Bus Digital</p>
+                </div>
+                <div class="quick-info-card">
+                    <h4>Lifespan</h4>
+                    <p>80,000 - 120,000 miles</p>
+                </div>
+                <div class="quick-info-card">
+                    <h4>Replacement Cost</h4>
+                    <p>$300 - $800</p>
+                </div>
+            </div>
+
+            <!-- Overview -->
+            <section class="content-section mb-4">
+                <h2>What Is a NOx Sensor?</h2>
+                <p>The NOx sensor measures nitrogen oxide (NOx) levels in the exhaust stream. NOx emissions are a significant pollutant from diesel engines and are regulated by EPA standards. NOx sensors are essential for controlling Selective Catalytic Reduction (SCR) systems that use Diesel Exhaust Fluid (DEF) to convert NOx into harmless nitrogen and water.</p>
+
+                <p>Most modern diesel vehicles have two NOx sensors - one before the SCR catalyst (measures incoming NOx) and one after (measures outgoing NOx to verify SCR effectiveness). The ECM uses this data to precisely control DEF injection and monitor system performance.</p>
+
+                <div class="info-box">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"/>
+                        <line x1="12" y1="16" x2="12" y2="12"/>
+                        <line x1="12" y1="8" x2="12.01" y2="8"/>
+                    </svg>
+                    <div>
+                        <strong>Emissions Compliance:</strong> NOx sensors are critical for meeting emissions regulations. A failed sensor can cause the vehicle to enter "inducement" mode with reduced power and speed limitations until the issue is repaired. Federal law requires these systems to function properly.
+                    </div>
+                </div>
+            </section>
+
+            <!-- How It Works -->
+            <section class="content-section mb-4">
+                <h2>How NOx Sensors Work</h2>
+
+                <h4>Dual-Cell Electrochemical Design</h4>
+                <p>NOx sensors use a sophisticated electrochemical sensing element with two cells. The first cell pumps oxygen out of the exhaust sample (like a wideband O2 sensor). The second cell measures the remaining NOx by further decomposing it and measuring the released oxygen. The difference represents the NOx concentration.</p>
+
+                <h4 class="mt-3">CAN Bus Communication</h4>
+                <p>Unlike simple voltage sensors, NOx sensors contain internal electronics that communicate via CAN bus. The sensor module converts the electrochemical signal to digital data and sends precise NOx concentration (in ppm) along with diagnostic information to the ECM.</p>
+
+                <h4 class="mt-3">Operating Requirements</h4>
+                <ul>
+                    <li>Requires high operating temperature (650-700°C) - takes 60-120 seconds to warm up</li>
+                    <li>Internal heater maintains operating temperature</li>
+                    <li>Self-diagnostic capabilities for heater, sensing elements, and circuitry</li>
+                    <li>Can also measure oxygen content (backup for O2 sensor)</li>
+                </ul>
+            </section>
+
+            <!-- Normal Values -->
+            <section class="content-section mb-4">
+                <h2>Normal NOx Sensor Readings</h2>
+
+                <div class="data-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Condition</th>
+                                <th>Pre-SCR (Sensor 1)</th>
+                                <th>Post-SCR (Sensor 2)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Idle</td>
+                                <td>50-200 ppm</td>
+                                <td>10-50 ppm</td>
+                            </tr>
+                            <tr>
+                                <td>Light Load</td>
+                                <td>100-400 ppm</td>
+                                <td>20-80 ppm</td>
+                            </tr>
+                            <tr>
+                                <td>Heavy Load</td>
+                                <td>500-1500 ppm</td>
+                                <td>50-150 ppm</td>
+                            </tr>
+                            <tr>
+                                <td>SCR Efficiency Target</td>
+                                <td>--</td>
+                                <td>>90% reduction</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <p class="mt-3"><strong>Key Ratio:</strong> Post-SCR NOx should be 80-95% lower than Pre-SCR NOx when the system is working properly. If post-SCR readings are similar to pre-SCR, the SCR catalyst or DEF system has a problem.</p>
+            </section>
+
+            <!-- Failure Symptoms -->
+            <section class="content-section mb-4">
+                <h2>Symptoms of a Failing NOx Sensor</h2>
+                <ul class="symptom-list">
+                    <li>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="2">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                        </svg>
+                        <div>
+                            <strong>Check Engine Light with P2200-P2203 or P229F Codes</strong>
+                            <p>NOx sensor circuit malfunction or efficiency codes</p>
+                        </div>
+                    </li>
+                    <li>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="2">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                        </svg>
+                        <div>
+                            <strong>DEF/SCR Warning Lights</strong>
+                            <p>Emissions system warnings on the dashboard</p>
+                        </div>
+                    </li>
+                    <li>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="2">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                        </svg>
+                        <div>
+                            <strong>Reduced Engine Power (Inducement)</strong>
+                            <p>Vehicle enters derate mode - speed and power limited</p>
+                        </div>
+                    </li>
+                    <li>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="2">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                        </svg>
+                        <div>
+                            <strong>Excessive DEF Consumption</strong>
+                            <p>Faulty sensor causes incorrect DEF dosing calculations</p>
+                        </div>
+                    </li>
+                    <li>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="2">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                        </svg>
+                        <div>
+                            <strong>Failed Emissions Test</strong>
+                            <p>High NOx emissions at tailpipe</p>
+                        </div>
+                    </li>
+                    <li>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="2">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                        </svg>
+                        <div>
+                            <strong>Countdown Warnings</strong>
+                            <p>Messages indicating miles/time until severe derate</p>
+                        </div>
+                    </li>
+                </ul>
+            </section>
+
+            <!-- Common Causes -->
+            <section class="content-section mb-4">
+                <h2>What Causes NOx Sensor Problems?</h2>
+                <div class="causes-grid">
+                    <div class="cause-category">
+                        <h4>Sensor Failure</h4>
+                        <ul>
+                            <li>Heater element burnout</li>
+                            <li>Sensing cell degradation</li>
+                            <li>Internal electronics failure</li>
+                            <li>CAN communication failure</li>
+                        </ul>
+                    </div>
+                    <div class="cause-category">
+                        <h4>Contamination</h4>
+                        <ul>
+                            <li>DEF crystallization on sensor</li>
+                            <li>Soot/ash buildup</li>
+                            <li>Poor quality DEF</li>
+                            <li>Engine oil contamination</li>
+                        </ul>
+                    </div>
+                    <div class="cause-category">
+                        <h4>System Issues</h4>
+                        <ul>
+                            <li>SCR catalyst failure</li>
+                            <li>DEF dosing problems</li>
+                            <li>Exhaust leaks</li>
+                            <li>DPF regeneration issues</li>
+                        </ul>
+                    </div>
+                    <div class="cause-category">
+                        <h4>Environmental</h4>
+                        <ul>
+                            <li>Thermal shock</li>
+                            <li>Vibration damage</li>
+                            <li>Water/moisture intrusion</li>
+                            <li>Corrosion</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="warning-box mt-3">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+                        <line x1="12" y1="9" x2="12" y2="13"/>
+                        <line x1="12" y1="17" x2="12.01" y2="17"/>
+                    </svg>
+                    <div>
+                        <strong>DEF Quality Matters:</strong> Using poor quality or diluted DEF can damage NOx sensors and the SCR catalyst. Always use DEF that meets ISO 22241 standards. Never use water or other fluids in the DEF tank.
+                    </div>
+                </div>
+            </section>
+
+            <!-- Testing Procedures -->
+            <section class="content-section mb-4">
+                <h2>How to Test a NOx Sensor</h2>
+
+                <div class="diagnostic-steps">
+                    <div class="step">
+                        <div class="step-number">1</div>
+                        <div class="step-content">
+                            <h4>Monitor Live Data</h4>
+                            <p>Use your ODB+ scanner to read NOx sensor data. Both sensors should show realistic values that change with engine load. Sensors reading 0 ppm, stuck values, or "--" indicate communication or sensor failure.</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">2</div>
+                        <div class="step-content">
+                            <h4>Compare Pre/Post SCR Readings</h4>
+                            <p>Post-SCR NOx should be significantly lower than pre-SCR. If both read similar values, the problem may be the SCR catalyst or DEF system rather than the sensor.</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">3</div>
+                        <div class="step-content">
+                            <h4>Check Sensor Ready Status</h4>
+                            <p>Monitor the sensor ready/heater ready flags. A sensor that never reaches ready status has a heater or power supply problem.</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">4</div>
+                        <div class="step-content">
+                            <h4>Visual Inspection</h4>
+                            <p>Inspect the sensor and wiring for damage, DEF crystallization, or contamination. Check for exhaust leaks near the sensor that could dilute readings.</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">5</div>
+                        <div class="step-content">
+                            <h4>Verify DEF System</h4>
+                            <p>Before condemning the sensor, verify the DEF system is working. Check DEF level, quality, and injector operation. A sensor can't show good efficiency if DEF isn't being injected.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Related Codes -->
+            <section class="content-section mb-4">
+                <h2>Related Diagnostic Codes</h2>
+                <div class="related-codes-grid">
+                    <a href="../codes/index.html" class="related-code">
+                        <span class="code-badge-sm">P2200</span>
+                        <span>NOx Sensor Circuit Bank 1</span>
+                    </a>
+                    <a href="../codes/index.html" class="related-code">
+                        <span class="code-badge-sm">P2201</span>
+                        <span>NOx Sensor Range/Performance</span>
+                    </a>
+                    <a href="../codes/index.html" class="related-code">
+                        <span class="code-badge-sm">P2202</span>
+                        <span>NOx Sensor Circuit Low</span>
+                    </a>
+                    <a href="../codes/index.html" class="related-code">
+                        <span class="code-badge-sm">P2203</span>
+                        <span>NOx Sensor Circuit High</span>
+                    </a>
+                    <a href="../codes/index.html" class="related-code">
+                        <span class="code-badge-sm">P229F</span>
+                        <span>SCR NOx Catalyst Efficiency</span>
+                    </a>
+                    <a href="../codes/index.html" class="related-code">
+                        <span class="code-badge-sm">P20EE</span>
+                        <span>SCR NOx Catalyst Efficiency</span>
+                    </a>
+                </div>
+            </section>
+
+            <!-- Forum Discussion -->
+            <section class="content-section mb-4">
+                <h2>Community Discussion</h2>
+                <p class="mb-3">Have questions about NOx sensors or DEF systems? Get help from experienced diesel mechanics and fellow truck owners.</p>
+                <a href="../forums/index.html" class="btn btn-primary">Visit Forums</a>
+                <a href="../forums/index.html?search=NOx+sensor+DEF" class="btn btn-outline" style="margin-left: 0.5rem;">Search NOx/DEF Threads</a>
+            </section>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-bottom" style="border-top: none; padding-top: 0;">
+                <p>&copy; 2024 ODB+. All rights reserved.</p>
+                <div class="footer-legal">
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Terms of Service</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../../js/main.js"></script>
+</body>
+</html>

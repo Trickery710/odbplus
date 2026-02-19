@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Engine Coolant Temperature (ECT) Sensor - Complete guide covering how ECT sensors work, failure symptoms, testing procedures, and replacement tips.">
+    <title>Engine Coolant Temperature (ECT) Sensor Guide | ODB+</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../../css/styles.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="navbar-container">
+            <a href="../../index.html" class="navbar-brand">
+                <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="40" height="40" rx="8" fill="url(#gradient)"/>
+                    <path d="M12 20C12 15.5817 15.5817 12 20 12C24.4183 12 28 15.5817 28 20C28 24.4183 24.4183 28 20 28" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+                    <path d="M20 16V20L23 23" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    <circle cx="20" cy="20" r="2" fill="white"/>
+                    <defs>
+                        <linearGradient id="gradient" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse">
+                            <stop stop-color="#2563eb"/>
+                            <stop offset="1" stop-color="#10b981"/>
+                        </linearGradient>
+                    </defs>
+                </svg>
+                <span>ODB+</span>
+            </a>
+            <ul class="navbar-menu">
+                <li><a href="../../index.html">Home</a></li>
+                <li><a href="../codes/index.html">Error Codes</a></li>
+                <li><a href="../forums/index.html">Forums</a></li>
+                <li><a href="index.html" class="active">Sensors</a></li>
+            </ul>
+            <div class="navbar-actions">
+                <a href="../auth/login.html" class="btn btn-secondary">Log In</a>
+                <a href="../auth/signup.html" class="btn btn-primary">Sign Up</a>
+            </div>
+        </div>
+    </nav>
+
+    <main style="padding-top: 100px; padding-bottom: 4rem;">
+        <div class="container" style="max-width: 900px;">
+            <!-- Breadcrumb -->
+            <nav class="breadcrumb mb-4">
+                <a href="index.html">Sensors</a>
+                <span class="separator">/</span>
+                <a href="index.html#temperature">Temperature</a>
+                <span class="separator">/</span>
+                <span class="current">ECT Sensor</span>
+            </nav>
+
+            <!-- Sensor Header -->
+            <div class="sensor-detail-header mb-4">
+                <div class="sensor-icon-lg">
+                    <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="1.5">
+                        <path d="M14 14.76V3.5a2.5 2.5 0 0 0-5 0v11.26a4.5 4.5 0 1 0 5 0z"/>
+                    </svg>
+                </div>
+                <div class="sensor-detail-info">
+                    <h1>Engine Coolant Temperature (ECT) Sensor</h1>
+                    <p class="sensor-subtitle">Also known as: Coolant Temp Sensor, CTS, Water Temperature Sensor</p>
+                    <div class="sensor-meta">
+                        <span class="badge badge-primary">Engine Management</span>
+                        <span class="badge badge-success">Fuel Control</span>
+                        <span class="badge badge-secondary">Critical</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Facts -->
+            <div class="quick-info-grid mb-4">
+                <div class="quick-info-card">
+                    <h4>Location</h4>
+                    <p>Cylinder Head or Thermostat Housing</p>
+                </div>
+                <div class="quick-info-card">
+                    <h4>Signal Type</h4>
+                    <p>Variable Resistance (NTC)</p>
+                </div>
+                <div class="quick-info-card">
+                    <h4>Lifespan</h4>
+                    <p>100,000+ miles</p>
+                </div>
+                <div class="quick-info-card">
+                    <h4>Replacement Cost</h4>
+                    <p>$15 - $100</p>
+                </div>
+            </div>
+
+            <!-- Overview -->
+            <section class="content-section mb-4">
+                <h2>What Is an ECT Sensor?</h2>
+                <p>The Engine Coolant Temperature (ECT) sensor measures the temperature of the engine coolant. This information is critical for the Engine Control Module (ECM) to adjust fuel injection, ignition timing, and other engine parameters based on whether the engine is cold, warming up, or at operating temperature.</p>
+
+                <p>The ECT sensor is typically a thermistor - a resistor whose resistance changes with temperature. Most vehicles use a Negative Temperature Coefficient (NTC) thermistor, meaning resistance decreases as temperature increases.</p>
+
+                <div class="info-box">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"/>
+                        <line x1="12" y1="16" x2="12" y2="12"/>
+                        <line x1="12" y1="8" x2="12.01" y2="8"/>
+                    </svg>
+                    <div>
+                        <strong>Two Sensors:</strong> Many vehicles have two coolant temperature sensors - one for the ECM (engine management) and one for the temperature gauge on the dashboard. They may be in different locations and have different specifications.
+                    </div>
+                </div>
+            </section>
+
+            <!-- How It Works -->
+            <section class="content-section mb-4">
+                <h2>How the ECT Sensor Works</h2>
+                <p>The ECT sensor is a two-wire sensor. The ECM sends a reference voltage (typically 5V) through one wire. The sensor's internal thermistor provides a path to ground through the second wire. As coolant temperature changes, the thermistor's resistance changes, which changes the voltage the ECM reads.</p>
+
+                <h4>Typical Resistance Values (NTC Thermistor):</h4>
+                <div class="data-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Temperature</th>
+                                <th>Resistance (Approx.)</th>
+                                <th>Voltage (Approx.)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>-4°F (-20°C)</td>
+                                <td>15,000 - 25,000 ohms</td>
+                                <td>4.0 - 4.5V</td>
+                            </tr>
+                            <tr>
+                                <td>68°F (20°C)</td>
+                                <td>2,000 - 3,000 ohms</td>
+                                <td>3.0 - 3.5V</td>
+                            </tr>
+                            <tr>
+                                <td>176°F (80°C)</td>
+                                <td>300 - 400 ohms</td>
+                                <td>1.0 - 1.5V</td>
+                            </tr>
+                            <tr>
+                                <td>212°F (100°C)</td>
+                                <td>150 - 200 ohms</td>
+                                <td>0.5 - 0.8V</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h4 class="mt-3">What the ECM Does with ECT Data:</h4>
+                <ul>
+                    <li><strong>Cold engine:</strong> Enriches fuel mixture, advances timing, increases idle speed</li>
+                    <li><strong>Warm-up:</strong> Gradually leans out mixture, adjusts timing</li>
+                    <li><strong>Operating temp:</strong> Uses closed-loop fuel control with O2 sensor feedback</li>
+                    <li><strong>Overheating:</strong> May retard timing, reduce power, activate cooling fans</li>
+                </ul>
+            </section>
+
+            <!-- Symptoms -->
+            <section class="content-section mb-4">
+                <h2>Symptoms of a Failing ECT Sensor</h2>
+                <ul class="symptom-list">
+                    <li>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="2">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                        </svg>
+                        <div>
+                            <strong>Check Engine Light</strong>
+                            <p>ECT sensor codes (P0115-P0119) indicate circuit or performance issues</p>
+                        </div>
+                    </li>
+                    <li>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="2">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                        </svg>
+                        <div>
+                            <strong>Hard Starting When Cold</strong>
+                            <p>Engine may be difficult to start when cold if sensor reports incorrect temperature</p>
+                        </div>
+                    </li>
+                    <li>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="2">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                        </svg>
+                        <div>
+                            <strong>Poor Fuel Economy</strong>
+                            <p>If sensor reads colder than actual, ECM will over-fuel the engine</p>
+                        </div>
+                    </li>
+                    <li>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="2">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                        </svg>
+                        <div>
+                            <strong>Rough Idle When Cold</strong>
+                            <p>Engine may run rough during warm-up period</p>
+                        </div>
+                    </li>
+                    <li>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="2">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                        </svg>
+                        <div>
+                            <strong>Temperature Gauge Issues</strong>
+                            <p>Gauge reads incorrectly or erratically (if using same sensor)</p>
+                        </div>
+                    </li>
+                    <li>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="2">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                        </svg>
+                        <div>
+                            <strong>Cooling Fan Issues</strong>
+                            <p>Fans may run constantly or not turn on when needed</p>
+                        </div>
+                    </li>
+                    <li>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="2">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                        </svg>
+                        <div>
+                            <strong>Black Smoke from Exhaust</strong>
+                            <p>Rich running condition due to ECM thinking engine is cold</p>
+                        </div>
+                    </li>
+                </ul>
+            </section>
+
+            <!-- Testing -->
+            <section class="content-section mb-4">
+                <h2>How to Test an ECT Sensor</h2>
+                <div class="diagnostic-steps">
+                    <div class="step">
+                        <div class="step-number">1</div>
+                        <div class="step-content">
+                            <h4>Check Live Data</h4>
+                            <p>Use your ODB+ scanner to read ECT temperature with the engine cold. It should match ambient temperature (within a few degrees). Then warm up the engine and verify the temperature rises smoothly to operating temp (typically 180-220°F / 82-104°C).</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">2</div>
+                        <div class="step-content">
+                            <h4>Compare to IAT</h4>
+                            <p>On a cold engine that has sat overnight, compare ECT to Intake Air Temperature (IAT). They should be within a few degrees of each other. A large difference indicates a problem with one sensor.</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">3</div>
+                        <div class="step-content">
+                            <h4>Resistance Test</h4>
+                            <p>With the sensor unplugged and engine cold, measure resistance across the sensor terminals with a multimeter. Compare to specifications for your vehicle. Test again with engine warm - resistance should be much lower.</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">4</div>
+                        <div class="step-content">
+                            <h4>Voltage Test</h4>
+                            <p>With sensor connected, backprobe the signal wire and measure voltage to ground. Cold engine should read 3-4V, warm engine should read 0.5-1.5V. Verify smooth change as engine warms up.</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">5</div>
+                        <div class="step-content">
+                            <h4>Check Wiring</h4>
+                            <p>Inspect the connector for corrosion, damaged pins, or loose connections. Check wiring for chafing or damage. Test continuity from ECM connector to sensor connector.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Common Causes -->
+            <section class="content-section mb-4">
+                <h2>Common Causes of Failure</h2>
+                <div class="causes-grid">
+                    <div class="cause-category">
+                        <h4>Sensor Failure</h4>
+                        <ul>
+                            <li>Internal thermistor degradation</li>
+                            <li>Open or shorted circuit</li>
+                            <li>Corrosion on terminals</li>
+                            <li>Physical damage</li>
+                        </ul>
+                    </div>
+                    <div class="cause-category">
+                        <h4>Wiring Issues</h4>
+                        <ul>
+                            <li>Corroded connector</li>
+                            <li>Damaged wires</li>
+                            <li>Poor ground connection</li>
+                            <li>Water intrusion</li>
+                        </ul>
+                    </div>
+                    <div class="cause-category">
+                        <h4>Coolant System</h4>
+                        <ul>
+                            <li>Low coolant level exposing sensor</li>
+                            <li>Air pocket around sensor</li>
+                            <li>Contaminated coolant</li>
+                        </ul>
+                    </div>
+                    <div class="cause-category">
+                        <h4>Other Issues</h4>
+                        <ul>
+                            <li>Stuck thermostat affecting actual temp</li>
+                            <li>ECM reference voltage issue</li>
+                            <li>Using wrong replacement sensor</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Replacement Tips -->
+            <section class="content-section mb-4">
+                <h2>Replacement Tips</h2>
+                <div class="tech-tips">
+                    <div class="tip">
+                        <h4>Drain Coolant First</h4>
+                        <p>Drain coolant below the sensor level before removal to prevent spills. Some sensors can be swapped quickly with minimal coolant loss, but have rags ready.</p>
+                    </div>
+                    <div class="tip">
+                        <h4>Use Thread Sealant</h4>
+                        <p>Apply Teflon tape or thread sealant to the sensor threads to prevent leaks. Don't get sealant on the sensor tip.</p>
+                    </div>
+                    <div class="tip">
+                        <h4>Torque Properly</h4>
+                        <p>Don't overtighten - ECT sensors are typically torqued to 10-15 ft-lbs. Overtightening can crack the housing or damage the sensor.</p>
+                    </div>
+                    <div class="tip">
+                        <h4>Bleed Air After</h4>
+                        <p>After refilling coolant, bleed air from the system. Air pockets can cause erratic readings and overheating.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Related Codes -->
+            <section class="content-section mb-4">
+                <h2>Related Diagnostic Codes</h2>
+                <div class="related-codes-grid">
+                    <a href="../codes/index.html" class="related-code">
+                        <span class="code-badge-sm">P0115</span>
+                        <span>ECT Circuit Malfunction</span>
+                    </a>
+                    <a href="../codes/index.html" class="related-code">
+                        <span class="code-badge-sm">P0116</span>
+                        <span>ECT Range/Performance</span>
+                    </a>
+                    <a href="../codes/index.html" class="related-code">
+                        <span class="code-badge-sm">P0117</span>
+                        <span>ECT Circuit Low Input</span>
+                    </a>
+                    <a href="../codes/index.html" class="related-code">
+                        <span class="code-badge-sm">P0118</span>
+                        <span>ECT Circuit High Input</span>
+                    </a>
+                    <a href="../codes/index.html" class="related-code">
+                        <span class="code-badge-sm">P0119</span>
+                        <span>ECT Circuit Intermittent</span>
+                    </a>
+                    <a href="../codes/index.html" class="related-code">
+                        <span class="code-badge-sm">P0128</span>
+                        <span>Thermostat Below Temp</span>
+                    </a>
+                </div>
+            </section>
+
+            <!-- Forum -->
+            <section class="content-section mb-4">
+                <h2>Community Discussion</h2>
+                <p class="mb-3">Have questions about ECT sensors? Get help from experienced mechanics and fellow car owners.</p>
+                <a href="../forums/index.html" class="btn btn-primary">Visit Forums</a>
+                <a href="../forums/index.html?search=coolant+temp+sensor" class="btn btn-outline" style="margin-left: 0.5rem;">Search ECT Threads</a>
+            </section>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-bottom" style="border-top: none; padding-top: 0;">
+                <p>&copy; 2024 ODB+. All rights reserved.</p>
+                <div class="footer-legal">
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Terms of Service</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../../js/main.js"></script>
+</body>
+</html>

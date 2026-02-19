@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="P0455 EVAP System Leak Detected (Large Leak) - Complete guide with causes, symptoms, diagnostic steps, and repair information.">
+    <title>P0455 - EVAP Large Leak Detected | ODB+</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../../css/styles.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="navbar-container">
+            <a href="../../index.html" class="navbar-brand">
+                <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="40" height="40" rx="8" fill="url(#gradient)"/>
+                    <path d="M12 20C12 15.5817 15.5817 12 20 12C24.4183 12 28 15.5817 28 20C28 24.4183 24.4183 28 20 28" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+                    <path d="M20 16V20L23 23" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    <circle cx="20" cy="20" r="2" fill="white"/>
+                    <defs>
+                        <linearGradient id="gradient" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse">
+                            <stop stop-color="#2563eb"/>
+                            <stop offset="1" stop-color="#10b981"/>
+                        </linearGradient>
+                    </defs>
+                </svg>
+                <span>ODB+</span>
+            </a>
+            <ul class="navbar-menu">
+                <li><a href="../../index.html">Home</a></li>
+                <li><a href="index.html" class="active">Error Codes</a></li>
+                <li><a href="../forums/index.html">Forums</a></li>
+                <li><a href="../sensors/index.html">Sensors</a></li>
+            </ul>
+            <div class="navbar-actions">
+                <a href="../auth/login.html" class="btn btn-secondary">Log In</a>
+                <a href="../auth/signup.html" class="btn btn-primary">Sign Up</a>
+            </div>
+        </div>
+    </nav>
+
+    <main style="padding-top: 100px; padding-bottom: 4rem;">
+        <div class="container" style="max-width: 900px;">
+            <!-- Breadcrumb -->
+            <nav class="breadcrumb mb-4">
+                <a href="index.html">Error Codes</a>
+                <span class="separator">/</span>
+                <a href="index.html#powertrain">Powertrain</a>
+                <span class="separator">/</span>
+                <span class="current">P0455</span>
+            </nav>
+
+            <!-- Code Header -->
+            <div class="code-detail-header mb-4">
+                <div class="code-badge-lg">P0455</div>
+                <div class="code-detail-info">
+                    <h1>Evaporative Emission System Leak Detected (Large Leak)</h1>
+                    <div class="code-meta">
+                        <span class="badge badge-warning">Emissions</span>
+                        <span class="badge badge-secondary">Generic (SAE)</span>
+                        <span class="severity-medium">Severity: Low-Medium</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Info -->
+            <div class="quick-info-grid mb-4">
+                <div class="quick-info-card">
+                    <h4>System</h4>
+                    <p>EVAP Emissions Control</p>
+                </div>
+                <div class="quick-info-card">
+                    <h4>Subsystem</h4>
+                    <p>Leak Detection</p>
+                </div>
+                <div class="quick-info-card">
+                    <h4>Common Fix</h4>
+                    <p>Gas Cap / EVAP Hoses</p>
+                </div>
+                <div class="quick-info-card">
+                    <h4>Repair Cost</h4>
+                    <p>$0 - $300</p>
+                </div>
+            </div>
+
+            <!-- Description -->
+            <section class="content-section mb-4">
+                <h2>What Does P0455 Mean?</h2>
+                <p>The P0455 code indicates that the vehicle's powertrain control module (PCM) has detected a large leak in the Evaporative Emission Control (EVAP) system. The EVAP system is designed to capture fuel vapors from the gas tank and store them in a charcoal canister, preventing them from escaping into the atmosphere.</p>
+
+                <p>A "large leak" typically means a leak equivalent to a 0.080" diameter hole or larger - often caused by something as simple as a loose or missing gas cap. The PCM performs periodic leak tests and triggers this code when the system can't maintain the expected vacuum level.</p>
+
+                <div class="info-box">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"/>
+                        <line x1="12" y1="16" x2="12" y2="12"/>
+                        <line x1="12" y1="8" x2="12.01" y2="8"/>
+                    </svg>
+                    <div>
+                        <strong>Good News:</strong> P0455 is often caused by a loose gas cap - the cheapest and easiest fix possible. Before spending money on diagnostics, check your gas cap first. Tighten it until it clicks, clear the code, and see if it returns.
+                    </div>
+                </div>
+            </section>
+
+            <!-- How the System Works -->
+            <section class="content-section mb-4">
+                <h2>How the EVAP System Works</h2>
+                <p>The EVAP system is an emissions control system that prevents gasoline vapors from escaping into the atmosphere. Here's how it operates:</p>
+
+                <div class="system-diagram">
+                    <h4>EVAP System Components:</h4>
+                    <ul class="component-list">
+                        <li>
+                            <strong>Fuel Tank:</strong> Source of fuel vapors that must be contained
+                        </li>
+                        <li>
+                            <strong>Gas Cap:</strong> Seals the fuel tank - a critical component
+                        </li>
+                        <li>
+                            <strong>Charcoal Canister:</strong> Stores fuel vapors using activated charcoal
+                        </li>
+                        <li>
+                            <strong>Purge Valve:</strong> Opens to allow stored vapors to enter the engine for burning
+                        </li>
+                        <li>
+                            <strong>Vent Valve:</strong> Controls airflow into the canister; closes during leak tests
+                        </li>
+                        <li>
+                            <strong>EVAP Lines:</strong> Hoses connecting all components
+                        </li>
+                        <li>
+                            <strong>Fuel Tank Pressure Sensor:</strong> Monitors system pressure during tests
+                        </li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Symptoms -->
+            <section class="content-section mb-4">
+                <h2>Common Symptoms</h2>
+                <ul class="symptom-list">
+                    <li>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="2">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                        </svg>
+                        <div>
+                            <strong>Check Engine Light</strong>
+                            <p>Usually the only symptom - vehicle typically runs normally</p>
+                        </div>
+                    </li>
+                    <li>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="2">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                        </svg>
+                        <div>
+                            <strong>Fuel Smell Near Vehicle</strong>
+                            <p>Noticeable gasoline odor, especially near the fuel tank or filler neck</p>
+                        </div>
+                    </li>
+                    <li>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="2">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                        </svg>
+                        <div>
+                            <strong>Failed Emissions Test</strong>
+                            <p>Vehicle will not pass inspection with this code present</p>
+                        </div>
+                    </li>
+                    <li>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="2">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                        </svg>
+                        <div>
+                            <strong>Slight Decrease in Fuel Economy</strong>
+                            <p>Fuel vapors escaping instead of being burned can marginally affect MPG</p>
+                        </div>
+                    </li>
+                </ul>
+            </section>
+
+            <!-- Possible Causes -->
+            <section class="content-section mb-4">
+                <h2>Possible Causes</h2>
+                <p>A large EVAP leak is usually caused by a significant opening in the system:</p>
+
+                <div class="causes-grid">
+                    <div class="cause-category">
+                        <h4>Gas Cap Issues (Most Common)</h4>
+                        <ul>
+                            <li>Gas cap not tightened (no click)</li>
+                            <li>Missing gas cap</li>
+                            <li>Damaged gas cap seal</li>
+                            <li>Wrong gas cap for vehicle</li>
+                            <li>Cracked gas cap housing</li>
+                        </ul>
+                    </div>
+                    <div class="cause-category">
+                        <h4>EVAP Hose Problems</h4>
+                        <ul>
+                            <li>Disconnected EVAP hose</li>
+                            <li>Cracked or split hose</li>
+                            <li>Hose knocked loose by road debris</li>
+                            <li>Rodent damage to hoses</li>
+                            <li>Deteriorated rubber connections</li>
+                        </ul>
+                    </div>
+                    <div class="cause-category">
+                        <h4>Valve Failures</h4>
+                        <ul>
+                            <li>Purge valve stuck open</li>
+                            <li>Vent valve stuck open</li>
+                            <li>Failed valve solenoid</li>
+                            <li>Cracked valve housing</li>
+                        </ul>
+                    </div>
+                    <div class="cause-category">
+                        <h4>Other Components</h4>
+                        <ul>
+                            <li>Cracked charcoal canister</li>
+                            <li>Damaged fuel tank</li>
+                            <li>Failed filler neck</li>
+                            <li>Fuel tank pressure sensor issue</li>
+                            <li>Leaking fuel sending unit O-ring</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Diagnostic Steps -->
+            <section class="content-section mb-4">
+                <h2>Diagnostic Steps</h2>
+                <div class="diagnostic-steps">
+                    <div class="step">
+                        <div class="step-number">1</div>
+                        <div class="step-content">
+                            <h4>Check the Gas Cap</h4>
+                            <p>Remove the gas cap and inspect the seal. Look for cracks, tears, or debris on the sealing surface. Reinstall and tighten until you hear it click (usually 2-3 clicks). Clear the code and drive for a few days to see if it returns.</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">2</div>
+                        <div class="step-content">
+                            <h4>Visual Inspection</h4>
+                            <p>Inspect all visible EVAP hoses under the hood and under the vehicle. Look for disconnected, cracked, or damaged hoses. Check the charcoal canister (usually near rear axle) for damage. Look for obvious signs of rodent activity.</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">3</div>
+                        <div class="step-content">
+                            <h4>Smoke Test</h4>
+                            <p>The most effective diagnostic method for EVAP leaks is a smoke test. Special equipment introduces smoke into the EVAP system, and leaks become visible as smoke escapes. Most shops charge $50-$100 for this test.</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">4</div>
+                        <div class="step-content">
+                            <h4>Check Purge and Vent Valves</h4>
+                            <p>Use your ODB+ scanner to command the purge valve closed during the test (if supported). If the system still won't hold vacuum, the leak is external. If it holds vacuum when the purge valve is closed, suspect the purge valve itself.</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">5</div>
+                        <div class="step-content">
+                            <h4>Inspect Under the Vehicle</h4>
+                            <p>Check the fuel tank, filler neck, and EVAP canister for physical damage. Road debris can crack components. Look at connections where hoses attach - these are common leak points.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Common Repairs -->
+            <section class="content-section mb-4">
+                <h2>Common Repairs</h2>
+                <div class="repair-list">
+                    <div class="repair-item">
+                        <div class="repair-info">
+                            <h4>Tighten or Replace Gas Cap</h4>
+                            <p>First thing to try - often solves the problem immediately.</p>
+                        </div>
+                        <div class="repair-cost">
+                            <span class="diy">DIY: $0-$25</span>
+                            <span class="shop">Shop: $25-$50</span>
+                        </div>
+                    </div>
+                    <div class="repair-item">
+                        <div class="repair-info">
+                            <h4>Replace EVAP Hose</h4>
+                            <p>Replace cracked or disconnected hoses with proper fuel-rated hose.</p>
+                        </div>
+                        <div class="repair-cost">
+                            <span class="diy">DIY: $10-$50</span>
+                            <span class="shop">Shop: $75-$150</span>
+                        </div>
+                    </div>
+                    <div class="repair-item">
+                        <div class="repair-info">
+                            <h4>Replace Purge Valve</h4>
+                            <p>Electronic solenoid valve that controls vapor flow to engine.</p>
+                        </div>
+                        <div class="repair-cost">
+                            <span class="diy">DIY: $30-$80</span>
+                            <span class="shop">Shop: $100-$250</span>
+                        </div>
+                    </div>
+                    <div class="repair-item">
+                        <div class="repair-info">
+                            <h4>Replace Vent Valve</h4>
+                            <p>Controls airflow into EVAP canister; often located near canister.</p>
+                        </div>
+                        <div class="repair-cost">
+                            <span class="diy">DIY: $30-$100</span>
+                            <span class="shop">Shop: $100-$300</span>
+                        </div>
+                    </div>
+                    <div class="repair-item">
+                        <div class="repair-info">
+                            <h4>Replace Charcoal Canister</h4>
+                            <p>Replace if cracked or saturated with liquid fuel.</p>
+                        </div>
+                        <div class="repair-cost">
+                            <span class="diy">DIY: $100-$200</span>
+                            <span class="shop">Shop: $200-$400</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Related Codes -->
+            <section class="content-section mb-4">
+                <h2>Related Codes</h2>
+                <div class="related-codes-grid">
+                    <a href="P0442.html" class="related-code">
+                        <span class="code-badge-sm">P0442</span>
+                        <span>EVAP Small Leak</span>
+                    </a>
+                    <a href="index.html" class="related-code">
+                        <span class="code-badge-sm">P0440</span>
+                        <span>EVAP System Malfunction</span>
+                    </a>
+                    <a href="index.html" class="related-code">
+                        <span class="code-badge-sm">P0443</span>
+                        <span>EVAP Purge Valve Circuit</span>
+                    </a>
+                    <a href="index.html" class="related-code">
+                        <span class="code-badge-sm">P0446</span>
+                        <span>EVAP Vent Control Circuit</span>
+                    </a>
+                    <a href="index.html" class="related-code">
+                        <span class="code-badge-sm">P0456</span>
+                        <span>EVAP Very Small Leak</span>
+                    </a>
+                    <a href="index.html" class="related-code">
+                        <span class="code-badge-sm">P0457</span>
+                        <span>EVAP Loose Gas Cap</span>
+                    </a>
+                </div>
+            </section>
+
+            <!-- Forum Discussion -->
+            <section class="content-section mb-4">
+                <h2>Community Discussion</h2>
+                <p class="mb-3">Have questions about P0455? Get help from experienced mechanics and fellow car owners.</p>
+                <a href="../forums/index.html" class="btn btn-primary">Visit Forums</a>
+                <a href="../forums/index.html?search=P0455" class="btn btn-outline" style="margin-left: 0.5rem;">Search P0455 Threads</a>
+            </section>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-bottom" style="border-top: none; padding-top: 0;">
+                <p>&copy; 2024 ODB+. All rights reserved.</p>
+                <div class="footer-legal">
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Terms of Service</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../../js/main.js"></script>
+</body>
+</html>

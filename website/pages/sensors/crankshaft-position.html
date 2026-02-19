@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Crankshaft Position Sensor (CKP) - Complete guide covering how CKP sensors work, failure symptoms, testing procedures, and replacement tips.">
+    <title>Crankshaft Position Sensor (CKP) Guide | ODB+</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../../css/styles.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="navbar-container">
+            <a href="../../index.html" class="navbar-brand">
+                <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="40" height="40" rx="8" fill="url(#gradient)"/>
+                    <path d="M12 20C12 15.5817 15.5817 12 20 12C24.4183 12 28 15.5817 28 20C28 24.4183 24.4183 28 20 28" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+                    <path d="M20 16V20L23 23" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    <circle cx="20" cy="20" r="2" fill="white"/>
+                    <defs>
+                        <linearGradient id="gradient" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse">
+                            <stop stop-color="#2563eb"/>
+                            <stop offset="1" stop-color="#10b981"/>
+                        </linearGradient>
+                    </defs>
+                </svg>
+                <span>ODB+</span>
+            </a>
+            <ul class="navbar-menu">
+                <li><a href="../../index.html">Home</a></li>
+                <li><a href="../codes/index.html">Error Codes</a></li>
+                <li><a href="../forums/index.html">Forums</a></li>
+                <li><a href="index.html" class="active">Sensors</a></li>
+            </ul>
+            <div class="navbar-actions">
+                <a href="../auth/login.html" class="btn btn-secondary">Log In</a>
+                <a href="../auth/signup.html" class="btn btn-primary">Sign Up</a>
+            </div>
+        </div>
+    </nav>
+
+    <main style="padding-top: 100px; padding-bottom: 4rem;">
+        <div class="container" style="max-width: 900px;">
+            <!-- Breadcrumb -->
+            <nav class="breadcrumb mb-4">
+                <a href="index.html">Sensors</a>
+                <span class="separator">/</span>
+                <a href="index.html#engine">Engine Management</a>
+                <span class="separator">/</span>
+                <span class="current">CKP Sensor</span>
+            </nav>
+
+            <!-- Sensor Header -->
+            <div class="sensor-detail-header mb-4">
+                <div class="sensor-icon-lg">
+                    <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="1.5">
+                        <circle cx="12" cy="12" r="10"/>
+                        <path d="M12 6v12"/>
+                        <path d="M8 10l4 2 4-2"/>
+                    </svg>
+                </div>
+                <div class="sensor-detail-info">
+                    <h1>Crankshaft Position Sensor (CKP)</h1>
+                    <p class="sensor-subtitle">Also known as: Crank Sensor, CPS, Engine Speed Sensor</p>
+                    <div class="sensor-meta">
+                        <span class="badge badge-primary">Engine Management</span>
+                        <span class="badge badge-danger">Critical</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Facts -->
+            <div class="quick-info-grid mb-4">
+                <div class="quick-info-card">
+                    <h4>Location</h4>
+                    <p>Near Crankshaft Pulley or Flywheel</p>
+                </div>
+                <div class="quick-info-card">
+                    <h4>Signal Type</h4>
+                    <p>AC Voltage or Digital Square Wave</p>
+                </div>
+                <div class="quick-info-card">
+                    <h4>Lifespan</h4>
+                    <p>100,000+ miles</p>
+                </div>
+                <div class="quick-info-card">
+                    <h4>Replacement Cost</h4>
+                    <p>$50 - $250</p>
+                </div>
+            </div>
+
+            <!-- Overview -->
+            <section class="content-section mb-4">
+                <h2>What Is a Crankshaft Position Sensor?</h2>
+                <p>The Crankshaft Position Sensor (CKP) is one of the most critical sensors in the engine management system. It monitors the rotational speed and position of the crankshaft, providing the Engine Control Module (ECM) with essential data for ignition timing, fuel injection timing, and engine speed (RPM) calculation.</p>
+
+                <p>Without a working CKP sensor, the engine cannot run - the ECM has no way to know when to fire the spark plugs or inject fuel. This is why a failing CKP sensor often causes sudden stalling or no-start conditions.</p>
+
+                <div class="warning-box">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+                        <line x1="12" y1="9" x2="12" y2="13"/>
+                        <line x1="12" y1="17" x2="12.01" y2="17"/>
+                    </svg>
+                    <div>
+                        <strong>Critical Sensor:</strong> A completely failed CKP sensor will prevent the engine from starting. If your car stalls suddenly and won't restart, but the starter cranks normally, the CKP sensor is a prime suspect.
+                    </div>
+                </div>
+            </section>
+
+            <!-- How It Works -->
+            <section class="content-section mb-4">
+                <h2>How the CKP Sensor Works</h2>
+                <p>The CKP sensor reads a toothed wheel (reluctor ring) attached to the crankshaft. As the teeth pass by the sensor, they create a signal that the ECM uses to determine crankshaft position and speed.</p>
+
+                <h4>Magnetic (Variable Reluctance) Type</h4>
+                <p>Uses a permanent magnet wrapped with a coil of wire. As each tooth passes, it creates a change in the magnetic field that induces an AC voltage in the coil. The frequency of this signal corresponds to engine RPM, and the amplitude increases with speed. These sensors typically have two wires.</p>
+
+                <h4 class="mt-3">Hall Effect Type</h4>
+                <p>Uses a semiconductor that responds to changes in magnetic field. Produces a clean digital square wave signal regardless of engine speed. These sensors require a power supply and typically have three wires (power, ground, signal). More common on modern vehicles.</p>
+
+                <h4 class="mt-3">The Reluctor Ring</h4>
+                <p>The toothed wheel typically has a missing tooth (or teeth) that creates a signature in the signal. This "missing tooth" position corresponds to a specific crankshaft position (usually near TDC for cylinder 1), allowing the ECM to determine exact crankshaft position, not just speed.</p>
+
+                <h4 class="mt-3">What the ECM Does with CKP Data:</h4>
+                <ul>
+                    <li><strong>Ignition timing:</strong> Determines exactly when to fire each spark plug</li>
+                    <li><strong>Fuel injection:</strong> Times fuel injection for optimal combustion</li>
+                    <li><strong>RPM calculation:</strong> Provides engine speed for gauge and other systems</li>
+                    <li><strong>Misfire detection:</strong> Detects slight variations in crankshaft acceleration</li>
+                    <li><strong>Tachometer signal:</strong> Drives the RPM gauge on the dashboard</li>
+                </ul>
+            </section>
+
+            <!-- Symptoms -->
+            <section class="content-section mb-4">
+                <h2>Symptoms of a Failing CKP Sensor</h2>
+                <ul class="symptom-list">
+                    <li>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--danger)" stroke-width="2">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                        </svg>
+                        <div>
+                            <strong>No Start / Crank No Start</strong>
+                            <p>Engine cranks but won't start - most common symptom of complete failure</p>
+                        </div>
+                    </li>
+                    <li>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--danger)" stroke-width="2">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                        </svg>
+                        <div>
+                            <strong>Intermittent Stalling</strong>
+                            <p>Engine suddenly dies while driving, often restarts after cooling down</p>
+                        </div>
+                    </li>
+                    <li>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--danger)" stroke-width="2">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                        </svg>
+                        <div>
+                            <strong>Check Engine Light</strong>
+                            <p>CKP codes (P0335-P0339) stored in the ECM</p>
+                        </div>
+                    </li>
+                    <li>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="2">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                        </svg>
+                        <div>
+                            <strong>Hard Starting</strong>
+                            <p>Extended cranking before engine fires, especially when hot</p>
+                        </div>
+                    </li>
+                    <li>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="2">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                        </svg>
+                        <div>
+                            <strong>Engine Misfires</strong>
+                            <p>Rough running, misfires, or hesitation due to incorrect timing</p>
+                        </div>
+                    </li>
+                    <li>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="2">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                        </svg>
+                        <div>
+                            <strong>Tachometer Not Working</strong>
+                            <p>RPM gauge reads zero or erratically (on some vehicles)</p>
+                        </div>
+                    </li>
+                    <li>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="2">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                        </svg>
+                        <div>
+                            <strong>Vibration or Rough Running</strong>
+                            <p>Engine runs rough due to timing variations</p>
+                        </div>
+                    </li>
+                </ul>
+            </section>
+
+            <!-- Testing -->
+            <section class="content-section mb-4">
+                <h2>How to Test a CKP Sensor</h2>
+                <div class="diagnostic-steps">
+                    <div class="step">
+                        <div class="step-number">1</div>
+                        <div class="step-content">
+                            <h4>Check for RPM Signal</h4>
+                            <p>Connect your ODB+ scanner and crank the engine. If the RPM reading stays at 0 during cranking, the ECM isn't receiving a valid CKP signal. This is a quick way to confirm a CKP-related problem.</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">2</div>
+                        <div class="step-content">
+                            <h4>Visual Inspection</h4>
+                            <p>Inspect the sensor and wiring for obvious damage. Check the connector for corrosion, bent pins, or oil contamination. Examine the sensor tip for metal debris (can indicate reluctor wheel damage) or damage from contact with the reluctor.</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">3</div>
+                        <div class="step-content">
+                            <h4>Resistance Test (Magnetic Type)</h4>
+                            <p>With the sensor unplugged, measure resistance across the two terminals. Typical range is 200-2000 ohms (check your vehicle's specs). Open circuit (infinite resistance) or very low resistance indicates a failed sensor.</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">4</div>
+                        <div class="step-content">
+                            <h4>Voltage Output Test (Magnetic Type)</h4>
+                            <p>Set your multimeter to AC volts. Connect to the sensor terminals and crank the engine. You should see 0.2V - 2V AC during cranking. No voltage means the sensor isn't generating a signal.</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">5</div>
+                        <div class="step-content">
+                            <h4>Signal Test (Hall Effect Type)</h4>
+                            <p>Use a digital multimeter or scope to check for a pulsing DC signal during cranking. The signal should switch between 0V and 5V (or close to reference voltage). A noid light can also be used to verify signal presence.</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">6</div>
+                        <div class="step-content">
+                            <h4>Check Air Gap</h4>
+                            <p>Some sensors are adjustable. The gap between sensor tip and reluctor wheel should typically be 0.5mm - 1.5mm. Too large a gap can cause weak or missing signals, especially at low RPM.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Common Causes -->
+            <section class="content-section mb-4">
+                <h2>Common Causes of Failure</h2>
+                <div class="causes-grid">
+                    <div class="cause-category">
+                        <h4>Heat Related</h4>
+                        <ul>
+                            <li>Internal component degradation from heat cycles</li>
+                            <li>Cracked or melted plastic housing</li>
+                            <li>Heat-induced intermittent failures</li>
+                        </ul>
+                    </div>
+                    <div class="cause-category">
+                        <h4>Physical Damage</h4>
+                        <ul>
+                            <li>Sensor tip contact with reluctor</li>
+                            <li>Damaged or worn reluctor teeth</li>
+                            <li>Impact damage during service</li>
+                        </ul>
+                    </div>
+                    <div class="cause-category">
+                        <h4>Electrical Issues</h4>
+                        <ul>
+                            <li>Corroded connector terminals</li>
+                            <li>Damaged wiring harness</li>
+                            <li>Poor ground connection</li>
+                            <li>Oil contamination in connector</li>
+                        </ul>
+                    </div>
+                    <div class="cause-category">
+                        <h4>Installation Issues</h4>
+                        <ul>
+                            <li>Incorrect air gap</li>
+                            <li>Improper torque causing cracking</li>
+                            <li>Wrong sensor for application</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Replacement Tips -->
+            <section class="content-section mb-4">
+                <h2>Replacement Tips</h2>
+                <div class="tech-tips">
+                    <div class="tip">
+                        <h4>Note Sensor Location</h4>
+                        <p>CKP sensors can be located near the crankshaft pulley (front of engine), near the flywheel (back of engine), or on the engine block. Identify your sensor location before ordering parts.</p>
+                    </div>
+                    <div class="tip">
+                        <h4>Check the Reluctor</h4>
+                        <p>While the sensor is out, inspect the reluctor wheel for damaged or missing teeth, debris, or excessive runout. A damaged reluctor can cause intermittent CKP problems.</p>
+                    </div>
+                    <div class="tip">
+                        <h4>Use Proper Torque</h4>
+                        <p>Don't overtighten the mounting bolt. CKP sensors are often plastic and can crack under excessive torque. Follow manufacturer specifications.</p>
+                    </div>
+                    <div class="tip">
+                        <h4>Check for Relearn</h4>
+                        <p>Some vehicles require a CKP relearn procedure after sensor replacement. This teaches the ECM the exact position of the reluctor wheel. Check service information for your specific vehicle.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Related Codes -->
+            <section class="content-section mb-4">
+                <h2>Related Diagnostic Codes</h2>
+                <div class="related-codes-grid">
+                    <a href="../codes/index.html" class="related-code">
+                        <span class="code-badge-sm">P0335</span>
+                        <span>CKP Sensor A Circuit</span>
+                    </a>
+                    <a href="../codes/index.html" class="related-code">
+                        <span class="code-badge-sm">P0336</span>
+                        <span>CKP Sensor A Range/Perf</span>
+                    </a>
+                    <a href="../codes/index.html" class="related-code">
+                        <span class="code-badge-sm">P0337</span>
+                        <span>CKP Sensor A Low Input</span>
+                    </a>
+                    <a href="../codes/index.html" class="related-code">
+                        <span class="code-badge-sm">P0338</span>
+                        <span>CKP Sensor A High Input</span>
+                    </a>
+                    <a href="../codes/index.html" class="related-code">
+                        <span class="code-badge-sm">P0339</span>
+                        <span>CKP Sensor A Intermittent</span>
+                    </a>
+                    <a href="../codes/index.html" class="related-code">
+                        <span class="code-badge-sm">P0016</span>
+                        <span>Crank/Cam Correlation</span>
+                    </a>
+                </div>
+            </section>
+
+            <!-- Forum -->
+            <section class="content-section mb-4">
+                <h2>Community Discussion</h2>
+                <p class="mb-3">Have questions about CKP sensors? Get help from experienced mechanics and fellow car owners.</p>
+                <a href="../forums/index.html" class="btn btn-primary">Visit Forums</a>
+                <a href="../forums/index.html?search=crankshaft+sensor" class="btn btn-outline" style="margin-left: 0.5rem;">Search CKP Threads</a>
+            </section>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-bottom" style="border-top: none; padding-top: 0;">
+                <p>&copy; 2024 ODB+. All rights reserved.</p>
+                <div class="footer-legal">
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Terms of Service</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../../js/main.js"></script>
+</body>
+</html>
