@@ -4,17 +4,17 @@ plugins {
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.hilt)
-    kotlin("kapt")
+    alias(libs.plugins.ksp)
 }
 
 android {
     namespace = "com.odbplus.app"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.odbplus.app"
         minSdk = 26
-        targetSdk = 35
+        targetSdk = 36
         versionCode = 1
         versionName = "1.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -23,8 +23,7 @@ android {
     buildFeatures { compose = true }
 
     kotlin {
-        // Set the JVM toolchain to version 17
-        jvmToolchain(17)
+        jvmToolchain(libs.versions.jvmTarget.get().toInt())
     }
 }
 
@@ -47,7 +46,7 @@ dependencies {
 
     // Hilt
     implementation(libs.hilt.android)
-    kapt(libs.hilt.compiler)
+    ksp(libs.hilt.compiler)
     implementation(libs.hilt.navigation.compose)
 
     // Serialization & DataStore
@@ -83,4 +82,3 @@ dependencies {
     androidTestImplementation(libs.compose.ui.test.junit4)
 }
 
-kapt { correctErrorTypes = true }

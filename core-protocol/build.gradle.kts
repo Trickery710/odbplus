@@ -2,13 +2,13 @@ plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.hilt)
-    kotlin("kapt")
+    alias(libs.plugins.ksp)
 }
 
 
 android {
     namespace = "com.odbplus.core.protocol"
-    compileSdk = 34
+    compileSdk = 36
 
     defaultConfig {
         minSdk = 24
@@ -26,8 +26,7 @@ android {
         }
     }
     kotlin {
-        // Set the JVM toolchain to version 17
-        jvmToolchain(17)
+        jvmToolchain(libs.versions.jvmTarget.get().toInt())
     }
 }
 
@@ -38,9 +37,8 @@ dependencies {
     implementation(project(":core-transport"))
     implementation(libs.javax.inject)
 
-    // Add these Hilt dependencies
     implementation(libs.hilt.android)
-    kapt(libs.hilt.compiler)
+    ksp(libs.hilt.compiler)
 
     coreLibraryDesugaring(libs.desugar.jdk.libs)
 }

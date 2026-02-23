@@ -1,14 +1,13 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
-    // Add these two lines for Hilt
     alias(libs.plugins.hilt)
-    kotlin("kapt")
+    alias(libs.plugins.ksp)
 }
 
 android {
     namespace = "com.odbplus.core.transport"
-    compileSdk = 34
+    compileSdk = 36
 
     defaultConfig {
         minSdk = 24
@@ -26,22 +25,16 @@ android {
         }
     }
     kotlin {
-        // Set the JVM toolchain to version 17
-        jvmToolchain(17)
+        jvmToolchain(libs.versions.jvmTarget.get().toInt())
     }
 }
 
 dependencies {
     implementation(libs.androidx.core.ktx)
-    api(libs.kotlinx.coroutines.android)
+    api(libs.coroutines.android)
     implementation(libs.timber)
     implementation(libs.javax.inject)
-    // Add these Hilt dependencies
     implementation(libs.hilt.android)
-    kapt(libs.hilt.compiler)
+    ksp(libs.hilt.compiler)
 }
 
-// Add this block at the end of the file for Kapt
-kapt {
-    correctErrorTypes = true
-}
