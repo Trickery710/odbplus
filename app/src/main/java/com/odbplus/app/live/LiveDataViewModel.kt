@@ -4,17 +4,13 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.odbplus.core.protocol.ObdPid
-import com.odbplus.core.protocol.ObdResponse
 import com.odbplus.core.protocol.ObdService
 import com.odbplus.core.transport.ConnectionState
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -83,407 +79,158 @@ class LiveDataViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(LiveDataUiState())
     val uiState: StateFlow<LiveDataUiState> = _uiState.asStateFlow()
 
-    private var pollingJob: Job? = null
-    private var replayJob: Job? = null
+    private val polling = PollingManager(obdService).also { mgr ->
+        mgr.onPollCycle = { pidValues ->
+            logSession.addPoint(pidValues)
+            repository.updatePidValues(_uiState.value.pidValues)
+        }
+    }
+    private val logSession = LogSessionManager(repository)
+    private val replay = ReplayManager().also { mgr ->
+        mgr.onFrame = { pidValues ->
+            val selectedPids = _uiState.value.selectedPids
+            val updatedValues = _uiState.value.pidValues.toMutableMap()
+            for ((pid, value) in pidValues) {
+                updatedValues[pid] = PidDisplayState(
+                    pid = pid, isSelected = pid in selectedPids,
+                    isLoading = false, value = value,
+                    formattedValue = if (value != null) formatReplayValue(value, pid) else "N/A",
+                    error = if (value == null) "No data" else null
+                )
+            }
+            _uiState.update { it.copy(pidValues = updatedValues) }
+        }
+    }
 
     init {
-        // Initialize repository and restore state
         viewModelScope.launch {
             try {
                 repository.initialize()
-
-                // Restore selected PIDs once after initialization
                 val savedPids = repository.selectedPids.value
                 if (savedPids.isNotEmpty()) {
-                    val updatedAvailable = _uiState.value.availablePids.map { pidState ->
-                        pidState.copy(isSelected = pidState.pid in savedPids)
+                    val updatedAvailable = _uiState.value.availablePids.map {
+                        it.copy(isSelected = it.pid in savedPids)
                     }
-                    _uiState.update {
-                        it.copy(
-                            selectedPids = savedPids,
-                            availablePids = updatedAvailable
-                        )
-                    }
+                    _uiState.update { it.copy(selectedPids = savedPids, availablePids = updatedAvailable) }
                 }
-
-                // Restore PID values once
                 val savedValues = repository.currentPidValues.value
                 if (savedValues.isNotEmpty()) {
                     _uiState.update { it.copy(pidValues = savedValues) }
                 }
-            } catch (e: Exception) {
-                // Ignore initialization errors
-            }
+            } catch (_: Exception) {}
         }
 
-        // Load saved sessions from repository
         viewModelScope.launch {
             repository.sessions.collect { sessions ->
                 _uiState.update { it.copy(savedSessions = sessions) }
             }
         }
 
-        // Monitor connection state
         viewModelScope.launch {
             obdService.connectionState.collect { state ->
-                val isConnected = state == ConnectionState.CONNECTED
-                _uiState.update { it.copy(isConnected = isConnected) }
-
-                if (!isConnected && _uiState.value.isPolling) {
-                    stopPolling()
-                }
+                val connected = state == ConnectionState.CONNECTED
+                _uiState.update { it.copy(isConnected = connected) }
+                if (!connected && polling.isPolling.value) polling.stop()
             }
         }
+
+        // Mirror sub-manager state into the unified UiState
+        viewModelScope.launch { polling.isPolling.collect { v -> _uiState.update { it.copy(isPolling = v) } } }
+        viewModelScope.launch { polling.pollIntervalMs.collect { v -> _uiState.update { it.copy(pollIntervalMs = v) } } }
+        viewModelScope.launch { polling.pidValues.collect { v -> _uiState.update { it.copy(pidValues = v) } } }
+        viewModelScope.launch { logSession.isLogging.collect { v -> _uiState.update { it.copy(isLogging = v) } } }
+        viewModelScope.launch { logSession.currentSession.collect { v -> _uiState.update { it.copy(currentLogSession = v) } } }
+        viewModelScope.launch { replay.isReplaying.collect { v -> _uiState.update { it.copy(isReplaying = v) } } }
+        viewModelScope.launch { replay.replaySession.collect { v -> _uiState.update { it.copy(replaySession = v) } } }
+        viewModelScope.launch { replay.replayIndex.collect { v -> _uiState.update { it.copy(replayIndex = v) } } }
+        viewModelScope.launch { replay.replaySpeed.collect { v -> _uiState.update { it.copy(replaySpeed = v) } } }
     }
 
     // ==================== PID Selection ====================
 
     fun togglePidSelection(pid: ObdPid) {
         _uiState.update { state ->
-            val currentSelected = state.selectedPids.toMutableList()
-            if (pid in currentSelected) {
-                currentSelected.remove(pid)
-            } else {
-                currentSelected.add(pid)
+            val updated = state.selectedPids.toMutableList().also {
+                if (pid in it) it.remove(pid) else it.add(pid)
             }
-
-            val updatedAvailable = state.availablePids.map { pidState ->
-                pidState.copy(isSelected = pidState.pid in currentSelected)
-            }
-
             state.copy(
-                selectedPids = currentSelected,
-                availablePids = updatedAvailable
+                selectedPids = updated,
+                availablePids = state.availablePids.map { it.copy(isSelected = it.pid in updated) }
             )
         }
     }
 
     fun selectPids(pids: List<ObdPid>) {
         _uiState.update { state ->
-            val updatedAvailable = state.availablePids.map { pidState ->
-                pidState.copy(isSelected = pidState.pid in pids)
-            }
             state.copy(
                 selectedPids = pids,
-                availablePids = updatedAvailable
+                availablePids = state.availablePids.map { it.copy(isSelected = it.pid in pids) }
             )
         }
-        // Persist selected PIDs
-        viewModelScope.launch {
-            repository.saveSelectedPids(pids)
-        }
+        viewModelScope.launch { repository.saveSelectedPids(pids) }
     }
 
-    fun selectPreset(preset: PidPreset) {
-        selectPids(preset.pids)
-    }
+    fun selectPreset(preset: PidPreset) = selectPids(preset.pids)
 
-    fun clearSelection() {
-        selectPids(emptyList())
-    }
+    fun clearSelection() = selectPids(emptyList())
 
     // ==================== Polling ====================
 
-    fun setPollInterval(intervalMs: Long) {
-        _uiState.update { it.copy(pollIntervalMs = intervalMs.coerceIn(100L, 5000L)) }
-    }
+    fun setPollInterval(intervalMs: Long) = polling.setInterval(intervalMs)
 
     fun startPolling() {
-        if (_uiState.value.selectedPids.isEmpty()) return
-        if (!_uiState.value.isConnected) return
         if (_uiState.value.isReplaying) return
-
-        pollingJob?.cancel()
-        _uiState.update { it.copy(isPolling = true) }
-
-        pollingJob = viewModelScope.launch {
-            while (isActive && _uiState.value.isPolling) {
-                pollSelectedPids()
-                delay(_uiState.value.pollIntervalMs)
-            }
-        }
+        polling.start(_uiState.value.selectedPids, viewModelScope)
     }
 
     fun stopPolling() {
-        pollingJob?.cancel()
-        pollingJob = null
-        _uiState.update { it.copy(isPolling = false) }
-
-        // Stop logging if it was active
-        if (_uiState.value.isLogging) {
-            stopLogging()
-        }
+        polling.stop()
+        if (logSession.isLogging.value) logSession.stop(viewModelScope)
     }
 
-    fun togglePolling() {
-        if (_uiState.value.isPolling) {
-            stopPolling()
-        } else {
-            startPolling()
-        }
-    }
+    fun togglePolling() { if (polling.isPolling.value) stopPolling() else startPolling() }
 
     fun querySinglePid(pid: ObdPid) {
-        if (!_uiState.value.isConnected) return
-        if (_uiState.value.isReplaying) return
-
-        viewModelScope.launch {
-            updatePidLoading(pid, true)
-            val response = obdService.query(pid)
-            updatePidValue(pid, response)
-        }
-    }
-
-    private suspend fun pollSelectedPids() {
-        val selectedPids = _uiState.value.selectedPids
-        val pidValuesForLog = mutableMapOf<ObdPid, Double?>()
-
-        for (pid in selectedPids) {
-            if (!_uiState.value.isPolling) break
-
-            updatePidLoading(pid, true)
-            val response = obdService.query(pid)
-            updatePidValue(pid, response)
-
-            // Collect values for logging
-            if (_uiState.value.isLogging) {
-                pidValuesForLog[pid] = (response as? ObdResponse.Success)?.value
-            }
-        }
-
-        // Add data point to log if logging
-        if (_uiState.value.isLogging && pidValuesForLog.isNotEmpty()) {
-            addLogDataPoint(pidValuesForLog)
-        }
-    }
-
-    private fun updatePidLoading(pid: ObdPid, isLoading: Boolean) {
-        _uiState.update { state ->
-            val currentPidState = state.pidValues[pid] ?: PidDisplayState(pid)
-            val updatedValues = state.pidValues.toMutableMap()
-            updatedValues[pid] = currentPidState.copy(isLoading = isLoading)
-            state.copy(pidValues = updatedValues)
-        }
-    }
-
-    private fun updatePidValue(pid: ObdPid, response: ObdResponse) {
-        _uiState.update { state ->
-            val pidState = when (response) {
-                is ObdResponse.Success -> PidDisplayState(
-                    pid = pid,
-                    isSelected = pid in state.selectedPids,
-                    isLoading = false,
-                    value = response.value,
-                    formattedValue = response.formattedValue,
-                    error = null
-                )
-                is ObdResponse.NoData -> PidDisplayState(
-                    pid = pid,
-                    isSelected = pid in state.selectedPids,
-                    isLoading = false,
-                    value = null,
-                    formattedValue = "N/A",
-                    error = "Not supported"
-                )
-                is ObdResponse.Error -> PidDisplayState(
-                    pid = pid,
-                    isSelected = pid in state.selectedPids,
-                    isLoading = false,
-                    value = null,
-                    formattedValue = "--",
-                    error = response.message
-                )
-                is ObdResponse.ParseError -> PidDisplayState(
-                    pid = pid,
-                    isSelected = pid in state.selectedPids,
-                    isLoading = false,
-                    value = null,
-                    formattedValue = "--",
-                    error = response.reason
-                )
-            }
-
-            val updatedValues = state.pidValues.toMutableMap()
-            updatedValues[pid] = pidState
-
-            // Persist PID values to repository for tab switching
-            repository.updatePidValues(updatedValues)
-
-            state.copy(pidValues = updatedValues)
-        }
+        if (!_uiState.value.isConnected || _uiState.value.isReplaying) return
+        polling.querySingle(pid, viewModelScope)
     }
 
     // ==================== Logging ====================
 
     fun startLogging() {
-        if (_uiState.value.selectedPids.isEmpty()) return
         if (_uiState.value.isReplaying) return
-
-        val session = LogSession(
-            selectedPids = _uiState.value.selectedPids
-        )
-
-        _uiState.update {
-            it.copy(
-                isLogging = true,
-                currentLogSession = session
-            )
-        }
-
-        // Start polling if not already polling
-        if (!_uiState.value.isPolling) {
-            startPolling()
-        }
+        logSession.start(_uiState.value.selectedPids)
+        if (!polling.isPolling.value) startPolling()
     }
 
-    fun stopLogging() {
-        val currentSession = _uiState.value.currentLogSession ?: return
+    fun stopLogging() = logSession.stop(viewModelScope)
 
-        val finalSession = currentSession.copy(endTime = System.currentTimeMillis())
+    fun toggleLogging() { if (logSession.isLogging.value) stopLogging() else startLogging() }
 
-        _uiState.update { state ->
-            state.copy(
-                isLogging = false,
-                currentLogSession = null
-            )
-        }
+    fun deleteSession(session: LogSession) = logSession.delete(session, viewModelScope)
 
-        // Persist session to repository
-        viewModelScope.launch {
-            repository.saveSession(finalSession)
-        }
-    }
-
-    fun toggleLogging() {
-        if (_uiState.value.isLogging) {
-            stopLogging()
-        } else {
-            startLogging()
-        }
-    }
-
-    private fun addLogDataPoint(pidValues: Map<ObdPid, Double?>) {
-        _uiState.update { state ->
-            val currentSession = state.currentLogSession ?: return@update state
-            val dataPoint = LoggedDataPoint(
-                timestamp = System.currentTimeMillis(),
-                pidValues = pidValues
-            )
-            val updatedSession = currentSession.copy(
-                dataPoints = currentSession.dataPoints + dataPoint
-            )
-            state.copy(currentLogSession = updatedSession)
-        }
-    }
-
-    fun deleteSession(session: LogSession) {
-        viewModelScope.launch {
-            repository.deleteSession(session.id)
-        }
-    }
-
-    fun clearAllSessions() {
-        viewModelScope.launch {
-            repository.clearAllSessions()
-        }
-    }
+    fun clearAllSessions() = logSession.clearAll(viewModelScope)
 
     // ==================== Replay ====================
 
     fun startReplay(session: LogSession) {
         if (session.dataPoints.isEmpty()) return
-
-        // Stop polling if active
-        stopPolling()
-
-        // Set the selected PIDs to match the session
+        polling.stop()
         selectPids(session.selectedPids)
-
-        _uiState.update {
-            it.copy(
-                isReplaying = true,
-                replaySession = session,
-                replayIndex = 0
-            )
-        }
-
-        replayJob = viewModelScope.launch {
-            val dataPoints = session.dataPoints
-            var index = 0
-
-            while (isActive && _uiState.value.isReplaying && index < dataPoints.size) {
-                val dataPoint = dataPoints[index]
-                applyReplayDataPoint(dataPoint)
-
-                _uiState.update { it.copy(replayIndex = index) }
-
-                // Calculate delay to next point
-                if (index + 1 < dataPoints.size) {
-                    val currentTime = dataPoint.timestamp
-                    val nextTime = dataPoints[index + 1].timestamp
-                    val delayMs = ((nextTime - currentTime) / _uiState.value.replaySpeed).toLong()
-                    delay(delayMs.coerceAtLeast(50L))
-                }
-
-                index++
-            }
-
-            // Replay finished
-            if (_uiState.value.isReplaying) {
-                _uiState.update { it.copy(isReplaying = false, replaySession = null, replayIndex = 0) }
-            }
-        }
+        replay.start(session, viewModelScope)
     }
 
-    fun stopReplay() {
-        replayJob?.cancel()
-        replayJob = null
-        _uiState.update {
-            it.copy(
-                isReplaying = false,
-                replaySession = null,
-                replayIndex = 0
-            )
-        }
-    }
+    fun stopReplay() = replay.stop()
 
-    fun setReplaySpeed(speed: Float) {
-        _uiState.update { it.copy(replaySpeed = speed.coerceIn(0.25f, 4.0f)) }
-    }
+    fun setReplaySpeed(speed: Float) = replay.setSpeed(speed)
 
-    private fun applyReplayDataPoint(dataPoint: LoggedDataPoint) {
-        _uiState.update { state ->
-            val updatedPidValues = state.pidValues.toMutableMap()
-
-            for ((pid, value) in dataPoint.pidValues) {
-                val formatted = if (value != null) {
-                    formatReplayValue(value, pid)
-                } else {
-                    "N/A"
-                }
-
-                updatedPidValues[pid] = PidDisplayState(
-                    pid = pid,
-                    isSelected = pid in state.selectedPids,
-                    isLoading = false,
-                    value = value,
-                    formattedValue = formatted,
-                    error = if (value == null) "No data" else null
-                )
-            }
-
-            state.copy(pidValues = updatedPidValues)
-        }
-    }
+    // ==================== Helpers ====================
 
     private fun formatReplayValue(value: Double, pid: ObdPid): String {
         val numericPart = when (pid) {
-            ObdPid.ENGINE_RPM,
-            ObdPid.VEHICLE_SPEED,
-            ObdPid.ENGINE_COOLANT_TEMP,
-            ObdPid.INTAKE_AIR_TEMP,
-            ObdPid.AMBIENT_AIR_TEMP,
-            ObdPid.ENGINE_OIL_TEMP -> value.toInt().toString()
+            ObdPid.ENGINE_RPM, ObdPid.VEHICLE_SPEED,
+            ObdPid.ENGINE_COOLANT_TEMP, ObdPid.INTAKE_AIR_TEMP,
+            ObdPid.AMBIENT_AIR_TEMP, ObdPid.ENGINE_OIL_TEMP -> value.toInt().toString()
             else -> if (value == value.toLong().toDouble()) {
                 value.toLong().toString()
             } else {
@@ -495,8 +242,8 @@ class LiveDataViewModel @Inject constructor(
 
     override fun onCleared() {
         super.onCleared()
-        stopPolling()
-        stopReplay()
+        polling.stop()
+        replay.stop()
     }
 }
 
@@ -506,49 +253,25 @@ class LiveDataViewModel @Inject constructor(
 enum class PidPreset(val displayName: String, val pids: List<ObdPid>) {
     ENGINE_BASICS(
         "Engine Basics",
-        listOf(
-            ObdPid.ENGINE_RPM,
-            ObdPid.ENGINE_LOAD,
-            ObdPid.ENGINE_COOLANT_TEMP,
-            ObdPid.THROTTLE_POSITION
-        )
+        listOf(ObdPid.ENGINE_RPM, ObdPid.ENGINE_LOAD, ObdPid.ENGINE_COOLANT_TEMP, ObdPid.THROTTLE_POSITION)
     ),
     DRIVING(
         "Driving",
-        listOf(
-            ObdPid.ENGINE_RPM,
-            ObdPid.VEHICLE_SPEED,
-            ObdPid.THROTTLE_POSITION,
-            ObdPid.ENGINE_LOAD
-        )
+        listOf(ObdPid.ENGINE_RPM, ObdPid.VEHICLE_SPEED, ObdPid.THROTTLE_POSITION, ObdPid.ENGINE_LOAD)
     ),
     FUEL_ECONOMY(
         "Fuel Economy",
-        listOf(
-            ObdPid.MAF_FLOW_RATE,
-            ObdPid.VEHICLE_SPEED,
-            ObdPid.ENGINE_FUEL_RATE,
-            ObdPid.FUEL_TANK_LEVEL
-        )
+        listOf(ObdPid.MAF_FLOW_RATE, ObdPid.VEHICLE_SPEED, ObdPid.ENGINE_FUEL_RATE, ObdPid.FUEL_TANK_LEVEL)
     ),
     TEMPERATURES(
         "Temperatures",
-        listOf(
-            ObdPid.ENGINE_COOLANT_TEMP,
-            ObdPid.INTAKE_AIR_TEMP,
-            ObdPid.AMBIENT_AIR_TEMP,
-            ObdPid.ENGINE_OIL_TEMP
-        )
+        listOf(ObdPid.ENGINE_COOLANT_TEMP, ObdPid.INTAKE_AIR_TEMP, ObdPid.AMBIENT_AIR_TEMP, ObdPid.ENGINE_OIL_TEMP)
     ),
     FULL_DASHBOARD(
         "Full Dashboard",
         listOf(
-            ObdPid.ENGINE_RPM,
-            ObdPid.VEHICLE_SPEED,
-            ObdPid.ENGINE_COOLANT_TEMP,
-            ObdPid.THROTTLE_POSITION,
-            ObdPid.ENGINE_LOAD,
-            ObdPid.FUEL_TANK_LEVEL
+            ObdPid.ENGINE_RPM, ObdPid.VEHICLE_SPEED, ObdPid.ENGINE_COOLANT_TEMP,
+            ObdPid.THROTTLE_POSITION, ObdPid.ENGINE_LOAD, ObdPid.FUEL_TANK_LEVEL
         )
     )
 }

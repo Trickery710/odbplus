@@ -17,21 +17,21 @@ class ConnectViewModel @Inject constructor(
     val connectionState: StateFlow<ConnectionState> = repo.connectionState
     val logLines: StateFlow<List<String>> = repo.logLines
 
-    // --- FIX: Renamed the old 'connect' to be specific to TCP ---
+    /** Connect via TCP/IP (ELM327 Wi-Fi adapters). */
     fun connectTcp(host: String, port: Int) {
         viewModelScope.launch {
             repo.connect(host, port, isBluetooth = false)
         }
     }
 
-    // --- FIX: Added a new function specifically for Bluetooth ---
+    /** Connect via Bluetooth SPP (ELM327 BT adapters). */
     fun connectBluetooth(macAddress: String) {
         viewModelScope.launch {
             repo.connect(macAddress, 0, isBluetooth = true)
         }
     }
 
-    // --- FIX: Added the missing function for sending custom commands ---
+    /** Send a raw AT/OBD command and discard the reply (terminal use). */
     fun sendCustomCommand(cmd: String) {
         viewModelScope.launch {
             repo.sendAndAwait(cmd)

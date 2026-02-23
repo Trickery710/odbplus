@@ -40,70 +40,55 @@ class DiagnosticsViewModel @Inject constructor(
     }
 
     fun readCodes() {
-        if (!_uiState.value.isConnected) return
+        launchOdbOperation(errorPrefix = "Failed to read codes") {
+            val stored = obdService.readStoredDtcs()
+            val pending = obdService.readPendingDtcs()
+            _uiState.update {
+                it.copy(
+                    isLoading = false,
+                    storedCodes = stored,
+                    pendingCodes = pending,
+                    lastReadTime = System.currentTimeMillis(),
+                    errorMessage = null
+                )
+            }
+        }
+    }
 
-        viewModelScope.launch {
-            _uiState.update { it.copy(isLoading = true, errorMessage = null, clearSuccess = null) }
-
-            try {
-                val stored = obdService.readStoredDtcs()
-                val pending = obdService.readPendingDtcs()
-
+    fun clearCodes() {
+        launchOdbOperation(errorPrefix = "Failed to clear codes") {
+            val success = obdService.clearDtcs()
+            if (success) {
                 _uiState.update {
                     it.copy(
                         isLoading = false,
-                        storedCodes = stored,
-                        pendingCodes = pending,
-                        lastReadTime = System.currentTimeMillis(),
+                        storedCodes = emptyList(),
+                        pendingCodes = emptyList(),
+                        clearSuccess = true,
                         errorMessage = null
                     )
                 }
-            } catch (e: Exception) {
+            } else {
                 _uiState.update {
                     it.copy(
                         isLoading = false,
-                        errorMessage = "Failed to read codes: ${e.message}"
+                        clearSuccess = false,
+                        errorMessage = "Clear command did not confirm"
                     )
                 }
             }
         }
     }
 
-    fun clearCodes() {
+    private fun launchOdbOperation(errorPrefix: String, block: suspend () -> Unit) {
         if (!_uiState.value.isConnected) return
-
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true, errorMessage = null, clearSuccess = null) }
-
             try {
-                val success = obdService.clearDtcs()
-
-                if (success) {
-                    _uiState.update {
-                        it.copy(
-                            isLoading = false,
-                            storedCodes = emptyList(),
-                            pendingCodes = emptyList(),
-                            clearSuccess = true,
-                            errorMessage = null
-                        )
-                    }
-                } else {
-                    _uiState.update {
-                        it.copy(
-                            isLoading = false,
-                            clearSuccess = false,
-                            errorMessage = "Clear command did not confirm"
-                        )
-                    }
-                }
+                block()
             } catch (e: Exception) {
                 _uiState.update {
-                    it.copy(
-                        isLoading = false,
-                        clearSuccess = false,
-                        errorMessage = "Failed to clear codes: ${e.message}"
-                    )
+                    it.copy(isLoading = false, errorMessage = "$errorPrefix: ${e.message}")
                 }
             }
         }

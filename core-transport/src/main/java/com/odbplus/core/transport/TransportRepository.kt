@@ -15,6 +15,13 @@ interface TransportRepository {
     suspend fun sendAndAwait(cmd: String, timeoutMs: Long = TransportConstants.DEFAULT_RESPONSE_TIMEOUT_MS)
     suspend fun disconnect()
     fun clearLogs()
+
+    /**
+     * Returns the currently active [ObdTransport], or null if not connected.
+     * Used by higher-level protocol layers (e.g. AdapterSession) that need
+     * direct access to the raw transport for fingerprinting and command routing.
+     */
+    fun getActiveTransport(): ObdTransport?
 }
 
 @Singleton
@@ -76,6 +83,8 @@ class TransportRepositoryImpl @Inject constructor(
         }
         activeTransport = null
     }
+
+    override fun getActiveTransport(): ObdTransport? = activeTransport
 
     private suspend fun initElmSession() {
         addLog("Initializing ELM327 session...")

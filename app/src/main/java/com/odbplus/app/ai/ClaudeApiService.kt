@@ -197,40 +197,23 @@ class ClaudeApiService @Inject constructor() {
                 setBody(request)
             }
 
-            when (response.status) {
-                HttpStatusCode.OK -> {
-                    val claudeResponse = response.body<ClaudeResponse>()
-                    val content = claudeResponse.content
-                        .filter { it.type == "text" }
-                        .mapNotNull { it.text }
-                        .joinToString("\n")
-                    ApiResult.Success(AiResponse(content, AiProvider.CLAUDE))
-                }
-                HttpStatusCode.Unauthorized -> {
-                    ApiResult.Error("Invalid Claude API key. Please check your key.", 401)
-                }
-                HttpStatusCode.TooManyRequests -> {
-                    ApiResult.Error("Claude rate limit exceeded. Please wait and try again.", 429)
-                }
-                else -> {
-                    val errorBody = tryParseClaudeError(response)
-                    ApiResult.Error(errorBody ?: "Claude request failed: ${response.status.value}", response.status.value)
-                }
+            if (response.status == HttpStatusCode.OK) {
+                val content = response.body<ClaudeResponse>().content
+                    .filter { it.type == "text" }
+                    .mapNotNull { it.text }
+                    .joinToString("\n")
+                ApiResult.Success(AiResponse(content, AiProvider.CLAUDE))
+            } else {
+                ApiErrorHandler.handleHttpError(response, "claude") { tryParseClaudeError(it) }
             }
         } catch (e: Exception) {
-            ApiResult.Error(parseNetworkError(e))
+            ApiResult.Error(ApiErrorHandler.parseNetworkError(e))
         }
     }
 
-    private suspend fun tryParseClaudeError(response: HttpResponse): String? {
-        return try {
-            val body = response.bodyAsText()
-            val errorResponse = json.decodeFromString<ClaudeErrorResponse>(body)
-            errorResponse.error.message
-        } catch (e: Exception) {
-            null
-        }
-    }
+    private suspend fun tryParseClaudeError(response: HttpResponse): String? = try {
+        json.decodeFromString<ClaudeErrorResponse>(response.bodyAsText()).error.message
+    } catch (e: Exception) { null }
 
     // ==================== Gemini Implementation ====================
 
@@ -240,16 +223,8 @@ class ClaudeApiService @Inject constructor() {
         messages: List<ClaudeMessage>
     ): ApiResult<AiResponse> {
         return try {
-            // Convert messages to Gemini format
-            val geminiContents = messages.map { msg ->
-                GeminiContent(
-                    role = if (msg.role == "user") "user" else "model",
-                    parts = listOf(GeminiPart(msg.content))
-                )
-            }
-
             val request = GeminiRequest(
-                contents = geminiContents,
+                contents = MessageConverters.toGeminiContents(messages),
                 systemInstruction = GeminiContent(parts = listOf(GeminiPart(systemPrompt))),
                 generationConfig = GeminiGenerationConfig(maxOutputTokens = DEFAULT_MAX_TOKENS)
             )
@@ -259,47 +234,22 @@ class ClaudeApiService @Inject constructor() {
                 setBody(request)
             }
 
-            when (response.status) {
-                HttpStatusCode.OK -> {
-                    val geminiResponse = response.body<GeminiResponse>()
-                    val content = geminiResponse.candidates
-                        ?.firstOrNull()
-                        ?.content
-                        ?.parts
-                        ?.firstOrNull()
-                        ?.text
-                        ?: "No response generated"
-                    ApiResult.Success(AiResponse(content, AiProvider.GEMINI))
-                }
-                HttpStatusCode.BadRequest -> {
-                    val errorBody = tryParseGeminiError(response)
-                    ApiResult.Error(errorBody ?: "Invalid Gemini API key or request.", 400)
-                }
-                HttpStatusCode.Forbidden -> {
-                    ApiResult.Error("Invalid Gemini API key. Please check your key.", 403)
-                }
-                HttpStatusCode.TooManyRequests -> {
-                    ApiResult.Error("Gemini rate limit exceeded. Free tier: 15 req/min. Please wait.", 429)
-                }
-                else -> {
-                    val errorBody = tryParseGeminiError(response)
-                    ApiResult.Error(errorBody ?: "Gemini request failed: ${response.status.value}", response.status.value)
-                }
+            if (response.status == HttpStatusCode.OK) {
+                val content = response.body<GeminiResponse>().candidates
+                    ?.firstOrNull()?.content?.parts?.firstOrNull()?.text
+                    ?: "No response generated"
+                ApiResult.Success(AiResponse(content, AiProvider.GEMINI))
+            } else {
+                ApiErrorHandler.handleHttpError(response, "gemini") { tryParseGeminiError(it) }
             }
         } catch (e: Exception) {
-            ApiResult.Error(parseNetworkError(e))
+            ApiResult.Error(ApiErrorHandler.parseNetworkError(e))
         }
     }
 
-    private suspend fun tryParseGeminiError(response: HttpResponse): String? {
-        return try {
-            val body = response.bodyAsText()
-            val errorResponse = json.decodeFromString<GeminiResponse>(body)
-            errorResponse.error?.message
-        } catch (e: Exception) {
-            null
-        }
-    }
+    private suspend fun tryParseGeminiError(response: HttpResponse): String? = try {
+        json.decodeFromString<GeminiResponse>(response.bodyAsText()).error?.message
+    } catch (e: Exception) { null }
 
     // ==================== Gemini OAuth Implementation ====================
 
@@ -313,57 +263,28 @@ class ClaudeApiService @Inject constructor() {
         messages: List<ClaudeMessage>
     ): ApiResult<AiResponse> {
         return try {
-            // Convert messages to Gemini format
-            val geminiContents = messages.map { msg ->
-                GeminiContent(
-                    role = if (msg.role == "user") "user" else "model",
-                    parts = listOf(GeminiPart(msg.content))
-                )
-            }
-
             val request = GeminiRequest(
-                contents = geminiContents,
+                contents = MessageConverters.toGeminiContents(messages),
                 systemInstruction = GeminiContent(parts = listOf(GeminiPart(systemPrompt))),
                 generationConfig = GeminiGenerationConfig(maxOutputTokens = DEFAULT_MAX_TOKENS)
             )
 
-            // Use OAuth endpoint with Bearer token
             val response: HttpResponse = client.post(GEMINI_OAUTH_API_URL) {
                 contentType(ContentType.Application.Json)
-                headers {
-                    append("Authorization", "Bearer $idToken")
-                }
+                headers { append("Authorization", "Bearer $idToken") }
                 setBody(request)
             }
 
-            when (response.status) {
-                HttpStatusCode.OK -> {
-                    val geminiResponse = response.body<GeminiResponse>()
-                    val content = geminiResponse.candidates
-                        ?.firstOrNull()
-                        ?.content
-                        ?.parts
-                        ?.firstOrNull()
-                        ?.text
-                        ?: "No response generated"
-                    ApiResult.Success(AiResponse(content, AiProvider.GEMINI))
-                }
-                HttpStatusCode.Unauthorized -> {
-                    ApiResult.Error("Google Sign-In expired. Please sign in again.", 401)
-                }
-                HttpStatusCode.Forbidden -> {
-                    ApiResult.Error("Access denied. Please sign in with Google again.", 403)
-                }
-                HttpStatusCode.TooManyRequests -> {
-                    ApiResult.Error("Gemini rate limit exceeded. Please wait and try again.", 429)
-                }
-                else -> {
-                    val errorBody = tryParseGeminiError(response)
-                    ApiResult.Error(errorBody ?: "Gemini request failed: ${response.status.value}", response.status.value)
-                }
+            if (response.status == HttpStatusCode.OK) {
+                val content = response.body<GeminiResponse>().candidates
+                    ?.firstOrNull()?.content?.parts?.firstOrNull()?.text
+                    ?: "No response generated"
+                ApiResult.Success(AiResponse(content, AiProvider.GEMINI))
+            } else {
+                ApiErrorHandler.handleHttpError(response, "gemini") { tryParseGeminiError(it) }
             }
         } catch (e: Exception) {
-            ApiResult.Error(parseNetworkError(e))
+            ApiResult.Error(ApiErrorHandler.parseNetworkError(e))
         }
     }
 
@@ -375,82 +296,34 @@ class ClaudeApiService @Inject constructor() {
         messages: List<ClaudeMessage>
     ): ApiResult<AiResponse> {
         return try {
-            // Convert messages to Groq format (OpenAI-compatible)
-            val groqMessages = mutableListOf<GroqMessage>()
-
-            // Add system message
-            groqMessages.add(GroqMessage(role = "system", content = systemPrompt))
-
-            // Add conversation messages
-            messages.forEach { msg ->
-                groqMessages.add(GroqMessage(
-                    role = if (msg.role == "user") "user" else "assistant",
-                    content = msg.content
-                ))
-            }
-
             val request = GroqRequest(
                 model = GROQ_MODEL,
-                messages = groqMessages,
+                messages = MessageConverters.toGroqMessages(systemPrompt, messages),
                 max_tokens = DEFAULT_MAX_TOKENS
             )
 
             val response: HttpResponse = client.post(GROQ_API_URL) {
                 contentType(ContentType.Application.Json)
-                headers {
-                    append("Authorization", "Bearer $apiKey")
-                }
+                headers { append("Authorization", "Bearer $apiKey") }
                 setBody(request)
             }
 
-            when (response.status) {
-                HttpStatusCode.OK -> {
-                    val groqResponse = response.body<GroqResponse>()
-                    val content = groqResponse.choices
-                        ?.firstOrNull()
-                        ?.message
-                        ?.content
-                        ?: "No response generated"
-                    ApiResult.Success(AiResponse(content, AiProvider.GROQ))
-                }
-                HttpStatusCode.Unauthorized -> {
-                    ApiResult.Error("Invalid Groq API key. Please check your key.", 401)
-                }
-                HttpStatusCode.TooManyRequests -> {
-                    ApiResult.Error("Groq rate limit exceeded. Free tier: 30 req/min. Please wait.", 429)
-                }
-                else -> {
-                    val errorBody = tryParseGroqError(response)
-                    ApiResult.Error(errorBody ?: "Groq request failed: ${response.status.value}", response.status.value)
-                }
+            if (response.status == HttpStatusCode.OK) {
+                val content = response.body<GroqResponse>().choices
+                    ?.firstOrNull()?.message?.content
+                    ?: "No response generated"
+                ApiResult.Success(AiResponse(content, AiProvider.GROQ))
+            } else {
+                ApiErrorHandler.handleHttpError(response, "groq") { tryParseGroqError(it) }
             }
         } catch (e: Exception) {
-            ApiResult.Error(parseNetworkError(e))
+            ApiResult.Error(ApiErrorHandler.parseNetworkError(e))
         }
     }
 
-    private suspend fun tryParseGroqError(response: HttpResponse): String? {
-        return try {
-            val body = response.bodyAsText()
-            val errorResponse = json.decodeFromString<GroqResponse>(body)
-            errorResponse.error?.message
-        } catch (e: Exception) {
-            null
-        }
-    }
-
-    // ==================== Utilities ====================
-
-    private fun parseNetworkError(e: Exception): String {
-        return when {
-            e.message?.contains("Unable to resolve host") == true ->
-                "No internet connection. Please check your network."
-            e.message?.contains("timeout") == true ->
-                "Request timed out. Please try again."
-            else ->
-                "Network error: ${e.message ?: "Unknown error"}"
-        }
-    }
+    private suspend fun tryParseGroqError(response: HttpResponse): String? = try {
+        json.decodeFromString<GroqResponse>(response.bodyAsText()).error?.message
+    } catch (e: Exception) { null }
 
     /**
      * Test the API key for a specific provider.

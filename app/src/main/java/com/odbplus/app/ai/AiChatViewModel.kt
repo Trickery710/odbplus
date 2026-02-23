@@ -4,12 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.odbplus.app.ai.data.AiProvider
 import com.odbplus.app.ai.data.ChatMessage
-import com.odbplus.app.ai.data.VehicleContext
-import com.odbplus.app.ai.data.VehicleInfo
-import com.odbplus.app.live.LogSessionRepository
 import com.odbplus.app.parts.PartsRepository
-import com.odbplus.core.protocol.ObdService
-import com.odbplus.core.transport.ConnectionState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -17,51 +12,20 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import timber.log.Timber
 import javax.inject.Inject
-
-/**
- * UI state for the AI chat screen.
- */
-data class AiChatUiState(
-    val isLoading: Boolean = false,
-    val isSending: Boolean = false,
-    val hasApiKey: Boolean = false,
-    val showApiKeyDialog: Boolean = false,
-    val showProviderSelector: Boolean = false,
-    val selectedProvider: AiProvider = AiProvider.GEMINI,
-    val isConnected: Boolean = false,
-    val isFetchingVehicleInfo: Boolean = false,
-    val currentVin: String? = null,
-    val messages: List<ChatMessage> = emptyList(),
-    val suggestedPrompts: List<String> = emptyList(),
-    val errorMessage: String? = null,
-    val apiKeyError: String? = null,
-    // Google Auth state
-    val isGoogleSignedIn: Boolean = false,
-    val googleUserEmail: String? = null,
-    val googleUserName: String? = null,
-    val isGoogleSignInConfigured: Boolean = false,
-    val googleSignInError: String? = null
-)
 
 @HiltViewModel
 class AiChatViewModel @Inject constructor(
     private val aiSettingsRepository: AiSettingsRepository,
     private val chatRepository: ChatRepository,
     private val claudeApiService: ClaudeApiService,
-    private val obdService: ObdService,
-    private val logSessionRepository: LogSessionRepository,
-    private val vehicleInfoRepository: VehicleInfoRepository,
+    private val vehicleContextProvider: VehicleContextProvider,
     private val partsRepository: PartsRepository,
     private val googleAuthManager: GoogleAuthManager
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(AiChatUiState())
     val uiState: StateFlow<AiChatUiState> = _uiState.asStateFlow()
-
-    private var currentVehicleContext = VehicleContext()
-    private var wasConnected = false
 
     init {
         initialize()
@@ -70,79 +34,39 @@ class AiChatViewModel @Inject constructor(
     private fun initialize() {
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true) }
-
-            // Initialize repositories
             chatRepository.initialize()
-            vehicleInfoRepository.initialize()
 
-            // Collect messages
             launch {
                 chatRepository.messages.collect { messages ->
-                    _uiState.update { it.copy(messages = messages) }
-                    updateSuggestedPrompts()
+                    val hasMessages = messages.isNotEmpty()
+                    val prompts = if (!hasMessages) {
+                        AutomotiveSystemPrompt.getSuggestedPrompts(vehicleContextProvider.current())
+                    } else emptyList()
+                    _uiState.update { it.copy(messages = messages, suggestedPrompts = prompts) }
                 }
             }
 
-            // Collect selected provider
             launch {
                 aiSettingsRepository.selectedProvider.collect { provider ->
                     _uiState.update { it.copy(selectedProvider = provider) }
                 }
             }
 
-            // Collect API key status for current provider
             launch {
                 aiSettingsRepository.hasApiKey.collect { hasKey ->
                     _uiState.update { it.copy(hasApiKey = hasKey) }
                 }
             }
 
-            // Collect connection state and fetch vehicle info on new connection
-            launch {
-                obdService.connectionState.collect { state ->
-                    val isConnected = state == ConnectionState.CONNECTED
-                    _uiState.update { it.copy(isConnected = isConnected) }
-
-                    // Detect new connection
-                    if (isConnected && !wasConnected) {
-                        fetchVehicleInfo()
-                    } else if (!isConnected && wasConnected) {
-                        // Clear current vehicle on disconnect
-                        vehicleInfoRepository.clearCurrentVehicle()
-                        currentVehicleContext = currentVehicleContext.copy(vehicleInfo = null)
-                        _uiState.update { it.copy(currentVin = null) }
-                    }
-
-                    wasConnected = isConnected
-                    updateVehicleContext()
-                }
+            _uiState.update {
+                it.copy(isGoogleSignInConfigured = googleAuthManager.isConfigured())
             }
 
-            // Collect current vehicle info
-            launch {
-                vehicleInfoRepository.currentVehicle.collect { vehicleInfo ->
-                    currentVehicleContext = currentVehicleContext.copy(vehicleInfo = vehicleInfo)
-                    _uiState.update { it.copy(currentVin = vehicleInfo?.vin) }
-                    updateSuggestedPrompts()
-                }
+            val (savedToken, savedEmail, savedName) = aiSettingsRepository.getSavedGoogleAuth()
+            if (!savedToken.isNullOrBlank()) {
+                googleAuthManager.restoreAuthState(savedToken, savedEmail, savedName)
             }
 
-            // Collect live PID values
-            launch {
-                logSessionRepository.currentPidValues.collect { pidValues ->
-                    currentVehicleContext = currentVehicleContext.copy(livePidValues = pidValues)
-                    updateSuggestedPrompts()
-                }
-            }
-
-            // Collect log sessions
-            launch {
-                logSessionRepository.sessions.collect { sessions ->
-                    currentVehicleContext = currentVehicleContext.copy(recentSessions = sessions)
-                }
-            }
-
-            // Collect Google auth state
             launch {
                 googleAuthManager.authState.collect { authState ->
                     _uiState.update {
@@ -152,22 +76,27 @@ class AiChatViewModel @Inject constructor(
                             googleUserName = authState.userName
                         )
                     }
-                    // Update hasApiKey for Gemini when signed in with Google
                     if (authState.isSignedIn && _uiState.value.selectedProvider == AiProvider.GEMINI) {
                         _uiState.update { it.copy(hasApiKey = true) }
                     }
                 }
             }
 
-            // Check if Google Sign-In is configured
-            _uiState.update {
-                it.copy(isGoogleSignInConfigured = googleAuthManager.isConfigured())
-            }
-
-            // Restore Google auth state from saved data
-            val (savedToken, savedEmail, savedName) = aiSettingsRepository.getSavedGoogleAuth()
-            if (!savedToken.isNullOrBlank()) {
-                googleAuthManager.restoreAuthState(savedToken, savedEmail, savedName)
+            // Mirror vehicle-context fields that the UI needs
+            launch {
+                vehicleContextProvider.context.collect { ctx ->
+                    val prompts = if (_uiState.value.messages.isEmpty()) {
+                        AutomotiveSystemPrompt.getSuggestedPrompts(ctx)
+                    } else emptyList()
+                    _uiState.update {
+                        it.copy(
+                            isConnected = ctx.isConnected,
+                            isFetchingVehicleInfo = ctx.isFetchingVehicleInfo,
+                            currentVin = ctx.vehicleInfo?.vin,
+                            suggestedPrompts = prompts
+                        )
+                    }
+                }
             }
 
             _uiState.update { it.copy(isLoading = false) }
@@ -175,119 +104,34 @@ class AiChatViewModel @Inject constructor(
     }
 
     /**
-     * Fetch vehicle information (VIN and additional info) from the connected vehicle.
-     */
-    private fun fetchVehicleInfo() {
-        viewModelScope.launch {
-            _uiState.update { it.copy(isFetchingVehicleInfo = true) }
-            currentVehicleContext = currentVehicleContext.copy(isFetchingVehicleInfo = true)
-
-            try {
-                // First, get the VIN
-                val vin = obdService.readVin()
-                if (vin.isNullOrBlank()) {
-                    Timber.w("Could not read VIN from vehicle")
-                    _uiState.update { it.copy(isFetchingVehicleInfo = false) }
-                    currentVehicleContext = currentVehicleContext.copy(isFetchingVehicleInfo = false)
-                    return@launch
-                }
-
-                Timber.d("Read VIN: $vin")
-
-                // Check if this is a new vehicle
-                val isFirstTime = vehicleInfoRepository.isFirstTimeVehicle(vin)
-
-                // Build vehicle info
-                var vehicleInfo = VehicleInfo(vin = vin)
-
-                // If first time seeing this vehicle, read additional info
-                if (isFirstTime) {
-                    Timber.d("First time vehicle, reading additional info...")
-
-                    val calibrationId = obdService.readCalibrationId()
-                    val cvn = obdService.readCalibrationVerificationNumber()
-                    val ecuName = obdService.readEcuName()
-
-                    vehicleInfo = vehicleInfo.copy(
-                        calibrationId = calibrationId,
-                        calibrationVerificationNumber = cvn,
-                        ecuName = ecuName
-                    )
-
-                    Timber.d("Vehicle info: CalID=$calibrationId, CVN=$cvn, ECU=$ecuName")
-                } else {
-                    // Use existing info but update timestamps
-                    val existing = vehicleInfoRepository.getVehicle(vin)
-                    if (existing != null) {
-                        vehicleInfo = existing.copy(lastSeenTimestamp = System.currentTimeMillis())
-                    }
-                }
-
-                // Save to repository
-                vehicleInfoRepository.saveVehicle(vehicleInfo)
-
-            } catch (e: Exception) {
-                Timber.e(e, "Error fetching vehicle info")
-            } finally {
-                _uiState.update { it.copy(isFetchingVehicleInfo = false) }
-                currentVehicleContext = currentVehicleContext.copy(isFetchingVehicleInfo = false)
-            }
-        }
-    }
-
-    private fun updateVehicleContext() {
-        currentVehicleContext = currentVehicleContext.copy(
-            isConnected = _uiState.value.isConnected
-        )
-    }
-
-    private fun updateSuggestedPrompts() {
-        if (_uiState.value.messages.isEmpty()) {
-            val prompts = AutomotiveSystemPrompt.getSuggestedPrompts(currentVehicleContext)
-            _uiState.update { it.copy(suggestedPrompts = prompts) }
-        } else {
-            _uiState.update { it.copy(suggestedPrompts = emptyList()) }
-        }
-    }
-
-    /**
      * Update DTCs from the diagnostics screen.
+     * Delegates to [VehicleContextProvider] via the shared state — callers should use
+     * [VehicleContextViewModel.updateDtcs] where possible.
      */
     fun updateDtcs(
         storedDtcs: List<com.odbplus.core.protocol.DiagnosticTroubleCode>,
         pendingDtcs: List<com.odbplus.core.protocol.DiagnosticTroubleCode>
     ) {
-        currentVehicleContext = currentVehicleContext.copy(
-            storedDtcs = storedDtcs,
-            pendingDtcs = pendingDtcs
+        vehicleContextProvider.update(
+            vehicleContextProvider.current().copy(
+                storedDtcs = storedDtcs,
+                pendingDtcs = pendingDtcs
+            )
         )
-        updateSuggestedPrompts()
     }
 
-    /**
-     * Send a message to the AI.
-     */
     fun sendMessage(content: String) {
-        if (content.isBlank()) return
-        if (_uiState.value.isSending) return
+        if (content.isBlank() || _uiState.value.isSending) return
 
         viewModelScope.launch {
-            // Add user message
             val userMessage = ChatMessage.userMessage(content.trim())
             chatRepository.addMessage(userMessage)
-
             _uiState.update { it.copy(isSending = true, errorMessage = null) }
 
-            // Get current provider
             val provider = _uiState.value.selectedProvider
-
-            // Check for Google Sign-In for Gemini
             val useGoogleAuth = provider == AiProvider.GEMINI && _uiState.value.isGoogleSignedIn
-            val googleToken = if (useGoogleAuth) {
-                googleAuthManager.authState.value.idToken
-            } else null
+            val googleToken = if (useGoogleAuth) googleAuthManager.authState.value.idToken else null
 
-            // Get API key (either Google token or manual API key)
             val apiKey = if (useGoogleAuth && !googleToken.isNullOrBlank()) {
                 googleToken
             } else {
@@ -295,23 +139,13 @@ class AiChatViewModel @Inject constructor(
             }
 
             if (apiKey == null) {
-                _uiState.update {
-                    it.copy(
-                        isSending = false,
-                        showApiKeyDialog = true
-                    )
-                }
+                _uiState.update { it.copy(isSending = false, showApiKeyDialog = true) }
                 return@launch
             }
 
-            // Prepare messages for API
-            val allMessages = chatRepository.getCurrentMessages()
-            val claudeMessages = allMessages.map { it.toClaudeMessage() }
+            val systemPrompt = AutomotiveSystemPrompt.generate(vehicleContextProvider.current())
+            val claudeMessages = chatRepository.getCurrentMessages().map { it.toClaudeMessage() }
 
-            // Generate system prompt with vehicle context
-            val systemPrompt = AutomotiveSystemPrompt.generate(currentVehicleContext)
-
-            // Send to selected AI provider
             when (val result = claudeApiService.sendMessage(
                 provider = provider,
                 apiKey = apiKey,
@@ -320,52 +154,28 @@ class AiChatViewModel @Inject constructor(
                 useOAuth = useGoogleAuth
             )) {
                 is ApiResult.Success -> {
-                    val responseText = result.data.content
-                    if (responseText.isNotBlank()) {
-                        val assistantMessage = ChatMessage.assistantMessage(responseText)
-                        chatRepository.addMessage(assistantMessage)
-
-                        // Parse and save any recommended parts from the response
-                        val recommendedParts = partsRepository.parsePartsFromAiResponse(responseText)
-                        if (recommendedParts.isNotEmpty()) {
-                            partsRepository.addParts(recommendedParts)
-                        }
+                    val text = result.data.content
+                    if (text.isNotBlank()) {
+                        chatRepository.addMessage(ChatMessage.assistantMessage(text))
+                        val parts = partsRepository.parsePartsFromAiResponse(text)
+                        if (parts.isNotEmpty()) partsRepository.addParts(parts)
                     }
-
                     _uiState.update { it.copy(isSending = false) }
                 }
                 is ApiResult.Error -> {
-                    // Check if it's an auth error and clear Google auth
-                    if (useGoogleAuth && (result.code == 401 || result.code == 403)) {
-                        googleSignOut()
-                    }
-
-                    val errorMessage = ChatMessage.errorMessage(result.message)
-                    chatRepository.addMessage(errorMessage)
-
-                    _uiState.update {
-                        it.copy(
-                            isSending = false,
-                            errorMessage = result.message
-                        )
-                    }
+                    if (useGoogleAuth && (result.code == 401 || result.code == 403)) googleSignOut()
+                    chatRepository.addMessage(ChatMessage.errorMessage(result.message))
+                    _uiState.update { it.copy(isSending = false, errorMessage = result.message) }
                 }
             }
         }
     }
 
-    /**
-     * Initiate Google Sign-In.
-     * Must be called from Activity context.
-     */
     suspend fun googleSignIn(activityContext: android.content.Context): GoogleSignInResult {
         _uiState.update { it.copy(isLoading = true, googleSignInError = null) }
-
         val result = googleAuthManager.signIn(activityContext)
-
         when (result) {
             is GoogleSignInResult.Success -> {
-                // Save auth state
                 result.state.idToken?.let { token ->
                     aiSettingsRepository.saveGoogleAuth(
                         idToken = token,
@@ -373,81 +183,31 @@ class AiChatViewModel @Inject constructor(
                         name = result.state.userName
                     )
                 }
-                _uiState.update {
-                    it.copy(
-                        isLoading = false,
-                        hasApiKey = true,
-                        showApiKeyDialog = false
-                    )
-                }
+                _uiState.update { it.copy(isLoading = false, hasApiKey = true, showApiKeyDialog = false) }
             }
-            is GoogleSignInResult.Error -> {
-                _uiState.update {
-                    it.copy(
-                        isLoading = false,
-                        googleSignInError = result.message
-                    )
-                }
-            }
-            GoogleSignInResult.Cancelled -> {
+            is GoogleSignInResult.Error ->
+                _uiState.update { it.copy(isLoading = false, googleSignInError = result.message) }
+            GoogleSignInResult.Cancelled ->
                 _uiState.update { it.copy(isLoading = false) }
-            }
         }
-
         return result
     }
 
-    /**
-     * Sign out from Google.
-     */
     fun googleSignOut() {
         viewModelScope.launch {
             googleAuthManager.signOut()
             aiSettingsRepository.clearGoogleAuth()
-            _uiState.update {
-                it.copy(
-                    isGoogleSignedIn = false,
-                    googleUserEmail = null,
-                    googleUserName = null
-                )
-            }
-            // Re-check if we still have an API key (manual key)
+            _uiState.update { it.copy(isGoogleSignedIn = false, googleUserEmail = null, googleUserName = null) }
             val hasManualKey = aiSettingsRepository.getApiKeyForProvider(AiProvider.GEMINI).first() != null
             _uiState.update { it.copy(hasApiKey = hasManualKey) }
         }
     }
 
-    /**
-     * Show the API key dialog.
-     */
-    fun showApiKeyDialog() {
-        _uiState.update { it.copy(showApiKeyDialog = true, apiKeyError = null) }
-    }
+    fun showApiKeyDialog() { _uiState.update { it.copy(showApiKeyDialog = true, apiKeyError = null) } }
+    fun hideApiKeyDialog() { _uiState.update { it.copy(showApiKeyDialog = false, apiKeyError = null) } }
+    fun showProviderSelector() { _uiState.update { it.copy(showProviderSelector = true) } }
+    fun hideProviderSelector() { _uiState.update { it.copy(showProviderSelector = false) } }
 
-    /**
-     * Hide the API key dialog.
-     */
-    fun hideApiKeyDialog() {
-        _uiState.update { it.copy(showApiKeyDialog = false, apiKeyError = null) }
-    }
-
-    /**
-     * Show the provider selector.
-     */
-    fun showProviderSelector() {
-        _uiState.update { it.copy(showProviderSelector = true) }
-    }
-
-    /**
-     * Hide the provider selector.
-     */
-    fun hideProviderSelector() {
-        _uiState.update { it.copy(showProviderSelector = false) }
-    }
-
-    /**
-     * Select a new AI provider.
-     */
     fun selectProvider(provider: AiProvider) {
         viewModelScope.launch {
             aiSettingsRepository.saveSelectedProvider(provider)
@@ -455,92 +215,50 @@ class AiChatViewModel @Inject constructor(
         }
     }
 
-    /**
-     * Save the API key for the current provider.
-     */
     fun saveApiKey(key: String) {
         viewModelScope.launch {
             val provider = _uiState.value.selectedProvider
-
             if (!aiSettingsRepository.isValidApiKeyFormat(provider, key)) {
                 _uiState.update {
                     it.copy(apiKeyError = "Invalid API key format. Key should start with '${provider.keyPrefix}'")
                 }
                 return@launch
             }
-
             _uiState.update { it.copy(isLoading = true, apiKeyError = null) }
-
-            // Test the API key
             when (val result = claudeApiService.testApiKey(provider, key.trim())) {
                 is ApiResult.Success -> {
                     aiSettingsRepository.saveApiKey(provider, key.trim())
-                    _uiState.update {
-                        it.copy(
-                            isLoading = false,
-                            showApiKeyDialog = false,
-                            hasApiKey = true
-                        )
-                    }
+                    _uiState.update { it.copy(isLoading = false, showApiKeyDialog = false, hasApiKey = true) }
                 }
-                is ApiResult.Error -> {
-                    _uiState.update {
-                        it.copy(
-                            isLoading = false,
-                            apiKeyError = result.message
-                        )
-                    }
-                }
+                is ApiResult.Error ->
+                    _uiState.update { it.copy(isLoading = false, apiKeyError = result.message) }
             }
         }
     }
 
-    /**
-     * Clear the API key for the current provider.
-     */
     fun clearApiKey() {
         viewModelScope.launch {
-            val provider = _uiState.value.selectedProvider
-            aiSettingsRepository.clearApiKey(provider)
+            aiSettingsRepository.clearApiKey(_uiState.value.selectedProvider)
             _uiState.update { it.copy(hasApiKey = false) }
         }
     }
 
-    /**
-     * Clear chat history.
-     */
     fun clearHistory() {
-        viewModelScope.launch {
-            chatRepository.clearHistory()
-            updateSuggestedPrompts()
-        }
+        viewModelScope.launch { chatRepository.clearHistory() }
     }
 
-    /**
-     * Dismiss error message.
-     */
-    fun dismissError() {
-        _uiState.update { it.copy(errorMessage = null) }
-    }
+    fun dismissError() { _uiState.update { it.copy(errorMessage = null) } }
 
-    /**
-     * Retry the last failed message.
-     */
     fun retryLastMessage() {
         val messages = _uiState.value.messages
-        val lastUserMessage = messages.lastOrNull { it.role == com.odbplus.app.ai.data.MessageRole.USER }
-        if (lastUserMessage != null) {
-            // Remove the error message if present
+        val lastUser = messages.lastOrNull { it.role == com.odbplus.app.ai.data.MessageRole.USER }
+        if (lastUser != null) {
             viewModelScope.launch {
-                val lastMessage = messages.lastOrNull()
-                if (lastMessage?.isError == true) {
-                    // Clear and re-add without the error
+                if (messages.lastOrNull()?.isError == true) {
                     chatRepository.clearHistory()
-                    val messagesWithoutError = messages.dropLast(1)
-                    chatRepository.addMessages(messagesWithoutError)
+                    chatRepository.addMessages(messages.dropLast(1))
                 }
-                // Resend the last user message
-                sendMessage(lastUserMessage.content)
+                sendMessage(lastUser.content)
             }
         }
     }

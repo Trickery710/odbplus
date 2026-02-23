@@ -24,12 +24,7 @@ enum class ObdPid(
         description = "PIDs Supported [01-20]",
         unit = "bitmask",
         expectedBytes = 4,
-        parser = { bytes ->
-            ((bytes[0].toUByte().toLong() shl 24) or
-             (bytes[1].toUByte().toLong() shl 16) or
-             (bytes[2].toUByte().toLong() shl 8) or
-             bytes[3].toUByte().toLong()).toDouble()
-        }
+        parser = ::fourByteBitmask
     ),
 
     PIDS_SUPPORTED_21_40(
@@ -37,12 +32,7 @@ enum class ObdPid(
         description = "PIDs Supported [21-40]",
         unit = "bitmask",
         expectedBytes = 4,
-        parser = { bytes ->
-            ((bytes[0].toUByte().toLong() shl 24) or
-             (bytes[1].toUByte().toLong() shl 16) or
-             (bytes[2].toUByte().toLong() shl 8) or
-             bytes[3].toUByte().toLong()).toDouble()
-        }
+        parser = ::fourByteBitmask
     ),
 
     PIDS_SUPPORTED_41_60(
@@ -50,12 +40,7 @@ enum class ObdPid(
         description = "PIDs Supported [41-60]",
         unit = "bitmask",
         expectedBytes = 4,
-        parser = { bytes ->
-            ((bytes[0].toUByte().toLong() shl 24) or
-             (bytes[1].toUByte().toLong() shl 16) or
-             (bytes[2].toUByte().toLong() shl 8) or
-             bytes[3].toUByte().toLong()).toDouble()
-        }
+        parser = ::fourByteBitmask
     ),
 
     PIDS_SUPPORTED_61_80(
@@ -63,12 +48,7 @@ enum class ObdPid(
         description = "PIDs Supported [61-80]",
         unit = "bitmask",
         expectedBytes = 4,
-        parser = { bytes ->
-            ((bytes[0].toUByte().toLong() shl 24) or
-             (bytes[1].toUByte().toLong() shl 16) or
-             (bytes[2].toUByte().toLong() shl 8) or
-             bytes[3].toUByte().toLong()).toDouble()
-        }
+        parser = ::fourByteBitmask
     ),
 
     PIDS_SUPPORTED_81_A0(
@@ -76,12 +56,7 @@ enum class ObdPid(
         description = "PIDs Supported [81-A0]",
         unit = "bitmask",
         expectedBytes = 4,
-        parser = { bytes ->
-            ((bytes[0].toUByte().toLong() shl 24) or
-             (bytes[1].toUByte().toLong() shl 16) or
-             (bytes[2].toUByte().toLong() shl 8) or
-             bytes[3].toUByte().toLong()).toDouble()
-        }
+        parser = ::fourByteBitmask
     ),
 
     PIDS_SUPPORTED_A1_C0(
@@ -89,12 +64,7 @@ enum class ObdPid(
         description = "PIDs Supported [A1-C0]",
         unit = "bitmask",
         expectedBytes = 4,
-        parser = { bytes ->
-            ((bytes[0].toUByte().toLong() shl 24) or
-             (bytes[1].toUByte().toLong() shl 16) or
-             (bytes[2].toUByte().toLong() shl 8) or
-             bytes[3].toUByte().toLong()).toDouble()
-        }
+        parser = ::fourByteBitmask
     ),
 
     PIDS_SUPPORTED_C1_E0(
@@ -102,12 +72,7 @@ enum class ObdPid(
         description = "PIDs Supported [C1-E0]",
         unit = "bitmask",
         expectedBytes = 4,
-        parser = { bytes ->
-            ((bytes[0].toUByte().toLong() shl 24) or
-             (bytes[1].toUByte().toLong() shl 16) or
-             (bytes[2].toUByte().toLong() shl 8) or
-             bytes[3].toUByte().toLong()).toDouble()
-        }
+        parser = ::fourByteBitmask
     ),
 
     // ========== Monitor Status ==========
@@ -117,12 +82,7 @@ enum class ObdPid(
         description = "Monitor Status Since DTCs Cleared",
         unit = "bitmask",
         expectedBytes = 4,
-        parser = { bytes ->
-            ((bytes[0].toUByte().toLong() shl 24) or
-             (bytes[1].toUByte().toLong() shl 16) or
-             (bytes[2].toUByte().toLong() shl 8) or
-             bytes[3].toUByte().toLong()).toDouble()
-        }
+        parser = ::fourByteBitmask
     ),
 
     FREEZE_DTC(
@@ -130,9 +90,7 @@ enum class ObdPid(
         description = "Freeze DTC",
         unit = "code",
         expectedBytes = 2,
-        parser = { bytes ->
-            ((bytes[0].toUByte().toInt() shl 8) or bytes[1].toUByte().toInt()).toDouble()
-        }
+        parser = ::twoByteUInt
     ),
 
     // ========== Fuel System ==========
@@ -142,9 +100,7 @@ enum class ObdPid(
         description = "Fuel System Status",
         unit = "bitmask",
         expectedBytes = 2,
-        parser = { bytes ->
-            ((bytes[0].toUByte().toInt() shl 8) or bytes[1].toUByte().toInt()).toDouble()
-        }
+        parser = ::twoByteUInt
     ),
 
     ENGINE_LOAD(
@@ -152,7 +108,7 @@ enum class ObdPid(
         description = "Calculated Engine Load",
         unit = "%",
         expectedBytes = 1,
-        parser = { bytes -> bytes[0].toUByte().toDouble() * 100.0 / 255.0 }
+        parser = ::singleBytePercent
     ),
 
     ENGINE_COOLANT_TEMP(
@@ -160,7 +116,7 @@ enum class ObdPid(
         description = "Engine Coolant Temperature",
         unit = "°C",
         expectedBytes = 1,
-        parser = { bytes -> bytes[0].toUByte().toDouble() - 40.0 }
+        parser = ::singleByteOffset40
     ),
 
     SHORT_TERM_FUEL_TRIM_BANK1(
@@ -168,7 +124,7 @@ enum class ObdPid(
         description = "Short Term Fuel Trim - Bank 1",
         unit = "%",
         expectedBytes = 1,
-        parser = { bytes -> (bytes[0].toUByte().toDouble() - 128.0) * 100.0 / 128.0 }
+        parser = ::singleByteSigned128Percent
     ),
 
     LONG_TERM_FUEL_TRIM_BANK1(
@@ -176,7 +132,7 @@ enum class ObdPid(
         description = "Long Term Fuel Trim - Bank 1",
         unit = "%",
         expectedBytes = 1,
-        parser = { bytes -> (bytes[0].toUByte().toDouble() - 128.0) * 100.0 / 128.0 }
+        parser = ::singleByteSigned128Percent
     ),
 
     SHORT_TERM_FUEL_TRIM_BANK2(
@@ -184,7 +140,7 @@ enum class ObdPid(
         description = "Short Term Fuel Trim - Bank 2",
         unit = "%",
         expectedBytes = 1,
-        parser = { bytes -> (bytes[0].toUByte().toDouble() - 128.0) * 100.0 / 128.0 }
+        parser = ::singleByteSigned128Percent
     ),
 
     LONG_TERM_FUEL_TRIM_BANK2(
@@ -192,7 +148,7 @@ enum class ObdPid(
         description = "Long Term Fuel Trim - Bank 2",
         unit = "%",
         expectedBytes = 1,
-        parser = { bytes -> (bytes[0].toUByte().toDouble() - 128.0) * 100.0 / 128.0 }
+        parser = ::singleByteSigned128Percent
     ),
 
     FUEL_PRESSURE(
@@ -210,7 +166,7 @@ enum class ObdPid(
         description = "Intake Manifold Absolute Pressure",
         unit = "kPa",
         expectedBytes = 1,
-        parser = { bytes -> bytes[0].toUByte().toDouble() }
+        parser = ::singleByte
     ),
 
     ENGINE_RPM(
@@ -218,11 +174,7 @@ enum class ObdPid(
         description = "Engine RPM",
         unit = "rpm",
         expectedBytes = 2,
-        parser = { bytes ->
-            val a = bytes[0].toUByte().toInt()
-            val b = bytes[1].toUByte().toInt()
-            (256 * a + b) / 4.0
-        }
+        parser = { bytes -> (bytes[0].toUByte().toInt() * 256 + bytes[1].toUByte().toInt()) / 4.0 }
     ),
 
     VEHICLE_SPEED(
@@ -230,7 +182,7 @@ enum class ObdPid(
         description = "Vehicle Speed",
         unit = "km/h",
         expectedBytes = 1,
-        parser = { bytes -> bytes[0].toUByte().toDouble() }
+        parser = ::singleByte
     ),
 
     TIMING_ADVANCE(
@@ -246,7 +198,7 @@ enum class ObdPid(
         description = "Intake Air Temperature",
         unit = "°C",
         expectedBytes = 1,
-        parser = { bytes -> bytes[0].toUByte().toDouble() - 40.0 }
+        parser = ::singleByteOffset40
     ),
 
     MAF_FLOW_RATE(
@@ -254,11 +206,7 @@ enum class ObdPid(
         description = "MAF Air Flow Rate",
         unit = "g/s",
         expectedBytes = 2,
-        parser = { bytes ->
-            val a = bytes[0].toUByte().toInt()
-            val b = bytes[1].toUByte().toInt()
-            (256 * a + b) / 100.0
-        }
+        parser = { bytes -> (bytes[0].toUByte().toInt() * 256 + bytes[1].toUByte().toInt()) / 100.0 }
     ),
 
     THROTTLE_POSITION(
@@ -266,7 +214,7 @@ enum class ObdPid(
         description = "Throttle Position",
         unit = "%",
         expectedBytes = 1,
-        parser = { bytes -> bytes[0].toUByte().toDouble() * 100.0 / 255.0 }
+        parser = ::singleBytePercent
     ),
 
     // ========== Secondary Air / O2 Sensors Present ==========
@@ -276,7 +224,7 @@ enum class ObdPid(
         description = "Commanded Secondary Air Status",
         unit = "status",
         expectedBytes = 1,
-        parser = { bytes -> bytes[0].toUByte().toDouble() }
+        parser = ::singleByte
     ),
 
     O2_SENSORS_PRESENT_2_BANKS(
@@ -284,7 +232,7 @@ enum class ObdPid(
         description = "Oxygen Sensors Present (2 Banks)",
         unit = "bitmask",
         expectedBytes = 1,
-        parser = { bytes -> bytes[0].toUByte().toDouble() }
+        parser = ::singleByte
     ),
 
     // ========== Oxygen Sensors (Bank 1 & 2, Voltage) ==========
@@ -294,7 +242,7 @@ enum class ObdPid(
         description = "O2 Sensor Bank 1, Sensor 1 - Voltage",
         unit = "V",
         expectedBytes = 2,
-        parser = { bytes -> bytes[0].toUByte().toDouble() / 200.0 }
+        parser = ::o2Voltage
     ),
 
     O2_SENSOR_B1S1_FUEL_TRIM(
@@ -310,7 +258,7 @@ enum class ObdPid(
         description = "O2 Sensor Bank 1, Sensor 2 - Voltage",
         unit = "V",
         expectedBytes = 2,
-        parser = { bytes -> bytes[0].toUByte().toDouble() / 200.0 }
+        parser = ::o2Voltage
     ),
 
     O2_SENSOR_B1S3_VOLTAGE(
@@ -318,7 +266,7 @@ enum class ObdPid(
         description = "O2 Sensor Bank 1, Sensor 3 - Voltage",
         unit = "V",
         expectedBytes = 2,
-        parser = { bytes -> bytes[0].toUByte().toDouble() / 200.0 }
+        parser = ::o2Voltage
     ),
 
     O2_SENSOR_B1S4_VOLTAGE(
@@ -326,7 +274,7 @@ enum class ObdPid(
         description = "O2 Sensor Bank 1, Sensor 4 - Voltage",
         unit = "V",
         expectedBytes = 2,
-        parser = { bytes -> bytes[0].toUByte().toDouble() / 200.0 }
+        parser = ::o2Voltage
     ),
 
     O2_SENSOR_B2S1_VOLTAGE(
@@ -334,7 +282,7 @@ enum class ObdPid(
         description = "O2 Sensor Bank 2, Sensor 1 - Voltage",
         unit = "V",
         expectedBytes = 2,
-        parser = { bytes -> bytes[0].toUByte().toDouble() / 200.0 }
+        parser = ::o2Voltage
     ),
 
     O2_SENSOR_B2S2_VOLTAGE(
@@ -342,7 +290,7 @@ enum class ObdPid(
         description = "O2 Sensor Bank 2, Sensor 2 - Voltage",
         unit = "V",
         expectedBytes = 2,
-        parser = { bytes -> bytes[0].toUByte().toDouble() / 200.0 }
+        parser = ::o2Voltage
     ),
 
     O2_SENSOR_B2S3_VOLTAGE(
@@ -350,7 +298,7 @@ enum class ObdPid(
         description = "O2 Sensor Bank 2, Sensor 3 - Voltage",
         unit = "V",
         expectedBytes = 2,
-        parser = { bytes -> bytes[0].toUByte().toDouble() / 200.0 }
+        parser = ::o2Voltage
     ),
 
     O2_SENSOR_B2S4_VOLTAGE(
@@ -358,7 +306,7 @@ enum class ObdPid(
         description = "O2 Sensor Bank 2, Sensor 4 - Voltage",
         unit = "V",
         expectedBytes = 2,
-        parser = { bytes -> bytes[0].toUByte().toDouble() / 200.0 }
+        parser = ::o2Voltage
     ),
 
     // ========== OBD Standards / Aux Input ==========
@@ -368,7 +316,7 @@ enum class ObdPid(
         description = "OBD Standards This Vehicle Conforms To",
         unit = "type",
         expectedBytes = 1,
-        parser = { bytes -> bytes[0].toUByte().toDouble() }
+        parser = ::singleByte
     ),
 
     O2_SENSORS_PRESENT_4_BANKS(
@@ -376,7 +324,7 @@ enum class ObdPid(
         description = "Oxygen Sensors Present (4 Banks)",
         unit = "bitmask",
         expectedBytes = 1,
-        parser = { bytes -> bytes[0].toUByte().toDouble() }
+        parser = ::singleByte
     ),
 
     AUXILIARY_INPUT_STATUS(
@@ -384,7 +332,7 @@ enum class ObdPid(
         description = "Auxiliary Input Status",
         unit = "status",
         expectedBytes = 1,
-        parser = { bytes -> bytes[0].toUByte().toDouble() }
+        parser = ::singleByte
     ),
 
     RUNTIME_SINCE_START(
@@ -392,11 +340,7 @@ enum class ObdPid(
         description = "Run Time Since Engine Start",
         unit = "sec",
         expectedBytes = 2,
-        parser = { bytes ->
-            val a = bytes[0].toUByte().toInt()
-            val b = bytes[1].toUByte().toInt()
-            (256 * a + b).toDouble()
-        }
+        parser = ::twoByteUInt
     ),
 
     // ========== Distance / Fuel Rail ==========
@@ -406,11 +350,7 @@ enum class ObdPid(
         description = "Distance Traveled with MIL On",
         unit = "km",
         expectedBytes = 2,
-        parser = { bytes ->
-            val a = bytes[0].toUByte().toInt()
-            val b = bytes[1].toUByte().toInt()
-            (256 * a + b).toDouble()
-        }
+        parser = ::twoByteUInt
     ),
 
     FUEL_RAIL_PRESSURE_VAC(
@@ -418,11 +358,7 @@ enum class ObdPid(
         description = "Fuel Rail Pressure (Relative to Vacuum)",
         unit = "kPa",
         expectedBytes = 2,
-        parser = { bytes ->
-            val a = bytes[0].toUByte().toInt()
-            val b = bytes[1].toUByte().toInt()
-            (256 * a + b) * 0.079
-        }
+        parser = { bytes -> (bytes[0].toUByte().toInt() * 256 + bytes[1].toUByte().toInt()) * 0.079 }
     ),
 
     FUEL_RAIL_GAUGE_PRESSURE(
@@ -430,11 +366,7 @@ enum class ObdPid(
         description = "Fuel Rail Gauge Pressure (Diesel/GDI)",
         unit = "kPa",
         expectedBytes = 2,
-        parser = { bytes ->
-            val a = bytes[0].toUByte().toInt()
-            val b = bytes[1].toUByte().toInt()
-            (256 * a + b) * 10.0
-        }
+        parser = { bytes -> (bytes[0].toUByte().toInt() * 256 + bytes[1].toUByte().toInt()) * 10.0 }
     ),
 
     // ========== Oxygen Sensors (Lambda / Voltage) ==========
@@ -444,11 +376,7 @@ enum class ObdPid(
         description = "O2 Sensor Bank 1, Sensor 1 - Lambda",
         unit = "ratio",
         expectedBytes = 4,
-        parser = { bytes ->
-            val a = bytes[0].toUByte().toInt()
-            val b = bytes[1].toUByte().toInt()
-            (2.0 / 65536.0) * (256 * a + b)
-        }
+        parser = ::lambdaRatio
     ),
 
     O2_SENSOR_B1S2_LAMBDA(
@@ -456,11 +384,7 @@ enum class ObdPid(
         description = "O2 Sensor Bank 1, Sensor 2 - Lambda",
         unit = "ratio",
         expectedBytes = 4,
-        parser = { bytes ->
-            val a = bytes[0].toUByte().toInt()
-            val b = bytes[1].toUByte().toInt()
-            (2.0 / 65536.0) * (256 * a + b)
-        }
+        parser = ::lambdaRatio
     ),
 
     O2_SENSOR_B2S1_LAMBDA(
@@ -468,11 +392,7 @@ enum class ObdPid(
         description = "O2 Sensor Bank 2, Sensor 1 - Lambda",
         unit = "ratio",
         expectedBytes = 4,
-        parser = { bytes ->
-            val a = bytes[0].toUByte().toInt()
-            val b = bytes[1].toUByte().toInt()
-            (2.0 / 65536.0) * (256 * a + b)
-        }
+        parser = ::lambdaRatio
     ),
 
     O2_SENSOR_B2S2_LAMBDA(
@@ -480,11 +400,7 @@ enum class ObdPid(
         description = "O2 Sensor Bank 2, Sensor 2 - Lambda",
         unit = "ratio",
         expectedBytes = 4,
-        parser = { bytes ->
-            val a = bytes[0].toUByte().toInt()
-            val b = bytes[1].toUByte().toInt()
-            (2.0 / 65536.0) * (256 * a + b)
-        }
+        parser = ::lambdaRatio
     ),
 
     O2_SENSOR_B1S1_LAMBDA_VOLTAGE(
@@ -492,11 +408,7 @@ enum class ObdPid(
         description = "O2 Sensor Bank 1, Sensor 1 - Voltage (Wide Band)",
         unit = "V",
         expectedBytes = 4,
-        parser = { bytes ->
-            val c = bytes[2].toUByte().toInt()
-            val d = bytes[3].toUByte().toInt()
-            (8.0 / 65536.0) * (256 * c + d)
-        }
+        parser = { bytes -> (bytes[2].toUByte().toInt() * 256 + bytes[3].toUByte().toInt()) * 8.0 / 65536.0 }
     ),
 
     O2_SENSOR_B3S1_LAMBDA(
@@ -504,11 +416,7 @@ enum class ObdPid(
         description = "O2 Sensor Bank 3, Sensor 1 - Lambda",
         unit = "ratio",
         expectedBytes = 4,
-        parser = { bytes ->
-            val a = bytes[0].toUByte().toInt()
-            val b = bytes[1].toUByte().toInt()
-            (2.0 / 65536.0) * (256 * a + b)
-        }
+        parser = ::lambdaRatio
     ),
 
     O2_SENSOR_B3S2_LAMBDA(
@@ -516,11 +424,7 @@ enum class ObdPid(
         description = "O2 Sensor Bank 3, Sensor 2 - Lambda",
         unit = "ratio",
         expectedBytes = 4,
-        parser = { bytes ->
-            val a = bytes[0].toUByte().toInt()
-            val b = bytes[1].toUByte().toInt()
-            (2.0 / 65536.0) * (256 * a + b)
-        }
+        parser = ::lambdaRatio
     ),
 
     O2_SENSOR_B4S1_LAMBDA(
@@ -528,11 +432,7 @@ enum class ObdPid(
         description = "O2 Sensor Bank 4, Sensor 1 - Lambda",
         unit = "ratio",
         expectedBytes = 4,
-        parser = { bytes ->
-            val a = bytes[0].toUByte().toInt()
-            val b = bytes[1].toUByte().toInt()
-            (2.0 / 65536.0) * (256 * a + b)
-        }
+        parser = ::lambdaRatio
     ),
 
     O2_SENSOR_B4S2_LAMBDA(
@@ -540,11 +440,7 @@ enum class ObdPid(
         description = "O2 Sensor Bank 4, Sensor 2 - Lambda",
         unit = "ratio",
         expectedBytes = 4,
-        parser = { bytes ->
-            val a = bytes[0].toUByte().toInt()
-            val b = bytes[1].toUByte().toInt()
-            (2.0 / 65536.0) * (256 * a + b)
-        }
+        parser = ::lambdaRatio
     ),
 
     // ========== EGR / Evaporative System ==========
@@ -554,7 +450,7 @@ enum class ObdPid(
         description = "Commanded EGR",
         unit = "%",
         expectedBytes = 1,
-        parser = { bytes -> bytes[0].toUByte().toDouble() * 100.0 / 255.0 }
+        parser = ::singleBytePercent
     ),
 
     EGR_ERROR(
@@ -562,7 +458,7 @@ enum class ObdPid(
         description = "EGR Error",
         unit = "%",
         expectedBytes = 1,
-        parser = { bytes -> (bytes[0].toUByte().toDouble() - 128.0) * 100.0 / 128.0 }
+        parser = ::singleByteSigned128Percent
     ),
 
     COMMANDED_EVAP_PURGE(
@@ -570,7 +466,7 @@ enum class ObdPid(
         description = "Commanded Evaporative Purge",
         unit = "%",
         expectedBytes = 1,
-        parser = { bytes -> bytes[0].toUByte().toDouble() * 100.0 / 255.0 }
+        parser = ::singleBytePercent
     ),
 
     FUEL_TANK_LEVEL(
@@ -578,7 +474,7 @@ enum class ObdPid(
         description = "Fuel Tank Level Input",
         unit = "%",
         expectedBytes = 1,
-        parser = { bytes -> bytes[0].toUByte().toDouble() * 100.0 / 255.0 }
+        parser = ::singleBytePercent
     ),
 
     // ========== Warmups / Distance / Pressure ==========
@@ -588,7 +484,7 @@ enum class ObdPid(
         description = "Warm-Ups Since Codes Cleared",
         unit = "count",
         expectedBytes = 1,
-        parser = { bytes -> bytes[0].toUByte().toDouble() }
+        parser = ::singleByte
     ),
 
     DISTANCE_SINCE_CODES_CLEARED(
@@ -596,11 +492,7 @@ enum class ObdPid(
         description = "Distance Traveled Since Codes Cleared",
         unit = "km",
         expectedBytes = 2,
-        parser = { bytes ->
-            val a = bytes[0].toUByte().toInt()
-            val b = bytes[1].toUByte().toInt()
-            (256 * a + b).toDouble()
-        }
+        parser = ::twoByteUInt
     ),
 
     EVAP_SYSTEM_VAPOR_PRESSURE(
@@ -608,11 +500,7 @@ enum class ObdPid(
         description = "Evap. System Vapor Pressure",
         unit = "Pa",
         expectedBytes = 2,
-        parser = { bytes ->
-            val a = bytes[0].toByte().toInt()
-            val b = bytes[1].toUByte().toInt()
-            ((256 * a + b) / 4.0)
-        }
+        parser = { bytes -> (bytes[0].toByte().toInt() * 256 + bytes[1].toUByte().toInt()) / 4.0 }
     ),
 
     BAROMETRIC_PRESSURE(
@@ -620,7 +508,7 @@ enum class ObdPid(
         description = "Barometric Pressure",
         unit = "kPa",
         expectedBytes = 1,
-        parser = { bytes -> bytes[0].toUByte().toDouble() }
+        parser = ::singleByte
     ),
 
     // ========== Oxygen Sensors (Lambda / Current) ==========
@@ -630,11 +518,7 @@ enum class ObdPid(
         description = "O2 Sensor Bank 1, Sensor 1 - Current",
         unit = "mA",
         expectedBytes = 4,
-        parser = { bytes ->
-            val c = bytes[2].toUByte().toInt()
-            val d = bytes[3].toUByte().toInt()
-            ((256 * c + d) / 256.0) - 128.0
-        }
+        parser = ::wideRangeCurrent
     ),
 
     O2_SENSOR_B1S2_CURRENT(
@@ -642,11 +526,7 @@ enum class ObdPid(
         description = "O2 Sensor Bank 1, Sensor 2 - Current",
         unit = "mA",
         expectedBytes = 4,
-        parser = { bytes ->
-            val c = bytes[2].toUByte().toInt()
-            val d = bytes[3].toUByte().toInt()
-            ((256 * c + d) / 256.0) - 128.0
-        }
+        parser = ::wideRangeCurrent
     ),
 
     O2_SENSOR_B2S1_CURRENT(
@@ -654,11 +534,7 @@ enum class ObdPid(
         description = "O2 Sensor Bank 2, Sensor 1 - Current",
         unit = "mA",
         expectedBytes = 4,
-        parser = { bytes ->
-            val c = bytes[2].toUByte().toInt()
-            val d = bytes[3].toUByte().toInt()
-            ((256 * c + d) / 256.0) - 128.0
-        }
+        parser = ::wideRangeCurrent
     ),
 
     O2_SENSOR_B2S2_CURRENT(
@@ -666,11 +542,7 @@ enum class ObdPid(
         description = "O2 Sensor Bank 2, Sensor 2 - Current",
         unit = "mA",
         expectedBytes = 4,
-        parser = { bytes ->
-            val c = bytes[2].toUByte().toInt()
-            val d = bytes[3].toUByte().toInt()
-            ((256 * c + d) / 256.0) - 128.0
-        }
+        parser = ::wideRangeCurrent
     ),
 
     O2_SENSOR_B3S1_CURRENT(
@@ -678,11 +550,7 @@ enum class ObdPid(
         description = "O2 Sensor Bank 3, Sensor 1 - Current",
         unit = "mA",
         expectedBytes = 4,
-        parser = { bytes ->
-            val c = bytes[2].toUByte().toInt()
-            val d = bytes[3].toUByte().toInt()
-            ((256 * c + d) / 256.0) - 128.0
-        }
+        parser = ::wideRangeCurrent
     ),
 
     O2_SENSOR_B3S2_CURRENT(
@@ -690,11 +558,7 @@ enum class ObdPid(
         description = "O2 Sensor Bank 3, Sensor 2 - Current",
         unit = "mA",
         expectedBytes = 4,
-        parser = { bytes ->
-            val c = bytes[2].toUByte().toInt()
-            val d = bytes[3].toUByte().toInt()
-            ((256 * c + d) / 256.0) - 128.0
-        }
+        parser = ::wideRangeCurrent
     ),
 
     O2_SENSOR_B4S1_CURRENT(
@@ -702,11 +566,7 @@ enum class ObdPid(
         description = "O2 Sensor Bank 4, Sensor 1 - Current",
         unit = "mA",
         expectedBytes = 4,
-        parser = { bytes ->
-            val c = bytes[2].toUByte().toInt()
-            val d = bytes[3].toUByte().toInt()
-            ((256 * c + d) / 256.0) - 128.0
-        }
+        parser = ::wideRangeCurrent
     ),
 
     O2_SENSOR_B4S2_CURRENT(
@@ -714,11 +574,7 @@ enum class ObdPid(
         description = "O2 Sensor Bank 4, Sensor 2 - Current",
         unit = "mA",
         expectedBytes = 4,
-        parser = { bytes ->
-            val c = bytes[2].toUByte().toInt()
-            val d = bytes[3].toUByte().toInt()
-            ((256 * c + d) / 256.0) - 128.0
-        }
+        parser = ::wideRangeCurrent
     ),
 
     // ========== Catalyst Temperature ==========
@@ -728,11 +584,7 @@ enum class ObdPid(
         description = "Catalyst Temperature: Bank 1, Sensor 1",
         unit = "°C",
         expectedBytes = 2,
-        parser = { bytes ->
-            val a = bytes[0].toUByte().toInt()
-            val b = bytes[1].toUByte().toInt()
-            (256 * a + b) / 10.0 - 40.0
-        }
+        parser = { bytes -> (bytes[0].toUByte().toInt() * 256 + bytes[1].toUByte().toInt()) / 10.0 - 40.0 }
     ),
 
     CATALYST_TEMP_BANK2_SENSOR1(
@@ -740,11 +592,7 @@ enum class ObdPid(
         description = "Catalyst Temperature: Bank 2, Sensor 1",
         unit = "°C",
         expectedBytes = 2,
-        parser = { bytes ->
-            val a = bytes[0].toUByte().toInt()
-            val b = bytes[1].toUByte().toInt()
-            (256 * a + b) / 10.0 - 40.0
-        }
+        parser = { bytes -> (bytes[0].toUByte().toInt() * 256 + bytes[1].toUByte().toInt()) / 10.0 - 40.0 }
     ),
 
     CATALYST_TEMP_BANK1_SENSOR2(
@@ -752,11 +600,7 @@ enum class ObdPid(
         description = "Catalyst Temperature: Bank 1, Sensor 2",
         unit = "°C",
         expectedBytes = 2,
-        parser = { bytes ->
-            val a = bytes[0].toUByte().toInt()
-            val b = bytes[1].toUByte().toInt()
-            (256 * a + b) / 10.0 - 40.0
-        }
+        parser = { bytes -> (bytes[0].toUByte().toInt() * 256 + bytes[1].toUByte().toInt()) / 10.0 - 40.0 }
     ),
 
     CATALYST_TEMP_BANK2_SENSOR2(
@@ -764,11 +608,7 @@ enum class ObdPid(
         description = "Catalyst Temperature: Bank 2, Sensor 2",
         unit = "°C",
         expectedBytes = 2,
-        parser = { bytes ->
-            val a = bytes[0].toUByte().toInt()
-            val b = bytes[1].toUByte().toInt()
-            (256 * a + b) / 10.0 - 40.0
-        }
+        parser = { bytes -> (bytes[0].toUByte().toInt() * 256 + bytes[1].toUByte().toInt()) / 10.0 - 40.0 }
     ),
 
     // ========== Monitor Status / Voltage / Load ==========
@@ -778,12 +618,7 @@ enum class ObdPid(
         description = "Monitor Status This Drive Cycle",
         unit = "bitmask",
         expectedBytes = 4,
-        parser = { bytes ->
-            ((bytes[0].toUByte().toLong() shl 24) or
-             (bytes[1].toUByte().toLong() shl 16) or
-             (bytes[2].toUByte().toLong() shl 8) or
-             bytes[3].toUByte().toLong()).toDouble()
-        }
+        parser = ::fourByteBitmask
     ),
 
     CONTROL_MODULE_VOLTAGE(
@@ -791,11 +626,7 @@ enum class ObdPid(
         description = "Control Module Voltage",
         unit = "V",
         expectedBytes = 2,
-        parser = { bytes ->
-            val a = bytes[0].toUByte().toInt()
-            val b = bytes[1].toUByte().toInt()
-            (256 * a + b) / 1000.0
-        }
+        parser = { bytes -> (bytes[0].toUByte().toInt() * 256 + bytes[1].toUByte().toInt()) / 1000.0 }
     ),
 
     ABSOLUTE_LOAD(
@@ -803,11 +634,7 @@ enum class ObdPid(
         description = "Absolute Load Value",
         unit = "%",
         expectedBytes = 2,
-        parser = { bytes ->
-            val a = bytes[0].toUByte().toInt()
-            val b = bytes[1].toUByte().toInt()
-            (256 * a + b) * 100.0 / 255.0
-        }
+        parser = { bytes -> (bytes[0].toUByte().toInt() * 256 + bytes[1].toUByte().toInt()) * 100.0 / 255.0 }
     ),
 
     COMMANDED_AIR_FUEL_RATIO(
@@ -815,11 +642,7 @@ enum class ObdPid(
         description = "Commanded Air-Fuel Equivalence Ratio",
         unit = "ratio",
         expectedBytes = 2,
-        parser = { bytes ->
-            val a = bytes[0].toUByte().toInt()
-            val b = bytes[1].toUByte().toInt()
-            (2.0 / 65536.0) * (256 * a + b)
-        }
+        parser = ::lambdaRatio
     ),
 
     // ========== Throttle Positions ==========
@@ -829,7 +652,7 @@ enum class ObdPid(
         description = "Relative Throttle Position",
         unit = "%",
         expectedBytes = 1,
-        parser = { bytes -> bytes[0].toUByte().toDouble() * 100.0 / 255.0 }
+        parser = ::singleBytePercent
     ),
 
     AMBIENT_AIR_TEMP(
@@ -837,7 +660,7 @@ enum class ObdPid(
         description = "Ambient Air Temperature",
         unit = "°C",
         expectedBytes = 1,
-        parser = { bytes -> bytes[0].toUByte().toDouble() - 40.0 }
+        parser = ::singleByteOffset40
     ),
 
     ABSOLUTE_THROTTLE_POSITION_B(
@@ -845,7 +668,7 @@ enum class ObdPid(
         description = "Absolute Throttle Position B",
         unit = "%",
         expectedBytes = 1,
-        parser = { bytes -> bytes[0].toUByte().toDouble() * 100.0 / 255.0 }
+        parser = ::singleBytePercent
     ),
 
     ABSOLUTE_THROTTLE_POSITION_C(
@@ -853,7 +676,7 @@ enum class ObdPid(
         description = "Absolute Throttle Position C",
         unit = "%",
         expectedBytes = 1,
-        parser = { bytes -> bytes[0].toUByte().toDouble() * 100.0 / 255.0 }
+        parser = ::singleBytePercent
     ),
 
     // ========== Accelerator Pedal Positions ==========
@@ -863,7 +686,7 @@ enum class ObdPid(
         description = "Accelerator Pedal Position D",
         unit = "%",
         expectedBytes = 1,
-        parser = { bytes -> bytes[0].toUByte().toDouble() * 100.0 / 255.0 }
+        parser = ::singleBytePercent
     ),
 
     ACCELERATOR_PEDAL_POSITION_E(
@@ -871,7 +694,7 @@ enum class ObdPid(
         description = "Accelerator Pedal Position E",
         unit = "%",
         expectedBytes = 1,
-        parser = { bytes -> bytes[0].toUByte().toDouble() * 100.0 / 255.0 }
+        parser = ::singleBytePercent
     ),
 
     ACCELERATOR_PEDAL_POSITION_F(
@@ -879,7 +702,7 @@ enum class ObdPid(
         description = "Accelerator Pedal Position F",
         unit = "%",
         expectedBytes = 1,
-        parser = { bytes -> bytes[0].toUByte().toDouble() * 100.0 / 255.0 }
+        parser = ::singleBytePercent
     ),
 
     COMMANDED_THROTTLE_ACTUATOR(
@@ -887,7 +710,7 @@ enum class ObdPid(
         description = "Commanded Throttle Actuator",
         unit = "%",
         expectedBytes = 1,
-        parser = { bytes -> bytes[0].toUByte().toDouble() * 100.0 / 255.0 }
+        parser = ::singleBytePercent
     ),
 
     // ========== Time PIDs ==========
@@ -897,11 +720,7 @@ enum class ObdPid(
         description = "Time Run with MIL On",
         unit = "min",
         expectedBytes = 2,
-        parser = { bytes ->
-            val a = bytes[0].toUByte().toInt()
-            val b = bytes[1].toUByte().toInt()
-            (256 * a + b).toDouble()
-        }
+        parser = ::twoByteUInt
     ),
 
     TIME_SINCE_CODES_CLEARED(
@@ -909,11 +728,7 @@ enum class ObdPid(
         description = "Time Since Trouble Codes Cleared",
         unit = "min",
         expectedBytes = 2,
-        parser = { bytes ->
-            val a = bytes[0].toUByte().toInt()
-            val b = bytes[1].toUByte().toInt()
-            (256 * a + b).toDouble()
-        }
+        parser = ::twoByteUInt
     ),
 
     // ========== Maximum Values ==========
@@ -923,7 +738,7 @@ enum class ObdPid(
         description = "Max Values: Fuel-Air Ratio, O2 Voltage, O2 Current, Intake Pressure",
         unit = "various",
         expectedBytes = 4,
-        parser = { bytes -> bytes[0].toUByte().toDouble() }
+        parser = ::singleByte
     ),
 
     MAX_MAF_FLOW_RATE(
@@ -931,10 +746,7 @@ enum class ObdPid(
         description = "Maximum Air Flow Rate from MAF",
         unit = "g/s",
         expectedBytes = 4,
-        parser = { bytes ->
-            val a = bytes[0].toUByte().toInt()
-            (a * 10).toDouble()
-        }
+        parser = { bytes -> bytes[0].toUByte().toDouble() * 10.0 }
     ),
 
     // ========== Fuel Type / Ethanol ==========
@@ -944,7 +756,7 @@ enum class ObdPid(
         description = "Fuel Type",
         unit = "type",
         expectedBytes = 1,
-        parser = { bytes -> bytes[0].toUByte().toDouble() }
+        parser = ::singleByte
     ),
 
     ETHANOL_FUEL_PERCENT(
@@ -952,7 +764,7 @@ enum class ObdPid(
         description = "Ethanol Fuel Percentage",
         unit = "%",
         expectedBytes = 1,
-        parser = { bytes -> bytes[0].toUByte().toDouble() * 100.0 / 255.0 }
+        parser = ::singleBytePercent
     ),
 
     ABSOLUTE_EVAP_SYSTEM_VAPOR_PRESSURE(
@@ -960,11 +772,7 @@ enum class ObdPid(
         description = "Absolute Evap System Vapor Pressure",
         unit = "kPa",
         expectedBytes = 2,
-        parser = { bytes ->
-            val a = bytes[0].toUByte().toInt()
-            val b = bytes[1].toUByte().toInt()
-            (256 * a + b) / 200.0
-        }
+        parser = { bytes -> (bytes[0].toUByte().toInt() * 256 + bytes[1].toUByte().toInt()) / 200.0 }
     ),
 
     EVAP_SYSTEM_VAPOR_PRESSURE_2(
@@ -972,11 +780,7 @@ enum class ObdPid(
         description = "Evap System Vapor Pressure",
         unit = "Pa",
         expectedBytes = 2,
-        parser = { bytes ->
-            val a = bytes[0].toUByte().toInt()
-            val b = bytes[1].toUByte().toInt()
-            (256 * a + b) - 32767.0
-        }
+        parser = { bytes -> (bytes[0].toUByte().toInt() * 256 + bytes[1].toUByte().toInt()) - 32767.0 }
     ),
 
     // ========== Secondary O2 Sensor Trims ==========
@@ -986,7 +790,7 @@ enum class ObdPid(
         description = "Short Term Secondary O2 Sensor Trim - Bank 1 & 3",
         unit = "%",
         expectedBytes = 2,
-        parser = { bytes -> (bytes[0].toUByte().toDouble() - 128.0) * 100.0 / 128.0 }
+        parser = ::singleByteSigned128Percent
     ),
 
     LONG_TERM_O2_TRIM_BANK1_BANK3(
@@ -994,7 +798,7 @@ enum class ObdPid(
         description = "Long Term Secondary O2 Sensor Trim - Bank 1 & 3",
         unit = "%",
         expectedBytes = 2,
-        parser = { bytes -> (bytes[0].toUByte().toDouble() - 128.0) * 100.0 / 128.0 }
+        parser = ::singleByteSigned128Percent
     ),
 
     SHORT_TERM_O2_TRIM_BANK2_BANK4(
@@ -1002,7 +806,7 @@ enum class ObdPid(
         description = "Short Term Secondary O2 Sensor Trim - Bank 2 & 4",
         unit = "%",
         expectedBytes = 2,
-        parser = { bytes -> (bytes[0].toUByte().toDouble() - 128.0) * 100.0 / 128.0 }
+        parser = ::singleByteSigned128Percent
     ),
 
     LONG_TERM_O2_TRIM_BANK2_BANK4(
@@ -1010,7 +814,7 @@ enum class ObdPid(
         description = "Long Term Secondary O2 Sensor Trim - Bank 2 & 4",
         unit = "%",
         expectedBytes = 2,
-        parser = { bytes -> (bytes[0].toUByte().toDouble() - 128.0) * 100.0 / 128.0 }
+        parser = ::singleByteSigned128Percent
     ),
 
     // ========== Fuel Rail / Pedal / Battery ==========
@@ -1020,11 +824,7 @@ enum class ObdPid(
         description = "Fuel Rail Absolute Pressure",
         unit = "kPa",
         expectedBytes = 2,
-        parser = { bytes ->
-            val a = bytes[0].toUByte().toInt()
-            val b = bytes[1].toUByte().toInt()
-            (256 * a + b) * 10.0
-        }
+        parser = { bytes -> (bytes[0].toUByte().toInt() * 256 + bytes[1].toUByte().toInt()) * 10.0 }
     ),
 
     RELATIVE_ACCELERATOR_PEDAL_POSITION(
@@ -1032,7 +832,7 @@ enum class ObdPid(
         description = "Relative Accelerator Pedal Position",
         unit = "%",
         expectedBytes = 1,
-        parser = { bytes -> bytes[0].toUByte().toDouble() * 100.0 / 255.0 }
+        parser = ::singleBytePercent
     ),
 
     HYBRID_BATTERY_PACK_LIFE(
@@ -1040,7 +840,7 @@ enum class ObdPid(
         description = "Hybrid Battery Pack Remaining Life",
         unit = "%",
         expectedBytes = 1,
-        parser = { bytes -> bytes[0].toUByte().toDouble() * 100.0 / 255.0 }
+        parser = ::singleBytePercent
     ),
 
     ENGINE_OIL_TEMP(
@@ -1048,7 +848,7 @@ enum class ObdPid(
         description = "Engine Oil Temperature",
         unit = "°C",
         expectedBytes = 1,
-        parser = { bytes -> bytes[0].toUByte().toDouble() - 40.0 }
+        parser = ::singleByteOffset40
     ),
 
     FUEL_INJECTION_TIMING(
@@ -1056,11 +856,7 @@ enum class ObdPid(
         description = "Fuel Injection Timing",
         unit = "°",
         expectedBytes = 2,
-        parser = { bytes ->
-            val a = bytes[0].toUByte().toInt()
-            val b = bytes[1].toUByte().toInt()
-            ((256 * a + b) / 128.0) - 210.0
-        }
+        parser = { bytes -> (bytes[0].toUByte().toInt() * 256 + bytes[1].toUByte().toInt()) / 128.0 - 210.0 }
     ),
 
     ENGINE_FUEL_RATE(
@@ -1068,11 +864,7 @@ enum class ObdPid(
         description = "Engine Fuel Rate",
         unit = "L/h",
         expectedBytes = 2,
-        parser = { bytes ->
-            val a = bytes[0].toUByte().toInt()
-            val b = bytes[1].toUByte().toInt()
-            (256 * a + b) / 20.0
-        }
+        parser = { bytes -> (bytes[0].toUByte().toInt() * 256 + bytes[1].toUByte().toInt()) / 20.0 }
     ),
 
     EMISSION_REQUIREMENTS(
@@ -1080,7 +872,7 @@ enum class ObdPid(
         description = "Emission Requirements to Which Vehicle is Designed",
         unit = "type",
         expectedBytes = 1,
-        parser = { bytes -> bytes[0].toUByte().toDouble() }
+        parser = ::singleByte
     ),
 
     // ========== Engine Torque ==========
@@ -1106,11 +898,7 @@ enum class ObdPid(
         description = "Engine Reference Torque",
         unit = "Nm",
         expectedBytes = 2,
-        parser = { bytes ->
-            val a = bytes[0].toUByte().toInt()
-            val b = bytes[1].toUByte().toInt()
-            (256 * a + b).toDouble()
-        }
+        parser = ::twoByteUInt
     ),
 
     ENGINE_PERCENT_TORQUE_DATA(
@@ -1128,9 +916,7 @@ enum class ObdPid(
         description = "Auxiliary Input/Output Supported",
         unit = "bitmask",
         expectedBytes = 2,
-        parser = { bytes ->
-            ((bytes[0].toUByte().toInt() shl 8) or bytes[1].toUByte().toInt()).toDouble()
-        }
+        parser = ::twoByteUInt
     ),
 
     // ========== MAF Sensor ==========
@@ -1140,11 +926,7 @@ enum class ObdPid(
         description = "MAF Sensor",
         unit = "g/s",
         expectedBytes = 5,
-        parser = { bytes ->
-            val a = bytes[1].toUByte().toInt()
-            val b = bytes[2].toUByte().toInt()
-            (256 * a + b) / 32.0
-        }
+        parser = { bytes -> (bytes[1].toUByte().toInt() * 256 + bytes[2].toUByte().toInt()) / 32.0 }
     ),
 
     // ========== Engine Coolant Temperature (Extended) ==========
@@ -1190,11 +972,7 @@ enum class ObdPid(
         description = "Exhaust Gas Recirculation Temperature",
         unit = "°C",
         expectedBytes = 5,
-        parser = { bytes ->
-            val a = bytes[1].toUByte().toInt()
-            val b = bytes[2].toUByte().toInt()
-            ((256 * a + b) / 10.0) - 40.0
-        }
+        parser = { bytes -> (bytes[1].toUByte().toInt() * 256 + bytes[2].toUByte().toInt()) / 10.0 - 40.0 }
     ),
 
     COMMANDED_THROTTLE_ACTUATOR_2(
@@ -1212,11 +990,7 @@ enum class ObdPid(
         description = "Fuel Pressure Control System",
         unit = "kPa",
         expectedBytes = 6,
-        parser = { bytes ->
-            val a = bytes[1].toUByte().toInt()
-            val b = bytes[2].toUByte().toInt()
-            (256 * a + b) * 10.0
-        }
+        parser = { bytes -> (bytes[1].toUByte().toInt() * 256 + bytes[2].toUByte().toInt()) * 10.0 }
     ),
 
     INJECTION_PRESSURE_CONTROL(
@@ -1224,11 +998,7 @@ enum class ObdPid(
         description = "Injection Pressure Control System",
         unit = "kPa",
         expectedBytes = 5,
-        parser = { bytes ->
-            val a = bytes[1].toUByte().toInt()
-            val b = bytes[2].toUByte().toInt()
-            (256 * a + b) * 10.0
-        }
+        parser = { bytes -> (bytes[1].toUByte().toInt() * 256 + bytes[2].toUByte().toInt()) * 10.0 }
     ),
 
     // ========== Turbocharger ==========
@@ -1270,11 +1040,7 @@ enum class ObdPid(
         description = "Exhaust Pressure",
         unit = "kPa",
         expectedBytes = 5,
-        parser = { bytes ->
-            val a = bytes[1].toUByte().toInt()
-            val b = bytes[2].toUByte().toInt()
-            (256 * a + b) * 0.01
-        }
+        parser = { bytes -> (bytes[1].toUByte().toInt() * 256 + bytes[2].toUByte().toInt()) * 0.01 }
     ),
 
     TURBOCHARGER_RPM(
@@ -1282,11 +1048,7 @@ enum class ObdPid(
         description = "Turbocharger RPM",
         unit = "rpm",
         expectedBytes = 5,
-        parser = { bytes ->
-            val a = bytes[1].toUByte().toInt()
-            val b = bytes[2].toUByte().toInt()
-            (256 * a + b).toDouble()
-        }
+        parser = { bytes -> (bytes[1].toUByte().toInt() * 256 + bytes[2].toUByte().toInt()).toDouble() }
     ),
 
     // ========== Turbocharger Temperature ==========
@@ -1296,11 +1058,7 @@ enum class ObdPid(
         description = "Turbocharger Temperature A",
         unit = "°C",
         expectedBytes = 7,
-        parser = { bytes ->
-            val a = bytes[1].toUByte().toInt()
-            val b = bytes[2].toUByte().toInt()
-            ((256 * a + b) / 10.0) - 40.0
-        }
+        parser = { bytes -> (bytes[1].toUByte().toInt() * 256 + bytes[2].toUByte().toInt()) / 10.0 - 40.0 }
     ),
 
     TURBOCHARGER_TEMP_B(
@@ -1308,11 +1066,7 @@ enum class ObdPid(
         description = "Turbocharger Temperature B",
         unit = "°C",
         expectedBytes = 7,
-        parser = { bytes ->
-            val a = bytes[1].toUByte().toInt()
-            val b = bytes[2].toUByte().toInt()
-            ((256 * a + b) / 10.0) - 40.0
-        }
+        parser = { bytes -> (bytes[1].toUByte().toInt() * 256 + bytes[2].toUByte().toInt()) / 10.0 - 40.0 }
     ),
 
     // ========== Charge Air Cooler ==========
@@ -1332,11 +1086,7 @@ enum class ObdPid(
         description = "Exhaust Gas Temperature Bank 1",
         unit = "°C",
         expectedBytes = 9,
-        parser = { bytes ->
-            val a = bytes[1].toUByte().toInt()
-            val b = bytes[2].toUByte().toInt()
-            ((256 * a + b) / 10.0) - 40.0
-        }
+        parser = { bytes -> (bytes[1].toUByte().toInt() * 256 + bytes[2].toUByte().toInt()) / 10.0 - 40.0 }
     ),
 
     EXHAUST_GAS_TEMP_BANK2(
@@ -1344,11 +1094,7 @@ enum class ObdPid(
         description = "Exhaust Gas Temperature Bank 2",
         unit = "°C",
         expectedBytes = 9,
-        parser = { bytes ->
-            val a = bytes[1].toUByte().toInt()
-            val b = bytes[2].toUByte().toInt()
-            ((256 * a + b) / 10.0) - 40.0
-        }
+        parser = { bytes -> (bytes[1].toUByte().toInt() * 256 + bytes[2].toUByte().toInt()) / 10.0 - 40.0 }
     ),
 
     // ========== Diesel Particulate Filter ==========
@@ -1358,11 +1104,7 @@ enum class ObdPid(
         description = "Diesel Particulate Filter Differential Pressure",
         unit = "kPa",
         expectedBytes = 5,
-        parser = { bytes ->
-            val a = bytes[1].toUByte().toInt()
-            val b = bytes[2].toUByte().toInt()
-            (256 * a + b) * 0.01
-        }
+        parser = { bytes -> (bytes[1].toUByte().toInt() * 256 + bytes[2].toUByte().toInt()) * 0.01 }
     ),
 
     DPF_INLET_OUTLET_TEMP(
@@ -1370,11 +1112,7 @@ enum class ObdPid(
         description = "Diesel Particulate Filter",
         unit = "°C",
         expectedBytes = 5,
-        parser = { bytes ->
-            val a = bytes[1].toUByte().toInt()
-            val b = bytes[2].toUByte().toInt()
-            ((256 * a + b) / 10.0) - 40.0
-        }
+        parser = { bytes -> (bytes[1].toUByte().toInt() * 256 + bytes[2].toUByte().toInt()) / 10.0 - 40.0 }
     ),
 
     DPF_TEMP(
@@ -1382,11 +1120,7 @@ enum class ObdPid(
         description = "Diesel Particulate Filter Temperature",
         unit = "°C",
         expectedBytes = 9,
-        parser = { bytes ->
-            val a = bytes[1].toUByte().toInt()
-            val b = bytes[2].toUByte().toInt()
-            ((256 * a + b) / 10.0) - 40.0
-        }
+        parser = { bytes -> (bytes[1].toUByte().toInt() * 256 + bytes[2].toUByte().toInt()) / 10.0 - 40.0 }
     ),
 
     // ========== NOx Sensor ==========
@@ -1396,7 +1130,7 @@ enum class ObdPid(
         description = "NOx NTE Control Area Status",
         unit = "status",
         expectedBytes = 1,
-        parser = { bytes -> bytes[0].toUByte().toDouble() }
+        parser = ::singleByte
     ),
 
     PM_NTE_CONTROL_AREA_STATUS(
@@ -1404,7 +1138,7 @@ enum class ObdPid(
         description = "PM NTE Control Area Status",
         unit = "status",
         expectedBytes = 1,
-        parser = { bytes -> bytes[0].toUByte().toDouble() }
+        parser = ::singleByte
     ),
 
     ENGINE_RUN_TIME(
@@ -1413,11 +1147,8 @@ enum class ObdPid(
         unit = "sec",
         expectedBytes = 13,
         parser = { bytes ->
-            val a = bytes[1].toUByte().toLong()
-            val b = bytes[2].toUByte().toLong()
-            val c = bytes[3].toUByte().toLong()
-            val d = bytes[4].toUByte().toLong()
-            ((a shl 24) or (b shl 16) or (c shl 8) or d).toDouble()
+            ((bytes[1].toUByte().toLong() shl 24) or (bytes[2].toUByte().toLong() shl 16) or
+             (bytes[3].toUByte().toLong() shl 8) or bytes[4].toUByte().toLong()).toDouble()
         }
     ),
 
@@ -1429,11 +1160,8 @@ enum class ObdPid(
         unit = "sec",
         expectedBytes = 21,
         parser = { bytes ->
-            val a = bytes[1].toUByte().toLong()
-            val b = bytes[2].toUByte().toLong()
-            val c = bytes[3].toUByte().toLong()
-            val d = bytes[4].toUByte().toLong()
-            ((a shl 24) or (b shl 16) or (c shl 8) or d).toDouble()
+            ((bytes[1].toUByte().toLong() shl 24) or (bytes[2].toUByte().toLong() shl 16) or
+             (bytes[3].toUByte().toLong() shl 8) or bytes[4].toUByte().toLong()).toDouble()
         }
     ),
 
@@ -1443,11 +1171,8 @@ enum class ObdPid(
         unit = "sec",
         expectedBytes = 21,
         parser = { bytes ->
-            val a = bytes[1].toUByte().toLong()
-            val b = bytes[2].toUByte().toLong()
-            val c = bytes[3].toUByte().toLong()
-            val d = bytes[4].toUByte().toLong()
-            ((a shl 24) or (b shl 16) or (c shl 8) or d).toDouble()
+            ((bytes[1].toUByte().toLong() shl 24) or (bytes[2].toUByte().toLong() shl 16) or
+             (bytes[3].toUByte().toLong() shl 8) or bytes[4].toUByte().toLong()).toDouble()
         }
     ),
 
@@ -1456,11 +1181,7 @@ enum class ObdPid(
         description = "NOx Sensor",
         unit = "ppm",
         expectedBytes = 5,
-        parser = { bytes ->
-            val a = bytes[1].toUByte().toInt()
-            val b = bytes[2].toUByte().toInt()
-            (256 * a + b) * 0.1
-        }
+        parser = { bytes -> (bytes[1].toUByte().toInt() * 256 + bytes[2].toUByte().toInt()) * 0.1 }
     ),
 
     MANIFOLD_SURFACE_TEMP(
@@ -1468,7 +1189,7 @@ enum class ObdPid(
         description = "Manifold Surface Temperature",
         unit = "°C",
         expectedBytes = 1,
-        parser = { bytes -> bytes[0].toUByte().toDouble() - 40.0 }
+        parser = ::singleByteOffset40
     ),
 
     NOX_REAGENT_SYSTEM(
@@ -1484,11 +1205,7 @@ enum class ObdPid(
         description = "Particulate Matter Sensor",
         unit = "mg/m³",
         expectedBytes = 5,
-        parser = { bytes ->
-            val a = bytes[1].toUByte().toInt()
-            val b = bytes[2].toUByte().toInt()
-            (256 * a + b) * 0.0125
-        }
+        parser = { bytes -> (bytes[1].toUByte().toInt() * 256 + bytes[2].toUByte().toInt()) * 0.0125 }
     ),
 
     INTAKE_MANIFOLD_ABSOLUTE_PRESSURE(
@@ -1496,11 +1213,7 @@ enum class ObdPid(
         description = "Intake Manifold Absolute Pressure (Extended)",
         unit = "kPa",
         expectedBytes = 5,
-        parser = { bytes ->
-            val a = bytes[1].toUByte().toInt()
-            val b = bytes[2].toUByte().toInt()
-            (256 * a + b) * 0.03125
-        }
+        parser = { bytes -> (bytes[1].toUByte().toInt() * 256 + bytes[2].toUByte().toInt()) * 0.03125 }
     ),
 
     // ========== SCR System ==========
@@ -1519,11 +1232,8 @@ enum class ObdPid(
         unit = "sec",
         expectedBytes = 41,
         parser = { bytes ->
-            val a = bytes[1].toUByte().toLong()
-            val b = bytes[2].toUByte().toLong()
-            val c = bytes[3].toUByte().toLong()
-            val d = bytes[4].toUByte().toLong()
-            ((a shl 24) or (b shl 16) or (c shl 8) or d).toDouble()
+            ((bytes[1].toUByte().toLong() shl 24) or (bytes[2].toUByte().toLong() shl 16) or
+             (bytes[3].toUByte().toLong() shl 8) or bytes[4].toUByte().toLong()).toDouble()
         }
     ),
 
@@ -1533,11 +1243,8 @@ enum class ObdPid(
         unit = "sec",
         expectedBytes = 41,
         parser = { bytes ->
-            val a = bytes[1].toUByte().toLong()
-            val b = bytes[2].toUByte().toLong()
-            val c = bytes[3].toUByte().toLong()
-            val d = bytes[4].toUByte().toLong()
-            ((a shl 24) or (b shl 16) or (c shl 8) or d).toDouble()
+            ((bytes[1].toUByte().toLong() shl 24) or (bytes[2].toUByte().toLong() shl 16) or
+             (bytes[3].toUByte().toLong() shl 8) or bytes[4].toUByte().toLong()).toDouble()
         }
     ),
 
@@ -1556,11 +1263,7 @@ enum class ObdPid(
         description = "O2 Sensor (Wide Range)",
         unit = "ratio",
         expectedBytes = 17,
-        parser = { bytes ->
-            val a = bytes[2].toUByte().toInt()
-            val b = bytes[3].toUByte().toInt()
-            (2.0 / 65536.0) * (256 * a + b)
-        }
+        parser = { bytes -> (bytes[2].toUByte().toInt() * 256 + bytes[3].toUByte().toInt()) / 32768.0 }
     ),
 
     THROTTLE_POSITION_G(
@@ -1568,7 +1271,7 @@ enum class ObdPid(
         description = "Throttle Position G",
         unit = "%",
         expectedBytes = 1,
-        parser = { bytes -> bytes[0].toUByte().toDouble() * 100.0 / 255.0 }
+        parser = ::singleBytePercent
     ),
 
     ENGINE_FRICTION_TORQUE(
@@ -1586,11 +1289,7 @@ enum class ObdPid(
         description = "PM Sensor Output Bank 1 & 2",
         unit = "mA",
         expectedBytes = 5,
-        parser = { bytes ->
-            val a = bytes[1].toUByte().toInt()
-            val b = bytes[2].toUByte().toInt()
-            (256 * a + b) * 0.01
-        }
+        parser = { bytes -> (bytes[1].toUByte().toInt() * 256 + bytes[2].toUByte().toInt()) * 0.01 }
     ),
 
     WWH_OBD_VEHICLE_INFO(
@@ -1614,7 +1313,7 @@ enum class ObdPid(
         description = "Fuel System Control",
         unit = "status",
         expectedBytes = 2,
-        parser = { bytes -> bytes[0].toUByte().toDouble() }
+        parser = ::singleByte
     ),
 
     WWH_OBD_COUNTERS_SUPPORT(
@@ -1638,11 +1337,7 @@ enum class ObdPid(
         description = "Exhaust Gas Temperature Sensor",
         unit = "°C",
         expectedBytes = 9,
-        parser = { bytes ->
-            val a = bytes[1].toUByte().toInt()
-            val b = bytes[2].toUByte().toInt()
-            ((256 * a + b) / 10.0) - 40.0
-        }
+        parser = { bytes -> (bytes[1].toUByte().toInt() * 256 + bytes[2].toUByte().toInt()) / 10.0 - 40.0 }
     ),
 
     HYBRID_EV_VEHICLE_SYSTEM_DATA(
@@ -1666,11 +1361,7 @@ enum class ObdPid(
         description = "O2 Sensor Data",
         unit = "V",
         expectedBytes = 17,
-        parser = { bytes ->
-            val a = bytes[2].toUByte().toInt()
-            val b = bytes[3].toUByte().toInt()
-            (8.0 / 65536.0) * (256 * a + b)
-        }
+        parser = { bytes -> (bytes[2].toUByte().toInt() * 256 + bytes[3].toUByte().toInt()) * 8.0 / 65536.0 }
     ),
 
     ENGINE_FUEL_RATE_MULTI(
@@ -1678,11 +1369,7 @@ enum class ObdPid(
         description = "Engine Fuel Rate Multi",
         unit = "g/s",
         expectedBytes = 4,
-        parser = { bytes ->
-            val a = bytes[0].toUByte().toInt()
-            val b = bytes[1].toUByte().toInt()
-            (256 * a + b) * 0.05
-        }
+        parser = { bytes -> (bytes[0].toUByte().toInt() * 256 + bytes[1].toUByte().toInt()) * 0.05 }
     ),
 
     ENGINE_EXHAUST_FLOW_RATE(
@@ -1690,11 +1377,7 @@ enum class ObdPid(
         description = "Engine Exhaust Flow Rate",
         unit = "kg/h",
         expectedBytes = 2,
-        parser = { bytes ->
-            val a = bytes[0].toUByte().toInt()
-            val b = bytes[1].toUByte().toInt()
-            (256 * a + b) * 0.2
-        }
+        parser = { bytes -> (bytes[0].toUByte().toInt() * 256 + bytes[1].toUByte().toInt()) * 0.2 }
     ),
 
     FUEL_SYSTEM_PERCENTAGE_USE(
@@ -1729,3 +1412,33 @@ enum class ObdPid(
         fun fromCode(code: String): ObdPid? = byCode[code.uppercase()]
     }
 }
+
+// ── Parser helpers ────────────────────────────────────────────────────────────
+// Referenced by ::function in enum constructors above.
+
+private fun singleByte(bytes: ByteArray) = bytes[0].toUByte().toDouble()
+
+private fun singleByteOffset40(bytes: ByteArray) = bytes[0].toUByte().toDouble() - 40.0
+
+private fun singleBytePercent(bytes: ByteArray) = bytes[0].toUByte().toDouble() * 100.0 / 255.0
+
+private fun singleByteSigned128Percent(bytes: ByteArray) =
+    (bytes[0].toUByte().toDouble() - 128.0) * 100.0 / 128.0
+
+private fun twoByteUInt(bytes: ByteArray) =
+    ((bytes[0].toUByte().toInt() shl 8) or bytes[1].toUByte().toInt()).toDouble()
+
+private fun fourByteBitmask(bytes: ByteArray) =
+    ((bytes[0].toUByte().toLong() shl 24) or (bytes[1].toUByte().toLong() shl 16) or
+     (bytes[2].toUByte().toLong() shl 8) or bytes[3].toUByte().toLong()).toDouble()
+
+/** bytes[0] / 200 — used for narrow-band O2 sensor voltage readings. */
+private fun o2Voltage(bytes: ByteArray) = bytes[0].toUByte().toDouble() / 200.0
+
+/** (2 / 65536) × (bytes[0..1] as uint16) — used for lambda-ratio and equivalence-ratio readings. */
+private fun lambdaRatio(bytes: ByteArray) =
+    ((bytes[0].toUByte().toInt() shl 8) or bytes[1].toUByte().toInt()) / 32768.0
+
+/** bytes[2..3] as uint16, scaled to mA — used for wide-range O2 sensor current readings. */
+private fun wideRangeCurrent(bytes: ByteArray) =
+    ((bytes[2].toUByte().toInt() shl 8) or bytes[3].toUByte().toInt()) / 256.0 - 128.0

@@ -1,8 +1,12 @@
 package com.odbplus.core.protocol
 
+import com.odbplus.core.protocol.adapter.DeviceProfile
+import com.odbplus.core.protocol.adapter.ProtocolSessionState
+import com.odbplus.core.protocol.session.AdapterSession
 import com.odbplus.core.transport.ConnectionState
 import com.odbplus.core.transport.TransportRepository
 import kotlinx.coroutines.flow.StateFlow
+import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -15,13 +19,41 @@ import javax.inject.Singleton
  * - Reading DTCs
  * - Clearing DTCs
  * - Reading vehicle info (VIN, etc.)
+ *
+ * Internally routes all commands through [AdapterSession] which handles
+ * device fingerprinting, driver selection, health monitoring, and
+ * protocol fallback automatically.
  */
 @Singleton
 class ObdService @Inject constructor(
     private val transport: TransportRepository,
-    private val parser: ObdParser
+    private val parser: ObdParser,
+    private val adapterSession: AdapterSession
 ) {
     val connectionState: StateFlow<ConnectionState> = transport.connectionState
+
+    /** Live adapter profile (null until fingerprinting completes). */
+    val deviceProfile: StateFlow<DeviceProfile?> = adapterSession.deviceProfile
+
+    /** Full UOAPL session state (richer than ConnectionState). */
+    val sessionState: StateFlow<ProtocolSessionState> = adapterSession.state
+
+    /**
+     * Called after the transport layer has established a raw connection.
+     * Hands off to [AdapterSession] for fingerprinting and full initialization.
+     *
+     * Should be called from the connect flow (e.g. in a ViewModel after
+     * [TransportRepository.connect] succeeds).
+     */
+    suspend fun onTransportReady(transportLabel: String = "unknown") {
+        val rawTransport = transport.getActiveTransport() ?: run {
+            Timber.w("ObdService.onTransportReady: no active transport")
+            return
+        }
+        adapterSession.onTransportConnected(rawTransport, transportLabel)
+    }
+
+    // ── Query API ─────────────────────────────────────────────────────────────
 
     /**
      * Query a single PID and return the parsed response.
@@ -39,11 +71,9 @@ class ObdService @Inject constructor(
         timeoutMs: Long = 3000L
     ): ObdSnapshot {
         val responses = mutableMapOf<ObdPid, ObdResponse>()
-
         for (pid in pids) {
             responses[pid] = query(pid, timeoutMs)
         }
-
         return ObdSnapshot(responses = responses)
     }
 
@@ -63,6 +93,8 @@ class ObdService @Inject constructor(
         )
     }
 
+    // ── DTCs ──────────────────────────────────────────────────────────────────
+
     /**
      * Read stored Diagnostic Trouble Codes (Mode 03).
      */
@@ -81,12 +113,13 @@ class ObdService @Inject constructor(
 
     /**
      * Clear all DTCs and reset monitors (Mode 04).
-     * Warning: This clears all stored codes and may reset emission monitors.
      */
     suspend fun clearDtcs(timeoutMs: Long = 5000L): Boolean {
         val rawResponse = sendCommand("04", timeoutMs)
         return rawResponse.contains("44") || rawResponse.contains("OK")
     }
+
+    // ── Vehicle Info ──────────────────────────────────────────────────────────
 
     /**
      * Read the Vehicle Identification Number (Mode 09, PID 02).
@@ -98,7 +131,6 @@ class ObdService @Inject constructor(
 
     /**
      * Read Calibration ID (Mode 09, PID 04).
-     * This identifies the software calibration version.
      */
     suspend fun readCalibrationId(timeoutMs: Long = 5000L): String? {
         val rawResponse = sendCommand("0904", timeoutMs)
@@ -107,7 +139,6 @@ class ObdService @Inject constructor(
 
     /**
      * Read Calibration Verification Number (Mode 09, PID 06).
-     * This is used to verify the calibration integrity.
      */
     suspend fun readCalibrationVerificationNumber(timeoutMs: Long = 5000L): String? {
         val rawResponse = sendCommand("0906", timeoutMs)
@@ -116,7 +147,6 @@ class ObdService @Inject constructor(
 
     /**
      * Read ECU Name (Mode 09, PID 0A).
-     * This identifies the ECU module.
      */
     suspend fun readEcuName(timeoutMs: Long = 5000L): String? {
         val rawResponse = sendCommand("090A", timeoutMs)
@@ -125,99 +155,72 @@ class ObdService @Inject constructor(
 
     /**
      * Read all available vehicle information.
-     * Returns a map of info type to value.
      */
     suspend fun readAllVehicleInfo(timeoutMs: Long = 5000L): Map<String, String> {
         val info = mutableMapOf<String, String>()
-
-        // VIN
         readVin(timeoutMs)?.let { info["VIN"] = it }
-
-        // Calibration ID
         readCalibrationId(timeoutMs)?.let { info["Calibration ID"] = it }
-
-        // Calibration Verification Number
         readCalibrationVerificationNumber(timeoutMs)?.let { info["CVN"] = it }
-
-        // ECU Name
         readEcuName(timeoutMs)?.let { info["ECU Name"] = it }
-
         return info
     }
 
+    // ── PID support bitmap ────────────────────────────────────────────────────
+
     /**
      * Check which PIDs are supported by the vehicle.
-     * Returns a set of supported PID codes.
      */
     suspend fun getSupportedPids(timeoutMs: Long = 3000L): Set<String> {
         val supportedPids = mutableSetOf<String>()
-
-        // Query PID 00 (PIDs 01-20 supported)
         val pids0100 = querySupportBitmap("0100", timeoutMs)
         supportedPids.addAll(decodeSupportBitmap(pids0100, 0x01))
-
-        // If PID 20 is supported, query PID 20 (PIDs 21-40)
         if ("20" in supportedPids) {
             val pids0120 = querySupportBitmap("0120", timeoutMs)
             supportedPids.addAll(decodeSupportBitmap(pids0120, 0x21))
         }
-
-        // If PID 40 is supported, query PID 40 (PIDs 41-60)
         if ("40" in supportedPids) {
             val pids0140 = querySupportBitmap("0140", timeoutMs)
             supportedPids.addAll(decodeSupportBitmap(pids0140, 0x41))
         }
-
         return supportedPids
     }
 
-    /**
-     * Get a value directly, or null if not available.
-     * Convenience method for quick queries.
-     */
-    suspend fun getValue(pid: ObdPid, timeoutMs: Long = 3000L): Double? {
-        return (query(pid, timeoutMs) as? ObdResponse.Success)?.value
-    }
+    // ── Convenience getters ───────────────────────────────────────────────────
 
-    /**
-     * Get RPM value directly.
-     */
+    suspend fun getValue(pid: ObdPid, timeoutMs: Long = 3000L): Double? =
+        (query(pid, timeoutMs) as? ObdResponse.Success)?.value
+
     suspend fun getRpm(timeoutMs: Long = 3000L): Double? = getValue(ObdPid.ENGINE_RPM, timeoutMs)
-
-    /**
-     * Get vehicle speed directly (km/h).
-     */
     suspend fun getSpeed(timeoutMs: Long = 3000L): Double? = getValue(ObdPid.VEHICLE_SPEED, timeoutMs)
-
-    /**
-     * Get coolant temperature directly (°C).
-     */
     suspend fun getCoolantTemp(timeoutMs: Long = 3000L): Double? =
         getValue(ObdPid.ENGINE_COOLANT_TEMP, timeoutMs)
 
+    // ── Internal command routing ──────────────────────────────────────────────
+
+    /**
+     * Route a raw command through [AdapterSession] when active, otherwise
+     * fall back to [TransportRepository] for compatibility.
+     */
     private suspend fun sendCommand(command: String, timeoutMs: Long): String {
-        // Use a simple approach - capture log output after sending command
-        // This works with the existing TransportRepository implementation
+        // Primary path: UOAPL AdapterSession
+        if (adapterSession.state.value.canSendCommands) {
+            return adapterSession.sendCommand(command, timeoutMs)
+        }
+
+        // Fallback path: legacy log-based extraction (pre-UOAPL)
         val logLinesBefore = transport.logLines.value.size
-
         transport.sendAndAwait(command, timeoutMs)
-
-        // Get new log lines that appeared after the command
         val currentLines = transport.logLines.value
         val newLines = currentLines.drop(logLinesBefore)
-
-        // Find response lines (those starting with "<<")
         val responseLines = newLines
             .filter { it.startsWith("<< ") }
             .map { it.removePrefix("<< ").trim() }
             .filter { it.isNotEmpty() }
 
-        // Extract the PID code from the command (e.g., "010C" -> "0C")
         val pidCode = if (command.length >= 4 && command.startsWith("01")) {
             command.substring(2).uppercase()
         } else null
 
-        // If we have a specific PID, try to find matching responses first
         if (pidCode != null) {
             val matchingResponses = responseLines.filter { line ->
                 val cleaned = line.uppercase().replace(" ", "")
@@ -227,8 +230,6 @@ class ObdService @Inject constructor(
                 return matchingResponses.joinToString("\n")
             }
         }
-
-        // Fall back to returning all non-empty responses
         return responseLines.joinToString("\n")
     }
 
@@ -238,12 +239,8 @@ class ObdService @Inject constructor(
             .replace("\\s+".toRegex(), "")
             .replace(">", "")
             .uppercase()
-
-        // Response format: 41 00 XX XX XX XX
         if (cleaned.length < 12) return 0L
-
         return try {
-            // Skip "41XX" prefix (4 chars) and parse remaining 8 hex chars
             cleaned.substring(4, 12).toLong(16)
         } catch (e: NumberFormatException) {
             0L
