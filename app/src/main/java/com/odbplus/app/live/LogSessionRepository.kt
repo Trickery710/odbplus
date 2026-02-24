@@ -65,30 +65,23 @@ class LogSessionRepository @Inject constructor(
     val selectedPids: StateFlow<List<ObdPid>> = _selectedPids.asStateFlow()
 
     suspend fun initialize() = withContext(Dispatchers.IO) {
-        // Load saved sessions
-        loadSessions()
-        // Load selected PIDs
-        loadSelectedPids()
-    }
-
-    private suspend fun loadSessions() = withContext(Dispatchers.IO) {
         try {
+            // Single read — both sessions and selected PIDs live in the same DataStore file.
             val prefs = context.dataStore.data.first()
-            val sessionsJson = prefs[sessionsKey] ?: return@withContext
-            val serialized = json.decodeFromString<List<SerializableLogSession>>(sessionsJson)
-            _sessions.value = serialized.map { it.toLogSession() }
+
+            val sessionsJson = prefs[sessionsKey]
+            if (sessionsJson != null) {
+                runCatching { json.decodeFromString<List<SerializableLogSession>>(sessionsJson) }
+                    .onSuccess { serialized -> _sessions.value = serialized.map { it.toLogSession() } }
+                    .onFailure { _sessions.value = emptyList() }
+            }
+
+            val pidCodes = prefs[selectedPidsKey]
+            if (pidCodes != null) {
+                _selectedPids.value = pidCodes.mapNotNull { ObdPid.fromCode(it) }
+            }
         } catch (e: Exception) {
-            // Ignore errors on load, start fresh
             _sessions.value = emptyList()
-        }
-    }
-
-    private suspend fun loadSelectedPids() = withContext(Dispatchers.IO) {
-        try {
-            val prefs = context.dataStore.data.first()
-            val pidCodes = prefs[selectedPidsKey] ?: return@withContext
-            _selectedPids.value = pidCodes.mapNotNull { ObdPid.fromCode(it) }
-        } catch (e: Exception) {
             _selectedPids.value = emptyList()
         }
     }

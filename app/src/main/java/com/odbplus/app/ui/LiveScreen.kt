@@ -71,7 +71,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.odbplus.app.live.LiveDataUiState
 import com.odbplus.app.live.LiveDataViewModel
 import com.odbplus.app.live.LogSession

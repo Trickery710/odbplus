@@ -6,6 +6,8 @@ import com.odbplus.app.ai.data.AiProvider
 import com.odbplus.app.ai.data.ChatMessage
 import com.odbplus.app.parts.PartsRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -33,9 +35,15 @@ class AiChatViewModel @Inject constructor(
 
     private fun initialize() {
         viewModelScope.launch {
-            _uiState.update { it.copy(isLoading = true) }
-            chatRepository.initialize()
+            _uiState.update {
+                it.copy(
+                    isLoading = true,
+                    isGoogleSignInConfigured = googleAuthManager.isConfigured()
+                )
+            }
 
+            // Start all collectors immediately — they don't need DataStore to have loaded yet.
+            // This means the UI can process cached/default values while I/O is in flight.
             launch {
                 chatRepository.messages.collect { messages ->
                     val hasMessages = messages.isNotEmpty()
@@ -56,15 +64,6 @@ class AiChatViewModel @Inject constructor(
                 aiSettingsRepository.hasApiKey.collect { hasKey ->
                     _uiState.update { it.copy(hasApiKey = hasKey) }
                 }
-            }
-
-            _uiState.update {
-                it.copy(isGoogleSignInConfigured = googleAuthManager.isConfigured())
-            }
-
-            val (savedToken, savedEmail, savedName) = aiSettingsRepository.getSavedGoogleAuth()
-            if (!savedToken.isNullOrBlank()) {
-                googleAuthManager.restoreAuthState(savedToken, savedEmail, savedName)
             }
 
             launch {
@@ -97,6 +96,18 @@ class AiChatViewModel @Inject constructor(
                         )
                     }
                 }
+            }
+
+            // Run both DataStore reads in parallel — chat_history and ai_settings are separate
+            // files so they can be read concurrently with no contention.
+            val chatInitJob = async(Dispatchers.IO) { chatRepository.initialize() }
+            val googleAuthJob = async(Dispatchers.IO) { aiSettingsRepository.getSavedGoogleAuth() }
+
+            chatInitJob.await()
+            val (savedToken, savedEmail, savedName) = googleAuthJob.await()
+
+            if (!savedToken.isNullOrBlank()) {
+                googleAuthManager.restoreAuthState(savedToken, savedEmail, savedName)
             }
 
             _uiState.update { it.copy(isLoading = false) }

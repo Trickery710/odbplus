@@ -11,7 +11,9 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 /**
@@ -55,7 +57,7 @@ data class LiveDataUiState(
     val isConnected: Boolean = false,
     val isPolling: Boolean = false,
     val pollIntervalMs: Long = 500L,
-    val availablePids: List<PidDisplayState> = ObdPid.entries.map { PidDisplayState(it) },
+    val availablePids: List<PidDisplayState> = emptyList(),
     val selectedPids: List<ObdPid> = emptyList(),
     val pidValues: Map<ObdPid, PidDisplayState> = emptyMap(),
     // Logging state
@@ -107,12 +109,12 @@ class LiveDataViewModel @Inject constructor(
             try {
                 repository.initialize()
                 val savedPids = repository.selectedPids.value
-                if (savedPids.isNotEmpty()) {
-                    val updatedAvailable = _uiState.value.availablePids.map {
-                        it.copy(isSelected = it.pid in savedPids)
-                    }
-                    _uiState.update { it.copy(selectedPids = savedPids, availablePids = updatedAvailable) }
+                // Build PID list off the main thread — enum class-loading + 100 allocations
+                // are CPU work that must not run on Main.
+                val allPids = withContext(Dispatchers.Default) {
+                    ObdPid.entries.map { PidDisplayState(it, isSelected = it in savedPids) }
                 }
+                _uiState.update { it.copy(selectedPids = savedPids, availablePids = allPids) }
                 val savedValues = repository.currentPidValues.value
                 if (savedValues.isNotEmpty()) {
                     _uiState.update { it.copy(pidValues = savedValues) }

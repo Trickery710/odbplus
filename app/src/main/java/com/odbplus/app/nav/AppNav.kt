@@ -30,10 +30,15 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navigation
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import com.odbplus.app.ai.VehicleContextViewModel
 import com.odbplus.app.ui.theme.*
 
 @Composable
 fun AppScreen() {
+    // Instantiate at app scope so it collects connection/vehicle data for the lifetime of the session.
+    hiltViewModel<VehicleContextViewModel>()
+
     val navController = rememberNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route

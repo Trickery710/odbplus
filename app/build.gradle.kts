@@ -61,6 +61,7 @@ dependencies {
     implementation(libs.ktor.client.okhttp)
     implementation(libs.ktor.client.content.negotiation)
     implementation(libs.ktor.serialization.kotlinx.json)
+    implementation(libs.slf4j.nop) // SLF4J 2.x binding — silences Ktor's internal log output
 
     // Google Sign-In (Credential Manager)
     implementation(libs.credentials)
