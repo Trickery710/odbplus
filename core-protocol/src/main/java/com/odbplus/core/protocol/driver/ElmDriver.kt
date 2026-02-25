@@ -5,6 +5,7 @@ import com.odbplus.core.protocol.adapter.DeviceCapabilities
 import com.odbplus.core.protocol.adapter.DeviceProfile
 import com.odbplus.core.transport.ObdTransport
 import kotlin.math.pow
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.delay
 import timber.log.Timber
 
@@ -119,10 +120,9 @@ class ElmDriver(override var profile: DeviceProfile) : AdapterDriver {
 
     private suspend fun sendRaw(transport: ObdTransport, cmd: String, timeoutMs: Long): String =
         try {
-            transport.drainChannel()
-            transport.writeLine(cmd)
-            transport.readUntilPrompt(timeoutMs)
+            transport.sendCommand(cmd, timeoutMs)
         } catch (e: Exception) {
+            if (e is CancellationException) throw e
             Timber.w("ElmDriver raw send '$cmd' exception: ${e.message}")
             ""
         }

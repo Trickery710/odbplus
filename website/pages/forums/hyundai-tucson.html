@@ -111,6 +111,63 @@
                 </div>
             </div>
 
+            <h2 class="mb-3">DCT Troubleshooting with a Scan Tool</h2>
+            <div class="diagnostic-guide mb-5">
+                <div class="diag-intro issue-section">
+                    <p style="font-size:0.9rem; color:var(--text-secondary); margin-bottom:1rem;">The Hyundai 7-speed dual-clutch transmission (D7F/D7UF) is known for shudder and hesitation, especially under light throttle at low speeds. This guide walks you through diagnosing DCT issues using an OBD-II scan tool such as the ODB+ app.</p>
+                </div>
+
+                <div class="issue-section">
+                    <h3>Step 1 — Read and Record All Fault Codes</h3>
+                    <ul class="issue-list">
+                        <li>Connect your scan tool and navigate to the <strong>TCM (Transmission Control Module)</strong> — do not rely on the generic OBD-II mode, which often misses transmission codes.</li>
+                        <li>Record all stored and pending DTCs before clearing anything.</li>
+                        <li><strong>P0720</strong> — Output speed sensor circuit fault</li>
+                        <li><strong>P0730</strong> — Incorrect gear ratio</li>
+                        <li><strong>P17CB / P17CC</strong> — Odd/even clutch slip or temp too high</li>
+                        <li><strong>P177B / P177C</strong> — Clutch torque capacity deviation</li>
+                        <li><strong>P0815 / P0816</strong> — Upshift/downshift switch circuit</li>
+                    </ul>
+                </div>
+
+                <div class="issue-section">
+                    <h3>Step 2 — Monitor Live Data PIDs</h3>
+                    <ul class="issue-list">
+                        <li><strong>Odd-gear clutch temperature</strong> — Normal operating range: 60–150 °C. Above 200 °C indicates overheating or slipping.</li>
+                        <li><strong>Even-gear clutch temperature</strong> — Same range. A large imbalance between odd and even clutch temps can pinpoint which clutch pack is worn.</li>
+                        <li><strong>Input shaft speed (RPM)</strong> — Compare against engine RPM during engagement. Excessive slip = worn clutch plates.</li>
+                        <li><strong>Output shaft speed (RPM)</strong> — Should track expected vehicle speed precisely in each gear.</li>
+                        <li><strong>Clutch slip %</strong> — Any value above 3–5% during normal driving (not launch) indicates a worn or slipping clutch.</li>
+                        <li><strong>TCM adaptation values</strong> — High or maxed-out adaptation values (close to limit) mean the TCM has compensated as far as it can; fluid change or hardware replacement is needed.</li>
+                    </ul>
+                </div>
+
+                <div class="issue-section">
+                    <h3>Step 3 — Perform a Drive Cycle with Live Data</h3>
+                    <ul class="issue-list">
+                        <li>After reading baseline data, clear faults and perform a controlled drive: gentle 0–40 mph acceleration in 1st–3rd gear.</li>
+                        <li>Watch for clutch slip spikes during the 1→2 and 2→3 shifts — this is the most common shudder trigger on the Hyundai 7DCT.</li>
+                        <li>Note whether shudder occurs during engagement (clutch applying) or during coasting/deceleration (drag shudder).</li>
+                        <li>If shudder is worst when cold and improves when warm, the clutch fluid may be contaminated or degraded.</li>
+                    </ul>
+                </div>
+
+                <div class="issue-section">
+                    <h3>Step 4 — Evaluate Results and Next Steps</h3>
+                    <ul class="issue-list">
+                        <li><strong>No codes, mild shudder, adaptations near limit</strong> → DCT fluid service first. Hyundai recommends Genuine DCT Fluid SP-4 (or equivalent). Drain and refill, then perform TCM adaptation reset via scan tool.</li>
+                        <li><strong>Clutch temp codes (P17CB/P17CC), high slip %</strong> → Clutch pack wear. Fluid change may provide temporary relief but hardware replacement (clutch assembly) is likely needed.</li>
+                        <li><strong>P0720 or gear ratio codes</strong> → Check wiring and speed sensors before condemning the TCM.</li>
+                        <li><strong>After fluid service</strong> → Use scan tool to reset TCM adaptations so the module relearns clutch engagement points with fresh fluid.</li>
+                    </ul>
+                </div>
+
+                <div class="issue-section" style="border-color: var(--primary);">
+                    <h3 style="color: var(--primary);">Scan Tool Tip — ODB+ App</h3>
+                    <p style="font-size:0.875rem; color:var(--text-secondary);">Connect an ELM327 Bluetooth or WiFi OBD-II adapter to your Tucson's diagnostic port (under the dash, driver side). In the ODB+ app, select <strong>TCM</strong> from the module list to access transmission-specific live data and fault codes not available in generic OBD-II mode.</p>
+                </div>
+            </div>
+
             <h2 class="mb-3">Recent Discussions</h2>
             <div class="thread-list">
                 <a href="#" class="thread-item">

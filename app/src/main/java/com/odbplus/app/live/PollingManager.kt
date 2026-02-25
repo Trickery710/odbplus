@@ -29,6 +29,9 @@ class PollingManager(private val obdService: ObdService) {
     /** Callback invoked after each poll cycle with the collected pid→value map. */
     var onPollCycle: ((Map<ObdPid, Double?>) -> Unit)? = null
 
+    /** Pause between individual PID commands within one poll cycle. */
+    private val INTER_PID_DELAY_MS = 25L
+
     fun setInterval(ms: Long) {
         _pollIntervalMs.value = ms.coerceIn(100L, 5000L)
     }
@@ -62,12 +65,14 @@ class PollingManager(private val obdService: ObdService) {
 
     private suspend fun pollOnce(pids: List<ObdPid>) {
         val valuesForCycle = mutableMapOf<ObdPid, Double?>()
-        for (pid in pids) {
+        for ((index, pid) in pids.withIndex()) {
             if (!_isPolling.value) break
             updateLoading(pid, true)
             val response = obdService.query(pid)
             applyResponse(pid, pids, response)
             valuesForCycle[pid] = (response as? ObdResponse.Success)?.value
+            // Small breathing room between commands so the adapter isn't overwhelmed.
+            if (index < pids.lastIndex) delay(INTER_PID_DELAY_MS)
         }
         if (valuesForCycle.isNotEmpty()) onPollCycle?.invoke(valuesForCycle)
     }

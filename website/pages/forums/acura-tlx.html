@@ -94,6 +94,60 @@
                 </div>
             </div>
 
+            <h2 class="mb-3">DCT Troubleshooting with a Scan Tool</h2>
+            <div class="diagnostic-guide mb-5">
+                <div class="diag-intro issue-section">
+                    <p style="font-size:0.9rem; color:var(--text-secondary); margin-bottom:1rem;">The 1st Gen TLX (2015–2020) equipped with the 8-speed dual-clutch transmission (Honda/Acura 8DCT) can exhibit hesitation, shudder, and gear-hunting, particularly at low speeds. Use an OBD-II scan tool to diagnose before authorizing expensive repairs.</p>
+                </div>
+
+                <div class="issue-section">
+                    <h3>Step 1 — Read TCM Fault Codes</h3>
+                    <ul class="issue-list">
+                        <li>Connect scan tool and select the <strong>AT (Automatic Transmission) or TCM module</strong>. Generic OBD-II mode will miss most Honda/Acura-specific transmission codes.</li>
+                        <li><strong>P0700</strong> — Transmission Control System malfunction (general flag; look for sub-codes)</li>
+                        <li><strong>P0730</strong> — Incorrect gear ratio detected</li>
+                        <li><strong>P1738 / P1739</strong> — Shift solenoid valve A/B stuck open or closed</li>
+                        <li><strong>P0741</strong> — Torque converter clutch solenoid circuit performance</li>
+                        <li><strong>P0868</strong> — Transmission fluid pressure low</li>
+                    </ul>
+                </div>
+
+                <div class="issue-section">
+                    <h3>Step 2 — Monitor Live Data PIDs</h3>
+                    <ul class="issue-list">
+                        <li><strong>Clutch A and Clutch B temperatures</strong> — Normal operating range: 70–160 °C. Sustained values above 200 °C suggest slipping clutch packs.</li>
+                        <li><strong>Shift solenoid duty cycles (%)</strong> — Each solenoid should show smooth, consistent duty cycle ramps during gear changes; erratic readings indicate a worn or stuck solenoid.</li>
+                        <li><strong>Input vs. output shaft speed</strong> — Compare these during engagement for slip. Any RPM delta during steady-state cruising indicates clutch drag or incomplete engagement.</li>
+                        <li><strong>TCM learned/adaptation values</strong> — If any clutch adaptation parameter is near its maximum limit, the transmission is compensating for wear and needs service.</li>
+                        <li><strong>ATF temperature</strong> — If the fluid runs significantly hotter than coolant temperature during normal driving, this may indicate a clogged transmission cooler or degraded fluid.</li>
+                    </ul>
+                </div>
+
+                <div class="issue-section">
+                    <h3>Step 3 — Perform Engagement Test</h3>
+                    <ul class="issue-list">
+                        <li>With the car in a safe, open area, come to a complete stop and watch live clutch temperatures and slip % as you gently accelerate from 0–20 mph in 1st gear.</li>
+                        <li>If shudder occurs during this maneuver and clutch slip % spikes, the clutch plates or the transmission fluid are the primary suspects.</li>
+                        <li>Perform the same test with A/C off and then on — A/C load changes can expose weak clutch engagement points.</li>
+                    </ul>
+                </div>
+
+                <div class="issue-section">
+                    <h3>Step 4 — Evaluate and Act</h3>
+                    <ul class="issue-list">
+                        <li><strong>Solenoid codes with no clutch temp codes</strong> → Inspect/replace the specific solenoid. Often less expensive than clutch work.</li>
+                        <li><strong>High clutch temps + high slip %</strong> → ATF change first (use only Honda DW-1 or Acura ATF). If shudder persists, clutch pack replacement is required.</li>
+                        <li><strong>No codes but consistent shudder</strong> → Perform TCM adaptation reset via scan tool after a fluid change so the module relearns clutch engagement points.</li>
+                        <li><strong>P0730 (incorrect gear ratio)</strong> → Check all speed sensors and wiring harness before condemning the valve body or TCM.</li>
+                    </ul>
+                </div>
+
+                <div class="issue-section" style="border-color: var(--primary);">
+                    <h3 style="color: var(--primary);">Scan Tool Tip — ODB+ App</h3>
+                    <p style="font-size:0.875rem; color:var(--text-secondary);">Connect an ELM327 Bluetooth or WiFi OBD-II adapter to your TLX's diagnostic port (under the dash, driver side). In the ODB+ app, select <strong>AT/TCM</strong> from the module list to access Honda/Acura-specific live data and fault codes beyond generic OBD-II mode.</p>
+                </div>
+            </div>
+
             <h2 class="mb-3">Recent Discussions</h2>
             <div class="thread-list">
                 <a href="#" class="thread-item">

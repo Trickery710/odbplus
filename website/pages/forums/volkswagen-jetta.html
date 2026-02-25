@@ -123,6 +123,63 @@
                 </div>
             </div>
 
+            <h2 class="mb-3">DSG/DCT Troubleshooting with a Scan Tool</h2>
+            <div class="diagnostic-guide mb-5">
+                <div class="diag-intro issue-section">
+                    <p style="font-size:0.9rem; color:var(--text-secondary); margin-bottom:1rem;">The Volkswagen 7-speed DSG (DQ200 dry dual-clutch) found in 6th and 7th gen Jettas is notorious for shudder, hesitation at low speed, and mechatronic unit failures. Use an OBD-II scan tool to diagnose the transmission before committing to expensive repairs.</p>
+                </div>
+
+                <div class="issue-section">
+                    <h3>Step 1 — Read TCM/DSG Fault Codes</h3>
+                    <ul class="issue-list">
+                        <li>Connect your scan tool and navigate to the <strong>02 (Auto Trans) module</strong> or transmission control unit. Generic OBD-II mode will miss most VW-specific DSG codes.</li>
+                        <li><strong>P17BE</strong> — Mechatronic unit: clutch 1 adaptation at limit (odd gears: 1, 3, 5, 7)</li>
+                        <li><strong>P17BF</strong> — Mechatronic unit: clutch 2 adaptation at limit (even gears: 2, 4, 6, R)</li>
+                        <li><strong>P0743</strong> — Torque converter clutch solenoid circuit electrical fault</li>
+                        <li><strong>P0730</strong> — Incorrect gear ratio (often caused by a clutch fully slipping)</li>
+                        <li><strong>P17B6 / P17B7</strong> — Clutch 1 / Clutch 2 slip during engagement</li>
+                        <li><strong>P189E</strong> — DSG mechatronic unit internal fault (often requires mechatronic replacement)</li>
+                    </ul>
+                </div>
+
+                <div class="issue-section">
+                    <h3>Step 2 — Monitor Live Data PIDs</h3>
+                    <ul class="issue-list">
+                        <li><strong>Clutch 1 adaptation value</strong> — Displayed in ms (milliseconds of clutch engagement delay). Normal range: 0–500 ms. Values approaching or exceeding 800 ms mean clutch 1 is badly worn.</li>
+                        <li><strong>Clutch 2 adaptation value</strong> — Same scale. Compare both clutch adaptation values; a large imbalance (>300 ms difference) can cause jerky shifts between odd and even gears.</li>
+                        <li><strong>Mechatronic temperature</strong> — Operating range: 20–100 °C. Above 110 °C the DSG enters limp mode. If mechatronic temp spikes quickly, the clutch packs may be dragging excessively.</li>
+                        <li><strong>Clutch 1 and Clutch 2 slip</strong> — Any sustained slip during steady cruising (non-launch) indicates worn clutch plates.</li>
+                        <li><strong>Gear selector position</strong> — Should match expected gear; if gear selected ≠ gear engaged, the mechatronic forks or solenoids may be faulty.</li>
+                        <li><strong>ATF temperature</strong> — The DQ200 uses a dry clutch and separate wet mechatronic circuit. High mechatronic fluid temp without corresponding high clutch temp suggests a cooling or flow issue in the mechatronic unit itself.</li>
+                    </ul>
+                </div>
+
+                <div class="issue-section">
+                    <h3>Step 3 — Perform a Low-Speed Drive Cycle</h3>
+                    <ul class="issue-list">
+                        <li>The DQ200 shudder is most common during slow creep (0–10 mph) and during the 1→2 shift under light throttle. Monitor clutch slip % and adaptation values during this specific maneuver.</li>
+                        <li>Test a standing start with A/C on vs. off — A/C compressor load is a common trigger for DQ200 shudder on marginal clutch packs.</li>
+                        <li>Note whether shudder is worse when cold. The DQ200 dry clutch is particularly sensitive when cold; if shudder disappears after 10–15 minutes of driving, degraded DSG fluid is the likely cause.</li>
+                    </ul>
+                </div>
+
+                <div class="issue-section">
+                    <h3>Step 4 — Evaluate and Act</h3>
+                    <ul class="issue-list">
+                        <li><strong>P17BE or P17BF (adaptation at limit) with shudder</strong> → Perform DSG fluid service first (VW G 052 182 A2 or current spec DSG fluid). After fluid change, use scan tool to perform a <em>Basic Settings / DSG Adaptation Reset</em> so the mechatronic relearns clutch engagement points.</li>
+                        <li><strong>Adaptation values maxed out even after fluid change</strong> → Mechatronic unit replacement is required. The mechatronic contains the solenoids, fork actuators, and control electronics — it is replaced as an assembly.</li>
+                        <li><strong>P17B6/P17B7 (clutch slip) with high clutch temps</strong> → Clutch pack wear. Requires removal and internal repair or full transmission replacement.</li>
+                        <li><strong>P189E (internal mechatronic fault)</strong> → Electrical failure inside the mechatronic unit; replacement is the only remedy.</li>
+                        <li><strong>No codes, shudder only when cold</strong> → DSG fluid change and adaptation reset resolves this in many cases on 6th gen Jettas with 40–80k miles.</li>
+                    </ul>
+                </div>
+
+                <div class="issue-section" style="border-color: var(--primary);">
+                    <h3 style="color: var(--primary);">Scan Tool Tip — ODB+ App</h3>
+                    <p style="font-size:0.875rem; color:var(--text-secondary);">Connect an ELM327 Bluetooth or WiFi OBD-II adapter to your Jetta's diagnostic port (under the dash, driver side). In the ODB+ app, select module <strong>02 (Auto Trans)</strong> to access DSG-specific live data and fault codes. For DSG adaptation resets, navigate to <strong>Basic Settings</strong> within the transmission module.</p>
+                </div>
+            </div>
+
             <h2 class="mb-3">Recent Discussions</h2>
             <div class="thread-list">
                 <a href="#" class="thread-item">

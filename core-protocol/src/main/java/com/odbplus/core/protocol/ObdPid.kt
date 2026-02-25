@@ -139,7 +139,7 @@ enum class ObdPid(
         code = "08",
         description = "Short Term Fuel Trim - Bank 2",
         unit = "%",
-        expectedBytes = 1,
+        expectedBytes = 2,
         parser = ::singleByteSigned128Percent
     ),
 
@@ -147,7 +147,7 @@ enum class ObdPid(
         code = "09",
         description = "Long Term Fuel Trim - Bank 2",
         unit = "%",
-        expectedBytes = 1,
+        expectedBytes = 2,
         parser = ::singleByteSigned128Percent
     ),
 
@@ -498,7 +498,7 @@ enum class ObdPid(
     EVAP_SYSTEM_VAPOR_PRESSURE(
         code = "32",
         description = "Evap. System Vapor Pressure",
-        unit = "Pa",
+        unit = "kPa",
         expectedBytes = 2,
         parser = { bytes -> (bytes[0].toByte().toInt() * 256 + bytes[1].toUByte().toInt()) / 4.0 }
     ),
@@ -745,7 +745,7 @@ enum class ObdPid(
         code = "50",
         description = "Maximum Air Flow Rate from MAF",
         unit = "g/s",
-        expectedBytes = 4,
+        expectedBytes = 1,
         parser = { bytes -> bytes[0].toUByte().toDouble() * 10.0 }
     ),
 
@@ -989,7 +989,7 @@ enum class ObdPid(
         code = "6D",
         description = "Fuel Pressure Control System",
         unit = "kPa",
-        expectedBytes = 6,
+        expectedBytes = 11,
         parser = { bytes -> (bytes[1].toUByte().toInt() * 256 + bytes[2].toUByte().toInt()) * 10.0 }
     ),
 
@@ -1386,6 +1386,63 @@ enum class ObdPid(
         unit = "%",
         expectedBytes = 9,
         parser = { bytes -> bytes[1].toUByte().toDouble() * 100.0 / 255.0 }
+    ),
+
+    // ========== Modern / EV PIDs (A2+) ==========
+
+    CYLINDER_FUEL_RATE(
+        code = "A2",
+        description = "Cylinder Fuel Rate",
+        unit = "mg/stroke",
+        expectedBytes = 2,
+        parser = { bytes -> (bytes[0].toUByte().toInt() * 256 + bytes[1].toUByte().toInt()) / 32.0 }
+    ),
+
+    ODOMETER(
+        code = "A6",
+        description = "Odometer",
+        unit = "km",
+        expectedBytes = 4,
+        parser = { bytes ->
+            ((bytes[0].toUByte().toLong() shl 24) or (bytes[1].toUByte().toLong() shl 16) or
+             (bytes[2].toUByte().toLong() shl 8) or bytes[3].toUByte().toLong()) / 10.0
+        }
+    ),
+
+    MAX_SPEED_LIMIT(
+        code = "AA",
+        description = "Maximum Current Vehicle Speed Limit",
+        unit = "km/h",
+        expectedBytes = 1,
+        parser = ::singleByte
+    ),
+
+    BATTERY_STATE_OF_HEALTH(
+        code = "B2",
+        description = "Traction Battery Pack State of Health",
+        unit = "%",
+        expectedBytes = 1,
+        parser = ::singleBytePercent
+    ),
+
+    CERTIFIED_RANGE_STATE(
+        code = "D2",
+        description = "State of Certified Range",
+        unit = "%",
+        expectedBytes = 3,
+        // Byte 2 carries the certified range state-of-energy (0–100 %)
+        parser = { bytes -> bytes[2].toUByte().toDouble() * 100.0 / 255.0 }
+    ),
+
+    ENGINE_ODOMETER(
+        code = "D3",
+        description = "Engine Odometer",
+        unit = "km",
+        expectedBytes = 4,
+        parser = { bytes ->
+            ((bytes[0].toUByte().toLong() shl 24) or (bytes[1].toUByte().toLong() shl 16) or
+             (bytes[2].toUByte().toLong() shl 8) or bytes[3].toUByte().toLong()) / 10.0
+        }
     );
 
     /**

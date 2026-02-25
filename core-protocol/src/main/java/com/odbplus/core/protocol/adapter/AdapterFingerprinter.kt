@@ -1,5 +1,6 @@
 package com.odbplus.core.protocol.adapter
 
+import com.odbplus.core.protocol.diagnostic.DiagnosticLogger
 import com.odbplus.core.transport.ObdTransport
 import kotlinx.coroutines.delay
 import timber.log.Timber
@@ -9,13 +10,14 @@ import timber.log.Timber
  *
  * Detection algorithm:
  * 1. Reset (ATZ) and suppress echo/linefeeds
- * 2. Read identity strings (ATI, AT@1, ATDP)
- * 3. Classify chip family from response keywords
- * 4. Apply clone-detection heuristics
- * 5. Probe optional AT commands (ATAL, ATCAF1, ATSH)
- * 6. Test live protocol stability with 0100
- * 7. Cross-reference against [KnownDeviceRegistry]
- * 8. Build and return a [DeviceProfile]
+ * 2. STN/OBDLink fast-path: probe STI — if response starts with "STN", skip to [buildStnProfile]
+ * 3. Read ELM identity strings (ATI, AT@1, ATDP)
+ * 4. Classify chip family from response keywords
+ * 5. Apply clone-detection heuristics
+ * 6. Probe optional AT commands (ATAL, ATCAF1, ATSH)
+ * 7. Test live protocol stability with 0100
+ * 8. Cross-reference against [KnownDeviceRegistry]
+ * 9. Build and return a [DeviceProfile]
  */
 class AdapterFingerprinter(private val transport: ObdTransport) {
 
@@ -31,7 +33,20 @@ class AdapterFingerprinter(private val transport: ObdTransport) {
         sendRaw("ATL0", CMD_TIMEOUT_MS)  // Linefeeds off
         sendRaw("ATS0", CMD_TIMEOUT_MS)  // Spaces off (optional, some clones ignore)
 
-        // ── Step 2: Read identity ─────────────────────────────────────────────
+        // ── Step 2: STN / OBDLink fast-path probe ────────────────────────────
+        // STN chips respond to STI with "STN<device_id> vX.Y.Z" (e.g. "STN2232 v5.10.3").
+        // Non-STN devices return "?". This probe MUST come before ELM identification
+        // because STN/OBDLink chips advertise "ELM327 v1.4b" in ATZ/ATI, making them
+        // indistinguishable from genuine ELM327s without this ST-specific command.
+        val stiResponse = sendRaw("STI", CMD_TIMEOUT_MS)
+        Timber.d("STI → $stiResponse")
+
+        if (stiResponse.uppercase().startsWith("STN")) {
+            DiagnosticLogger.i("Fingerprint", "STI fast-path → STN/OBDLink detected: $stiResponse")
+            return buildStnProfile(stiResponse, transportLabel)
+        }
+
+        // ── Step 3: Read ELM identity ─────────────────────────────────────────
         val atiResponse  = sendRaw("ATI",  CMD_TIMEOUT_MS)   // e.g. "ELM327 v2.1"
         val at1Response  = sendRaw("AT@1", CMD_TIMEOUT_MS)   // e.g. "OBDLink MX+"
         val atdpResponse = sendRaw("ATDP", CMD_TIMEOUT_MS)   // e.g. "AUTO"
@@ -41,28 +56,28 @@ class AdapterFingerprinter(private val transport: ObdTransport) {
         Timber.d("AT@1 → $at1Response")
         Timber.d("ATDP → $atdpResponse")
 
-        // ── Step 3: Classify family ───────────────────────────────────────────
+        // ── Step 4: Classify family ───────────────────────────────────────────
         val combinedId = "$atzResponse $atiResponse $at1Response".uppercase()
         val detectedFamily = classifyFamily(combinedId)
         val firmwareVersion = extractFirmwareVersion(atiResponse)
 
-        // ── Step 4: Clone detection ───────────────────────────────────────────
+        // ── Step 5: Clone detection ───────────────────────────────────────────
         val isClone = detectedFamily == AdapterFamily.ELM327 && detectClone(firmwareVersion, at1Response)
         val resolvedFamily = if (isClone) AdapterFamily.ELM_CLONE else detectedFamily
 
         Timber.d("Family: $resolvedFamily  FW: $firmwareVersion  Clone: $isClone")
 
-        // ── Step 5: Probe AT capabilities ─────────────────────────────────────
+        // ── Step 6: Probe AT capabilities ─────────────────────────────────────
         val atAlOk    = probeAtAl()
         val atCafOk   = probeAtCaf()
         val headersOk = probeCustomHeaders()
 
-        // ── Step 6: Protocol stability test ───────────────────────────────────
+        // ── Step 7: Protocol stability test ───────────────────────────────────
         val protocolLive = probeProtocolStability()
 
         Timber.d("ATAL=$atAlOk  ATCAF=$atCafOk  Headers=$headersOk  Proto=$protocolLive")
 
-        // ── Step 7: Known-device registry lookup ──────────────────────────────
+        // ── Step 8: Known-device registry lookup ──────────────────────────────
         val registryHit = KnownDeviceRegistry.lookup(at1Response)
             ?: KnownDeviceRegistry.lookup(atiResponse)
 
@@ -74,7 +89,7 @@ class AdapterFingerprinter(private val transport: ObdTransport) {
             )
         }
 
-        // ── Step 8: Build capability profile from probed results ──────────────
+        // ── Step 9: Build capability profile from probed results ──────────────
         val capabilities = buildCapabilities(
             family = resolvedFamily,
             supportsAtAl = atAlOk,
@@ -82,13 +97,84 @@ class AdapterFingerprinter(private val transport: ObdTransport) {
             supportsHeaders = headersOk
         )
 
-        return DeviceProfile(
+        val profile = DeviceProfile(
             deviceName = resolveDeviceName(atiResponse, at1Response),
             chipFamily = resolvedFamily,
             firmwareVersion = firmwareVersion,
             transport = transportLabel,
             capabilities = capabilities
         )
+        DiagnosticLogger.i("Fingerprint", "ELM path → device=${profile.deviceName}  family=${profile.chipFamily}  fw=${profile.firmwareVersion}  clone=$isClone")
+        return profile
+    }
+
+    /**
+     * Build a [DeviceProfile] for a confirmed STN / OBDLink chip.
+     *
+     * Called when [STI] returns a response beginning with "STN" (e.g. "STN2232 v5.10.3").
+     *
+     * Additional ST commands probed here:
+     * - **STDI** — hardware device name: `<name> rX.Y.Z` (e.g. "OBDLink MX+ r3.2.1")
+     * - **STMFR** — manufacturer string: "OBD Solutions LLC" for OBDLink-branded products
+     */
+    private suspend fun buildStnProfile(stiResponse: String, transportLabel: String): DeviceProfile {
+        // STDI gives the human-readable hardware name: "OBDLink MX+ r3.2.1"
+        val stdiResponse = sendRaw("STDI", CMD_TIMEOUT_MS)
+        // STMFR distinguishes OBDLink-branded product from a standalone STN IC
+        val stmfrResponse = sendRaw("STMFR", CMD_TIMEOUT_MS)
+
+        Timber.d("STDI → $stdiResponse")
+        Timber.d("STMFR → $stmfrResponse")
+
+        val firmwareVersion = extractFirmwareVersion(stiResponse)
+
+        // Prefer STDI hardware name (e.g. "OBDLink MX+"); fall back to STN model ID
+        val deviceName = when {
+            stdiResponse.length > 3 && !stdiResponse.contains("?") ->
+                stdiResponse.substringBefore(" r").trim()
+            else ->
+                stiResponse.substringBefore(" v").trim()   // e.g. "STN2232"
+        }
+
+        val family = if (stmfrResponse.contains("OBD Solutions", ignoreCase = true)) {
+            AdapterFamily.OBDLINK
+        } else {
+            AdapterFamily.STN
+        }
+
+        Timber.d("STN identified — device=$deviceName  fw=$firmwareVersion  family=$family")
+
+        // Registry check (e.g. OBDLink MX+ may have a curated profile)
+        val registryHit = KnownDeviceRegistry.lookup(stdiResponse)
+            ?: KnownDeviceRegistry.lookup(stiResponse)
+        if (registryHit != null) {
+            Timber.d("Registry hit: ${registryHit.deviceName}")
+            return registryHit.copy(
+                firmwareVersion = firmwareVersion.ifEmpty { registryHit.firmwareVersion },
+                transport = transportLabel
+            )
+        }
+
+        val atAlOk    = probeAtAl()
+        val atCafOk   = probeAtCaf()
+        val headersOk = probeCustomHeaders()
+
+        val capabilities = buildCapabilities(
+            family = family,
+            supportsAtAl = atAlOk,
+            supportsAtCaf = atCafOk,
+            supportsHeaders = headersOk
+        )
+
+        val profile = DeviceProfile(
+            deviceName = deviceName,
+            chipFamily = family,
+            firmwareVersion = firmwareVersion,
+            transport = transportLabel,
+            capabilities = capabilities
+        )
+        DiagnosticLogger.i("Fingerprint", "STN path → device=${profile.deviceName}  family=${profile.chipFamily}  fw=${profile.firmwareVersion}")
+        return profile
     }
 
     // ── Private helpers ───────────────────────────────────────────────────────
@@ -229,10 +315,9 @@ class AdapterFingerprinter(private val transport: ObdTransport) {
 
     private suspend fun sendRaw(command: String, timeoutMs: Long): String =
         try {
-            transport.drainChannel()
-            transport.writeLine(command)
-            transport.readUntilPrompt(timeoutMs)
+            transport.sendCommand(command, timeoutMs)
         } catch (e: Exception) {
+            if (e is kotlinx.coroutines.CancellationException) throw e
             Timber.w("Fingerprint '$command' failed: ${e.message}")
             ""
         }

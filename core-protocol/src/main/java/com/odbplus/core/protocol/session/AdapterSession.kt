@@ -3,6 +3,7 @@ package com.odbplus.core.protocol.session
 import com.odbplus.core.protocol.adapter.AdapterFingerprinter
 import com.odbplus.core.protocol.adapter.DeviceProfile
 import com.odbplus.core.protocol.adapter.ProtocolSessionState
+import com.odbplus.core.protocol.diagnostic.DiagnosticLogger
 import com.odbplus.core.protocol.driver.AdapterDriver
 import com.odbplus.core.protocol.driver.DriverFactory
 import com.odbplus.core.protocol.isotp.IsoTpAssembler
@@ -73,6 +74,7 @@ class AdapterSession(private val scope: CoroutineScope) {
             _deviceProfile.value = profile
 
             Timber.i("UOAPL: Identified — ${profile.deviceName}  (${profile.chipFamily})")
+            DiagnosticLogger.i("Fingerprint", "device=${profile.deviceName}  family=${profile.chipFamily}  fw=${profile.firmwareVersion}  transport=${profile.transport}")
             transition(ProtocolSessionState.DEVICE_IDENTIFIED)
 
             // ── Step 2: Instantiate driver ────────────────────────────────────
@@ -99,6 +101,7 @@ class AdapterSession(private val scope: CoroutineScope) {
             }
 
         } catch (e: Exception) {
+            if (e is CancellationException) throw e
             Timber.e(e, "UOAPL: onTransportConnected failed")
             transition(ProtocolSessionState.ERROR_RECOVERY)
         }
@@ -136,13 +139,16 @@ class AdapterSession(private val scope: CoroutineScope) {
                 consecutiveCommandFailures++
                 hm.onTimeout()
                 Timber.w("UOAPL: empty response #$consecutiveCommandFailures for '$command'")
+                DiagnosticLogger.w("Session", "empty response #$consecutiveCommandFailures cmd=$command")
                 if (consecutiveCommandFailures >= MAX_CONSECUTIVE_FAILURES) {
+                    DiagnosticLogger.e("Session", "MAX_FAILURES reached — entering ERROR_RECOVERY")
                     enterErrorRecovery(t)
                 }
             }
             response.isCorrupt() -> {
                 consecutiveCommandFailures++
                 hm.onCorruptFrame()
+                DiagnosticLogger.w("Session", "corrupt frame cmd=$command resp=${response.take(32)}")
             }
             else -> {
                 consecutiveCommandFailures = 0
@@ -233,6 +239,7 @@ class AdapterSession(private val scope: CoroutineScope) {
         consecutiveCommandFailures = 0
 
         Timber.w("UOAPL: entering ERROR_RECOVERY — attempting soft reset")
+        DiagnosticLogger.w("Recovery", "ERROR_RECOVERY started  health=${healthMonitor?.healthScore}")
 
         try {
             transport.drainChannel()
@@ -250,11 +257,14 @@ class AdapterSession(private val scope: CoroutineScope) {
             if (ok) {
                 transition(ProtocolSessionState.SESSION_ACTIVE)
                 Timber.i("UOAPL: ERROR_RECOVERY succeeded — back to SESSION_ACTIVE")
+                DiagnosticLogger.i("Recovery", "ERROR_RECOVERY succeeded")
             } else {
                 Timber.e("UOAPL: ERROR_RECOVERY failed — session in ERROR")
+                DiagnosticLogger.e("Recovery", "ERROR_RECOVERY failed — entering RECONNECTING")
                 transition(ProtocolSessionState.RECONNECTING)
             }
         } catch (e: Exception) {
+            if (e is CancellationException) throw e
             Timber.e(e, "UOAPL: ERROR_RECOVERY exception")
             transition(ProtocolSessionState.RECONNECTING)
         }
@@ -271,8 +281,9 @@ class AdapterSession(private val scope: CoroutineScope) {
                 delay(intervalMs)
                 if (_state.value.canSendCommands) {
                     try {
-                        transport.writeLine("AT")  // Lightweight ping
+                        transport.sendCommand("AT", 1_000L)  // Lightweight ping (mutex-safe)
                     } catch (e: Exception) {
+                        if (e is CancellationException) throw e
                         Timber.w("UOAPL: keepalive failed: ${e.message}")
                     }
                 }
@@ -286,6 +297,7 @@ class AdapterSession(private val scope: CoroutineScope) {
         val old = _state.value
         _state.value = newState
         Timber.d("UOAPL: $old → $newState")
+        DiagnosticLogger.i("Session", "State: $old → $newState")
     }
 
     private fun String.isCorrupt(): Boolean {
@@ -297,6 +309,8 @@ class AdapterSession(private val scope: CoroutineScope) {
 
     companion object {
         private const val DEFAULT_TIMEOUT_MS = 3_000L
-        private const val MAX_CONSECUTIVE_FAILURES = 3
+        // Raised from 5 → 10: a single momentary adapter hiccup (e.g. engine under load
+        // during an RPM test stage transition) shouldn't trigger a full ERROR_RECOVERY.
+        private const val MAX_CONSECUTIVE_FAILURES = 10
     }
 }

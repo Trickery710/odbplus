@@ -42,6 +42,26 @@ fun ConnectScreen(viewModel: ConnectViewModel = hiltViewModel()) {
     val lazyListState = rememberLazyListState()
     val scope = rememberCoroutineScope()
 
+    var showBtPicker by remember { mutableStateOf(false) }
+    var showWifiDialog by remember { mutableStateOf(false) }
+
+    // Guard the BT picker behind a runtime permission request.
+    val connectBluetooth = rememberBluetoothGuard { showBtPicker = true }
+
+    if (showBtPicker) {
+        BluetoothDevicePickerDialog(
+            onDeviceSelected = { address -> viewModel.connectBluetooth(address) },
+            onDismiss = { showBtPicker = false },
+        )
+    }
+
+    if (showWifiDialog) {
+        WifiConnectDialog(
+            onConnect = { host, port -> viewModel.connectTcp(host, port) },
+            onDismiss = { showWifiDialog = false },
+        )
+    }
+
     LaunchedEffect(logLines.size) {
         if (logLines.isNotEmpty()) {
             lazyListState.animateScrollToItem(logLines.size - 1)
@@ -56,8 +76,8 @@ fun ConnectScreen(viewModel: ConnectViewModel = hiltViewModel()) {
         // 1. Top Bar content
         ConnectScreenTopBar(
             connectionState = connectionState,
-            onConnectTcp = { viewModel.connectTcp("10.0.2.2", 35000) },
-            onConnectBt = { viewModel.connectBluetooth("00:11:22:33:44:55") },
+            onConnectTcp = { showWifiDialog = true },
+            onConnectBt = connectBluetooth,
             onDisconnect = { viewModel.disconnect() }
         )
 
@@ -203,7 +223,7 @@ fun ConnectScreenTopBar(
                 ) {
                     Icon(Icons.Filled.Wifi, contentDescription = null, modifier = Modifier.size(18.dp))
                     Spacer(Modifier.width(6.dp))
-                    Text("Quick: OBDSim", fontWeight = FontWeight.SemiBold)
+                    Text("Wi-Fi", fontWeight = FontWeight.SemiBold)
                 }
                 Button(
                     onClick = onConnectBt,

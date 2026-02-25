@@ -123,10 +123,9 @@ class StnDriver(override var profile: DeviceProfile) : AdapterDriver {
 
     private suspend fun sendRaw(transport: ObdTransport, cmd: String, timeoutMs: Long): String =
         try {
-            transport.drainChannel()
-            transport.writeLine(cmd)
-            transport.readUntilPrompt(timeoutMs)
+            transport.sendCommand(cmd, timeoutMs)
         } catch (e: Exception) {
+            if (e is kotlinx.coroutines.CancellationException) throw e
             Timber.w("StnDriver raw send '$cmd' exception: ${e.message}")
             ""
         }

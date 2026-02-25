@@ -42,8 +42,17 @@ class ObdParser @Inject constructor() {
 
         val cleaned = cleanResponse(rawResponse)
 
+        // If the entire response is a negative response (7F xx yy) with no valid data,
+        // treat it as NoData. Common on multi-ECU buses where a secondary module
+        // responds with "subFunctionNotSupported" (12) for unsupported PIDs.
+        if (isOnlyNegativeResponse(cleaned)) {
+            return ObdResponse.NoData(rawResponse, requestedPid)
+        }
+
         // Try to extract matching response from merged multi-response data FIRST
-        // This handles cases where "NO DATA" appears alongside valid responses
+        // This handles cases where "NO DATA" appears alongside valid responses.
+        // The extracted response is truncated to exactly the expected byte count,
+        // discarding any trailing 7F xx xx bytes from secondary ECUs.
         val extractedResponse = extractMatchingPidResponse(cleaned, requestedPid)
         if (extractedResponse != null) {
             return parseDataResponse(rawResponse, extractedResponse, requestedPid)
@@ -85,27 +94,29 @@ class ObdParser @Inject constructor() {
 
     /**
      * Extract a specific PID response from a merged multi-response string.
-     * Handles cases like "41 0C 1A F8 41 0D 3C" where multiple responses are concatenated.
+     *
+     * Handles cases like "41 0C 1A F8 41 0D 3C" where multiple responses are concatenated,
+     * and also strips trailing negative-response bytes ("7F 01 12") that secondary ECUs
+     * append after the primary ECU's valid positive response.
+     *
+     * The returned string contains EXACTLY `2 + expectedBytes` hex tokens so the caller
+     * always gets a clean, unambiguous response with no trailing garbage.
      */
     private fun extractMatchingPidResponse(merged: String, requestedPid: ObdPid): String? {
         val pidCode = requestedPid.code.uppercase()
-        val pattern = "41\\s*$pidCode\\s*([0-9A-F]{2}\\s*)+".toRegex(RegexOption.IGNORE_CASE)
+        // Match "41 <PID>" followed by at least one hex byte
+        val pattern = "41\\s*$pidCode(?:\\s+[0-9A-F]{2})+".toRegex(RegexOption.IGNORE_CASE)
 
-        val match = pattern.find(merged)
-        if (match != null) {
-            val matchedResponse = match.value.trim()
-            // Validate we have enough bytes
-            val bytes = hexStringToBytes(matchedResponse)
-            if (bytes.size >= 2 + requestedPid.expectedBytes) {
-                return matchedResponse
-            }
-            // If not enough bytes, try to get more from the match
-            val startIndex = match.range.first
-            val endIndex = minOf(startIndex + 2 + 2 + (requestedPid.expectedBytes * 3), merged.length)
-            val extendedMatch = merged.substring(startIndex, endIndex).trim()
-            return cleanResponse(extendedMatch)
-        }
-        return null
+        val match = pattern.find(merged) ?: return null
+        val allBytes = hexStringToBytes(match.value)
+
+        // Need at least: service (1) + pid (1) + data (expectedBytes)
+        val needed = 2 + requestedPid.expectedBytes
+        if (allBytes.size < needed) return null
+
+        // Truncate to exactly the expected size — drops any trailing 7F xx xx bytes
+        val exactBytes = allBytes.take(needed)
+        return exactBytes.joinToString(" ") { String.format("%02X", it.toInt() and 0xFF) }
     }
 
     /**
@@ -143,43 +154,46 @@ class ObdParser @Inject constructor() {
     /**
      * Parse DTCs from Mode 03 (stored) or Mode 07 (pending) response.
      *
+     * Handles multi-ECU responses where two or more ECUs each emit a complete
+     * `43`/`47` frame concatenated into a single string, e.g.:
+     *   `43 01 71 00 00 00 00 43 00 00 00 00 00 00`
+     * The second `43` is a new response header, not a DTC byte. Each segment is
+     * parsed independently and duplicate DTCs are de-duplicated.
+     *
      * @param rawResponse The raw hex response
      * @param isPending True for Mode 07 (pending DTCs), false for Mode 03 (stored DTCs)
-     * @return List of parsed DTCs
+     * @return De-duplicated list of parsed DTCs
      */
     fun parseDtcs(rawResponse: String, isPending: Boolean = false): List<DiagnosticTroubleCode> {
         val cleaned = cleanResponse(rawResponse)
+        if (cleaned.isEmpty() || cleaned == "NO DATA") return emptyList()
 
-        if (cleaned.isEmpty() || cleaned == "NO DATA") {
-            return emptyList()
+        val headerByte = if (isPending) 0x47 else 0x43
+        val headerHex  = String.format("%02X", headerByte)
+
+        // Split the cleaned string into segments at each occurrence of the header token.
+        // "43 01 71 00 43 00 00" → ["43 01 71 00", "43 00 00"]
+        val segments = cleaned.split(Regex("(?<![0-9A-Fa-f])$headerHex(?![0-9A-Fa-f])"))
+            .map { it.trim() }
+            .filter { it.isNotEmpty() }
+
+        val dtcs = linkedSetOf<DiagnosticTroubleCode>() // use Set to de-duplicate
+        for (segment in segments) {
+            val bytes = hexStringToBytes(segment)
+            if (bytes.isEmpty()) continue
+
+            // DTCs come in pairs of bytes
+            var i = 0
+            while (i + 1 < bytes.size) {
+                val b1 = bytes[i].toInt()     and 0xFF
+                val b2 = bytes[i + 1].toInt() and 0xFF
+                i += 2
+                if (b1 == 0 && b2 == 0) continue  // empty slot
+                dtcs.add(DiagnosticTroubleCode.fromBytes(b1, b2))
+            }
         }
 
-        val bytes = hexStringToBytes(cleaned)
-        if (bytes.isEmpty()) return emptyList()
-
-        // Response should start with 43 (Mode 03) or 47 (Mode 07)
-        val expectedHeader = if (isPending) 0x47.toByte() else 0x43.toByte()
-        if (bytes[0] != expectedHeader) {
-            return emptyList()
-        }
-
-        val dtcBytes = bytes.drop(1)
-        val dtcs = mutableListOf<DiagnosticTroubleCode>()
-
-        // DTCs come in pairs of bytes
-        for (i in dtcBytes.indices step 2) {
-            if (i + 1 >= dtcBytes.size) break
-
-            val b1 = dtcBytes[i].toInt() and 0xFF
-            val b2 = dtcBytes[i + 1].toInt() and 0xFF
-
-            // Skip empty DTC slots (00 00)
-            if (b1 == 0 && b2 == 0) continue
-
-            dtcs.add(DiagnosticTroubleCode.fromBytes(b1, b2))
-        }
-
-        return dtcs
+        return dtcs.toList()
     }
 
     /**
@@ -313,6 +327,26 @@ class ObdParser @Inject constructor() {
             else -> String.format("%.2f", value)
         }
         return "$formatted ${pid.unit}"
+    }
+
+    /**
+     * Returns true when every hex token in [cleaned] is part of a negative-response
+     * frame (`7F xx yy`), meaning no positive `41` response is present.
+     *
+     * A negative response has the form:
+     *   7F — negative-response service ID
+     *   xx — echoed service byte
+     *   yy — NRC (e.g. 12 = subFunctionNotSupported, 22 = conditionsNotCorrect)
+     *
+     * Secondary ECUs on a multi-ECU CAN bus commonly return `7F 01 12` for PIDs
+     * they don't support, appearing after or instead of the primary ECU's response.
+     */
+    private fun isOnlyNegativeResponse(cleaned: String): Boolean {
+        if (cleaned.isEmpty() || cleaned.contains("41")) return false
+        val tokens = cleaned.split("\\s+".toRegex()).filter { it.isNotEmpty() }
+        // Must be a multiple of 3 (each NRC frame is 3 bytes: 7F xx yy)
+        if (tokens.size % 3 != 0) return false
+        return tokens.chunked(3).all { (a, _, _) -> a.equals("7F", ignoreCase = true) }
     }
 
     private fun cleanResponse(response: String): String {

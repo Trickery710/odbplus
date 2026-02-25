@@ -28,4 +28,12 @@ interface ObdTransport {
      * Returns the aggregated response.
      */
     suspend fun readUntilPrompt(timeoutMs: Long = 3000L): String
+
+    /**
+     * Atomically drain → write [line] → read until prompt, holding the transport
+     * lock so concurrent callers (e.g. keepalive) cannot interleave their writes.
+     *
+     * Prefer this over calling [writeLine] + [readUntilPrompt] separately.
+     */
+    suspend fun sendCommand(line: String, timeoutMs: Long = 3000L): String
 }

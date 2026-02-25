@@ -29,6 +29,7 @@ import androidx.compose.material.icons.filled.LinkOff
 import androidx.compose.material.icons.filled.Speed
 import androidx.compose.material.icons.filled.Sync
 import androidx.compose.material.icons.filled.Terminal
+import androidx.compose.material.icons.filled.Tune
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material.icons.filled.Wifi
 import androidx.compose.material3.Button
@@ -42,6 +43,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -70,6 +74,26 @@ fun OdbHubScreen(
 ) {
     val connectionState by viewModel.connectionState.collectAsState()
     val isConnected = connectionState == ConnectionState.CONNECTED
+
+    var showBtPicker by remember { mutableStateOf(false) }
+    var showWifiDialog by remember { mutableStateOf(false) }
+
+    // Guard the BT picker behind a runtime permission request.
+    val connectBluetooth = rememberBluetoothGuard { showBtPicker = true }
+
+    if (showBtPicker) {
+        BluetoothDevicePickerDialog(
+            onDeviceSelected = { address -> viewModel.connectBluetooth(address) },
+            onDismiss = { showBtPicker = false },
+        )
+    }
+
+    if (showWifiDialog) {
+        WifiConnectDialog(
+            onConnect = { host, port -> viewModel.connectTcp(host, port) },
+            onDismiss = { showWifiDialog = false },
+        )
+    }
 
     val menuItems = listOf(
         OdbMenuItem(
@@ -106,6 +130,13 @@ fun OdbHubScreen(
             icon = Icons.Filled.History,
             description = "View recorded sessions",
             requiresConnection = false
+        ),
+        OdbMenuItem(
+            id = "odb_hub/guided_test",
+            label = "RPM Test",
+            icon = Icons.Filled.Tune,
+            description = "Guided idle → 1000 → 2000 RPM + DTCs",
+            requiresConnection = true
         )
     )
 
@@ -118,8 +149,8 @@ fun OdbHubScreen(
         // Hero connection status card
         ConnectionStatusHeader(
             connectionState = connectionState,
-            onConnectTcp = { viewModel.connectTcp("10.0.2.2", 35000) },
-            onConnectBt = { viewModel.connectBluetooth("00:11:22:33:44:55") },
+            onConnectTcp = { showWifiDialog = true },
+            onConnectBt = connectBluetooth,
             onDisconnect = { viewModel.disconnect() }
         )
 
@@ -278,7 +309,7 @@ fun ConnectionStatusHeader(
                     ) {
                         Icon(Icons.Filled.Wifi, contentDescription = null, modifier = Modifier.size(18.dp))
                         Spacer(modifier = Modifier.width(6.dp))
-                        Text("WiFi/Sim", fontWeight = FontWeight.SemiBold)
+                        Text("Wi-Fi", fontWeight = FontWeight.SemiBold)
                     }
                     Button(
                         onClick = onConnectBt,

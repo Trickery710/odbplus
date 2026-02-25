@@ -1,5 +1,6 @@
 package com.odbplus.app.ui
 
+import android.content.Intent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
@@ -14,6 +15,7 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.Send
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.ContentCopy
+import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -21,6 +23,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalClipboardManager
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.font.FontFamily
@@ -45,6 +48,7 @@ fun TerminalScreen(
     val lazyListState = rememberLazyListState()
     val scope = rememberCoroutineScope()
     val clipboardManager = LocalClipboardManager.current
+    val context = LocalContext.current
 
     LaunchedEffect(logLines.size) {
         if (logLines.isNotEmpty()) {
@@ -73,6 +77,31 @@ fun TerminalScreen(
                     }
                 },
                 actions = {
+                    // Export diagnostic log (UOAPL events + transport log) via share sheet
+                    IconButton(
+                        onClick = {
+                            val uri = viewModel.exportDiagnosticLog()
+                            if (uri != null) {
+                                val intent = Intent(Intent.ACTION_SEND).apply {
+                                    type = "text/plain"
+                                    putExtra(Intent.EXTRA_STREAM, uri)
+                                    putExtra(Intent.EXTRA_SUBJECT, "ODBplus Diagnostic Log")
+                                    addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                                    addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                                }
+                                context.startActivity(
+                                    Intent.createChooser(intent, "Export Diagnostic Log")
+                                        .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                                )
+                            }
+                        }
+                    ) {
+                        Icon(
+                            Icons.Filled.Share,
+                            contentDescription = "Export Diagnostic Log",
+                            tint = TextSecondary
+                        )
+                    }
                     IconButton(
                         onClick = {
                             val logsText = logLines.joinToString("\n")

@@ -1,5 +1,6 @@
 package com.odbplus.core.transport
 
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -113,6 +114,8 @@ class TransportRepositoryImpl @Inject constructor(
                     }
                 }
             }
+        } catch (e: CancellationException) {
+            throw e
         } catch (e: NotConnectedException) {
             addLog("!! Error: Connection lost.")
             _connectionState.value = ConnectionState.ERROR

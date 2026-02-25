@@ -5,6 +5,8 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import java.io.BufferedInputStream
 import java.io.BufferedOutputStream
 import java.io.IOException
@@ -20,6 +22,12 @@ abstract class BaseTransport(
 
     protected var input: BufferedInputStream? = null
     protected var output: BufferedOutputStream? = null
+
+    /**
+     * Serialises write+read pairs so that a keepalive ping cannot inject
+     * its "OK>" response into a concurrently-reading command handler.
+     */
+    private val commandMutex = Mutex()
 
     private val inboundChan = Channel<String>(Channel.UNLIMITED)
     override val inbound = inboundChan.receiveAsFlow()
@@ -120,6 +128,20 @@ abstract class BaseTransport(
         }
         sb.toString().trim()
     }
+
+    /**
+     * Atomically drain → write → read under [commandMutex].
+     *
+     * Use this instead of separate [writeLine] + [readUntilPrompt] calls to
+     * prevent a concurrent keepalive ping from injecting its "OK>" response
+     * into the middle of another command's response window.
+     */
+    override suspend fun sendCommand(line: String, timeoutMs: Long): String =
+        commandMutex.withLock {
+            drainChannel()
+            writeLine(line)
+            readUntilPrompt(timeoutMs)
+        }
 
     override suspend fun close() = withContext(Dispatchers.IO) {
         _isConnected.value = false

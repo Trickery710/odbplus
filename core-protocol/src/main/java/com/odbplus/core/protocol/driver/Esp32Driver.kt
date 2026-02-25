@@ -113,14 +113,13 @@ class Esp32Driver(override var profile: DeviceProfile) : AdapterDriver {
         timeoutMs: Long
     ): String =
         try {
-            transport.drainChannel()
-            transport.writeLine(command)
-            val response = transport.readUntilPrompt(timeoutMs)
+            val response = transport.sendCommand(command, timeoutMs)
             if (response.isNotEmpty()) {
                 consecutiveFailures = 0
             }
             response
         } catch (e: Exception) {
+            if (e is kotlinx.coroutines.CancellationException) throw e
             Timber.w("Esp32Driver ASCII send '$command' exception: ${e.message}")
             ""
         }
@@ -142,10 +141,9 @@ class Esp32Driver(override var profile: DeviceProfile) : AdapterDriver {
 
     private suspend fun sendRaw(transport: ObdTransport, cmd: String, timeoutMs: Long): String =
         try {
-            transport.drainChannel()
-            transport.writeLine(cmd)
-            transport.readUntilPrompt(timeoutMs)
+            transport.sendCommand(cmd, timeoutMs)
         } catch (e: Exception) {
+            if (e is kotlinx.coroutines.CancellationException) throw e
             ""
         }
 }
