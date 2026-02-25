@@ -3,6 +3,12 @@ package com.odbplus.core.protocol
 import com.odbplus.core.protocol.adapter.DeviceProfile
 import com.odbplus.core.protocol.adapter.ProtocolSessionState
 import com.odbplus.core.protocol.session.AdapterSession
+import com.odbplus.core.protocol.signalset.VehicleCommand
+import com.odbplus.core.protocol.signalset.VehicleSignal
+import com.odbplus.core.protocol.signalset.VehicleSignalResult
+import com.odbplus.core.protocol.signalset.VehicleSignalSet
+import com.odbplus.core.protocol.signalset.VehicleSignalSetRepository
+import com.odbplus.core.protocol.signalset.extractFrom
 import com.odbplus.core.transport.ConnectionState
 import com.odbplus.core.transport.TransportRepository
 import kotlinx.coroutines.flow.StateFlow
@@ -28,7 +34,8 @@ import javax.inject.Singleton
 class ObdService @Inject constructor(
     private val transport: TransportRepository,
     private val parser: ObdParser,
-    private val adapterSession: AdapterSession
+    private val adapterSession: AdapterSession,
+    private val signalSetRepository: VehicleSignalSetRepository
 ) {
     val connectionState: StateFlow<ConnectionState> = transport.connectionState
 
@@ -195,16 +202,102 @@ class ObdService @Inject constructor(
     suspend fun getCoolantTemp(timeoutMs: Long = 3000L): Double? =
         getValue(ObdPid.ENGINE_COOLANT_TEMP, timeoutMs)
 
+    // ── Mode 22 (UDS Read DID) ────────────────────────────────────────────────
+
+    /**
+     * Load the [VehicleSignalSet] for [vehicleKey] (e.g. "Toyota-Camry").
+     * Uses memory/disk/asset/network fallback chain inside the repository.
+     */
+    suspend fun loadVehicleSignalSet(vehicleKey: String): VehicleSignalSet? =
+        signalSetRepository.load(vehicleKey)
+
+    /**
+     * Send [command] to the ECU (targeting [VehicleCommand.hdr]) and decode
+     * all of its signals from the response payload.
+     *
+     * Returns an empty list on NO DATA or a parse failure.
+     */
+    suspend fun queryCommand(
+        command: VehicleCommand,
+        timeoutMs: Long = 3_000L
+    ): List<VehicleSignalResult> {
+        val rawResponse = sendCommand(
+            command  = command.commandString,
+            timeoutMs = timeoutMs,
+            canHeader = command.hdr.ifEmpty { null }
+        )
+        val payload = extractMode22Payload(rawResponse, command) ?: return emptyList()
+        return command.signals.map { it.extractFrom(payload) }
+    }
+
+    /**
+     * Convenience wrapper: query a single [signal] that belongs to [command].
+     * Makes the same round-trip as [queryCommand] — prefer [queryCommand] when
+     * you need multiple signals from the same frame.
+     */
+    suspend fun querySignal(
+        signal: VehicleSignal,
+        command: VehicleCommand,
+        timeoutMs: Long = 3_000L
+    ): VehicleSignalResult {
+        val rawResponse = sendCommand(
+            command   = command.commandString,
+            timeoutMs = timeoutMs,
+            canHeader = command.hdr.ifEmpty { null }
+        )
+        val payload = extractMode22Payload(rawResponse, command)
+            ?: return VehicleSignalResult(signal = signal, rawValue = null)
+        return signal.extractFrom(payload)
+    }
+
+    /**
+     * Strip the Mode 22 positive response header (`62 DID_HI DID_LO`) from
+     * [rawResponse] and return the remaining data bytes.
+     *
+     * The ELM/adapter may return multiple lines (multi-ECU or multi-frame).
+     * We search for the first line whose hex stream contains the expected prefix.
+     *
+     * Returns null when no matching response line is found.
+     */
+    private fun extractMode22Payload(rawResponse: String, command: VehicleCommand): ByteArray? {
+        // Positive UDS response service byte = request service | 0x40  (0x22 → 0x62)
+        val positiveService = (command.service or 0x40).toString(16).padStart(2, '0').uppercase()
+        val didParts = command.did.uppercase().chunked(2)
+        // We need at least 2 hex chars (1 byte) for the DID; pad if the DID is a single byte
+        val didHi = didParts.getOrNull(0) ?: return null
+        val didLo = didParts.getOrNull(1) ?: "00"
+        val expectedPrefix = "$positiveService$didHi$didLo"
+
+        for (line in rawResponse.lines()) {
+            val cleaned = line.uppercase().replace("\\s+".toRegex(), "").replace(">", "")
+            if (cleaned.isEmpty() || cleaned == "NODATA" || cleaned == "ERROR") continue
+
+            // Find the header prefix anywhere in the cleaned line
+            val idx = cleaned.indexOf(expectedPrefix)
+            if (idx < 0) continue
+
+            // Everything after the 3-byte response header is payload
+            val payloadHex = cleaned.substring(idx + expectedPrefix.length)
+            if (payloadHex.length % 2 != 0) continue
+            return payloadHex.chunked(2).map { it.toInt(16).toByte() }.toByteArray()
+        }
+        return null
+    }
+
     // ── Internal command routing ──────────────────────────────────────────────
 
     /**
      * Route a raw command through [AdapterSession] when active, otherwise
      * fall back to [TransportRepository] for compatibility.
      */
-    private suspend fun sendCommand(command: String, timeoutMs: Long): String {
+    private suspend fun sendCommand(
+        command: String,
+        timeoutMs: Long,
+        canHeader: String? = null
+    ): String {
         // Primary path: UOAPL AdapterSession
         if (adapterSession.state.value.canSendCommands) {
-            return adapterSession.sendCommand(command, timeoutMs)
+            return adapterSession.sendCommand(command, timeoutMs, canHeader)
         }
 
         // Fallback path: legacy log-based extraction (pre-UOAPL)

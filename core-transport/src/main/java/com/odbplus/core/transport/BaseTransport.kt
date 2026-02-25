@@ -75,9 +75,11 @@ abstract class BaseTransport(
             }
 
             if (b < 0) {
-                if (!isConnectionActive()) break
-                delay(10)
-                continue
+                // Blocking read returning -1 means EOF — remote closed the connection.
+                // isConnected stays true in Java even after remote closure, so we
+                // cannot rely on isConnectionActive() here. Mark disconnected and exit.
+                _isConnected.value = false
+                break
             }
 
             val ch = b.toChar()

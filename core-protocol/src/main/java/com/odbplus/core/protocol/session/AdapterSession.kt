@@ -115,10 +115,13 @@ class AdapterSession(private val scope: CoroutineScope) {
      * - Health-aware timeout scaling
      * - Consecutive failure tracking → ERROR_RECOVERY
      * - ISO-TP assembly if the adapter can't handle it internally
+     * - Optional [canHeader]: when non-null, issues `AT SH <header>` before the
+     *   command and restores the broadcast header (`AT SH 7DF`) in a finally block.
      */
     suspend fun sendCommand(
         command: String,
-        timeoutMs: Long = DEFAULT_TIMEOUT_MS
+        timeoutMs: Long = DEFAULT_TIMEOUT_MS,
+        canHeader: String? = null
     ): String {
         val currentState = _state.value
         if (!currentState.canSendCommands) {
@@ -132,7 +135,20 @@ class AdapterSession(private val scope: CoroutineScope) {
 
         val effectiveTimeout = if (hm.isInSafeMode) timeoutMs * 2 else timeoutMs
 
-        val response = d.sendCommand(t, command, effectiveTimeout)
+        if (canHeader != null) {
+            d.sendCommand(t, "AT SH $canHeader", 1_000L)
+        }
+
+        val response: String
+        try {
+            response = d.sendCommand(t, command, effectiveTimeout)
+        } catch (e: Exception) {
+            if (canHeader != null) d.sendCommand(t, "AT SH 7DF", 1_000L)
+            throw e
+        }
+        if (canHeader != null) {
+            d.sendCommand(t, "AT SH 7DF", 1_000L)
+        }
 
         when {
             response.isEmpty() -> {
