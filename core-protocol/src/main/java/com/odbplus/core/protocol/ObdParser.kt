@@ -60,7 +60,7 @@ class ObdParser @Inject constructor() {
 
         // Check for error responses only if we couldn't find a valid response
         when {
-            cleaned.isEmpty() -> return ObdResponse.NoData(rawResponse, requestedPid)
+            cleaned.isEmpty() -> return ObdResponse.Error(rawResponse, "No response")
             cleaned == "NO DATA" -> return ObdResponse.NoData(rawResponse, requestedPid)
             // Only treat as NO DATA if there's no valid 41 response mixed in
             cleaned.contains("NO DATA") && !cleaned.contains("41") ->
