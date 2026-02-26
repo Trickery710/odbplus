@@ -41,9 +41,20 @@ data class VehicleInfo(
     }
 
     /**
+     * Short display name for UI: "Year Manufacturer" or VIN if undecodeable.
+     */
+    val displayName: String get() {
+        if (vin.length != 17) return vin.ifBlank { "Unknown Vehicle" }
+        val decoded = decodeVin()
+        val year = decoded["Model Year"] ?: ""
+        val manufacturer = decoded["Manufacturer"] ?: ""
+        return listOf(year, manufacturer).filter { it.isNotBlank() }.joinToString(" ").ifBlank { vin }
+    }
+
+    /**
      * Basic VIN decoding for common manufacturers.
      */
-    private fun decodeVin(): Map<String, String> {
+    internal fun decodeVin(): Map<String, String> {
         if (vin.length != 17) return emptyMap()
 
         val info = mutableMapOf<String, String>()

@@ -1,5 +1,6 @@
 package com.odbplus.app.live
 
+import com.odbplus.app.ai.data.VehicleInfo
 import com.odbplus.core.protocol.ObdPid
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -18,9 +19,9 @@ class LogSessionManager(private val repository: LogSessionRepository) {
     private val _currentSession = MutableStateFlow<LogSession?>(null)
     val currentSession: StateFlow<LogSession?> = _currentSession.asStateFlow()
 
-    fun start(selectedPids: List<ObdPid>) {
+    fun start(selectedPids: List<ObdPid>, vehicleInfo: VehicleInfo? = null) {
         if (selectedPids.isEmpty()) return
-        _currentSession.value = LogSession(selectedPids = selectedPids)
+        _currentSession.value = LogSession(selectedPids = selectedPids, vehicleInfo = vehicleInfo)
         _isLogging.value = true
     }
 

@@ -3,6 +3,8 @@ package com.odbplus.app.live
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.odbplus.app.ai.VehicleContextProvider
+import com.odbplus.app.ai.data.VehicleInfo
 import com.odbplus.core.protocol.ObdPid
 import com.odbplus.core.protocol.ObdService
 import com.odbplus.core.transport.ConnectionState
@@ -44,7 +46,8 @@ data class LogSession(
     val startTime: Long = System.currentTimeMillis(),
     val endTime: Long? = null,
     val selectedPids: List<ObdPid> = emptyList(),
-    val dataPoints: List<LoggedDataPoint> = emptyList()
+    val dataPoints: List<LoggedDataPoint> = emptyList(),
+    val vehicleInfo: VehicleInfo? = null
 ) {
     val duration: Long get() = (endTime ?: System.currentTimeMillis()) - startTime
     val dataPointCount: Int get() = dataPoints.size
@@ -75,6 +78,7 @@ data class LiveDataUiState(
 class LiveDataViewModel @Inject constructor(
     private val obdService: ObdService,
     private val repository: LogSessionRepository,
+    private val vehicleContextProvider: VehicleContextProvider,
     private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
@@ -201,7 +205,8 @@ class LiveDataViewModel @Inject constructor(
 
     fun startLogging() {
         if (_uiState.value.isReplaying) return
-        logSession.start(_uiState.value.selectedPids)
+        val vehicleInfo = vehicleContextProvider.current().vehicleInfo
+        logSession.start(_uiState.value.selectedPids, vehicleInfo)
         if (!polling.isPolling.value) startPolling()
     }
 

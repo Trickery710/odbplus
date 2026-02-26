@@ -7,6 +7,7 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.core.stringSetPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
+import com.odbplus.app.ai.data.VehicleInfo
 import com.odbplus.core.protocol.ObdPid
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
@@ -32,7 +33,8 @@ data class SerializableLogSession(
     val startTime: Long,
     val endTime: Long?,
     val selectedPidCodes: List<String>,
-    val dataPoints: List<SerializableDataPoint>
+    val dataPoints: List<SerializableDataPoint>,
+    val vehicleInfo: VehicleInfo? = null
 )
 
 @Serializable
@@ -151,7 +153,8 @@ class LogSessionRepository @Inject constructor(
                         }
                         .toMap()
                 )
-            }
+            },
+            vehicleInfo = vehicleInfo
         )
     }
 
@@ -166,7 +169,8 @@ class LogSessionRepository @Inject constructor(
                     timestamp = dp.timestamp,
                     pidValues = dp.pidValues.mapKeys { (pid, _) -> pid.code }
                 )
-            }
+            },
+            vehicleInfo = vehicleInfo
         )
     }
 }
