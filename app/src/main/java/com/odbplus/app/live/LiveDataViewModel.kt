@@ -71,7 +71,10 @@ data class LiveDataUiState(
     val isReplaying: Boolean = false,
     val replaySession: LogSession? = null,
     val replayIndex: Int = 0,
-    val replaySpeed: Float = 1.0f
+    val replaySpeed: Float = 1.0f,
+    // PIDs confirmed unsupported by the connected vehicle (NoData response).
+    // Hidden from the live grid and greyed out in the selector.
+    val unsupportedPids: Set<ObdPid> = emptySet()
 )
 
 @HiltViewModel
@@ -144,6 +147,7 @@ class LiveDataViewModel @Inject constructor(
         viewModelScope.launch { polling.isPolling.collect { v -> _uiState.update { it.copy(isPolling = v) } } }
         viewModelScope.launch { polling.pollIntervalMs.collect { v -> _uiState.update { it.copy(pollIntervalMs = v) } } }
         viewModelScope.launch { polling.pidValues.collect { v -> _uiState.update { it.copy(pidValues = v) } } }
+        viewModelScope.launch { polling.unsupportedPids.collect { v -> _uiState.update { it.copy(unsupportedPids = v) } } }
         viewModelScope.launch { logSession.isLogging.collect { v -> _uiState.update { it.copy(isLogging = v) } } }
         viewModelScope.launch { logSession.currentSession.collect { v -> _uiState.update { it.copy(currentLogSession = v) } } }
         viewModelScope.launch { replay.isReplaying.collect { v -> _uiState.update { it.copy(isReplaying = v) } } }
