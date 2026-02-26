@@ -82,38 +82,66 @@ class VehicleContextViewModel @Inject constructor(
     private fun fetchVehicleInfo() {
         viewModelScope.launch {
             ctx = ctx.copy(isFetchingVehicleInfo = true)
-
             try {
                 val vin = obdService.readVin()
-                if (vin.isNullOrBlank()) {
-                    Timber.w("Could not read VIN from vehicle")
-                    return@launch
-                }
-
-                Timber.d("Read VIN: $vin")
-                val isFirstTime = vehicleInfoRepository.isFirstTimeVehicle(vin)
-                var vehicleInfo = VehicleInfo(vin = vin)
-
-                if (isFirstTime) {
-                    Timber.d("First time vehicle, reading additional info...")
-                    vehicleInfo = vehicleInfo.copy(
-                        calibrationId = obdService.readCalibrationId(),
-                        calibrationVerificationNumber = obdService.readCalibrationVerificationNumber(),
-                        ecuName = obdService.readEcuName()
-                    )
+                if (!vin.isNullOrBlank()) {
+                    fetchByVin(vin)
                 } else {
-                    val existing = vehicleInfoRepository.getVehicle(vin)
-                    if (existing != null) {
-                        vehicleInfo = existing.copy(lastSeenTimestamp = System.currentTimeMillis())
-                    }
+                    Timber.w("VIN not available — trying Mode 09 fallback")
+                    fetchWithoutVin()
                 }
-
-                vehicleInfoRepository.saveVehicle(vehicleInfo)
             } catch (e: Exception) {
                 Timber.e(e, "Error fetching vehicle info")
             } finally {
                 ctx = ctx.copy(isFetchingVehicleInfo = false)
             }
         }
+    }
+
+    private suspend fun fetchByVin(vin: String) {
+        Timber.d("Read VIN: $vin")
+        val isFirstTime = vehicleInfoRepository.isFirstTimeVehicle(vin)
+        val vehicleInfo = if (isFirstTime) {
+            Timber.d("First time vehicle, reading additional info...")
+            VehicleInfo(
+                vin = vin,
+                calibrationId = obdService.readCalibrationId(),
+                calibrationVerificationNumber = obdService.readCalibrationVerificationNumber(),
+                ecuName = obdService.readEcuName()
+            )
+        } else {
+            vehicleInfoRepository.getVehicle(vin)
+                ?.copy(lastSeenTimestamp = System.currentTimeMillis())
+                ?: VehicleInfo(vin = vin)
+        }
+        vehicleInfoRepository.saveVehicle(vehicleInfo)
+    }
+
+    /**
+     * Fallback when Mode 09 VIN (PID 02) is unavailable.
+     * Reads calibration ID, CVN, and ECU name and uses the calibration ID
+     * (or ECU name if CalID is also absent) as a stable synthetic key.
+     */
+    private suspend fun fetchWithoutVin() {
+        val calibId = obdService.readCalibrationId()
+        val cvn     = obdService.readCalibrationVerificationNumber()
+        val ecuName = obdService.readEcuName()
+
+        val syntheticKey = calibId ?: ecuName
+        if (syntheticKey.isNullOrBlank()) {
+            Timber.w("No vehicle identifiers available — cannot identify vehicle")
+            return
+        }
+
+        Timber.d("No VIN — identified by: $syntheticKey")
+        val vehicleInfo = vehicleInfoRepository.getVehicle(syntheticKey)
+            ?.copy(lastSeenTimestamp = System.currentTimeMillis())
+            ?: VehicleInfo(
+                vin = syntheticKey,
+                calibrationId = calibId,
+                calibrationVerificationNumber = cvn,
+                ecuName = ecuName
+            )
+        vehicleInfoRepository.saveVehicle(vehicleInfo)
     }
 }
