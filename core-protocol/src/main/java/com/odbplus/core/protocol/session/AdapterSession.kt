@@ -139,9 +139,12 @@ class AdapterSession(private val scope: CoroutineScope) {
             d.sendCommand(t, "AT SH $canHeader", 1_000L)
         }
 
-        val response: String
+        val tSend = System.currentTimeMillis()
+        DiagnosticLogger.d("Tx", "t=$tSend  cmd=$command  timeout=${effectiveTimeout}ms  hdr=${canHeader ?: "default"}")
+
+        val rawResponse: String
         try {
-            response = d.sendCommand(t, command, effectiveTimeout)
+            rawResponse = d.sendCommand(t, command, effectiveTimeout)
         } catch (e: Exception) {
             if (canHeader != null) d.sendCommand(t, "AT SH 7DF", 1_000L)
             throw e
@@ -150,12 +153,21 @@ class AdapterSession(private val scope: CoroutineScope) {
             d.sendCommand(t, "AT SH 7DF", 1_000L)
         }
 
+        val tRecv = System.currentTimeMillis()
+        DiagnosticLogger.d("Rx", "t=$tRecv  cmd=$command  latency=${tRecv - tSend}ms  len=${rawResponse.length}  preview=${rawResponse.take(64).replace('\n', '|')}")
+
+        // Attempt ISO-TP software reassembly for adapters that emit raw CAN frames
+        // (e.g. ESP32 with ATCAF0, dumb clones that don't handle multi-frame internally).
+        // If the response doesn't look like ISO-TP frames the assembler returns null
+        // and we fall back to the raw string.
+        val response = tryIsoTpReassembly(rawResponse) ?: rawResponse
+
         when {
             response.isEmpty() -> {
                 consecutiveCommandFailures++
                 hm.onTimeout()
                 Timber.w("UOAPL: empty response #$consecutiveCommandFailures for '$command'")
-                DiagnosticLogger.w("Session", "empty response #$consecutiveCommandFailures cmd=$command")
+                DiagnosticLogger.w("Session", "empty response #$consecutiveCommandFailures cmd=$command  latency=${tRecv - tSend}ms")
                 if (consecutiveCommandFailures >= MAX_CONSECUTIVE_FAILURES) {
                     DiagnosticLogger.e("Session", "MAX_FAILURES reached — entering ERROR_RECOVERY")
                     enterErrorRecovery(t)
@@ -176,11 +188,55 @@ class AdapterSession(private val scope: CoroutineScope) {
         return response
     }
 
+    /**
+     * Try to reassemble a raw multi-frame ISO-TP response using [isoTpAssembler].
+     *
+     * Returns a hex-string representation of the assembled payload when the
+     * response contains ISO-TP framing markers (First Frame / Consecutive Frame
+     * PCI nibbles).  Returns null when the response looks like a normal
+     * single-line ELM-formatted reply so the caller falls back to the raw string.
+     *
+     * The assembler is NOT used when the ELM/STN adapter handles reassembly
+     * internally (the default — `ATCAF1`).  It IS useful for ESP32 adapters
+     * in raw CAN mode and for clones that emit bare CAN frames.
+     */
+    private fun tryIsoTpReassembly(raw: String): String? {
+        val lines = raw.lines().filter { it.isNotBlank() }
+        // A quick heuristic: if no line starts with a hex byte whose upper nibble
+        // is 1 or 2 (First Frame / Consecutive Frame), skip assembly entirely.
+        val hasMultiFrameMarkers = lines.any { line ->
+            val firstToken = line.trim().uppercase().split("\\s+".toRegex()).firstOrNull() ?: return@any false
+            // With headers, first token is the CAN address; skip to the PCI token
+            val tokens = line.trim().uppercase().split("\\s+".toRegex()).filter { it.isNotEmpty() }
+            tokens.getOrNull(if (tokens.size >= 4) 3 else 0)
+                ?.let { t -> t.length == 2 && (t[0] == '1' || t[0] == '2') }
+                ?: false
+        }
+        if (!hasMultiFrameMarkers) return null
+
+        isoTpAssembler.reset()
+        var result: com.odbplus.core.protocol.isotp.IsoTpAssembler.AssemblyResult? = null
+        for (line in lines) {
+            result = isoTpAssembler.feed(line) ?: continue
+            if (result.isComplete) break
+        }
+
+        val assembled = result?.takeIf { it.isComplete } ?: return null
+        DiagnosticLogger.d("IsoTP", "reassembled ${assembled.received}/${assembled.totalExpected} bytes from ${lines.size} frames")
+        return assembled.payload.joinToString(" ") { "%02X".format(it.toInt() and 0xFF) }
+    }
+
     /** Gracefully disconnect and release all resources. */
     suspend fun disconnect() {
         Timber.d("UOAPL: disconnect")
-        keepaliveJob?.cancel()
+
+        // cancelAndJoin (not just cancel) ensures the keepalive coroutine has
+        // fully stopped before we null out `transport`.  Without join(), a keepalive
+        // that is mid-command will continue to execute against a null transport,
+        // causing a NullPointerException or writing to an already-closed stream.
+        keepaliveJob?.cancelAndJoin()
         keepaliveJob = null
+
         driver = null
         transport = null
         healthMonitor = null
@@ -200,6 +256,26 @@ class AdapterSession(private val scope: CoroutineScope) {
     // ── Protocol negotiation ──────────────────────────────────────────────────
 
     private suspend fun negotiateProtocol(
+        transport: ObdTransport,
+        driver: AdapterDriver,
+        fallback: ProtocolFallback
+    ): Boolean {
+        // Wrap the entire negotiation in a hard ceiling.
+        //
+        // Without this, the fallback loop (9 protocols × 3 retries × up to 3 s each)
+        // can block for up to 81 seconds when the adapter can't connect.  The user
+        // experiences a permanent freeze with no indication of progress.
+        val result = withTimeoutOrNull(NEGOTIATION_TIMEOUT_MS) {
+            negotiateProtocolInner(transport, driver, fallback)
+        }
+        if (result == null) {
+            Timber.w("UOAPL: protocol negotiation timed out after ${NEGOTIATION_TIMEOUT_MS}ms")
+            DiagnosticLogger.w("Session", "negotiation timed out after ${NEGOTIATION_TIMEOUT_MS}ms")
+        }
+        return result == true
+    }
+
+    private suspend fun negotiateProtocolInner(
         transport: ObdTransport,
         driver: AdapterDriver,
         fallback: ProtocolFallback
@@ -325,8 +401,21 @@ class AdapterSession(private val scope: CoroutineScope) {
 
     companion object {
         private const val DEFAULT_TIMEOUT_MS = 3_000L
-        // Raised from 5 → 10: a single momentary adapter hiccup (e.g. engine under load
-        // during an RPM test stage transition) shouldn't trigger a full ERROR_RECOVERY.
-        private const val MAX_CONSECUTIVE_FAILURES = 10
+
+        // ElmDriver retries each command up to MAX_RETRIES (3) times with exponential
+        // timeout backoff (1.0×, 1.5×, 2.25× of base timeout).  At a 3-second base:
+        //   attempt 1 = 3 s, attempt 2 = 4.5 s, attempt 3 = 6.75 s → ~14 s per PID.
+        // MAX_CONSECUTIVE_FAILURES = 5 → at most ~70 s of silence before recovery,
+        // long enough to survive engine-load hiccups but short enough to avoid a
+        // multi-minute freeze visible to the user.
+        private const val MAX_CONSECUTIVE_FAILURES = 5
+
+        // Hard ceiling on the entire protocol-negotiation pass.
+        //
+        // Without this, the ProtocolFallback loop (9 protocols × 3 retries × up to
+        // 3 s each) can stall for up to 81 seconds on an adapter that cannot
+        // connect to the vehicle.  30 seconds is long enough to try all CAN speeds
+        // plus one or two legacy protocols before giving up cleanly.
+        private const val NEGOTIATION_TIMEOUT_MS = 30_000L
     }
 }

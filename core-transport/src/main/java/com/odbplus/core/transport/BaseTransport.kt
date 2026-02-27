@@ -10,6 +10,7 @@ import kotlinx.coroutines.sync.withLock
 import java.io.BufferedInputStream
 import java.io.BufferedOutputStream
 import java.io.IOException
+import java.net.SocketTimeoutException
 
 /**
  * Base implementation of [ObdTransport] that handles common I/O operations.
@@ -62,7 +63,11 @@ abstract class BaseTransport(
         output = streams.output
         _isConnected.value = true
 
-        readerJob = externalScope.launch { readerLoop() }
+        // Blocking I/O must run on Dispatchers.IO, not Dispatchers.Default.
+        // externalScope uses Dispatchers.Default (see CoroutineModule); without
+        // an explicit IO dispatcher here, the blocking read() would starve the
+        // CPU-bound thread pool and could cause apparent UI freezes.
+        readerJob = externalScope.launch(Dispatchers.IO) { readerLoop() }
     }
 
     private suspend fun CoroutineScope.readerLoop() {
@@ -70,7 +75,13 @@ abstract class BaseTransport(
         while (isActive) {
             val b: Int = try {
                 input?.read() ?: -1
+            } catch (_: SocketTimeoutException) {
+                // TCP SO_TIMEOUT fired — no data within SOCKET_READ_TIMEOUT_MS.
+                // This is normal; loop back so we can check isActive and keep the
+                // coroutine cooperative (and thus cancellable) without blocking forever.
+                continue
             } catch (_: Throwable) {
+                // IOException (stream closed by close()), Bluetooth errors, etc.
                 -1
             }
 
@@ -84,7 +95,7 @@ abstract class BaseTransport(
 
             val ch = b.toChar()
 
-            // The '>' prompt is a terminator for a command response
+            // The '>' prompt terminates a command response.
             if (ch == '>') {
                 if (sb.isNotEmpty()) {
                     val line = sb.toString().replace("\r", "").trim()
@@ -94,7 +105,22 @@ abstract class BaseTransport(
                 inboundChan.trySend(">")
             } else {
                 sb.append(ch)
-                if (ch == '\n') {
+                // Treat BOTH '\r' and '\n' as line-end markers.
+                //
+                // ELM327 with ATL0 (linefeeds off) uses '\r' as the only row
+                // separator — multi-line responses arrive as:
+                //   "LINE1\rLINE2\r>"
+                // Without handling '\r' here each response block would be
+                // buffered until '>' and then sent as one concatenated string
+                // (replace("\r","") erases the separator), which corrupts every
+                // multi-line response: 0100 support bitmaps, Mode-03 DTC lists,
+                // Mode-09 VIN frames, and multi-ECU replies.
+                //
+                // When ATL1 is on the adapter sends '\r\n' pairs; '\r' flushes
+                // the line and the immediately following '\n' fires on an already-
+                // cleared buffer (line.isNotEmpty() == false) so nothing is
+                // double-emitted.
+                if (ch == '\n' || ch == '\r') {
                     val line = sb.toString().replace("\r", "").trim()
                     if (line.isNotEmpty()) inboundChan.trySend(line)
                     sb.clear()
@@ -147,13 +173,23 @@ abstract class BaseTransport(
 
     override suspend fun close() = withContext(Dispatchers.IO) {
         _isConnected.value = false
-        readerJob?.cancelAndJoin()
 
+        // Close streams BEFORE cancelAndJoin.
+        //
+        // The reader loop calls the blocking input.read().  Kotlin coroutine
+        // cancellation only works at suspension points; a blocked native read()
+        // cannot be interrupted by cancel().  Closing the stream first forces
+        // read() to throw IOException immediately, which the loop catches and
+        // converts to -1, allowing the loop to exit cleanly.
+        //
+        // If we called cancelAndJoin() first with soTimeout=0 (or Bluetooth
+        // where soTimeout is not supported), we would deadlock here forever.
         try { input?.close() } catch (_: IOException) {}
         try { output?.close() } catch (_: IOException) {}
         input = null
         output = null
 
+        readerJob?.cancelAndJoin()
         closeConnection()
     }
 

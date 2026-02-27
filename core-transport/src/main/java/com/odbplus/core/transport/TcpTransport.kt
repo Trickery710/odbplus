@@ -23,7 +23,11 @@ class TcpTransport @Inject constructor(
             val s = Socket().apply {
                 tcpNoDelay = true
                 keepAlive = true
-                soTimeout = 0
+                // A non-zero SO_TIMEOUT makes read() throw SocketTimeoutException after
+                // SOCKET_READ_TIMEOUT_MS instead of blocking forever.  The reader loop
+                // treats that as "no data yet", keeps the coroutine cooperative, and
+                // prevents the app from freezing when the adapter goes silent.
+                soTimeout = TransportConstants.SOCKET_READ_TIMEOUT_MS
                 connect(InetSocketAddress(host, port), TransportConstants.CONNECTION_TIMEOUT_MS)
             }
             socket = s

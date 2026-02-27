@@ -89,10 +89,21 @@ class TransportRepositoryImpl @Inject constructor(
 
     private suspend fun initElmSession() {
         addLog("Initializing ELM327 session...")
-        sendAndAwait(ElmCommands.RESET, timeoutMs = TransportConstants.INIT_TIMEOUT_MS)
+
+        // ATZ is intentionally NOT sent here.
+        //
+        // AdapterFingerprinter.fingerprint() performs its own ATZ + settle delay
+        // as the very first step of UOAPL initialisation.  Sending a second ATZ
+        // here (immediately before fingerprinting) causes two full resets in
+        // rapid succession, which confuses cheap ELM clone adapters: many enter
+        // a state where they emit the banner repeatedly and stop responding to
+        // subsequent commands until they are power-cycled.
+        //
+        // ATE0 + ATL0 are still sent so the fingerprinter receives clean, echo-
+        // free output right from its first command.
         sendAndAwait(ElmCommands.ECHO_OFF)
         sendAndAwait(ElmCommands.LINEFEEDS_OFF)
-        addLog("Session initialized.")
+        addLog("Session pre-init complete.")
     }
 
     override suspend fun sendAndAwait(cmd: String, timeoutMs: Long) {
@@ -100,18 +111,20 @@ class TransportRepositoryImpl @Inject constructor(
             addLog("!! Error: Not connected.")
             return
         }
-        transport.drainChannel()
         addLog(">> $cmd")
 
         try {
-            transport.writeLine(cmd)
-            val response = transport.readUntilPrompt(timeoutMs)
-
+            // Use the atomic sendCommand (drain → write → read under commandMutex)
+            // rather than calling writeLine + readUntilPrompt separately.
+            //
+            // Calling them separately bypasses commandMutex, making it possible
+            // for a concurrent caller (e.g. a keepalive job or a second coroutine
+            // that also uses sendAndAwait) to inject its write between our write
+            // and our read, causing both sides to receive each other's responses.
+            val response = transport.sendCommand(cmd, timeoutMs)
             if (response.isNotBlank()) {
                 response.lines().forEach { line ->
-                    if (line.isNotBlank()) {
-                        addLog("<< $line")
-                    }
+                    if (line.isNotBlank()) addLog("<< $line")
                 }
             }
         } catch (e: CancellationException) {
