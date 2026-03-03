@@ -52,6 +52,7 @@ class AdapterSession(private val scope: CoroutineScope) {
 
     private var consecutiveCommandFailures = 0
     private var keepaliveJob: Job? = null
+    private var reconnectJob: Job? = null
 
     // ── Lifecycle ─────────────────────────────────────────────────────────────
 
@@ -103,7 +104,8 @@ class AdapterSession(private val scope: CoroutineScope) {
         } catch (e: Exception) {
             if (e is CancellationException) throw e
             Timber.e(e, "UOAPL: onTransportConnected failed")
-            transition(ProtocolSessionState.ERROR_RECOVERY)
+            transition(ProtocolSessionState.RECONNECTING)
+            this.transport?.let { startReconnectLoop(it) }
         }
     }
 
@@ -230,12 +232,15 @@ class AdapterSession(private val scope: CoroutineScope) {
     suspend fun disconnect() {
         Timber.d("UOAPL: disconnect")
 
-        // cancelAndJoin (not just cancel) ensures the keepalive coroutine has
-        // fully stopped before we null out `transport`.  Without join(), a keepalive
-        // that is mid-command will continue to execute against a null transport,
+        // cancelAndJoin (not just cancel) ensures the keepalive and reconnect
+        // coroutines have fully stopped before we null out `transport`.
+        // Without join(), a in-flight coroutine can execute against a null transport,
         // causing a NullPointerException or writing to an already-closed stream.
         keepaliveJob?.cancelAndJoin()
         keepaliveJob = null
+
+        reconnectJob?.cancelAndJoin()
+        reconnectJob = null
 
         driver = null
         transport = null
@@ -351,14 +356,87 @@ class AdapterSession(private val scope: CoroutineScope) {
                 Timber.i("UOAPL: ERROR_RECOVERY succeeded — back to SESSION_ACTIVE")
                 DiagnosticLogger.i("Recovery", "ERROR_RECOVERY succeeded")
             } else {
-                Timber.e("UOAPL: ERROR_RECOVERY failed — session in ERROR")
+                Timber.e("UOAPL: ERROR_RECOVERY failed — starting reconnect loop")
                 DiagnosticLogger.e("Recovery", "ERROR_RECOVERY failed — entering RECONNECTING")
                 transition(ProtocolSessionState.RECONNECTING)
+                startReconnectLoop(transport)
             }
         } catch (e: Exception) {
             if (e is CancellationException) throw e
             Timber.e(e, "UOAPL: ERROR_RECOVERY exception")
             transition(ProtocolSessionState.RECONNECTING)
+            startReconnectLoop(transport)
+        }
+    }
+
+    // ── Reconnect loop ────────────────────────────────────────────────────────
+
+    /**
+     * Launches a background job that retries protocol recovery with exponential
+     * backoff until the session is back to SESSION_ACTIVE or all attempts are
+     * exhausted.
+     *
+     * Backoff schedule: 2 s, 4 s, 8 s, 16 s, 30 s (capped), 30 s, …
+     * Max attempts: [MAX_RECONNECT_ATTEMPTS].
+     *
+     * Adapted from the ReconnectManager prototype in ODBPlus_Reconnect_Upgrade.
+     */
+    private fun startReconnectLoop(transport: ObdTransport) {
+        reconnectJob?.cancel()
+        reconnectJob = scope.launch {
+            var attempt = 0
+            while (isActive && _state.value == ProtocolSessionState.RECONNECTING) {
+                attempt++
+                val delayMs = minOf(30_000L, 1_000L * (1L shl attempt))
+                Timber.i("UOAPL: reconnect attempt $attempt — waiting ${delayMs}ms")
+                DiagnosticLogger.i("Reconnect", "attempt=$attempt  backoff=${delayMs}ms")
+                delay(delayMs)
+
+                if (_state.value != ProtocolSessionState.RECONNECTING) break
+
+                val success = attemptReconnect(transport)
+                if (success) {
+                    consecutiveCommandFailures = 0
+                    transition(ProtocolSessionState.SESSION_ACTIVE)
+                    Timber.i("UOAPL: reconnect succeeded on attempt $attempt")
+                    DiagnosticLogger.i("Reconnect", "succeeded  attempt=$attempt")
+                    val p = _deviceProfile.value
+                    if (p != null && p.capabilities.requiresKeepalive) startKeepalive(transport)
+                    break
+                }
+
+                Timber.w("UOAPL: reconnect attempt $attempt failed")
+                DiagnosticLogger.w("Reconnect", "attempt=$attempt failed")
+
+                if (attempt >= MAX_RECONNECT_ATTEMPTS) {
+                    Timber.e("UOAPL: reconnect exhausted after $attempt attempts")
+                    DiagnosticLogger.e("Reconnect", "exhausted after $attempt attempts — staying RECONNECTING")
+                    break
+                }
+            }
+        }
+    }
+
+    /**
+     * One reconnect attempt: drain channel, reset adapter, re-initialize driver,
+     * and re-negotiate the OBD protocol.  Returns true on success.
+     *
+     * Does NOT transition state — the caller owns state transitions.
+     */
+    private suspend fun attemptReconnect(transport: ObdTransport): Boolean {
+        return try {
+            transport.drainChannel()
+            val d = driver ?: return false
+            d.onCommandFailure(transport, "ATZ", "reconnect")
+            d.initialize(transport)
+            val pf = protocolFallback?.also { it.reset() } ?: return false
+            negotiateProtocol(transport, d, pf)
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: Exception) {
+            Timber.e(e, "UOAPL: attemptReconnect exception")
+            DiagnosticLogger.e("Reconnect", "exception: ${e.message}")
+            false
         }
     }
 
@@ -409,6 +487,10 @@ class AdapterSession(private val scope: CoroutineScope) {
         // long enough to survive engine-load hiccups but short enough to avoid a
         // multi-minute freeze visible to the user.
         private const val MAX_CONSECUTIVE_FAILURES = 5
+
+        // Max reconnect attempts before the loop gives up and leaves the
+        // session in RECONNECTING (user must manually reconnect after this).
+        private const val MAX_RECONNECT_ATTEMPTS = 10
 
         // Hard ceiling on the entire protocol-negotiation pass.
         //

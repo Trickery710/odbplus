@@ -10,6 +10,7 @@ document.addEventListener('DOMContentLoaded', function() {
     initSmoothScroll();
     initCodeLookup();
     checkAuthState();
+    initVehiclePhotos();
 });
 
 /**
@@ -448,3 +449,88 @@ function initTheme() {
 
 // Initialize theme on load
 initTheme();
+
+/**
+ * Load real vehicle photos from Wikipedia on forum pages.
+ * Replaces SVG placeholder icons in model cards with actual photos,
+ * and adds a hero image to model detail pages.
+ */
+function initVehiclePhotos() {
+    loadMakePagePhotos();
+    loadModelPagePhoto();
+}
+
+function loadMakePagePhotos() {
+    const modelCards = document.querySelectorAll('.model-card');
+    if (modelCards.length === 0) return;
+
+    const makeH1 = document.querySelector('.make-info h1');
+    if (!makeH1) return;
+    const make = makeH1.textContent.replace(/\s*Forums?\s*/i, '').trim();
+
+    modelCards.forEach(card => {
+        const imgDiv = card.querySelector('.model-image');
+        const nameEl = card.querySelector('.model-info h3');
+        if (!imgDiv || !nameEl || imgDiv.querySelector('img')) return;
+
+        const model = nameEl.textContent.trim();
+        const originalHTML = imgDiv.innerHTML;
+
+        fetchWikiThumb(make + ' ' + model, function(url) {
+            if (!url) return;
+            const img = document.createElement('img');
+            img.src = url;
+            img.alt = make + ' ' + model;
+            img.loading = 'lazy';
+            img.style.cssText = 'width:100%;height:100%;object-fit:cover;border-radius:inherit;';
+            img.onerror = function() { imgDiv.innerHTML = originalHTML; };
+            imgDiv.innerHTML = '';
+            imgDiv.appendChild(img);
+        });
+    });
+}
+
+function loadModelPagePhoto() {
+    const makeHeader = document.querySelector('.make-header');
+    if (!makeHeader || makeHeader.querySelector('img.vehicle-hero')) return;
+
+    const breadcrumb = document.querySelector('.breadcrumb');
+    if (!breadcrumb) return;
+
+    const crumbs = breadcrumb.querySelectorAll('a, .current');
+    if (crumbs.length < 3) return;
+
+    const make = crumbs[crumbs.length - 2] ? crumbs[crumbs.length - 2].textContent.trim() : '';
+    const model = crumbs[crumbs.length - 1] ? crumbs[crumbs.length - 1].textContent.trim() : '';
+    if (!make || !model || make === 'Forums') return;
+
+    fetchWikiThumb(make + ' ' + model, function(url) {
+        if (!url) return;
+        const heroDiv = document.createElement('div');
+        heroDiv.style.cssText = 'width:100%;height:220px;border-radius:12px;overflow:hidden;margin-bottom:1.5rem;background:var(--card-bg);';
+        const img = document.createElement('img');
+        img.src = url;
+        img.alt = make + ' ' + model;
+        img.loading = 'lazy';
+        img.className = 'vehicle-hero';
+        img.style.cssText = 'width:100%;height:100%;object-fit:cover;';
+        img.onerror = function() { heroDiv.remove(); };
+        heroDiv.appendChild(img);
+        makeHeader.insertAdjacentElement('afterend', heroDiv);
+    });
+}
+
+function fetchWikiThumb(title, callback) {
+    var url = 'https://en.wikipedia.org/w/api.php?action=query&titles=' +
+        encodeURIComponent(title) +
+        '&prop=pageimages&format=json&pithumbsize=500&piprop=thumbnail&origin=*';
+    fetch(url)
+        .then(function(r) { return r.json(); })
+        .then(function(d) {
+            var pages = d && d.query && d.query.pages;
+            if (!pages) return callback(null);
+            var page = Object.values(pages)[0];
+            callback((page && page.thumbnail && page.thumbnail.source) || null);
+        })
+        .catch(function() { callback(null); });
+}

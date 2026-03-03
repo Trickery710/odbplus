@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="P0133 O2 Sensor Circuit Slow Response (Bank 1, Sensor 1) - Complete guide with causes, symptoms, diagnostic steps, and repair information.">
+    <title>P0133 - O2 Sensor Circuit Slow Response Bank 1 Sensor 1 | ODB+</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../../css/styles.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="navbar-container">
+            <a href="../../index.html" class="navbar-brand">
+                <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="40" height="40" rx="8" fill="url(#gradient)"/>
+                    <path d="M12 20C12 15.5817 15.5817 12 20 12C24.4183 12 28 15.5817 28 20C28 24.4183 24.4183 28 20 28" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+                    <path d="M20 16V20L23 23" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    <circle cx="20" cy="20" r="2" fill="white"/>
+                    <defs>
+                        <linearGradient id="gradient" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse">
+                            <stop stop-color="#2563eb"/>
+                            <stop offset="1" stop-color="#10b981"/>
+                        </linearGradient>
+                    </defs>
+                </svg>
+                <span>ODB+</span>
+            </a>
+            <ul class="navbar-menu">
+                <li><a href="../../index.html">Home</a></li>
+                <li><a href="index.html" class="active">Error Codes</a></li>
+                <li><a href="../forums/index.html">Forums</a></li>
+                <li><a href="../sensors/index.html">Sensors</a></li>
+            </ul>
+            <div class="navbar-actions">
+                <a href="../auth/login.html" class="btn btn-secondary">Log In</a>
+                <a href="../auth/signup.html" class="btn btn-primary">Sign Up</a>
+            </div>
+        </div>
+    </nav>
+
+    <main style="padding-top: 100px; padding-bottom: 4rem;">
+        <div class="container" style="max-width: 900px;">
+            <!-- Breadcrumb -->
+            <nav class="breadcrumb mb-4">
+                <a href="index.html">Error Codes</a>
+                <span class="separator">/</span>
+                <a href="index.html#powertrain">Powertrain</a>
+                <span class="separator">/</span>
+                <span class="current">P0133</span>
+            </nav>
+
+            <!-- Code Header -->
+            <div class="code-detail-header mb-4">
+                <div class="code-badge-lg">P0133</div>
+                <div class="code-detail-info">
+                    <h1>O2 Sensor Circuit Slow Response (Bank 1, Sensor 1)</h1>
+                    <div class="code-meta">
+                        <span class="badge badge-danger">Powertrain</span>
+                        <span class="badge badge-secondary">Generic (SAE)</span>
+                        <span class="severity-medium">Severity: Medium</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Info -->
+            <div class="quick-info-grid mb-4">
+                <div class="quick-info-card">
+                    <h4>System</h4>
+                    <p>Fuel System / Emissions</p>
+                </div>
+                <div class="quick-info-card">
+                    <h4>Subsystem</h4>
+                    <p>Oxygen Sensor (Upstream)</p>
+                </div>
+                <div class="quick-info-card">
+                    <h4>Common Fix</h4>
+                    <p>Replace O2 Sensor</p>
+                </div>
+                <div class="quick-info-card">
+                    <h4>Repair Cost</h4>
+                    <p>$100 - $300</p>
+                </div>
+            </div>
+
+            <!-- Description -->
+            <section class="content-section mb-4">
+                <h2>What Does P0133 Mean?</h2>
+                <p>P0133 means the upstream oxygen sensor on Bank 1, Sensor 1 is responding too slowly to changes in exhaust oxygen content. The PCM measures how quickly the sensor's voltage transitions between lean (low voltage ~0.1V) and rich (high voltage ~0.9V). A healthy sensor makes these transitions multiple times per second. P0133 is triggered when the average transition time exceeds a calibrated threshold — typically the sensor takes more than one second to complete a full rich-to-lean or lean-to-rich transition.</p>
+
+                <p>This code is distinct from P0130, P0131, and P0132 in that the sensor is still producing a switching signal — it just isn't switching fast enough for effective closed-loop fuel control. This is almost always caused by a worn or contaminated sensor that has lost its electrochemical efficiency.</p>
+
+                <div class="info-box">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"/>
+                        <line x1="12" y1="16" x2="12" y2="12"/>
+                        <line x1="12" y1="8" x2="12.01" y2="8"/>
+                    </svg>
+                    <div>
+                        <strong>Note:</strong> P0133 is one of the most reliable indicators of a sensor that has simply reached the end of its service life. Most oxygen sensors should be replaced every 60,000–100,000 miles. A slow-responding sensor reduces fuel economy and increases emissions even before the code sets.
+                    </div>
+                </div>
+            </section>
+
+            <!-- How the System Works -->
+            <section class="content-section mb-4">
+                <h2>How Response Time Is Measured</h2>
+                <p>The PCM evaluates O2 sensor performance using a specific response-rate test during closed-loop operation:</p>
+
+                <div class="system-diagram">
+                    <h4>PCM Response Time Evaluation:</h4>
+                    <ul class="component-list">
+                        <li>
+                            <strong>Normal Switching Rate:</strong> A healthy upstream sensor switches between 0.1V and 0.9V roughly 2–8 times per second (0.5–0.125 seconds per transition) during steady cruise.
+                        </li>
+                        <li>
+                            <strong>Slow Response Threshold:</strong> The PCM typically flags P0133 when the sensor takes longer than 1.0–1.2 seconds per transition, though this varies by manufacturer.
+                        </li>
+                        <li>
+                            <strong>Effect on Fuel Control:</strong> A sluggish sensor causes the PCM to over-correct with larger fuel trim swings, degrading efficiency and increasing emissions.
+                        </li>
+                        <li>
+                            <strong>Heater Circuit Role:</strong> The sensor heater must bring the sensor to operating temperature (~600°F) quickly. A partially failed heater can slow sensor response, especially in cold conditions.
+                        </li>
+                        <li>
+                            <strong>Test Conditions:</strong> The PCM typically runs the response time monitor at steady-state cruise after reaching closed-loop operation — the code may not set during short city trips.
+                        </li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Symptoms -->
+            <section class="content-section mb-4">
+                <h2>Common Symptoms</h2>
+                <ul class="symptom-list">
+                    <li>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="2">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                        </svg>
+                        <div>
+                            <strong>Check Engine Light</strong>
+                            <p>Illuminated MIL; may take multiple drive cycles at highway speed to set</p>
+                        </div>
+                    </li>
+                    <li>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="2">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                        </svg>
+                        <div>
+                            <strong>Slightly Reduced Fuel Economy</strong>
+                            <p>Imprecise fuel control from slow feedback loop reduces efficiency modestly</p>
+                        </div>
+                    </li>
+                    <li>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="2">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                        </svg>
+                        <div>
+                            <strong>Failed Emissions Test</strong>
+                            <p>Slow fuel control response increases average HC and CO output</p>
+                        </div>
+                    </li>
+                    <li>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="2">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                        </svg>
+                        <div>
+                            <strong>Sluggish Fuel Trim Corrections</strong>
+                            <p>Live data shows larger-than-normal STFT oscillations as PCM over-corrects</p>
+                        </div>
+                    </li>
+                    <li>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="2">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                        </svg>
+                        <div>
+                            <strong>Generally Normal Drivability</strong>
+                            <p>Unlike P0131/P0132, the engine usually drives normally — the code may seem surprising</p>
+                        </div>
+                    </li>
+                </ul>
+            </section>
+
+            <!-- Possible Causes -->
+            <section class="content-section mb-4">
+                <h2>Possible Causes</h2>
+
+                <div class="causes-grid">
+                    <div class="cause-category">
+                        <h4>Sensor Age and Wear (Most Common)</h4>
+                        <ul>
+                            <li>Sensor zirconia element degraded over time</li>
+                            <li>High mileage sensor past service life (100k+ miles)</li>
+                            <li>Lead or silicone contamination poisoning the element</li>
+                            <li>Carbon deposits coating the sensor tip</li>
+                            <li>Oil or coolant contamination slowing response</li>
+                        </ul>
+                    </div>
+                    <div class="cause-category">
+                        <h4>Heater Circuit Issues</h4>
+                        <ul>
+                            <li>Partially failed internal heater element</li>
+                            <li>Intermittent heater power circuit fault</li>
+                            <li>Poor heater ground connection</li>
+                            <li>Heater relay failing intermittently</li>
+                        </ul>
+                    </div>
+                    <div class="cause-category">
+                        <h4>Exhaust and Engine Issues</h4>
+                        <ul>
+                            <li>Exhaust leak near sensor diluting reading</li>
+                            <li>Engine running marginally lean or rich</li>
+                            <li>Oil burning fouling sensor element</li>
+                        </ul>
+                    </div>
+                    <div class="cause-category">
+                        <h4>Other Causes</h4>
+                        <ul>
+                            <li>Wrong sensor installed (incorrect response characteristics)</li>
+                            <li>Universal sensor with spliced wiring adding resistance</li>
+                            <li>PCM software issue (rare)</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Diagnostic Steps -->
+            <section class="content-section mb-4">
+                <h2>Diagnostic Steps</h2>
+                <div class="diagnostic-steps">
+                    <div class="step">
+                        <div class="step-number">1</div>
+                        <div class="step-content">
+                            <h4>Verify the Code and Check Sensor Mileage</h4>
+                            <p>Confirm P0133 with your ODB+ scanner and note any accompanying codes. Check the vehicle's service history — if the upstream O2 sensor has not been replaced in 80,000–100,000+ miles, sensor replacement is the most likely repair needed without extensive further testing.</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">2</div>
+                        <div class="step-content">
+                            <h4>Observe Sensor Switching Rate with Live Data</h4>
+                            <p>Use ODB+ live data during a steady highway cruise to watch the upstream B1S1 voltage. A healthy sensor will switch rapidly between 0.1V and 0.9V. A slow sensor will show a sluggish, rounded waveform with transitions taking a second or more. Compare to the opposite bank if your vehicle has one.</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">3</div>
+                        <div class="step-content">
+                            <h4>Test the Sensor Heater Circuit</h4>
+                            <p>With a multimeter, verify battery voltage is present on the heater power wire and that the heater ground is solid. A faulty heater delays the sensor reaching operating temperature, causing slow response especially during cold starts and short trips.</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">4</div>
+                        <div class="step-content">
+                            <h4>Inspect Sensor for Contamination</h4>
+                            <p>Remove the sensor and visually inspect the tip. Black sooty deposits indicate oil burning. White chalky deposits indicate coolant contamination. Either condition can slow response time. If contamination is found, address the root cause before installing a new sensor.</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">5</div>
+                        <div class="step-content">
+                            <h4>Check for Exhaust Leaks</h4>
+                            <p>An exhaust manifold leak upstream of the sensor periodically introduces fresh air, causing the sensor to read lean and disrupting the normal switching pattern in a way that mimics slow response. Listen carefully for exhaust tick or hiss near the manifold.</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">6</div>
+                        <div class="step-content">
+                            <h4>Replace the O2 Sensor</h4>
+                            <p>For a high-mileage sensor with confirmed slow switching and no heater circuit or exhaust leak issues, replacement is the definitive repair. Use an OEM or premium aftermarket sensor. After replacement, clear codes and run a complete drive cycle to confirm resolution.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Common Repairs -->
+            <section class="content-section mb-4">
+                <h2>Common Repairs</h2>
+                <div class="repair-list">
+                    <div class="repair-item">
+                        <div class="repair-info">
+                            <h4>Replace Upstream O2 Sensor (Bank 1, Sensor 1)</h4>
+                            <p>The definitive fix in the vast majority of P0133 cases. Use an OEM or high-quality aftermarket sensor; avoid cheap universal sensors that may have slow response characteristics themselves.</p>
+                        </div>
+                        <div class="repair-cost">
+                            <span class="diy">DIY: $30-$100</span>
+                            <span class="shop">Shop: $150-$300</span>
+                        </div>
+                    </div>
+                    <div class="repair-item">
+                        <div class="repair-info">
+                            <h4>Repair Heater Circuit</h4>
+                            <p>Replace damaged heater wiring or the heater relay if heater circuit testing reveals a fault delaying sensor warm-up.</p>
+                        </div>
+                        <div class="repair-cost">
+                            <span class="diy">DIY: $10-$40</span>
+                            <span class="shop">Shop: $75-$175</span>
+                        </div>
+                    </div>
+                    <div class="repair-item">
+                        <div class="repair-info">
+                            <h4>Repair Exhaust Leak</h4>
+                            <p>Weld or replace exhaust manifold, gasket, or flex pipe to eliminate fresh air contamination of exhaust stream near sensor.</p>
+                        </div>
+                        <div class="repair-cost">
+                            <span class="diy">DIY: $20-$80</span>
+                            <span class="shop">Shop: $100-$500</span>
+                        </div>
+                    </div>
+                    <div class="repair-item">
+                        <div class="repair-info">
+                            <h4>Address Oil or Coolant Consumption</h4>
+                            <p>Fix the source of sensor contamination (valve seals, piston rings, head gasket) to prevent premature failure of the replacement sensor.</p>
+                        </div>
+                        <div class="repair-cost">
+                            <span class="diy">DIY: $50-$300</span>
+                            <span class="shop">Shop: $300-$2,000+</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Related Codes -->
+            <section class="content-section mb-4">
+                <h2>Related Codes</h2>
+                <div class="related-codes-grid">
+                    <a href="P0130.html" class="related-code">
+                        <span class="code-badge-sm">P0130</span>
+                        <span>O2 Circuit Malfunction B1S1</span>
+                    </a>
+                    <a href="P0131.html" class="related-code">
+                        <span class="code-badge-sm">P0131</span>
+                        <span>O2 Circuit Low Voltage B1S1</span>
+                    </a>
+                    <a href="P0132.html" class="related-code">
+                        <span class="code-badge-sm">P0132</span>
+                        <span>O2 Circuit High Voltage B1S1</span>
+                    </a>
+                    <a href="#" class="related-code">
+                        <span class="code-badge-sm">P0133</span>
+                        <span>O2 Slow Response B1S1</span>
+                    </a>
+                    <a href="P0171.html" class="related-code">
+                        <span class="code-badge-sm">P0171</span>
+                        <span>System Too Lean Bank 1</span>
+                    </a>
+                    <a href="P0420.html" class="related-code">
+                        <span class="code-badge-sm">P0420</span>
+                        <span>Catalyst Efficiency Low Bank 1</span>
+                    </a>
+                </div>
+            </section>
+
+            <!-- Forum Discussion -->
+            <section class="content-section mb-4">
+                <h2>Community Discussion</h2>
+                <p class="mb-3">Have questions about P0133? Get help from experienced mechanics and fellow car owners.</p>
+                <a href="../forums/index.html" class="btn btn-primary">Visit Forums</a>
+                <a href="../forums/index.html?search=P0133" class="btn btn-outline" style="margin-left: 0.5rem;">Search P0133 Threads</a>
+            </section>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-bottom" style="border-top: none; padding-top: 0;">
+                <p>&copy; 2024 ODB+. All rights reserved.</p>
+                <div class="footer-legal">
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Terms of Service</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../../js/main.js"></script>
+</body>
+</html>

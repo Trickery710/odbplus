@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="P0130 O2 Sensor Circuit Malfunction (Bank 1, Sensor 1) - Complete guide with causes, symptoms, diagnostic steps, and repair information.">
+    <title>P0130 - O2 Sensor Circuit Malfunction Bank 1 Sensor 1 | ODB+</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../../css/styles.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="navbar-container">
+            <a href="../../index.html" class="navbar-brand">
+                <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="40" height="40" rx="8" fill="url(#gradient)"/>
+                    <path d="M12 20C12 15.5817 15.5817 12 20 12C24.4183 12 28 15.5817 28 20C28 24.4183 24.4183 28 20 28" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+                    <path d="M20 16V20L23 23" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    <circle cx="20" cy="20" r="2" fill="white"/>
+                    <defs>
+                        <linearGradient id="gradient" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse">
+                            <stop stop-color="#2563eb"/>
+                            <stop offset="1" stop-color="#10b981"/>
+                        </linearGradient>
+                    </defs>
+                </svg>
+                <span>ODB+</span>
+            </a>
+            <ul class="navbar-menu">
+                <li><a href="../../index.html">Home</a></li>
+                <li><a href="index.html" class="active">Error Codes</a></li>
+                <li><a href="../forums/index.html">Forums</a></li>
+                <li><a href="../sensors/index.html">Sensors</a></li>
+            </ul>
+            <div class="navbar-actions">
+                <a href="../auth/login.html" class="btn btn-secondary">Log In</a>
+                <a href="../auth/signup.html" class="btn btn-primary">Sign Up</a>
+            </div>
+        </div>
+    </nav>
+
+    <main style="padding-top: 100px; padding-bottom: 4rem;">
+        <div class="container" style="max-width: 900px;">
+            <!-- Breadcrumb -->
+            <nav class="breadcrumb mb-4">
+                <a href="index.html">Error Codes</a>
+                <span class="separator">/</span>
+                <a href="index.html#powertrain">Powertrain</a>
+                <span class="separator">/</span>
+                <span class="current">P0130</span>
+            </nav>
+
+            <!-- Code Header -->
+            <div class="code-detail-header mb-4">
+                <div class="code-badge-lg">P0130</div>
+                <div class="code-detail-info">
+                    <h1>O2 Sensor Circuit Malfunction (Bank 1, Sensor 1)</h1>
+                    <div class="code-meta">
+                        <span class="badge badge-danger">Powertrain</span>
+                        <span class="badge badge-secondary">Generic (SAE)</span>
+                        <span class="severity-medium">Severity: Medium</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Info -->
+            <div class="quick-info-grid mb-4">
+                <div class="quick-info-card">
+                    <h4>System</h4>
+                    <p>Fuel System / Emissions</p>
+                </div>
+                <div class="quick-info-card">
+                    <h4>Subsystem</h4>
+                    <p>Oxygen Sensor (Upstream)</p>
+                </div>
+                <div class="quick-info-card">
+                    <h4>Common Fix</h4>
+                    <p>Replace O2 Sensor</p>
+                </div>
+                <div class="quick-info-card">
+                    <h4>Repair Cost</h4>
+                    <p>$100 - $350</p>
+                </div>
+            </div>
+
+            <!-- Description -->
+            <section class="content-section mb-4">
+                <h2>What Does P0130 Mean?</h2>
+                <p>The P0130 code indicates a general circuit malfunction in the upstream oxygen sensor on Bank 1, Sensor 1. Bank 1 refers to the side of the engine containing cylinder #1. Sensor 1 (upstream) is the pre-catalytic converter sensor used by the PCM to actively control the air/fuel mixture.</p>
+
+                <p>The PCM monitors the O2 sensor's voltage output. A properly functioning upstream sensor should cycle rapidly between approximately 0.1V (lean) and 0.9V (rich) as the PCM adjusts fuel delivery. P0130 is set when the sensor's output is outside its expected range or is producing an implausible signal — this is a general circuit fault encompassing wiring, the sensor heater circuit, or the sensor element itself.</p>
+
+                <div class="warning-box">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+                        <line x1="12" y1="9" x2="12" y2="13"/>
+                        <line x1="12" y1="17" x2="12.01" y2="17"/>
+                    </svg>
+                    <div>
+                        <strong>Important:</strong> A faulty upstream O2 sensor causes the PCM to run open-loop, losing its ability to fine-tune the air/fuel mixture. This leads to increased fuel consumption, higher emissions, and potential catalytic converter damage over time.
+                    </div>
+                </div>
+            </section>
+
+            <!-- How the System Works -->
+            <section class="content-section mb-4">
+                <h2>How the Oxygen Sensor System Works</h2>
+                <p>The oxygen sensor system is central to the engine's ability to maintain efficient combustion and low emissions:</p>
+
+                <div class="system-diagram">
+                    <h4>O2 Sensor System Components:</h4>
+                    <ul class="component-list">
+                        <li>
+                            <strong>Upstream O2 Sensor (Sensor 1):</strong> Located before the catalytic converter. Its signal is used by the PCM to calculate fuel trims and control closed-loop fueling.
+                        </li>
+                        <li>
+                            <strong>Downstream O2 Sensor (Sensor 2):</strong> Located after the catalytic converter. Used to monitor catalyst efficiency (related to P0420).
+                        </li>
+                        <li>
+                            <strong>Sensor Heater Element:</strong> Internal heater that brings the sensor to operating temperature (~600°F) quickly to enable closed-loop operation sooner.
+                        </li>
+                        <li>
+                            <strong>PCM (Engine Computer):</strong> Reads sensor voltage and adjusts short-term and long-term fuel trims to maintain stoichiometric (14.7:1) air/fuel ratio.
+                        </li>
+                        <li>
+                            <strong>Wiring Harness:</strong> Carries sensor signal, heater power, and ground circuits between the sensor and PCM.
+                        </li>
+                    </ul>
+                </div>
+
+                <p class="mt-3"><strong>Normal Operation:</strong> Once at operating temperature, the upstream sensor voltage oscillates between 0.1V and 0.9V roughly 2-8 times per second. This rapid switching tells the PCM the combustion is occurring correctly around the ideal stoichiometric ratio.</p>
+            </section>
+
+            <!-- Symptoms -->
+            <section class="content-section mb-4">
+                <h2>Common Symptoms</h2>
+                <ul class="symptom-list">
+                    <li>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="2">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                        </svg>
+                        <div>
+                            <strong>Check Engine Light</strong>
+                            <p>The most immediate and often only noticeable symptom</p>
+                        </div>
+                    </li>
+                    <li>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="2">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                        </svg>
+                        <div>
+                            <strong>Decreased Fuel Economy</strong>
+                            <p>PCM operates in open-loop, often defaulting to a richer mixture</p>
+                        </div>
+                    </li>
+                    <li>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="2">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                        </svg>
+                        <div>
+                            <strong>Rough Idle or Hesitation</strong>
+                            <p>Inaccurate fueling can cause drivability issues in some vehicles</p>
+                        </div>
+                    </li>
+                    <li>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="2">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                        </svg>
+                        <div>
+                            <strong>Failed Emissions Test</strong>
+                            <p>Open-loop operation produces higher NOx, HC, and CO emissions</p>
+                        </div>
+                    </li>
+                    <li>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="2">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                        </svg>
+                        <div>
+                            <strong>Rich or Lean Running Conditions</strong>
+                            <p>May accompany fuel trim codes such as P0171 or P0172</p>
+                        </div>
+                    </li>
+                    <li>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="2">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                        </svg>
+                        <div>
+                            <strong>Catalytic Converter Damage (Long-term)</strong>
+                            <p>Chronic rich running from a bad O2 sensor can overheat and destroy the catalyst</p>
+                        </div>
+                    </li>
+                </ul>
+            </section>
+
+            <!-- Possible Causes -->
+            <section class="content-section mb-4">
+                <h2>Possible Causes</h2>
+
+                <div class="causes-grid">
+                    <div class="cause-category">
+                        <h4>Sensor Failure (Most Common)</h4>
+                        <ul>
+                            <li>Failed O2 sensor element</li>
+                            <li>Contaminated sensor (oil, coolant, silicone)</li>
+                            <li>Burned or cracked sensor body</li>
+                            <li>Sensor heater element failure</li>
+                            <li>Sensor aged beyond service life</li>
+                        </ul>
+                    </div>
+                    <div class="cause-category">
+                        <h4>Wiring and Connector</h4>
+                        <ul>
+                            <li>Damaged, chafed, or melted wiring</li>
+                            <li>Corroded or loose connector pins</li>
+                            <li>Open circuit in sensor signal wire</li>
+                            <li>Short to ground or to voltage</li>
+                            <li>Poor ground connection</li>
+                        </ul>
+                    </div>
+                    <div class="cause-category">
+                        <h4>Engine Issues</h4>
+                        <ul>
+                            <li>Exhaust leaks near the sensor</li>
+                            <li>Oil consumption fouling the sensor</li>
+                            <li>Coolant leak into exhaust (head gasket)</li>
+                            <li>Extremely rich or lean running condition</li>
+                        </ul>
+                    </div>
+                    <div class="cause-category">
+                        <h4>Other Causes</h4>
+                        <ul>
+                            <li>PCM failure (rare)</li>
+                            <li>Use of non-OEM silicone sealants</li>
+                            <li>Incorrect sensor part number installed</li>
+                            <li>Aftermarket exhaust modifications</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Diagnostic Steps -->
+            <section class="content-section mb-4">
+                <h2>Diagnostic Steps</h2>
+                <div class="diagnostic-steps">
+                    <div class="step">
+                        <div class="step-number">1</div>
+                        <div class="step-content">
+                            <h4>Scan for All Codes and Freeze Frame Data</h4>
+                            <p>Use your ODB+ scanner to retrieve all stored DTCs. Note any accompanying fuel trim codes (P0171, P0172), heater circuit codes (P0135), or other sensor codes. Freeze frame data shows the conditions present when P0130 was set.</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">2</div>
+                        <div class="step-content">
+                            <h4>Inspect Wiring and Connector</h4>
+                            <p>Locate the Bank 1 upstream O2 sensor connector (typically near the exhaust manifold). Inspect the wiring harness for heat damage, chafing against the engine or exhaust, and corrosion at the connector pins. Repair any wiring faults before condemning the sensor.</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">3</div>
+                        <div class="step-content">
+                            <h4>Monitor Live O2 Sensor Data</h4>
+                            <p>With ODB+ live data, observe the upstream O2 sensor voltage at operating temperature. A healthy sensor switches rapidly between 0.1V and 0.9V. A sensor stuck at a fixed voltage, or producing no output, confirms sensor or circuit failure.</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">4</div>
+                        <div class="step-content">
+                            <h4>Test Sensor Heater Circuit</h4>
+                            <p>With the ignition on and engine cold, check for battery voltage on the heater power wire and continuity on the heater ground. A failed heater circuit will delay or prevent the sensor from reaching operating temperature, causing the code to set during cold starts.</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">5</div>
+                        <div class="step-content">
+                            <h4>Check for Exhaust Leaks</h4>
+                            <p>An exhaust leak upstream of the sensor allows fresh air to dilute exhaust gases, causing the sensor to read lean continuously. Listen and feel for exhaust leaks near the manifold and sensor bung with the engine running.</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">6</div>
+                        <div class="step-content">
+                            <h4>Replace O2 Sensor if Indicated</h4>
+                            <p>If wiring and heater circuit check out and the sensor output is abnormal, replace the upstream O2 sensor. Always use an OEM or quality aftermarket sensor matching the exact connector and thread pitch for the vehicle.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Common Repairs -->
+            <section class="content-section mb-4">
+                <h2>Common Repairs</h2>
+                <div class="repair-list">
+                    <div class="repair-item">
+                        <div class="repair-info">
+                            <h4>Replace Upstream O2 Sensor (Bank 1, Sensor 1)</h4>
+                            <p>Most common repair. Use the correct sensor for your vehicle; universal sensors require splicing and are not recommended.</p>
+                        </div>
+                        <div class="repair-cost">
+                            <span class="diy">DIY: $30-$100</span>
+                            <span class="shop">Shop: $150-$300</span>
+                        </div>
+                    </div>
+                    <div class="repair-item">
+                        <div class="repair-info">
+                            <h4>Repair Wiring or Connector</h4>
+                            <p>Replace damaged wires or a corroded connector pigtail. Often less expensive than a new sensor.</p>
+                        </div>
+                        <div class="repair-cost">
+                            <span class="diy">DIY: $10-$40</span>
+                            <span class="shop">Shop: $75-$200</span>
+                        </div>
+                    </div>
+                    <div class="repair-item">
+                        <div class="repair-info">
+                            <h4>Repair Exhaust Leak</h4>
+                            <p>Weld or replace cracked manifold, replace manifold gasket, or repair flex pipe as needed.</p>
+                        </div>
+                        <div class="repair-cost">
+                            <span class="diy">DIY: $20-$80</span>
+                            <span class="shop">Shop: $100-$500</span>
+                        </div>
+                    </div>
+                    <div class="repair-item">
+                        <div class="repair-info">
+                            <h4>Address Engine Oil or Coolant Consumption</h4>
+                            <p>Fix the root cause (worn valve seals, head gasket) to prevent recurring sensor contamination.</p>
+                        </div>
+                        <div class="repair-cost">
+                            <span class="diy">DIY: $50-$300</span>
+                            <span class="shop">Shop: $300-$2,000+</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Related Codes -->
+            <section class="content-section mb-4">
+                <h2>Related Codes</h2>
+                <div class="related-codes-grid">
+                    <a href="#" class="related-code">
+                        <span class="code-badge-sm">P0130</span>
+                        <span>O2 Circuit Malfunction B1S1</span>
+                    </a>
+                    <a href="P0131.html" class="related-code">
+                        <span class="code-badge-sm">P0131</span>
+                        <span>O2 Circuit Low Voltage B1S1</span>
+                    </a>
+                    <a href="P0132.html" class="related-code">
+                        <span class="code-badge-sm">P0132</span>
+                        <span>O2 Circuit High Voltage B1S1</span>
+                    </a>
+                    <a href="P0133.html" class="related-code">
+                        <span class="code-badge-sm">P0133</span>
+                        <span>O2 Slow Response B1S1</span>
+                    </a>
+                    <a href="P0171.html" class="related-code">
+                        <span class="code-badge-sm">P0171</span>
+                        <span>System Too Lean Bank 1</span>
+                    </a>
+                    <a href="P0420.html" class="related-code">
+                        <span class="code-badge-sm">P0420</span>
+                        <span>Catalyst Efficiency Low Bank 1</span>
+                    </a>
+                </div>
+            </section>
+
+            <!-- Forum Discussion -->
+            <section class="content-section mb-4">
+                <h2>Community Discussion</h2>
+                <p class="mb-3">Have questions about P0130? Get help from experienced mechanics and fellow car owners.</p>
+                <a href="../forums/index.html" class="btn btn-primary">Visit Forums</a>
+                <a href="../forums/index.html?search=P0130" class="btn btn-outline" style="margin-left: 0.5rem;">Search P0130 Threads</a>
+            </section>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-bottom" style="border-top: none; padding-top: 0;">
+                <p>&copy; 2024 ODB+. All rights reserved.</p>
+                <div class="footer-legal">
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Terms of Service</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../../js/main.js"></script>
+</body>
+</html>

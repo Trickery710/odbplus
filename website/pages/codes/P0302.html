@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="P0302 Cylinder 2 Misfire Detected - Complete guide with causes, symptoms, diagnostic steps, and repair information.">
+    <title>P0302 - Cylinder 2 Misfire Detected | ODB+</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../../css/styles.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="navbar-container">
+            <a href="../../index.html" class="navbar-brand">
+                <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="40" height="40" rx="8" fill="url(#gradient)"/>
+                    <path d="M12 20C12 15.5817 15.5817 12 20 12C24.4183 12 28 15.5817 28 20C28 24.4183 24.4183 28 20 28" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+                    <path d="M20 16V20L23 23" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    <circle cx="20" cy="20" r="2" fill="white"/>
+                    <defs>
+                        <linearGradient id="gradient" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse">
+                            <stop stop-color="#2563eb"/>
+                            <stop offset="1" stop-color="#10b981"/>
+                        </linearGradient>
+                    </defs>
+                </svg>
+                <span>ODB+</span>
+            </a>
+            <ul class="navbar-menu">
+                <li><a href="../../index.html">Home</a></li>
+                <li><a href="index.html" class="active">Error Codes</a></li>
+                <li><a href="../forums/index.html">Forums</a></li>
+                <li><a href="../sensors/index.html">Sensors</a></li>
+            </ul>
+            <div class="navbar-actions">
+                <a href="../auth/login.html" class="btn btn-secondary">Log In</a>
+                <a href="../auth/signup.html" class="btn btn-primary">Sign Up</a>
+            </div>
+        </div>
+    </nav>
+
+    <main style="padding-top: 100px; padding-bottom: 4rem;">
+        <div class="container" style="max-width: 900px;">
+            <!-- Breadcrumb -->
+            <nav class="breadcrumb mb-4">
+                <a href="index.html">Error Codes</a>
+                <span class="separator">/</span>
+                <a href="index.html#powertrain">Powertrain</a>
+                <span class="separator">/</span>
+                <span class="current">P0302</span>
+            </nav>
+
+            <!-- Code Header -->
+            <div class="code-detail-header mb-4">
+                <div class="code-badge-lg">P0302</div>
+                <div class="code-detail-info">
+                    <h1>Cylinder 2 Misfire Detected</h1>
+                    <div class="code-meta">
+                        <span class="badge badge-danger">Powertrain</span>
+                        <span class="badge badge-secondary">Generic (SAE)</span>
+                        <span class="severity-high">Severity: High</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Info -->
+            <div class="quick-info-grid mb-4">
+                <div class="quick-info-card">
+                    <h4>System</h4>
+                    <p>Ignition System / Fuel System</p>
+                </div>
+                <div class="quick-info-card">
+                    <h4>Subsystem</h4>
+                    <p>Misfire Detection — Cylinder 2</p>
+                </div>
+                <div class="quick-info-card">
+                    <h4>Common Fix</h4>
+                    <p>Spark Plug / Ignition Coil (Cyl. 2)</p>
+                </div>
+                <div class="quick-info-card">
+                    <h4>Repair Cost</h4>
+                    <p>$50 - $500+</p>
+                </div>
+            </div>
+
+            <!-- Description -->
+            <section class="content-section mb-4">
+                <h2>What Does P0302 Mean?</h2>
+                <p>P0302 indicates that the powertrain control module (PCM) has detected a misfire specifically in cylinder number 2. The PCM monitors crankshaft rotational speed via the crankshaft position sensor and detects the slight deceleration that occurs when a cylinder fails to produce its power stroke. When the misfire rate in cylinder 2 exceeds a calibrated threshold over a set number of crankshaft revolutions, P0302 is stored.</p>
+
+                <p>Having a cylinder-specific code like P0302 is a significant advantage over P0300 — it immediately directs diagnosis to the ignition coil, spark plug, injector, and compression health of cylinder 2 specifically, avoiding the need to test every cylinder.</p>
+
+                <div class="warning-box">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+                        <line x1="12" y1="9" x2="12" y2="13"/>
+                        <line x1="12" y1="17" x2="12.01" y2="17"/>
+                    </svg>
+                    <div>
+                        <strong>Important:</strong> A flashing check engine light means misfires are severe enough to damage the catalytic converter with unburned fuel. Reduce speed and engine load immediately and arrange repairs promptly.
+                    </div>
+                </div>
+            </section>
+
+            <!-- How the System Works -->
+            <section class="content-section mb-4">
+                <h2>How Cylinder 2 Misfire Detection Works</h2>
+                <p>The PCM identifies cylinder-specific misfires through crankshaft speed analysis combined with the camshaft position signal:</p>
+
+                <div class="system-diagram">
+                    <h4>Components Involved in Cylinder 2 Firing:</h4>
+                    <ul class="component-list">
+                        <li>
+                            <strong>Ignition Coil (Cylinder 2):</strong> On coil-on-plug systems, this coil sits directly on the cylinder 2 spark plug. On distributor systems, the distributor routes the high-voltage pulse to cylinder 2 at the correct time.
+                        </li>
+                        <li>
+                            <strong>Spark Plug (Cylinder 2):</strong> Ignites the compressed air/fuel mixture in cylinder 2 during the compression stroke.
+                        </li>
+                        <li>
+                            <strong>Fuel Injector (Cylinder 2):</strong> Delivers the metered fuel charge to cylinder 2 on each intake stroke.
+                        </li>
+                        <li>
+                            <strong>Crankshaft Position Sensor:</strong> Detects deceleration in the crankshaft corresponding to cylinder 2's power stroke interval.
+                        </li>
+                        <li>
+                            <strong>Camshaft Position Sensor:</strong> Helps the PCM correlate crankshaft position to individual cylinder timing for accurate misfire attribution.
+                        </li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Symptoms -->
+            <section class="content-section mb-4">
+                <h2>Common Symptoms</h2>
+                <ul class="symptom-list">
+                    <li>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--danger)" stroke-width="2">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                        </svg>
+                        <div>
+                            <strong>Rough or Shaking Idle</strong>
+                            <p>One cylinder offline causes noticeable vibration at idle</p>
+                        </div>
+                    </li>
+                    <li>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--danger)" stroke-width="2">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                        </svg>
+                        <div>
+                            <strong>Check Engine Light (Steady or Flashing)</strong>
+                            <p>Flashing indicates severe misfire rate; do not continue driving</p>
+                        </div>
+                    </li>
+                    <li>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--danger)" stroke-width="2">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                        </svg>
+                        <div>
+                            <strong>Loss of Power</strong>
+                            <p>Engine output is reduced proportionally to the number of cylinders affected</p>
+                        </div>
+                    </li>
+                    <li>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--danger)" stroke-width="2">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                        </svg>
+                        <div>
+                            <strong>Hesitation During Acceleration</strong>
+                            <p>Stumbling when pulling away from a stop or during hard acceleration</p>
+                        </div>
+                    </li>
+                    <li>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--danger)" stroke-width="2">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                        </svg>
+                        <div>
+                            <strong>Poor Fuel Economy</strong>
+                            <p>Increased consumption due to unburned fuel and open-loop compensation</p>
+                        </div>
+                    </li>
+                </ul>
+            </section>
+
+            <!-- Possible Causes -->
+            <section class="content-section mb-4">
+                <h2>Possible Causes</h2>
+                <p>Focus diagnosis on components exclusive to cylinder 2 before investigating engine-wide issues:</p>
+
+                <div class="causes-grid">
+                    <div class="cause-category">
+                        <h4>Ignition System — Cylinder 2</h4>
+                        <ul>
+                            <li>Worn or fouled spark plug (cylinder 2)</li>
+                            <li>Failed ignition coil (cylinder 2)</li>
+                            <li>Damaged spark plug wire or boot</li>
+                            <li>Carbon tracking on coil tower</li>
+                            <li>Cracked coil housing</li>
+                        </ul>
+                    </div>
+                    <div class="cause-category">
+                        <h4>Fuel System — Cylinder 2</h4>
+                        <ul>
+                            <li>Clogged or stuck-closed fuel injector</li>
+                            <li>Leaking injector (flooding cylinder)</li>
+                            <li>Injector wiring or connector fault</li>
+                            <li>Low fuel pressure (all-cylinder issue)</li>
+                        </ul>
+                    </div>
+                    <div class="cause-category">
+                        <h4>Mechanical — Cylinder 2</h4>
+                        <ul>
+                            <li>Low compression (worn rings or valves)</li>
+                            <li>Burned exhaust valve</li>
+                            <li>Head gasket failure at cylinder 2</li>
+                            <li>Valve timing problem</li>
+                            <li>Carbon buildup on intake valve</li>
+                        </ul>
+                    </div>
+                    <div class="cause-category">
+                        <h4>Other Causes</h4>
+                        <ul>
+                            <li>Vacuum leak at cylinder 2 intake runner</li>
+                            <li>Coolant or oil intrusion into cylinder</li>
+                            <li>PCM driver fault for coil or injector</li>
+                            <li>Crankshaft position sensor fault</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Diagnostic Steps -->
+            <section class="content-section mb-4">
+                <h2>Diagnostic Steps</h2>
+                <div class="diagnostic-steps">
+                    <div class="step">
+                        <div class="step-number">1</div>
+                        <div class="step-content">
+                            <h4>Confirm Code and Check for Companion Codes</h4>
+                            <p>Use ODB+ to confirm P0302 and note any additional codes. Codes for other cylinders suggest an engine-wide issue (fuel, vacuum). Codes for only cylinder 2 point to cylinder-specific components.</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">2</div>
+                        <div class="step-content">
+                            <h4>Perform the Coil Swap Test</h4>
+                            <p>Move the cylinder 2 coil to cylinder 3 (or another adjacent cylinder). Clear codes and test drive. If the misfire code follows the coil (P0303 appears), replace the coil. If P0302 remains, the coil is not the problem.</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">3</div>
+                        <div class="step-content">
+                            <h4>Inspect the Cylinder 2 Spark Plug</h4>
+                            <p>Remove and examine the plug. Heavy carbon or black oily deposits, a cracked insulator, or a worn electrode all warrant replacement. Check the gap against manufacturer specification.</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">4</div>
+                        <div class="step-content">
+                            <h4>Test or Swap the Fuel Injector</h4>
+                            <p>Listen with a stethoscope for the injector click on cylinder 2. If available, use your ODB+ scanner's injector cut-out test — disabling cylinder 2's injector on a running engine should change idle quality if that cylinder was contributing. Swap the injector to rule it in or out.</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">5</div>
+                        <div class="step-content">
+                            <h4>Compression Test — Cylinder 2</h4>
+                            <p>Perform a compression test with all plugs removed. Cylinder 2 compression should be within 10% of the highest reading. Below 100 psi or more than a 20% difference from other cylinders indicates a mechanical problem requiring further diagnosis.</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">6</div>
+                        <div class="step-content">
+                            <h4>Leak-Down Test if Compression is Low</h4>
+                            <p>A cylinder leak-down test pressurizes the cylinder and measures how much air escapes. Air heard from the oil cap indicates worn rings; air from the intake indicates an intake valve problem; air from the coolant overflow indicates a head gasket leak.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Common Repairs -->
+            <section class="content-section mb-4">
+                <h2>Common Repairs</h2>
+                <div class="repair-list">
+                    <div class="repair-item">
+                        <div class="repair-info">
+                            <h4>Replace Spark Plug — Cylinder 2</h4>
+                            <p>Most common repair. Use manufacturer-spec plug type and gap. Replacing all plugs at the same time is recommended if mileage warrants it.</p>
+                        </div>
+                        <div class="repair-cost">
+                            <span class="diy">DIY: $5-$25</span>
+                            <span class="shop">Shop: $50-$150</span>
+                        </div>
+                    </div>
+                    <div class="repair-item">
+                        <div class="repair-info">
+                            <h4>Replace Ignition Coil — Cylinder 2</h4>
+                            <p>Confirmed by the coil swap test. Replace with an OEM or quality aftermarket coil.</p>
+                        </div>
+                        <div class="repair-cost">
+                            <span class="diy">DIY: $20-$80</span>
+                            <span class="shop">Shop: $100-$250</span>
+                        </div>
+                    </div>
+                    <div class="repair-item">
+                        <div class="repair-info">
+                            <h4>Replace Fuel Injector — Cylinder 2</h4>
+                            <p>Needed if injector testing confirms a clogged or failed injector on cylinder 2.</p>
+                        </div>
+                        <div class="repair-cost">
+                            <span class="diy">DIY: $50-$150</span>
+                            <span class="shop">Shop: $150-$400</span>
+                        </div>
+                    </div>
+                    <div class="repair-item">
+                        <div class="repair-info">
+                            <h4>Engine Mechanical Repairs</h4>
+                            <p>Valve job, head gasket replacement, or engine overhaul if low compression is confirmed in cylinder 2.</p>
+                        </div>
+                        <div class="repair-cost">
+                            <span class="diy">DIY: $200-$600</span>
+                            <span class="shop">Shop: $1,000-$4,000+</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Related Codes -->
+            <section class="content-section mb-4">
+                <h2>Related Codes</h2>
+                <div class="related-codes-grid">
+                    <a href="P0300.html" class="related-code">
+                        <span class="code-badge-sm">P0300</span>
+                        <span>Random/Multiple Cylinder Misfire</span>
+                    </a>
+                    <a href="P0301.html" class="related-code">
+                        <span class="code-badge-sm">P0301</span>
+                        <span>Cylinder 1 Misfire</span>
+                    </a>
+                    <a href="#" class="related-code">
+                        <span class="code-badge-sm">P0302</span>
+                        <span>Cylinder 2 Misfire</span>
+                    </a>
+                    <a href="P0303.html" class="related-code">
+                        <span class="code-badge-sm">P0303</span>
+                        <span>Cylinder 3 Misfire</span>
+                    </a>
+                    <a href="P0304.html" class="related-code">
+                        <span class="code-badge-sm">P0304</span>
+                        <span>Cylinder 4 Misfire</span>
+                    </a>
+                    <a href="P0420.html" class="related-code">
+                        <span class="code-badge-sm">P0420</span>
+                        <span>Catalyst Efficiency Low</span>
+                    </a>
+                </div>
+            </section>
+
+            <!-- Forum Discussion -->
+            <section class="content-section mb-4">
+                <h2>Community Discussion</h2>
+                <p class="mb-3">Have questions about P0302? Get help from experienced mechanics and fellow car owners.</p>
+                <a href="../forums/index.html" class="btn btn-primary">Visit Forums</a>
+                <a href="../forums/index.html?search=P0302" class="btn btn-outline" style="margin-left: 0.5rem;">Search P0302 Threads</a>
+            </section>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-bottom" style="border-top: none; padding-top: 0;">
+                <p>&copy; 2024 ODB+. All rights reserved.</p>
+                <div class="footer-legal">
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Terms of Service</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../../js/main.js"></script>
+</body>
+</html>

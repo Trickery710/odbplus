@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="P0132 O2 Sensor Circuit High Voltage (Bank 1, Sensor 1) - Complete guide with causes, symptoms, diagnostic steps, and repair information.">
+    <title>P0132 - O2 Sensor Circuit High Voltage Bank 1 Sensor 1 | ODB+</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../../css/styles.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="navbar-container">
+            <a href="../../index.html" class="navbar-brand">
+                <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="40" height="40" rx="8" fill="url(#gradient)"/>
+                    <path d="M12 20C12 15.5817 15.5817 12 20 12C24.4183 12 28 15.5817 28 20C28 24.4183 24.4183 28 20 28" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+                    <path d="M20 16V20L23 23" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    <circle cx="20" cy="20" r="2" fill="white"/>
+                    <defs>
+                        <linearGradient id="gradient" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse">
+                            <stop stop-color="#2563eb"/>
+                            <stop offset="1" stop-color="#10b981"/>
+                        </linearGradient>
+                    </defs>
+                </svg>
+                <span>ODB+</span>
+            </a>
+            <ul class="navbar-menu">
+                <li><a href="../../index.html">Home</a></li>
+                <li><a href="index.html" class="active">Error Codes</a></li>
+                <li><a href="../forums/index.html">Forums</a></li>
+                <li><a href="../sensors/index.html">Sensors</a></li>
+            </ul>
+            <div class="navbar-actions">
+                <a href="../auth/login.html" class="btn btn-secondary">Log In</a>
+                <a href="../auth/signup.html" class="btn btn-primary">Sign Up</a>
+            </div>
+        </div>
+    </nav>
+
+    <main style="padding-top: 100px; padding-bottom: 4rem;">
+        <div class="container" style="max-width: 900px;">
+            <!-- Breadcrumb -->
+            <nav class="breadcrumb mb-4">
+                <a href="index.html">Error Codes</a>
+                <span class="separator">/</span>
+                <a href="index.html#powertrain">Powertrain</a>
+                <span class="separator">/</span>
+                <span class="current">P0132</span>
+            </nav>
+
+            <!-- Code Header -->
+            <div class="code-detail-header mb-4">
+                <div class="code-badge-lg">P0132</div>
+                <div class="code-detail-info">
+                    <h1>O2 Sensor Circuit High Voltage (Bank 1, Sensor 1)</h1>
+                    <div class="code-meta">
+                        <span class="badge badge-danger">Powertrain</span>
+                        <span class="badge badge-secondary">Generic (SAE)</span>
+                        <span class="severity-medium">Severity: Medium</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Info -->
+            <div class="quick-info-grid mb-4">
+                <div class="quick-info-card">
+                    <h4>System</h4>
+                    <p>Fuel System / Emissions</p>
+                </div>
+                <div class="quick-info-card">
+                    <h4>Subsystem</h4>
+                    <p>Oxygen Sensor (Upstream)</p>
+                </div>
+                <div class="quick-info-card">
+                    <h4>Common Fix</h4>
+                    <p>Replace O2 Sensor / Fix Rich Condition</p>
+                </div>
+                <div class="quick-info-card">
+                    <h4>Repair Cost</h4>
+                    <p>$75 - $450</p>
+                </div>
+            </div>
+
+            <!-- Description -->
+            <section class="content-section mb-4">
+                <h2>What Does P0132 Mean?</h2>
+                <p>P0132 is set when the upstream oxygen sensor on Bank 1, Sensor 1 (pre-catalytic converter, on the side of the engine containing cylinder #1) produces a voltage that is consistently too high — typically above 0.9 volts for an extended period. This high voltage tells the PCM that the exhaust is very rich (little oxygen remaining after combustion), or that the signal circuit has a short to voltage.</p>
+
+                <p>A correctly functioning upstream O2 sensor voltage switches rapidly between the lean range (~0.1V) and the rich range (~0.9V). When it gets stuck at the high end, the PCM perceives the mixture as perpetually rich and pulls fuel. If the over-rich condition or circuit fault persists beyond a threshold, P0132 is stored.</p>
+
+                <div class="warning-box">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+                        <line x1="12" y1="9" x2="12" y2="13"/>
+                        <line x1="12" y1="17" x2="12.01" y2="17"/>
+                    </svg>
+                    <div>
+                        <strong>Important:</strong> A genuinely rich running condition indicated by P0132 can damage the catalytic converter with unburned fuel, foul spark plugs, and dilute engine oil with fuel. If P0172 (System Too Rich Bank 1) is also present, address the root cause of the rich condition rather than only replacing the sensor.
+                    </div>
+                </div>
+            </section>
+
+            <!-- How the System Works -->
+            <section class="content-section mb-4">
+                <h2>How the Upstream O2 Sensor Works</h2>
+                <p>The upstream O2 sensor is a zirconia-based electrochemical cell. It generates voltage proportional to the difference in oxygen concentration between the exhaust gas and the reference air inside the sensor:</p>
+
+                <div class="system-diagram">
+                    <h4>Voltage and Mixture Relationship:</h4>
+                    <ul class="component-list">
+                        <li>
+                            <strong>~0.9V (High/Rich):</strong> Very little oxygen in exhaust — too much fuel was burned. PCM decreases fuel delivery to compensate.
+                        </li>
+                        <li>
+                            <strong>~0.45V (Ideal Crossover):</strong> Stoichiometric combustion — the 14.7:1 air/fuel ratio sweet spot.
+                        </li>
+                        <li>
+                            <strong>~0.1V (Low/Lean):</strong> Excess oxygen in exhaust — too little fuel.
+                        </li>
+                        <li>
+                            <strong>Closed-Loop Control:</strong> The PCM uses the switching frequency and amplitude to calculate short-term fuel trims (STFT) and long-term fuel trims (LTFT) to maintain the ideal ratio.
+                        </li>
+                        <li>
+                            <strong>P0132 Trigger:</strong> Sensor voltage exceeds ~0.9V–1.0V and remains there beyond the PCM's tolerance window (often several seconds under certain operating conditions).
+                        </li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Symptoms -->
+            <section class="content-section mb-4">
+                <h2>Common Symptoms</h2>
+                <ul class="symptom-list">
+                    <li>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="2">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                        </svg>
+                        <div>
+                            <strong>Check Engine Light</strong>
+                            <p>Illuminated MIL, often the only easily noticeable symptom</p>
+                        </div>
+                    </li>
+                    <li>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="2">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                        </svg>
+                        <div>
+                            <strong>Decreased Fuel Economy</strong>
+                            <p>Rich running condition wastes fuel and reduces MPG noticeably</p>
+                        </div>
+                    </li>
+                    <li>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="2">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                        </svg>
+                        <div>
+                            <strong>Fuel Smell from Exhaust</strong>
+                            <p>Rich combustion produces a strong unburned fuel odor at the tailpipe</p>
+                        </div>
+                    </li>
+                    <li>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="2">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                        </svg>
+                        <div>
+                            <strong>Black Smoke from Exhaust</strong>
+                            <p>Soot from incomplete combustion of excess fuel</p>
+                        </div>
+                    </li>
+                    <li>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="2">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                        </svg>
+                        <div>
+                            <strong>Negative Fuel Trim Values</strong>
+                            <p>STFT and LTFT well below -10% visible on scanner as PCM pulls fuel</p>
+                        </div>
+                    </li>
+                    <li>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="2">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                        </svg>
+                        <div>
+                            <strong>Failed Emissions Test</strong>
+                            <p>Rich running substantially increases HC and CO emissions</p>
+                        </div>
+                    </li>
+                </ul>
+            </section>
+
+            <!-- Possible Causes -->
+            <section class="content-section mb-4">
+                <h2>Possible Causes</h2>
+
+                <div class="causes-grid">
+                    <div class="cause-category">
+                        <h4>Rich Engine Conditions (Check First)</h4>
+                        <ul>
+                            <li>Leaking fuel injector (stuck open)</li>
+                            <li>High fuel pressure (faulty fuel pressure regulator)</li>
+                            <li>Clogged air filter severely restricting airflow</li>
+                            <li>Faulty MAP or MAF sensor reading high</li>
+                            <li>Coolant temperature sensor stuck cold (PCM adds cold-start enrichment)</li>
+                        </ul>
+                    </div>
+                    <div class="cause-category">
+                        <h4>Sensor and Circuit Issues</h4>
+                        <ul>
+                            <li>Failed O2 sensor element (stuck rich)</li>
+                            <li>Signal wire shorted to voltage source</li>
+                            <li>Sensor contaminated with oil or coolant</li>
+                            <li>Sensor aged beyond service life</li>
+                            <li>Wrong sensor installed (incorrect reference voltage)</li>
+                        </ul>
+                    </div>
+                    <div class="cause-category">
+                        <h4>Engine Mechanical</h4>
+                        <ul>
+                            <li>Excessive oil burning (fouling sensor)</li>
+                            <li>Head gasket allowing coolant into combustion chamber</li>
+                            <li>Stuck closed or restricted PCV valve</li>
+                        </ul>
+                    </div>
+                    <div class="cause-category">
+                        <h4>Other Causes</h4>
+                        <ul>
+                            <li>PCM fault or software issue (rare)</li>
+                            <li>Aftermarket performance tune running rich</li>
+                            <li>Silicone contamination from intake sealants</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Diagnostic Steps -->
+            <section class="content-section mb-4">
+                <h2>Diagnostic Steps</h2>
+                <div class="diagnostic-steps">
+                    <div class="step">
+                        <div class="step-number">1</div>
+                        <div class="step-content">
+                            <h4>Read All Codes and Check Fuel Trims</h4>
+                            <p>Retrieve all stored DTCs. If P0172 (System Too Rich Bank 1) accompanies P0132, the engine is genuinely running rich and must be diagnosed beyond sensor replacement. Monitor STFT and LTFT — strongly negative trims (-10% or more) confirm over-rich fueling.</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">2</div>
+                        <div class="step-content">
+                            <h4>Monitor O2 Sensor Live Data</h4>
+                            <p>Use ODB+ live data to watch the upstream B1S1 voltage at operating temperature. A voltage fixed above 0.9V that never drops indicates a sensor stuck rich or a short to voltage. Compare to the other bank's upstream sensor if available.</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">3</div>
+                        <div class="step-content">
+                            <h4>Inspect for Fuel System Issues</h4>
+                            <p>Test fuel pressure at idle and under load. Pressure consistently above specification suggests a faulty fuel pressure regulator. Perform an injector balance test if possible, or listen for injector tick abnormalities indicating a leaking injector.</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">4</div>
+                        <div class="step-content">
+                            <h4>Check MAF and MAP Sensors</h4>
+                            <p>A MAF sensor reading too low (under-reporting airflow) or a MAP sensor misreading manifold pressure will cause the PCM to add excess fuel. Compare MAF grams-per-second readings to expected values for your engine at idle and at various RPMs.</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">5</div>
+                        <div class="step-content">
+                            <h4>Inspect O2 Sensor Wiring for Short to Voltage</h4>
+                            <p>Disconnect the O2 sensor and check the signal wire at the PCM harness for voltage with the ignition on. Any voltage present on the signal wire when the sensor is unplugged indicates a short to a power circuit that would hold voltage high.</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">6</div>
+                        <div class="step-content">
+                            <h4>Replace O2 Sensor if Tests Point to Sensor</h4>
+                            <p>If the engine is not truly running rich, the wiring is intact, and sensor voltage is fixed high, replace the upstream O2 sensor with a quality OEM-equivalent part. Clear codes and verify the fix over at least two drive cycles.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Common Repairs -->
+            <section class="content-section mb-4">
+                <h2>Common Repairs</h2>
+                <div class="repair-list">
+                    <div class="repair-item">
+                        <div class="repair-info">
+                            <h4>Replace Upstream O2 Sensor (Bank 1, Sensor 1)</h4>
+                            <p>Required when the sensor element has failed stuck rich. Use an OEM or quality aftermarket sensor specific to your vehicle.</p>
+                        </div>
+                        <div class="repair-cost">
+                            <span class="diy">DIY: $30-$100</span>
+                            <span class="shop">Shop: $150-$300</span>
+                        </div>
+                    </div>
+                    <div class="repair-item">
+                        <div class="repair-info">
+                            <h4>Replace Fuel Pressure Regulator</h4>
+                            <p>Fixes high fuel pressure causing over-rich combustion and falsely elevated O2 voltage.</p>
+                        </div>
+                        <div class="repair-cost">
+                            <span class="diy">DIY: $30-$100</span>
+                            <span class="shop">Shop: $150-$350</span>
+                        </div>
+                    </div>
+                    <div class="repair-item">
+                        <div class="repair-info">
+                            <h4>Clean or Replace Fuel Injectors</h4>
+                            <p>A leaking injector floods the cylinder with excess fuel, creating persistent rich conditions.</p>
+                        </div>
+                        <div class="repair-cost">
+                            <span class="diy">DIY: $150-$400</span>
+                            <span class="shop">Shop: $400-$900</span>
+                        </div>
+                    </div>
+                    <div class="repair-item">
+                        <div class="repair-info">
+                            <h4>Replace MAF Sensor</h4>
+                            <p>If MAF sensor under-reports airflow, the PCM over-fuels. Cleaning or replacement resolves rich-related O2 codes.</p>
+                        </div>
+                        <div class="repair-cost">
+                            <span class="diy">DIY: $50-$150</span>
+                            <span class="shop">Shop: $150-$400</span>
+                        </div>
+                    </div>
+                    <div class="repair-item">
+                        <div class="repair-info">
+                            <h4>Repair O2 Sensor Wiring</h4>
+                            <p>Repair or replace wiring harness segment if a short to voltage on the signal wire is confirmed.</p>
+                        </div>
+                        <div class="repair-cost">
+                            <span class="diy">DIY: $10-$50</span>
+                            <span class="shop">Shop: $75-$200</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Related Codes -->
+            <section class="content-section mb-4">
+                <h2>Related Codes</h2>
+                <div class="related-codes-grid">
+                    <a href="P0130.html" class="related-code">
+                        <span class="code-badge-sm">P0130</span>
+                        <span>O2 Circuit Malfunction B1S1</span>
+                    </a>
+                    <a href="P0131.html" class="related-code">
+                        <span class="code-badge-sm">P0131</span>
+                        <span>O2 Circuit Low Voltage B1S1</span>
+                    </a>
+                    <a href="#" class="related-code">
+                        <span class="code-badge-sm">P0132</span>
+                        <span>O2 Circuit High Voltage B1S1</span>
+                    </a>
+                    <a href="P0133.html" class="related-code">
+                        <span class="code-badge-sm">P0133</span>
+                        <span>O2 Slow Response B1S1</span>
+                    </a>
+                    <a href="index.html" class="related-code">
+                        <span class="code-badge-sm">P0172</span>
+                        <span>System Too Rich Bank 1</span>
+                    </a>
+                    <a href="P0420.html" class="related-code">
+                        <span class="code-badge-sm">P0420</span>
+                        <span>Catalyst Efficiency Low Bank 1</span>
+                    </a>
+                </div>
+            </section>
+
+            <!-- Forum Discussion -->
+            <section class="content-section mb-4">
+                <h2>Community Discussion</h2>
+                <p class="mb-3">Have questions about P0132? Get help from experienced mechanics and fellow car owners.</p>
+                <a href="../forums/index.html" class="btn btn-primary">Visit Forums</a>
+                <a href="../forums/index.html?search=P0132" class="btn btn-outline" style="margin-left: 0.5rem;">Search P0132 Threads</a>
+            </section>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-bottom" style="border-top: none; padding-top: 0;">
+                <p>&copy; 2024 ODB+. All rights reserved.</p>
+                <div class="footer-legal">
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Terms of Service</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../../js/main.js"></script>
+</body>
+</html>

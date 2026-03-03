@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="P0131 O2 Sensor Circuit Low Voltage (Bank 1, Sensor 1) - Complete guide with causes, symptoms, diagnostic steps, and repair information.">
+    <title>P0131 - O2 Sensor Circuit Low Voltage Bank 1 Sensor 1 | ODB+</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../../css/styles.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="navbar-container">
+            <a href="../../index.html" class="navbar-brand">
+                <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="40" height="40" rx="8" fill="url(#gradient)"/>
+                    <path d="M12 20C12 15.5817 15.5817 12 20 12C24.4183 12 28 15.5817 28 20C28 24.4183 24.4183 28 20 28" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+                    <path d="M20 16V20L23 23" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    <circle cx="20" cy="20" r="2" fill="white"/>
+                    <defs>
+                        <linearGradient id="gradient" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse">
+                            <stop stop-color="#2563eb"/>
+                            <stop offset="1" stop-color="#10b981"/>
+                        </linearGradient>
+                    </defs>
+                </svg>
+                <span>ODB+</span>
+            </a>
+            <ul class="navbar-menu">
+                <li><a href="../../index.html">Home</a></li>
+                <li><a href="index.html" class="active">Error Codes</a></li>
+                <li><a href="../forums/index.html">Forums</a></li>
+                <li><a href="../sensors/index.html">Sensors</a></li>
+            </ul>
+            <div class="navbar-actions">
+                <a href="../auth/login.html" class="btn btn-secondary">Log In</a>
+                <a href="../auth/signup.html" class="btn btn-primary">Sign Up</a>
+            </div>
+        </div>
+    </nav>
+
+    <main style="padding-top: 100px; padding-bottom: 4rem;">
+        <div class="container" style="max-width: 900px;">
+            <!-- Breadcrumb -->
+            <nav class="breadcrumb mb-4">
+                <a href="index.html">Error Codes</a>
+                <span class="separator">/</span>
+                <a href="index.html#powertrain">Powertrain</a>
+                <span class="separator">/</span>
+                <span class="current">P0131</span>
+            </nav>
+
+            <!-- Code Header -->
+            <div class="code-detail-header mb-4">
+                <div class="code-badge-lg">P0131</div>
+                <div class="code-detail-info">
+                    <h1>O2 Sensor Circuit Low Voltage (Bank 1, Sensor 1)</h1>
+                    <div class="code-meta">
+                        <span class="badge badge-danger">Powertrain</span>
+                        <span class="badge badge-secondary">Generic (SAE)</span>
+                        <span class="severity-medium">Severity: Medium</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Info -->
+            <div class="quick-info-grid mb-4">
+                <div class="quick-info-card">
+                    <h4>System</h4>
+                    <p>Fuel System / Emissions</p>
+                </div>
+                <div class="quick-info-card">
+                    <h4>Subsystem</h4>
+                    <p>Oxygen Sensor (Upstream)</p>
+                </div>
+                <div class="quick-info-card">
+                    <h4>Common Fix</h4>
+                    <p>Replace O2 Sensor / Fix Lean Condition</p>
+                </div>
+                <div class="quick-info-card">
+                    <h4>Repair Cost</h4>
+                    <p>$75 - $400</p>
+                </div>
+            </div>
+
+            <!-- Description -->
+            <section class="content-section mb-4">
+                <h2>What Does P0131 Mean?</h2>
+                <p>P0131 is set when the upstream oxygen sensor on Bank 1 (the side containing cylinder #1), Sensor 1 (pre-catalytic converter), produces a voltage that is consistently too low — typically below 0.1 volts for an extended period. This low voltage indicates that the sensor is detecting an extremely lean exhaust mixture (excess oxygen), or that the sensor circuit itself has an issue such as a short to ground or a broken signal wire.</p>
+
+                <p>A normal upstream O2 sensor continuously cycles between roughly 0.1V (lean) and 0.9V (rich). When it gets stuck at the low end, the PCM interprets the engine as perpetually lean and attempts to add fuel. If this condition persists, P0131 is stored.</p>
+
+                <div class="warning-box">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+                        <line x1="12" y1="9" x2="12" y2="13"/>
+                        <line x1="12" y1="17" x2="12.01" y2="17"/>
+                    </svg>
+                    <div>
+                        <strong>Important:</strong> P0131 often accompanies or masks a genuine lean condition (P0171). Do not simply replace the sensor without investigating whether the engine is actually running lean due to a vacuum leak, low fuel pressure, or a failing injector.
+                    </div>
+                </div>
+            </section>
+
+            <!-- How the System Works -->
+            <section class="content-section mb-4">
+                <h2>How the Upstream O2 Sensor Works</h2>
+                <p>The upstream oxygen sensor generates its own voltage based on the difference in oxygen content between the exhaust gases and the outside air reference inside the sensor body:</p>
+
+                <div class="system-diagram">
+                    <h4>Sensor Voltage Reference:</h4>
+                    <ul class="component-list">
+                        <li>
+                            <strong>~0.9V (High/Rich):</strong> Little oxygen in exhaust — fuel-rich combustion occurred. PCM reduces fuel delivery.
+                        </li>
+                        <li>
+                            <strong>~0.45V (Stoichiometric):</strong> Ideal 14.7:1 air/fuel ratio crossing point.
+                        </li>
+                        <li>
+                            <strong>~0.1V (Low/Lean):</strong> Excess oxygen in exhaust — lean combustion or sensor/circuit fault.
+                        </li>
+                        <li>
+                            <strong>Heater Circuit:</strong> Powers the sensor's internal heater to bring it to operating temperature within 30-60 seconds of startup, enabling early closed-loop operation.
+                        </li>
+                        <li>
+                            <strong>PCM Fuel Trim:</strong> Short-term fuel trim (STFT) spikes positive when sensor voltage is low, as the PCM adds fuel to compensate.
+                        </li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Symptoms -->
+            <section class="content-section mb-4">
+                <h2>Common Symptoms</h2>
+                <ul class="symptom-list">
+                    <li>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="2">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                        </svg>
+                        <div>
+                            <strong>Check Engine Light</strong>
+                            <p>Illuminated MIL is typically the primary noticeable symptom</p>
+                        </div>
+                    </li>
+                    <li>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="2">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                        </svg>
+                        <div>
+                            <strong>Poor Fuel Economy</strong>
+                            <p>PCM compensates for perceived lean condition by adding extra fuel</p>
+                        </div>
+                    </li>
+                    <li>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="2">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                        </svg>
+                        <div>
+                            <strong>Rough Idle or Hesitation (if lean condition exists)</strong>
+                            <p>Vacuum leaks or fuel delivery problems causing P0131 will also cause drivability issues</p>
+                        </div>
+                    </li>
+                    <li>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="2">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                        </svg>
+                        <div>
+                            <strong>High Positive Fuel Trim Values</strong>
+                            <p>STFT and LTFT readings well above +10% visible on live data scanner</p>
+                        </div>
+                    </li>
+                    <li>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="2">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                        </svg>
+                        <div>
+                            <strong>Failed Emissions Test</strong>
+                            <p>Open-loop or lean operation increases harmful exhaust emissions</p>
+                        </div>
+                    </li>
+                </ul>
+            </section>
+
+            <!-- Possible Causes -->
+            <section class="content-section mb-4">
+                <h2>Possible Causes</h2>
+
+                <div class="causes-grid">
+                    <div class="cause-category">
+                        <h4>Lean Engine Conditions (Check First)</h4>
+                        <ul>
+                            <li>Vacuum leak (intake manifold, hoses, gaskets)</li>
+                            <li>Low fuel pressure (weak pump, clogged filter)</li>
+                            <li>Stuck-open EGR valve</li>
+                            <li>Faulty or clogged fuel injector</li>
+                            <li>Exhaust leak near the sensor (dilutes exhaust)</li>
+                        </ul>
+                    </div>
+                    <div class="cause-category">
+                        <h4>Sensor and Circuit Issues</h4>
+                        <ul>
+                            <li>Failed O2 sensor element (stuck lean)</li>
+                            <li>Signal wire shorted to ground</li>
+                            <li>Open circuit in signal wire</li>
+                            <li>Corroded or loose connector</li>
+                            <li>Sensor contaminated with coolant or RTV silicone</li>
+                        </ul>
+                    </div>
+                    <div class="cause-category">
+                        <h4>Engine Mechanical</h4>
+                        <ul>
+                            <li>Head gasket leak (exhaust gases diluted by air)</li>
+                            <li>Incorrect air/fuel ratio from MAF sensor fault</li>
+                            <li>PCV system leak introducing excess air</li>
+                        </ul>
+                    </div>
+                    <div class="cause-category">
+                        <h4>Other Causes</h4>
+                        <ul>
+                            <li>Wrong O2 sensor installed</li>
+                            <li>PCM fault (rare)</li>
+                            <li>Wiring harness damage from heat or abrasion</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Diagnostic Steps -->
+            <section class="content-section mb-4">
+                <h2>Diagnostic Steps</h2>
+                <div class="diagnostic-steps">
+                    <div class="step">
+                        <div class="step-number">1</div>
+                        <div class="step-content">
+                            <h4>Review All Codes and Fuel Trim Data</h4>
+                            <p>Pull all stored codes. If P0171 (System Too Lean Bank 1) is also present, the lean condition is real and must be diagnosed before replacing the O2 sensor. Check STFT and LTFT live data — values above +10% at idle confirm a lean condition.</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">2</div>
+                        <div class="step-content">
+                            <h4>Inspect for Vacuum and Exhaust Leaks</h4>
+                            <p>With the engine running, listen for hissing near the intake manifold, vacuum hoses, and throttle body. Also check for exhaust leaks near the manifold and O2 sensor bung, which allow fresh air to enter and cause falsely low sensor readings.</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">3</div>
+                        <div class="step-content">
+                            <h4>Monitor O2 Sensor Voltage with Live Data</h4>
+                            <p>Use ODB+ to observe the upstream B1S1 sensor voltage at operating temperature. If the voltage is fixed at or below 0.1V and never rises, the sensor or its circuit is the primary suspect. Compare to Bank 2 Sensor 1 if available to confirm isolation to Bank 1.</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">4</div>
+                        <div class="step-content">
+                            <h4>Check Fuel Pressure</h4>
+                            <p>Attach a fuel pressure gauge and compare to spec at idle and at 3,000 RPM. Low fuel pressure causes a lean condition that will hold the O2 sensor voltage low. If pressure drops under load, suspect the fuel pump or a clogged filter.</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">5</div>
+                        <div class="step-content">
+                            <h4>Inspect O2 Sensor Wiring</h4>
+                            <p>Trace the sensor wiring harness back to the PCM connector. Look for melted insulation, pinched wires, and corroded pins. Use a multimeter to check for a short to ground on the signal wire (should show high resistance to ground with sensor disconnected).</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">6</div>
+                        <div class="step-content">
+                            <h4>Replace O2 Sensor if Circuit Tests Good</h4>
+                            <p>If wiring is intact, there are no vacuum or exhaust leaks, and fuel pressure is correct but the sensor voltage remains low, replace the upstream O2 sensor (Bank 1, Sensor 1) with an OEM-equivalent part.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Common Repairs -->
+            <section class="content-section mb-4">
+                <h2>Common Repairs</h2>
+                <div class="repair-list">
+                    <div class="repair-item">
+                        <div class="repair-info">
+                            <h4>Replace Upstream O2 Sensor (Bank 1, Sensor 1)</h4>
+                            <p>Most common fix when circuit tests confirm sensor failure. Use vehicle-specific sensor; avoid universal-fit sensors with spliced wiring.</p>
+                        </div>
+                        <div class="repair-cost">
+                            <span class="diy">DIY: $30-$100</span>
+                            <span class="shop">Shop: $150-$300</span>
+                        </div>
+                    </div>
+                    <div class="repair-item">
+                        <div class="repair-info">
+                            <h4>Repair Vacuum Leak</h4>
+                            <p>Replace cracked hoses, intake manifold gasket, or throttle body gasket to eliminate false lean readings.</p>
+                        </div>
+                        <div class="repair-cost">
+                            <span class="diy">DIY: $10-$60</span>
+                            <span class="shop">Shop: $100-$400</span>
+                        </div>
+                    </div>
+                    <div class="repair-item">
+                        <div class="repair-info">
+                            <h4>Replace Fuel Pump or Fuel Filter</h4>
+                            <p>Restores proper fuel pressure to eliminate a true lean condition causing the low O2 voltage.</p>
+                        </div>
+                        <div class="repair-cost">
+                            <span class="diy">DIY: $50-$200</span>
+                            <span class="shop">Shop: $200-$600</span>
+                        </div>
+                    </div>
+                    <div class="repair-item">
+                        <div class="repair-info">
+                            <h4>Repair O2 Sensor Wiring/Connector</h4>
+                            <p>Replace damaged wiring pigtail or repair short-to-ground in signal circuit.</p>
+                        </div>
+                        <div class="repair-cost">
+                            <span class="diy">DIY: $10-$40</span>
+                            <span class="shop">Shop: $75-$200</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Related Codes -->
+            <section class="content-section mb-4">
+                <h2>Related Codes</h2>
+                <div class="related-codes-grid">
+                    <a href="P0130.html" class="related-code">
+                        <span class="code-badge-sm">P0130</span>
+                        <span>O2 Circuit Malfunction B1S1</span>
+                    </a>
+                    <a href="#" class="related-code">
+                        <span class="code-badge-sm">P0131</span>
+                        <span>O2 Circuit Low Voltage B1S1</span>
+                    </a>
+                    <a href="P0132.html" class="related-code">
+                        <span class="code-badge-sm">P0132</span>
+                        <span>O2 Circuit High Voltage B1S1</span>
+                    </a>
+                    <a href="P0133.html" class="related-code">
+                        <span class="code-badge-sm">P0133</span>
+                        <span>O2 Slow Response B1S1</span>
+                    </a>
+                    <a href="P0171.html" class="related-code">
+                        <span class="code-badge-sm">P0171</span>
+                        <span>System Too Lean Bank 1</span>
+                    </a>
+                    <a href="P0420.html" class="related-code">
+                        <span class="code-badge-sm">P0420</span>
+                        <span>Catalyst Efficiency Low Bank 1</span>
+                    </a>
+                </div>
+            </section>
+
+            <!-- Forum Discussion -->
+            <section class="content-section mb-4">
+                <h2>Community Discussion</h2>
+                <p class="mb-3">Have questions about P0131? Get help from experienced mechanics and fellow car owners.</p>
+                <a href="../forums/index.html" class="btn btn-primary">Visit Forums</a>
+                <a href="../forums/index.html?search=P0131" class="btn btn-outline" style="margin-left: 0.5rem;">Search P0131 Threads</a>
+            </section>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-bottom" style="border-top: none; padding-top: 0;">
+                <p>&copy; 2024 ODB+. All rights reserved.</p>
+                <div class="footer-legal">
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Terms of Service</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../../js/main.js"></script>
+</body>
+</html>
