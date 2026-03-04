@@ -68,14 +68,21 @@ class AdapterFingerprinter(private val transport: ObdTransport) {
         Timber.d("Family: $resolvedFamily  FW: $firmwareVersion  Clone: $isClone")
 
         // ── Step 6: Probe AT capabilities ─────────────────────────────────────
-        val atAlOk    = probeAtAl()
-        val atCafOk   = probeAtCaf()
-        val headersOk = probeCustomHeaders()
+        val atAlOk  = probeAtAl()
+        val atCafOk = probeAtCaf()
+        // NOTE: probeCustomHeaders() (ATSH 7DF) is intentionally NOT called here.
+        // Setting ATSH 7DF overrides the ISO protocol header bytes used by the
+        // ELM327 during auto-detection, causing ISO 9141-2 and KWP2000 bus init
+        // to fail with "NO DATA".  All genuine ELM327 chips support ATSH, and
+        // supportsCustomHeaders is not used in any decision-making code path.
 
-        // ── Step 7: Protocol stability test ───────────────────────────────────
-        val protocolLive = probeProtocolStability()
+        // NOTE: probeProtocolStability() (sends 0100) is intentionally NOT called here.
+        // Sending 0100 during fingerprinting triggers a partial bus init that can take
+        // 3-4 seconds before timing out.  On KWP2000 / ISO 9141-2 vehicles the ECU then
+        // enters recovery mode (5-20 s), causing the subsequent negotiation to see
+        // "UNABLE TO CONNECT" even though the vehicle is running and the bus is healthy.
 
-        Timber.d("ATAL=$atAlOk  ATCAF=$atCafOk  Headers=$headersOk  Proto=$protocolLive")
+        Timber.d("ATAL=$atAlOk  ATCAF=$atCafOk  Headers=true(assumed)")
 
         // ── Step 8: Known-device registry lookup ──────────────────────────────
         val registryHit = KnownDeviceRegistry.lookup(at1Response)
@@ -94,7 +101,7 @@ class AdapterFingerprinter(private val transport: ObdTransport) {
             family = resolvedFamily,
             supportsAtAl = atAlOk,
             supportsAtCaf = atCafOk,
-            supportsHeaders = headersOk
+            supportsHeaders = true   // all genuine ELM327 chips support ATSH; see note above
         )
 
         val profile = DeviceProfile(
@@ -155,15 +162,14 @@ class AdapterFingerprinter(private val transport: ObdTransport) {
             )
         }
 
-        val atAlOk    = probeAtAl()
-        val atCafOk   = probeAtCaf()
-        val headersOk = probeCustomHeaders()
+        val atAlOk  = probeAtAl()
+        val atCafOk = probeAtCaf()
 
         val capabilities = buildCapabilities(
             family = family,
             supportsAtAl = atAlOk,
             supportsAtCaf = atCafOk,
-            supportsHeaders = headersOk
+            supportsHeaders = true
         )
 
         val profile = DeviceProfile(
@@ -229,9 +235,10 @@ class AdapterFingerprinter(private val transport: ObdTransport) {
 
     private suspend fun probeAtCaf(): Boolean {
         val r = sendRaw("ATCAF1", CMD_TIMEOUT_MS)
-        val ok = r.contains("OK") && !r.contains("?")
-        if (ok) sendRaw("ATCAF0", 500L)   // Restore default — don't leave it on
-        return ok
+        // ATCAF1 is the ELM327 default after ATZ and required for CAN OBD-II communication
+        // (auto-framing adds ISO-TP headers so the ECU can interpret OBD commands).
+        // Leave it enabled — disabling it here causes all CAN PID queries to return "NO DATA".
+        return r.contains("OK") && !r.contains("?")
     }
 
     private suspend fun probeCustomHeaders(): Boolean {
@@ -326,6 +333,6 @@ class AdapterFingerprinter(private val transport: ObdTransport) {
         private const val RESET_TIMEOUT_MS   = 3_000L
         private const val RESET_SETTLE_MS    = 300L
         private const val CMD_TIMEOUT_MS     = 1_000L
-        private const val PROTO_PROBE_TIMEOUT_MS = 2_000L
+        private const val PROTO_PROBE_TIMEOUT_MS = 4_000L   // ISO 9141-2 5-baud init takes ~2.7s
     }
 }

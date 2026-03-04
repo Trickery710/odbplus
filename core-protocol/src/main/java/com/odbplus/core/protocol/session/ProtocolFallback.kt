@@ -37,9 +37,10 @@ class ProtocolFallback(private val profile: DeviceProfile) {
         add(ProtocolEntry("CAN 29-bit 500k",   "ATSP7", 1_000L))
         add(ProtocolEntry("CAN 11-bit 250k",   "ATSP8", 1_500L))
         add(ProtocolEntry("CAN 29-bit 250k",   "ATSP9", 1_500L))
-        add(ProtocolEntry("ISO 9141-2",        "ATSP3", 2_000L))
-        add(ProtocolEntry("KWP2000 (fast)",    "ATSP5", 2_000L))
-        add(ProtocolEntry("KWP2000 (5-baud)",  "ATSP4", 3_000L))
+        // KWP2000 fast init before ISO 9141-2: fast init is ~200 ms vs 5-baud 2.7 s
+        add(ProtocolEntry("KWP2000 (fast)",    "ATSP5", 3_000L))
+        add(ProtocolEntry("KWP2000 (5-baud)",  "ATSP4", 4_000L))
+        add(ProtocolEntry("ISO 9141-2",        "ATSP3", 4_000L))  // 5-baud init needs ~2.7s
         add(ProtocolEntry("J1850 PWM",         "ATSP1", 2_000L))
         add(ProtocolEntry("J1850 VPW",         "ATSP2", 2_000L))
     }

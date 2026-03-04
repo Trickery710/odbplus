@@ -7,6 +7,7 @@ import com.odbplus.app.ai.data.VehicleInfo
 import com.odbplus.app.live.LogSessionRepository
 import com.odbplus.core.protocol.DiagnosticTroubleCode
 import com.odbplus.core.protocol.ObdService
+import com.odbplus.core.protocol.adapter.ProtocolSessionState
 import com.odbplus.core.transport.ConnectionState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.StateFlow
@@ -34,22 +35,35 @@ class VehicleContextViewModel @Inject constructor(
     private var ctx: VehicleContext = VehicleContext()
         set(value) { field = value; provider.update(value) }
 
-    private var wasConnected = false
+    // True after SESSION_ACTIVE is first reached for the current connection.
+    // Reset to false on DISCONNECTED so the next connection triggers a fresh fetch.
+    private var wasActive = false
 
     init {
         viewModelScope.launch { vehicleInfoRepository.initialize() }
 
+        // Track raw connection state for UI / AI context "isConnected" flag,
+        // and clear vehicle info on disconnect.
         viewModelScope.launch {
             obdService.connectionState.collect { state ->
                 val connected = state == ConnectionState.CONNECTED
                 ctx = ctx.copy(isConnected = connected)
-
-                if (connected && !wasConnected) fetchVehicleInfo()
-                else if (!connected && wasConnected) {
+                if (!connected && wasActive) {
+                    wasActive = false
                     vehicleInfoRepository.clearCurrentVehicle()
                     ctx = ctx.copy(vehicleInfo = null)
                 }
-                wasConnected = connected
+            }
+        }
+
+        // Only fetch vehicle info once the protocol is fully initialised (SESSION_ACTIVE).
+        // This prevents Mode-09 commands from racing with UOAPL fingerprinting / AT-init.
+        viewModelScope.launch {
+            obdService.sessionState.collect { state ->
+                if (state.canSendCommands && !wasActive) {
+                    wasActive = true
+                    fetchVehicleInfo()
+                }
             }
         }
 

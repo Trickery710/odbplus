@@ -60,6 +60,15 @@ class ObdService @Inject constructor(
         adapterSession.onTransportConnected(rawTransport, transportLabel)
     }
 
+    /**
+     * Called before the transport disconnects.
+     * Tears down the UOAPL session cleanly — cancels keepalive / reconnect jobs
+     * and resets state to DISCONNECTED so the next [onTransportReady] starts fresh.
+     */
+    suspend fun onTransportDisconnected() {
+        adapterSession.disconnect()
+    }
+
     // ── Query API ─────────────────────────────────────────────────────────────
 
     /**
@@ -287,43 +296,18 @@ class ObdService @Inject constructor(
     // ── Internal command routing ──────────────────────────────────────────────
 
     /**
-     * Route a raw command through [AdapterSession] when active, otherwise
-     * fall back to [TransportRepository] for compatibility.
+     * Route a raw command through [AdapterSession].
+     * Returns an empty string when the session is not yet active (e.g. during
+     * UOAPL initialisation) so callers receive a clean NoData / Error rather than
+     * racing with the AT-command init sequence via the transport directly.
      */
     private suspend fun sendCommand(
         command: String,
         timeoutMs: Long,
         canHeader: String? = null
     ): String {
-        // Primary path: UOAPL AdapterSession
-        if (adapterSession.state.value.canSendCommands) {
-            return adapterSession.sendCommand(command, timeoutMs, canHeader)
-        }
-
-        // Fallback path: legacy log-based extraction (pre-UOAPL)
-        val logLinesBefore = transport.logLines.value.size
-        transport.sendAndAwait(command, timeoutMs)
-        val currentLines = transport.logLines.value
-        val newLines = currentLines.drop(logLinesBefore)
-        val responseLines = newLines
-            .filter { it.startsWith("<< ") }
-            .map { it.removePrefix("<< ").trim() }
-            .filter { it.isNotEmpty() }
-
-        val pidCode = if (command.length >= 4 && command.startsWith("01")) {
-            command.substring(2).uppercase()
-        } else null
-
-        if (pidCode != null) {
-            val matchingResponses = responseLines.filter { line ->
-                val cleaned = line.uppercase().replace(" ", "")
-                cleaned.startsWith("41$pidCode")
-            }
-            if (matchingResponses.isNotEmpty()) {
-                return matchingResponses.joinToString("\n")
-            }
-        }
-        return responseLines.joinToString("\n")
+        if (!adapterSession.state.value.canSendCommands) return ""
+        return adapterSession.sendCommand(command, timeoutMs, canHeader)
     }
 
     private suspend fun querySupportBitmap(command: String, timeoutMs: Long): Long {

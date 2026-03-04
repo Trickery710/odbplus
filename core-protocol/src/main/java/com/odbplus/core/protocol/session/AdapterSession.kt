@@ -285,13 +285,39 @@ class AdapterSession(private val scope: CoroutineScope) {
         driver: AdapterDriver,
         fallback: ProtocolFallback
     ): Boolean {
-        // First try ATSP0 (auto)
+        // ── Fast path: direct 0100 using stored protocol ──────────────────────
+        //
+        // After ATZ the ELM327 retains its last-used protocol in non-volatile
+        // memory (visible via ATDP as "AUTO, ISO 14230-4 (KWP FAST)").  In AUTO
+        // mode the ELM tries the stored protocol first before scanning others.
+        // Sending 0100 here lets the ELM connect in ~300 ms when the stored
+        // protocol matches the vehicle.
+        //
+        // We deliberately do NOT send ATSP0 first.  ATSP0 resets the stored-
+        // protocol hint, forcing a complete scan (CAN → ISO 9141-2 → KWP FAST,
+        // ~4.9 s total).  Empirically, ATSP0 returns "UNABLE TO CONNECT" on this
+        // vehicle even though direct 0100 succeeds — the stored KWP FAST hint is
+        // critical.
+        Timber.d("UOAPL: fast-path 0100 (stored/AUTO protocol)")
+        val fastR = driver.sendCommand(transport, "0100", 6_000L)
+        Timber.d("UOAPL: fast-path 0100 → ${fastR.take(64)}")
+        if (fastR.contains("41") || fastR.contains("NO DATA")) {
+            Timber.i("UOAPL: fast-path succeeded")
+            return true
+        }
+
+        // ── ATSP0 auto-detect fallback ────────────────────────────────────────
+        //
+        // Fast path failed (stored hint expired or first-time connection).
+        // ATSP0 triggers a full protocol scan.  The ELM returns "UNABLE TO
+        // CONNECT" or "OK" directly (with 0100 starting the actual bus init).
         if (driver.profile.capabilities.supportsAutoProtocol) {
             Timber.d("UOAPL: trying ATSP0 (auto)")
             val r = driver.sendCommand(transport, "ATSP0", 2_000L)
+            Timber.d("UOAPL: ATSP0 → ${r.take(32)}")
             if (r.contains("OK") || r.isEmpty()) {
-                // Validate with 0100
-                val response = driver.sendCommand(transport, "0100", 2_500L)
+                val response = driver.sendCommand(transport, "0100", 12_000L)
+                Timber.d("UOAPL: ATSP0 + 0100 → ${response.take(64)}")
                 if (response.contains("41") || response.contains("NO DATA")) {
                     Timber.d("UOAPL: ATSP0 + 0100 succeeded")
                     fallback.markCurrentSucceeded()
@@ -313,6 +339,7 @@ class AdapterSession(private val scope: CoroutineScope) {
                 val atspR = driver.sendCommand(transport, proto.atspCommand, 1_000L)
                 if (atspR.contains("OK") || atspR.isEmpty()) {
                     val probeR = driver.sendCommand(transport, "0100", timeout)
+                    Timber.d("UOAPL: ${proto.name} probe → ${probeR.take(64)}")
                     if (probeR.contains("41") || probeR.contains("NO DATA")) {
                         Timber.i("UOAPL: Protocol '${proto.name}' succeeded")
                         fallback.markCurrentSucceeded()

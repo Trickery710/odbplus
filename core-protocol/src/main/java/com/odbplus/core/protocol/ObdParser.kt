@@ -15,6 +15,28 @@ import javax.inject.Singleton
 @Singleton
 class ObdParser @Inject constructor() {
 
+    // ── Compiled patterns ──────────────────────────────────────────────────────
+
+    private companion object {
+        /** Three-byte negative-response frame(s): `7F <svc> <nrc>` repeated 1+ times. */
+        val NEG_FRAME_RE = Regex(
+            """^(?:7F\s+[0-9A-F]{2}\s+[0-9A-F]{2}\s*)+$""",
+            RegexOption.IGNORE_CASE
+        )
+
+        /** Adapter error / state keywords. */
+        val NO_DATA_RE      = Regex("""^NO\s+DATA$""",          RegexOption.IGNORE_CASE)
+        val NO_DATA_MIX_RE  = Regex("""NO\s+DATA""",            RegexOption.IGNORE_CASE)
+        val UNKNOWN_CMD_RE  = Regex("""^\?$""")
+        val ERROR_RE        = Regex("""^ERROR""",               RegexOption.IGNORE_CASE)
+        val NO_CONN_RE      = Regex("""^UNABLE\s+TO\s+CONNECT""", RegexOption.IGNORE_CASE)
+        val BUS_INIT_RE     = Regex("""^BUS\s+INIT""",          RegexOption.IGNORE_CASE)
+        val STOPPED_RE      = Regex("""^STOPPED""",             RegexOption.IGNORE_CASE)
+
+        /** Collapses any run of whitespace to a single space. */
+        val WHITESPACE_RE   = Regex("""\s+""")
+    }
+
     /**
      * Parse a raw response string for a known PID request.
      *
@@ -40,6 +62,15 @@ class ObdParser @Inject constructor() {
             }
         }
 
+        // Detect BUS INIT errors in the raw response BEFORE cleanResponse strips the prefix.
+        // cleanResponse removes "BUS INIT: ..." so BUS_INIT_RE can never match the cleaned
+        // string — we must check the original here. Only treat as bus-init failure when there
+        // is no valid "41 xx" response data alongside it.
+        val rawUpper = rawResponse.uppercase()
+        if (BUS_INIT_RE.containsMatchIn(rawUpper) && !rawUpper.contains("41")) {
+            return ObdResponse.Error(rawResponse, "Bus initialization failed")
+        }
+
         val cleaned = cleanResponse(rawResponse)
 
         // If the entire response is a negative response (7F xx yy) with no valid data,
@@ -60,16 +91,24 @@ class ObdParser @Inject constructor() {
 
         // Check for error responses only if we couldn't find a valid response
         when {
-            cleaned.isEmpty() -> return ObdResponse.Error(rawResponse, "No response")
-            cleaned == "NO DATA" -> return ObdResponse.NoData(rawResponse, requestedPid)
-            // Only treat as NO DATA if there's no valid 41 response mixed in
-            cleaned.contains("NO DATA") && !cleaned.contains("41") ->
-                return ObdResponse.NoData(rawResponse, requestedPid)
-            cleaned == "?" -> return ObdResponse.Error(rawResponse, "Unknown command")
-            cleaned.startsWith("ERROR") -> return ObdResponse.Error(rawResponse, cleaned)
-            cleaned == "UNABLE TO CONNECT" -> return ObdResponse.Error(rawResponse, "Unable to connect to vehicle")
-            cleaned == "BUS INIT" -> return ObdResponse.Error(rawResponse, "Bus initialization failed")
-            cleaned.startsWith("STOPPED") -> return ObdResponse.Error(rawResponse, "Command stopped")
+            cleaned.isEmpty()                                       -> return ObdResponse.Error(rawResponse, "No response")
+            NO_DATA_RE.matches(cleaned)                             -> return ObdResponse.NoData(rawResponse, requestedPid)
+            NO_DATA_MIX_RE.containsMatchIn(cleaned)
+                && !cleaned.contains("41")                          -> return ObdResponse.NoData(rawResponse, requestedPid)
+            UNKNOWN_CMD_RE.matches(cleaned)                         -> return ObdResponse.Error(rawResponse, "Unknown command")
+            ERROR_RE.containsMatchIn(cleaned)                       -> return ObdResponse.Error(rawResponse, cleaned)
+            NO_CONN_RE.containsMatchIn(cleaned)                     -> return ObdResponse.Error(rawResponse, "Unable to connect to vehicle")
+            STOPPED_RE.containsMatchIn(cleaned)                     -> return ObdResponse.Error(rawResponse, "Command stopped")
+        }
+
+        // If cleaned still contains no "41" response, all error conditions have been handled
+        // above (NO DATA, ERROR, UNABLE TO CONNECT, negative-response-only).  What remains is
+        // likely an ISO/KWP header-wrapped negative response (e.g. "84 F1 10 7F 01 12") where
+        // the 7F frame is not at the start of the string so isOnlyNegativeResponse() missed it.
+        // Attempting to parse it as a PID response would produce a misleading "Invalid mode byte"
+        // error.  Treat it as NoData instead.
+        if (!cleaned.contains("41")) {
+            return ObdResponse.NoData(rawResponse, requestedPid)
         }
 
         return parseDataResponse(rawResponse, cleaned, requestedPid)
@@ -84,9 +123,19 @@ class ObdParser @Inject constructor() {
 
         for (line in responseLines) {
             val cleaned = cleanResponse(line)
-            if (cleaned.uppercase().startsWith(expectedPrefix) ||
-                cleaned.uppercase().replace(" ", "").startsWith(expectedPrefixNoSpace)) {
+            val upper = cleaned.uppercase()
+            val upperNoSpace = upper.replace(" ", "")
+            // Match at start (no headers) or embedded after ISO 9141-2/KWP2000 header bytes
+            if (upper.startsWith(expectedPrefix) || upperNoSpace.startsWith(expectedPrefixNoSpace)) {
                 return cleaned
+            }
+            // Headered response: "84 F1 10 41 0C …" — find the OBD payload after the header
+            val idx = upper.indexOf(" $expectedPrefix")
+            if (idx >= 0) return cleaned.substring(idx + 1)
+            val idxNoSpace = upperNoSpace.indexOf(expectedPrefixNoSpace)
+            if (idxNoSpace >= 0 && idxNoSpace % 2 == 0) {
+                // Re-insert spaces for the downstream parser
+                return upperNoSpace.substring(idxNoSpace).chunked(2).joinToString(" ")
             }
         }
         return null
@@ -127,10 +176,10 @@ class ObdParser @Inject constructor() {
         val cleaned = cleanResponse(rawResponse)
 
         when {
-            cleaned.isEmpty() -> return ObdResponse.NoData(rawResponse)
-            cleaned == "NO DATA" -> return ObdResponse.NoData(rawResponse)
-            cleaned == "?" -> return ObdResponse.Error(rawResponse, "Unknown command")
-            cleaned.startsWith("ERROR") -> return ObdResponse.Error(rawResponse, cleaned)
+            cleaned.isEmpty()                   -> return ObdResponse.NoData(rawResponse)
+            NO_DATA_RE.matches(cleaned)         -> return ObdResponse.NoData(rawResponse)
+            UNKNOWN_CMD_RE.matches(cleaned)     -> return ObdResponse.Error(rawResponse, "Unknown command")
+            ERROR_RE.containsMatchIn(cleaned)   -> return ObdResponse.Error(rawResponse, cleaned)
         }
 
         val bytes = hexStringToBytes(cleaned)
@@ -343,34 +392,30 @@ class ObdParser @Inject constructor() {
      */
     private fun isOnlyNegativeResponse(cleaned: String): Boolean {
         if (cleaned.isEmpty() || cleaned.contains("41")) return false
-        val tokens = cleaned.split("\\s+".toRegex()).filter { it.isNotEmpty() }
-        // Must be a multiple of 3 (each NRC frame is 3 bytes: 7F xx yy)
-        if (tokens.size % 3 != 0) return false
-        return tokens.chunked(3).all { (a, _, _) -> a.equals("7F", ignoreCase = true) }
+        return NEG_FRAME_RE.matches(cleaned)
     }
 
     private fun cleanResponse(response: String): String {
         return response
             .uppercase()
-            .replace("\r", "")
+            .replace("\r", " ")
             .replace("\n", " ")
             .replace(">", "")
             .replace("SEARCHING...", "")
             .replace("BUS INIT: ...", "")
+            .let { WHITESPACE_RE.replace(it, " ") }
             .trim()
-            .split("\\s+".toRegex())
-            .filter { it.isNotEmpty() }
-            .joinToString(" ")
     }
 
     private fun hexStringToBytes(hexString: String): ByteArray {
-        val parts = hexString.split("\\s+".toRegex()).filter { it.isNotEmpty() }
-        return parts.mapNotNull { part ->
-            try {
-                part.toInt(16).toByte()
-            } catch (e: NumberFormatException) {
-                null
+        // Split on whitespace first, then chunk any run-together tokens into 2-char pairs.
+        // Handles both space-separated ("84 F1 10 41 0C") and unspaced ("84F110410C") formats.
+        return hexString.split("\\s+".toRegex())
+            .filter { it.isNotEmpty() }
+            .flatMap { token -> if (token.length == 2) listOf(token) else token.chunked(2) }
+            .mapNotNull { pair ->
+                try { pair.toInt(16).toByte() } catch (e: NumberFormatException) { null }
             }
-        }.toByteArray()
+            .toByteArray()
     }
 }

@@ -28,8 +28,15 @@ class ElmDriver(override var profile: DeviceProfile) : AdapterDriver {
 
         sendRaw(transport, "ATE0", 1_000L)   // Echo off
         sendRaw(transport, "ATL0", 1_000L)   // Linefeeds off
+        sendRaw(transport, "ATS1", 1_000L)   // Spaces ON — fingerprinter sets ATS0 (off);
+                                              // restore so hex bytes are space-separated
+                                              // ("84 F1 10 41 0C…") which the parser requires
         sendRaw(transport, "ATH1", 1_000L)   // Headers on (needed for ISO-TP framing)
-        sendRaw(transport, "ATSP0", 2_000L)  // Auto-detect protocol
+        sendRaw(transport, "ATCAF1", 1_000L) // CAN auto format on — required so ELM adds
+                                              // ISO-TP headers; without this all CAN PID
+                                              // queries return NO DATA
+        // Do NOT send ATSP0 here — the adapter may have a working protocol stored
+        // from the previous session.  Protocol selection is handled by AdapterSession.
 
         if (profile.capabilities.supportsAtAl && !isClone) {
             val r = sendRaw(transport, "ATAL", 1_000L)

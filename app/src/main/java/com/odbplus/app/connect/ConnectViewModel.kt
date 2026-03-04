@@ -5,6 +5,7 @@ import android.net.Uri
 import androidx.core.content.FileProvider
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import com.odbplus.core.protocol.ObdService
 import com.odbplus.core.protocol.diagnostic.DiagnosticLogger
 import com.odbplus.core.transport.ConnectionState
 import com.odbplus.core.transport.TransportRepository
@@ -17,7 +18,8 @@ import javax.inject.Inject
 @HiltViewModel
 class ConnectViewModel @Inject constructor(
     application: Application,
-    private val repo: TransportRepository
+    private val repo: TransportRepository,
+    private val obdService: ObdService
 ) : AndroidViewModel(application) {
 
     val connectionState: StateFlow<ConnectionState> = repo.connectionState
@@ -27,6 +29,9 @@ class ConnectViewModel @Inject constructor(
     fun connectTcp(host: String, port: Int) {
         viewModelScope.launch {
             repo.connect(host, port, isBluetooth = false)
+            if (repo.connectionState.value == ConnectionState.CONNECTED) {
+                obdService.onTransportReady("tcp:$host:$port")
+            }
         }
     }
 
@@ -34,6 +39,9 @@ class ConnectViewModel @Inject constructor(
     fun connectBluetooth(macAddress: String) {
         viewModelScope.launch {
             repo.connect(macAddress, 0, isBluetooth = true)
+            if (repo.connectionState.value == ConnectionState.CONNECTED) {
+                obdService.onTransportReady("bt:$macAddress")
+            }
         }
     }
 
@@ -46,6 +54,7 @@ class ConnectViewModel @Inject constructor(
 
     fun disconnect() {
         viewModelScope.launch {
+            obdService.onTransportDisconnected()
             repo.disconnect()
         }
     }
