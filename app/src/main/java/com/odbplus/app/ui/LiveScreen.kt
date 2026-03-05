@@ -34,7 +34,6 @@ import androidx.compose.material.icons.filled.FiberManualRecord
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.PlayArrow
-import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.Stop
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
@@ -79,6 +78,7 @@ import com.odbplus.app.live.PidDisplayState
 import com.odbplus.app.live.PidPreset
 import com.odbplus.app.ui.theme.*
 import com.odbplus.core.protocol.ObdPid
+import com.odbplus.core.protocol.PidDiscoveryState
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -111,10 +111,7 @@ fun LiveScreen(viewModel: LiveDataViewModel = hiltViewModel()) {
         if (uiState.selectedPids.isEmpty()) {
             EmptyStatePrompt(onOpenPidSelector = { showPidSelector = true })
         } else {
-            LiveDataGrid(
-                uiState = uiState,
-                onRefreshPid = { viewModel.querySinglePid(it) }
-            )
+            LiveDataGrid(uiState = uiState)
         }
     }
 
@@ -125,8 +122,7 @@ fun LiveScreen(viewModel: LiveDataViewModel = hiltViewModel()) {
             onDismiss = { showPidSelector = false },
             onTogglePid = { viewModel.togglePidSelection(it) },
             onSelectPreset = { viewModel.selectPreset(it) },
-            onClearAll = { viewModel.clearSelection() },
-            unsupportedPids = uiState.unsupportedPids
+            onClearAll = { viewModel.clearSelection() }
         )
     }
 
@@ -235,17 +231,33 @@ private fun LiveDataHeader(
                 text = if (uiState.isReplaying) {
                     "${uiState.replayIndex + 1}/${uiState.replaySession?.dataPointCount ?: 0}"
                 } else {
-                    val activePidCount = uiState.selectedPids.count { it !in uiState.unsupportedPids }
-                    if (uiState.unsupportedPids.isNotEmpty() && uiState.selectedPids.any { it in uiState.unsupportedPids }) {
-                        "$activePidCount / ${uiState.selectedPids.size} PIDs"
-                    } else {
-                        "${uiState.selectedPids.size} PIDs"
-                    }
+                    "${uiState.selectedPids.size} PIDs"
                 },
                 style = MaterialTheme.typography.labelMedium,
                 color = TextTertiary,
                 fontWeight = FontWeight.Medium
             )
+        }
+
+        // Discovery progress banner — shown while the adapter scans the ECU for supported PIDs.
+        if (uiState.pidDiscoveryState == PidDiscoveryState.DISCOVERING) {
+            Spacer(Modifier.height(8.dp))
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                CircularProgressIndicator(
+                    modifier = Modifier.size(12.dp),
+                    color = CyanPrimary,
+                    strokeWidth = 1.5.dp
+                )
+                Spacer(Modifier.width(8.dp))
+                Text(
+                    text = "Scanning supported PIDs…",
+                    style = MaterialTheme.typography.labelSmall,
+                    color = TextSecondary
+                )
+            }
         }
 
         Spacer(Modifier.height(14.dp))
@@ -497,13 +509,7 @@ private fun EmptyStatePrompt(onOpenPidSelector: () -> Unit) {
 }
 
 @Composable
-private fun LiveDataGrid(
-    uiState: LiveDataUiState,
-    onRefreshPid: (ObdPid) -> Unit
-) {
-    // Only display PIDs that the vehicle has confirmed as supported.
-    val visiblePids = uiState.selectedPids.filterNot { it in uiState.unsupportedPids }
-
+private fun LiveDataGrid(uiState: LiveDataUiState) {
     LazyVerticalGrid(
         columns = GridCells.Fixed(2),
         contentPadding = PaddingValues(10.dp),
@@ -511,23 +517,15 @@ private fun LiveDataGrid(
         verticalArrangement = Arrangement.spacedBy(10.dp),
         modifier = Modifier.fillMaxSize()
     ) {
-        items(visiblePids) { pid ->
+        items(uiState.selectedPids) { pid ->
             val pidState = uiState.pidValues[pid] ?: PidDisplayState(pid)
-            PidDisplayCard(
-                pidState = pidState,
-                onRefresh = { onRefreshPid(pid) },
-                isReplaying = uiState.isReplaying
-            )
+            PidDisplayCard(pidState = pidState)
         }
     }
 }
 
 @Composable
-private fun PidDisplayCard(
-    pidState: PidDisplayState,
-    onRefresh: () -> Unit,
-    isReplaying: Boolean = false
-) {
+private fun PidDisplayCard(pidState: PidDisplayState) {
     // Color-code based on state: error = red, active value = cyan glow, empty = neutral
     val borderColor by animateColorAsState(
         targetValue = when {
@@ -577,27 +575,6 @@ private fun PidDisplayCard(
                     modifier = Modifier.weight(1f),
                     color = TextSecondary
                 )
-                if (!isReplaying) {
-                    IconButton(
-                        onClick = onRefresh,
-                        modifier = Modifier.size(24.dp)
-                    ) {
-                        if (pidState.isLoading) {
-                            CircularProgressIndicator(
-                                modifier = Modifier.size(14.dp),
-                                strokeWidth = 2.dp,
-                                color = CyanPrimary
-                            )
-                        } else {
-                            Icon(
-                                Icons.Default.Refresh,
-                                contentDescription = "Refresh",
-                                modifier = Modifier.size(16.dp),
-                                tint = TextTertiary
-                            )
-                        }
-                    }
-                }
             }
 
             Column(
@@ -716,8 +693,7 @@ private fun PidSelectorDialog(
     onDismiss: () -> Unit,
     onTogglePid: (ObdPid) -> Unit,
     onSelectPreset: (PidPreset) -> Unit,
-    onClearAll: () -> Unit,
-    unsupportedPids: Set<ObdPid> = emptySet()
+    onClearAll: () -> Unit
 ) {
     val groupedPids = remember(uiState.availablePids) {
         uiState.availablePids
@@ -739,8 +715,12 @@ private fun PidSelectorDialog(
                 )
                 val subtitle = buildString {
                     append("${uiState.selectedPids.size} selected")
-                    if (unsupportedPids.isNotEmpty()) {
-                        append("  ·  ${unsupportedPids.size} not supported on this vehicle")
+                    when (uiState.pidDiscoveryState) {
+                        PidDiscoveryState.COMPLETE ->
+                            append("  ·  ${uiState.availablePids.size} available on this vehicle")
+                        PidDiscoveryState.DISCOVERING ->
+                            append("  ·  Scanning supported PIDs…")
+                        else -> Unit
                     }
                 }
                 Text(
@@ -824,7 +804,6 @@ private fun PidSelectorDialog(
                 // Render each category
                 groupedPids.forEach { (category, pidsInCategory) ->
                     val selectedCount = pidsInCategory.count { it.isSelected }
-                    val unsupportedCount = pidsInCategory.count { it.pid in unsupportedPids }
                     val isExpanded = expandedCategory == category
 
                     item {
@@ -832,7 +811,6 @@ private fun PidSelectorDialog(
                             category = category,
                             totalCount = pidsInCategory.size,
                             selectedCount = selectedCount,
-                            unsupportedCount = unsupportedCount,
                             isExpanded = isExpanded,
                             onClick = {
                                 expandedCategory = if (isExpanded) null else category
@@ -844,7 +822,6 @@ private fun PidSelectorDialog(
                         items(pidsInCategory) { pidState ->
                             PidSelectorItem(
                                 pidState = pidState,
-                                isUnsupported = pidState.pid in unsupportedPids,
                                 onToggle = { onTogglePid(pidState.pid) }
                             )
                         }
@@ -872,7 +849,6 @@ private fun PidCategoryHeader(
     category: PidCategory,
     totalCount: Int,
     selectedCount: Int,
-    unsupportedCount: Int = 0,
     isExpanded: Boolean,
     onClick: () -> Unit
 ) {
@@ -912,21 +888,12 @@ private fun PidCategoryHeader(
                     color = if (selectedCount > 0) CyanOnContainer else TextPrimary
                 )
             }
-            Column(horizontalAlignment = Alignment.End) {
-                Text(
-                    text = if (selectedCount > 0) "$selectedCount / $totalCount" else "$totalCount",
-                    style = MaterialTheme.typography.labelMedium,
-                    color = if (selectedCount > 0) CyanPrimary else TextTertiary,
-                    fontWeight = if (selectedCount > 0) FontWeight.Bold else FontWeight.Normal
-                )
-                if (unsupportedCount > 0) {
-                    Text(
-                        text = "$unsupportedCount not supported",
-                        style = MaterialTheme.typography.labelSmall,
-                        color = TextTertiary.copy(alpha = 0.6f)
-                    )
-                }
-            }
+            Text(
+                text = if (selectedCount > 0) "$selectedCount / $totalCount" else "$totalCount",
+                style = MaterialTheme.typography.labelMedium,
+                color = if (selectedCount > 0) CyanPrimary else TextTertiary,
+                fontWeight = if (selectedCount > 0) FontWeight.Bold else FontWeight.Normal
+            )
         }
     }
 }
@@ -934,7 +901,6 @@ private fun PidCategoryHeader(
 @Composable
 private fun PidSelectorItem(
     pidState: PidDisplayState,
-    isUnsupported: Boolean = false,
     onToggle: () -> Unit
 ) {
     val backgroundColor by animateColorAsState(
@@ -964,31 +930,19 @@ private fun PidSelectorItem(
                 Text(
                     text = pidState.pid.description,
                     style = MaterialTheme.typography.bodyMedium,
-                    color = if (isUnsupported) TextTertiary else TextPrimary
+                    color = TextPrimary
                 )
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        text = "PID: ${pidState.pid.code} | ${pidState.pid.unit}",
-                        style = MaterialTheme.typography.bodySmall,
-                        color = TextTertiary
-                    )
-                    if (isUnsupported) {
-                        Text(
-                            text = "Not supported",
-                            style = MaterialTheme.typography.labelSmall,
-                            color = TextTertiary.copy(alpha = 0.6f)
-                        )
-                    }
-                }
+                Text(
+                    text = "PID: ${pidState.pid.code} | ${pidState.pid.unit}",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = TextTertiary
+                )
             }
             if (pidState.isSelected) {
                 Icon(
                     Icons.Default.CheckCircle,
                     contentDescription = "Selected",
-                    tint = if (isUnsupported) TextTertiary else CyanPrimary
+                    tint = CyanPrimary
                 )
             }
         }

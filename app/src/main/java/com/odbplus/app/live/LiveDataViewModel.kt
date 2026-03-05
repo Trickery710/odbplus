@@ -7,6 +7,7 @@ import com.odbplus.app.ai.VehicleContextProvider
 import com.odbplus.app.ai.data.VehicleInfo
 import com.odbplus.core.protocol.ObdPid
 import com.odbplus.core.protocol.ObdService
+import com.odbplus.core.protocol.PidDiscoveryState
 import com.odbplus.core.transport.ConnectionState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -60,6 +61,14 @@ data class LiveDataUiState(
     val isConnected: Boolean = false,
     val isPolling: Boolean = false,
     val pollIntervalMs: Long = 500L,
+    /**
+     * PIDs available for selection on the current vehicle.
+     *
+     * When disconnected: the full master PID list (allows offline browsing).
+     * When connected and discovery complete: only PIDs confirmed supported by the
+     * vehicle's ECU. Unsupported PIDs are never included — they must never be
+     * polled, as doing so wastes ECU bus time and risks timeout cascades.
+     */
     val availablePids: List<PidDisplayState> = emptyList(),
     val selectedPids: List<ObdPid> = emptyList(),
     val pidValues: Map<ObdPid, PidDisplayState> = emptyMap(),
@@ -72,9 +81,8 @@ data class LiveDataUiState(
     val replaySession: LogSession? = null,
     val replayIndex: Int = 0,
     val replaySpeed: Float = 1.0f,
-    // PIDs confirmed unsupported by the connected vehicle (NoData response).
-    // Hidden from the live grid and greyed out in the selector.
-    val unsupportedPids: Set<ObdPid> = emptySet()
+    /** Current state of the PID discovery run. COMPLETE means availablePids is filtered. */
+    val pidDiscoveryState: PidDiscoveryState = PidDiscoveryState.IDLE
 )
 
 @HiltViewModel
@@ -112,21 +120,54 @@ class LiveDataViewModel @Inject constructor(
     }
 
     init {
+        // Load persisted state first, then observe discovery results. Sequenced in
+        // a single coroutine so the saved PIDs are available when the first
+        // supportedPids emission is processed.
         viewModelScope.launch {
             try {
                 repository.initialize()
                 val savedPids = repository.selectedPids.value
-                // Build PID list off the main thread — enum class-loading + 100 allocations
-                // are CPU work that must not run on Main.
-                val allPids = withContext(Dispatchers.Default) {
-                    ObdPid.entries.map { PidDisplayState(it, isSelected = it in savedPids) }
-                }
-                _uiState.update { it.copy(selectedPids = savedPids, availablePids = allPids) }
+                _uiState.update { it.copy(selectedPids = savedPids) }
                 val savedValues = repository.currentPidValues.value
                 if (savedValues.isNotEmpty()) {
                     _uiState.update { it.copy(pidValues = savedValues) }
                 }
             } catch (_: Exception) {}
+
+            // Observe PID discovery results and rebuild availablePids reactively.
+            //
+            // supportedPids == null  → not connected; show full master list so users
+            //                          can browse and plan their PID selection offline.
+            // supportedPids != null  → discovery complete; show only PIDs confirmed
+            //                          supported by this vehicle's ECU.
+            //
+            // Caching discovery results avoids re-querying the ECU on every poll start.
+            // Only supported PIDs are ever added to availablePids — unsupported PIDs
+            // must never appear in the UI, and must never be polled.
+            obdService.supportedPids.collect { supported ->
+                val current = _uiState.value
+                if (supported == null) {
+                    // Disconnected: show full master list for offline browsing.
+                    val allPids = withContext(Dispatchers.Default) {
+                        ObdPid.entries.map { pid ->
+                            PidDisplayState(pid, isSelected = pid in current.selectedPids)
+                        }
+                    }
+                    _uiState.update { it.copy(availablePids = allPids) }
+                } else {
+                    // Discovery complete: only include PIDs the ECU confirmed as supported.
+                    val availablePids = withContext(Dispatchers.Default) {
+                        ObdPid.entries
+                            .filter { pid -> supported.contains(pid.code) }
+                            .map { pid ->
+                                PidDisplayState(pid, isSelected = pid in current.selectedPids)
+                            }
+                    }
+                    // On reconnect: restore only selected PIDs still supported by this ECU.
+                    val validSelected = current.selectedPids.filter { supported.contains(it.code) }
+                    _uiState.update { it.copy(availablePids = availablePids, selectedPids = validSelected) }
+                }
+            }
         }
 
         viewModelScope.launch {
@@ -147,7 +188,7 @@ class LiveDataViewModel @Inject constructor(
         viewModelScope.launch { polling.isPolling.collect { v -> _uiState.update { it.copy(isPolling = v) } } }
         viewModelScope.launch { polling.pollIntervalMs.collect { v -> _uiState.update { it.copy(pollIntervalMs = v) } } }
         viewModelScope.launch { polling.pidValues.collect { v -> _uiState.update { it.copy(pidValues = v) } } }
-        viewModelScope.launch { polling.unsupportedPids.collect { v -> _uiState.update { it.copy(unsupportedPids = v) } } }
+        viewModelScope.launch { obdService.discoveryState.collect { v -> _uiState.update { it.copy(pidDiscoveryState = v) } } }
         viewModelScope.launch { logSession.isLogging.collect { v -> _uiState.update { it.copy(isLogging = v) } } }
         viewModelScope.launch { logSession.currentSession.collect { v -> _uiState.update { it.copy(currentLogSession = v) } } }
         viewModelScope.launch { replay.isReplaying.collect { v -> _uiState.update { it.copy(isReplaying = v) } } }
@@ -180,7 +221,18 @@ class LiveDataViewModel @Inject constructor(
         viewModelScope.launch { repository.saveSelectedPids(pids) }
     }
 
-    fun selectPreset(preset: PidPreset) = selectPids(preset.pids)
+    fun selectPreset(preset: PidPreset) {
+        val supported = obdService.supportedPids.value
+        // When connected, filter the preset to only include PIDs that the vehicle's
+        // ECU confirmed as supported during discovery. Presets contain hardcoded PIDs
+        // that may not exist on all vehicles.
+        val filteredPids = if (supported != null) {
+            preset.pids.filter { supported.contains(it.code) }
+        } else {
+            preset.pids
+        }
+        selectPids(filteredPids)
+    }
 
     fun clearSelection() = selectPids(emptyList())
 
@@ -190,7 +242,16 @@ class LiveDataViewModel @Inject constructor(
 
     fun startPolling() {
         if (_uiState.value.isReplaying) return
-        polling.start(_uiState.value.selectedPids, viewModelScope)
+        val state = _uiState.value
+        // Only poll PIDs that appear in availablePids (i.e. confirmed supported by discovery).
+        // Sending Mode 01 queries for unsupported PIDs wastes ECU bus time and can cause
+        // timeout cascades on KWP2000 / ISO 9141-2 buses where each NO DATA response
+        // burns a full timeout window (~300 ms).
+        val availablePidSet = state.availablePids.map { it.pid }.toHashSet()
+        val pollablePids = state.selectedPids.filter { it in availablePidSet }
+        if (pollablePids.isNotEmpty()) {
+            polling.start(pollablePids, viewModelScope)
+        }
     }
 
     fun stopPolling() {

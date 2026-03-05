@@ -11,10 +11,20 @@ import com.odbplus.core.protocol.signalset.VehicleSignalSetRepository
 import com.odbplus.core.protocol.signalset.extractFrom
 import com.odbplus.core.transport.ConnectionState
 import com.odbplus.core.transport.TransportRepository
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
+
+/**
+ * Lifecycle state of the Mode 01 PID support bitmap discovery run.
+ *
+ * Discovery runs once per connection, after [ProtocolSessionState.SESSION_ACTIVE] is reached.
+ * Results are cached so the ECU is never re-queried for support bitmaps during polling.
+ */
+enum class PidDiscoveryState { IDLE, DISCOVERING, COMPLETE, FAILED }
 
 /**
  * High-level service for OBD-II communication.
@@ -45,6 +55,23 @@ class ObdService @Inject constructor(
     /** Full UOAPL session state (richer than ConnectionState). */
     val sessionState: StateFlow<ProtocolSessionState> = adapterSession.state
 
+    // ── PID Discovery ─────────────────────────────────────────────────────────
+
+    /**
+     * Mode 01 PIDs confirmed supported by the connected ECU, keyed by hex code (e.g. "0C", "0D").
+     *
+     * Null until [runPidDiscovery] completes for the current connection.
+     * Reset to null on [onTransportDisconnected].
+     *
+     * Caching discovery results is critical — re-querying support bitmaps wastes ECU
+     * bus time and can interfere with KWP2000 slow-init recovery windows.
+     */
+    private val _supportedPids = MutableStateFlow<Set<String>?>(null)
+    val supportedPids: StateFlow<Set<String>?> = _supportedPids.asStateFlow()
+
+    private val _discoveryState = MutableStateFlow(PidDiscoveryState.IDLE)
+    val discoveryState: StateFlow<PidDiscoveryState> = _discoveryState.asStateFlow()
+
     /**
      * Called after the transport layer has established a raw connection.
      * Hands off to [AdapterSession] for fingerprinting and full initialization.
@@ -64,9 +91,12 @@ class ObdService @Inject constructor(
      * Called before the transport disconnects.
      * Tears down the UOAPL session cleanly — cancels keepalive / reconnect jobs
      * and resets state to DISCONNECTED so the next [onTransportReady] starts fresh.
+     * Also clears the discovery cache so the next connection re-runs discovery.
      */
     suspend fun onTransportDisconnected() {
         adapterSession.disconnect()
+        _supportedPids.value = null
+        _discoveryState.value = PidDiscoveryState.IDLE
     }
 
     // ── Query API ─────────────────────────────────────────────────────────────
@@ -181,10 +211,98 @@ class ObdService @Inject constructor(
         return info
     }
 
-    // ── PID support bitmap ────────────────────────────────────────────────────
+    // ── PID Discovery ─────────────────────────────────────────────────────────
+
+    /**
+     * Run Mode 01 PID support bitmap discovery, querying 0100 through 01A0.
+     *
+     * Each 32-PID range is probed in order. Discovery stops early when a range's
+     * continuation bit (bit 0, i.e. PID xx20) is not set — this matches the
+     * ISO 15765-4 / KWP2000 / ISO 9141-2 standard bitmap walk.
+     *
+     * Results are stored in [supportedPids] and [discoveryState] is updated.
+     * Must be called after the session reaches [ProtocolSessionState.SESSION_ACTIVE].
+     *
+     * Unsupported PIDs must never be polled — each NO DATA response on a KWP2000
+     * bus burns a full timeout window (~300 ms) and risks ECU error recovery.
+     */
+    suspend fun runPidDiscovery(timeoutMs: Long = 3000L) {
+        if (!adapterSession.state.value.canSendCommands) return
+        _discoveryState.value = PidDiscoveryState.DISCOVERING
+        try {
+            val discovered = buildSupportedPidSet(timeoutMs)
+            _supportedPids.value = discovered
+            _discoveryState.value = PidDiscoveryState.COMPLETE
+            Timber.i("PID discovery complete: ${discovered.size} supported PIDs")
+        } catch (e: Exception) {
+            Timber.w(e, "PID discovery failed")
+            _discoveryState.value = PidDiscoveryState.FAILED
+        }
+    }
+
+    /**
+     * Walk all six Mode 01 support bitmap ranges and decode the resulting PID set.
+     *
+     * The "support bitmap" PIDs (00, 20, 40, 60, 80, A0, C0) encode range availability,
+     * not sensor values — they are excluded from the returned set so callers never
+     * attempt to poll them as live data.
+     */
+    private suspend fun buildSupportedPidSet(timeoutMs: Long): Set<String> {
+        val supported = mutableSetOf<String>()
+        // Each pair: (Mode 01 command to send, first real PID encoded in that bitmap).
+        val ranges = listOf(
+            "0100" to 0x01,
+            "0120" to 0x21,
+            "0140" to 0x41,
+            "0160" to 0x61,
+            "0180" to 0x81,
+            "01A0" to 0xA1,
+        )
+        for ((command, startPid) in ranges) {
+            // Ranges after the first require the previous range's continuation bit
+            // (PID startPid-1, e.g. "20" for range 0120) to be present in supported.
+            val continuationPid = String.format("%02X", startPid - 1)
+            if (startPid != 0x01 && continuationPid !in supported) break
+
+            val bitmap = queryPidBitmap(command, timeoutMs)
+            if (bitmap == 0L) break
+            supported.addAll(decodeSupportBitmap(bitmap, startPid))
+        }
+        // Exclude the range-support PIDs themselves — they are bitmask metadata, not data PIDs.
+        return supported - setOf("00", "20", "40", "60", "80", "A0", "C0")
+    }
+
+    /**
+     * Send a Mode 01 support bitmap command and extract the 4-byte bitmask.
+     *
+     * Searches for the "41 XX" positive response tag anywhere in the cleaned response
+     * string rather than assuming a fixed byte offset. This correctly handles both
+     * CAN responses (no ISO headers) and KWP2000/ISO 9141-2 responses (3-byte ISO
+     * header prefix, e.g. "84 F1 10 41 00 BE 3F A8 13").
+     *
+     * Returns 0L on NO DATA, parse failure, or when the session is not active.
+     */
+    private suspend fun queryPidBitmap(command: String, timeoutMs: Long): Long {
+        val pidCode = command.drop(2).uppercase() // "0100" → "00", "0120" → "20"
+        val raw = sendCommand(command, timeoutMs)
+        val cleaned = raw.replace("\\s+".toRegex(), "").replace(">", "").uppercase()
+        val marker = "41$pidCode"
+        val idx = cleaned.indexOf(marker)
+        if (idx < 0) return 0L
+        val bitmapStart = idx + 4 // skip "41" (2 chars) + pidCode (2 chars)
+        if (cleaned.length < bitmapStart + 8) return 0L
+        return try {
+            cleaned.substring(bitmapStart, bitmapStart + 8).toLong(16)
+        } catch (_: NumberFormatException) {
+            0L
+        }
+    }
+
+    // ── PID support bitmap (legacy) ───────────────────────────────────────────
 
     /**
      * Check which PIDs are supported by the vehicle.
+     * @deprecated Prefer [runPidDiscovery] which caches results and covers all six ranges.
      */
     suspend fun getSupportedPids(timeoutMs: Long = 3000L): Set<String> {
         val supportedPids = mutableSetOf<String>()
