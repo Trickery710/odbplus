@@ -118,10 +118,10 @@ fun OdbHubScreen(
             requiresConnection = true
         ),
         OdbMenuItem(
-            id = "odb_hub/terminal",
-            label = "Terminal",
-            icon = Icons.Filled.Terminal,
-            description = "Custom OBD commands",
+            id = "odb_hub/tests",
+            label = "Test",
+            icon = Icons.Filled.Tune,
+            description = "Guided vehicle tests",
             requiresConnection = true
         ),
         OdbMenuItem(
@@ -132,10 +132,10 @@ fun OdbHubScreen(
             requiresConnection = false
         ),
         OdbMenuItem(
-            id = "odb_hub/guided_test",
-            label = "RPM Test",
-            icon = Icons.Filled.Tune,
-            description = "Guided idle → 1000 → 2000 RPM + DTCs",
+            id = "odb_hub/terminal",
+            label = "Terminal",
+            icon = Icons.Filled.Terminal,
+            description = "Custom OBD commands",
             requiresConnection = true
         )
     )

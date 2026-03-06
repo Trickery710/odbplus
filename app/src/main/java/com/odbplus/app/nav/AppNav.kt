@@ -5,6 +5,7 @@ import com.odbplus.app.ui.CodesScreen
 import com.odbplus.app.ui.ConnectScreen
 import com.odbplus.app.ui.GuidedRpmTestScreen
 import com.odbplus.app.ui.LiveScreen
+import com.odbplus.app.ui.TestsScreen
 import com.odbplus.app.ui.LogsScreen
 import com.odbplus.app.ui.OdbHubScreen
 import com.odbplus.app.ui.PartsScreen
@@ -103,6 +104,16 @@ fun AppScreen() {
                                 popUpTo("odb_hub/live") { inclusive = true }
                             }
                         }
+                    )
+                }
+                composable("odb_hub/tests") {
+                    TestsScreen(
+                        onNavigate = { route ->
+                            navController.navigate(route) {
+                                launchSingleTop = true
+                            }
+                        },
+                        onBack = { navController.popBackStack() }
                     )
                 }
                 composable("odb_hub/guided_test") {
