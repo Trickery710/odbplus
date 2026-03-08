@@ -23,6 +23,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Bluetooth
 import androidx.compose.material.icons.filled.CheckCircle
+import androidx.compose.material.icons.filled.DirectionsCar
 import androidx.compose.material.icons.filled.History
 import androidx.compose.material.icons.filled.Link
 import androidx.compose.material.icons.filled.LinkOff
@@ -55,6 +56,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import com.odbplus.app.ai.data.VehicleInfo
 import com.odbplus.app.connect.ConnectViewModel
 import com.odbplus.app.ui.theme.*
 import com.odbplus.core.transport.ConnectionState
@@ -73,6 +75,7 @@ fun OdbHubScreen(
     viewModel: ConnectViewModel = hiltViewModel()
 ) {
     val connectionState by viewModel.connectionState.collectAsState()
+    val currentVehicle by viewModel.currentVehicle.collectAsState()
     val isConnected = connectionState == ConnectionState.CONNECTED
 
     var showBtPicker by remember { mutableStateOf(false) }
@@ -153,6 +156,12 @@ fun OdbHubScreen(
             onConnectBt = connectBluetooth,
             onDisconnect = { viewModel.disconnect() }
         )
+
+        // Vehicle info card — shown when connected and VIN is known
+        if (isConnected && currentVehicle != null) {
+            Spacer(modifier = Modifier.height(12.dp))
+            CurrentVehicleCard(vehicle = currentVehicle!!)
+        }
 
         Spacer(modifier = Modifier.height(24.dp))
 
@@ -404,6 +413,56 @@ fun OdbMenuCard(
                     style = MaterialTheme.typography.labelSmall,
                     color = AmberSecondary.copy(alpha = 0.8f),
                     fontWeight = FontWeight.Medium
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun CurrentVehicleCard(vehicle: VehicleInfo) {
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(12.dp),
+        colors = CardDefaults.cardColors(containerColor = DarkSurfaceVariant)
+    ) {
+        Row(
+            modifier = Modifier.padding(12.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Box(
+                modifier = Modifier
+                    .size(40.dp)
+                    .clip(CircleShape)
+                    .background(CyanPrimary.copy(alpha = 0.12f)),
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(
+                    Icons.Filled.DirectionsCar,
+                    contentDescription = null,
+                    tint = CyanPrimary,
+                    modifier = Modifier.size(22.dp)
+                )
+            }
+            Spacer(modifier = Modifier.width(12.dp))
+            Column(modifier = Modifier.weight(1f)) {
+                Text(
+                    text = vehicle.displayName,
+                    style = MaterialTheme.typography.titleSmall,
+                    color = TextPrimary,
+                    fontWeight = FontWeight.SemiBold
+                )
+                Text(
+                    text = vehicle.vin,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = TextSecondary
+                )
+            }
+            vehicle.ecuName?.let {
+                Text(
+                    text = it,
+                    style = MaterialTheme.typography.labelSmall,
+                    color = CyanPrimary.copy(alpha = 0.8f)
                 )
             }
         }

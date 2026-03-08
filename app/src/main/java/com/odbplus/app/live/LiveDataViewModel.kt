@@ -56,6 +56,11 @@ data class LogSession(
     val dataPointCount: Int get() = dataPoints.size
 }
 
+/** A single timestamped value for chart rendering. */
+data class ChartPoint(val timestamp: Long, val value: Double)
+
+private const val CHART_MAX_POINTS = 120
+
 /**
  * UI state for the live data screen.
  */
@@ -63,6 +68,8 @@ data class LiveDataUiState(
     val isConnected: Boolean = false,
     val isPolling: Boolean = false,
     val pollIntervalMs: Long = 500L,
+    val chartData: Map<ObdPid, List<ChartPoint>> = emptyMap(),
+    val showChart: Boolean = false,
     /**
      * PIDs available for selection on the current vehicle.
      *
@@ -104,11 +111,17 @@ class LiveDataViewModel @Inject constructor(
         mgr.onPollCycle = { pidValues ->
             logSession.addPoint(pidValues)
             repository.updatePidValues(_uiState.value.pidValues)
-            // Record each non-null PID value to the sensor log DB
+            // Record each non-null PID value to the sensor log DB and update chart data
+            val now = System.currentTimeMillis()
+            val chartUpdates = _uiState.value.chartData.toMutableMap()
             for ((pid, v) in pidValues) {
                 val value = v ?: continue
                 sensorLoggingService.record(pid.name, value)
+                val existing = chartUpdates[pid] ?: emptyList()
+                chartUpdates[pid] = (existing + ChartPoint(now, value))
+                    .takeLast(CHART_MAX_POINTS)
             }
+            _uiState.update { it.copy(chartData = chartUpdates) }
         }
     }
     private val logSession = LogSessionManager(repository)
@@ -273,6 +286,8 @@ class LiveDataViewModel @Inject constructor(
     }
 
     fun togglePolling() { if (polling.isPolling.value) stopPolling() else startPolling() }
+
+    fun toggleChart() { _uiState.update { it.copy(showChart = !it.showChart) } }
 
     fun querySinglePid(pid: ObdPid) {
         if (!_uiState.value.isConnected || _uiState.value.isReplaying) return

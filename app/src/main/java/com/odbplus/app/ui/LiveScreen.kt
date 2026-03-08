@@ -71,6 +71,13 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.compose.ui.draw.drawWithCache
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.graphics.StrokeJoin
+import androidx.compose.ui.graphics.drawscope.Stroke
+import com.odbplus.app.live.ChartPoint
 import com.odbplus.app.live.LiveDataUiState
 import com.odbplus.app.live.LiveDataViewModel
 import com.odbplus.app.live.LogSession
@@ -110,8 +117,17 @@ fun LiveScreen(viewModel: LiveDataViewModel = hiltViewModel()) {
 
         if (uiState.selectedPids.isEmpty()) {
             EmptyStatePrompt(onOpenPidSelector = { showPidSelector = true })
+        } else if (uiState.showChart) {
+            PidLineChart(
+                chartData = uiState.chartData,
+                selectedPids = uiState.selectedPids,
+                onToggleChart = { viewModel.toggleChart() }
+            )
         } else {
-            LiveDataGrid(uiState = uiState)
+            LiveDataGrid(
+                uiState = uiState,
+                onToggleChart = { viewModel.toggleChart() }
+            )
         }
     }
 
@@ -509,17 +525,30 @@ private fun EmptyStatePrompt(onOpenPidSelector: () -> Unit) {
 }
 
 @Composable
-private fun LiveDataGrid(uiState: LiveDataUiState) {
-    LazyVerticalGrid(
-        columns = GridCells.Fixed(2),
-        contentPadding = PaddingValues(10.dp),
-        horizontalArrangement = Arrangement.spacedBy(10.dp),
-        verticalArrangement = Arrangement.spacedBy(10.dp),
-        modifier = Modifier.fillMaxSize()
-    ) {
-        items(uiState.selectedPids) { pid ->
-            val pidState = uiState.pidValues[pid] ?: PidDisplayState(pid)
-            PidDisplayCard(pidState = pidState)
+private fun LiveDataGrid(uiState: LiveDataUiState, onToggleChart: () -> Unit) {
+    Column(modifier = Modifier.fillMaxSize()) {
+        // Chart toggle button — only show when polling with data
+        if (uiState.isPolling && uiState.chartData.isNotEmpty()) {
+            TextButton(
+                onClick = onToggleChart,
+                modifier = Modifier
+                    .align(Alignment.End)
+                    .padding(end = 8.dp, top = 4.dp)
+            ) {
+                Text("Show Chart", style = MaterialTheme.typography.labelMedium, color = CyanPrimary)
+            }
+        }
+        LazyVerticalGrid(
+            columns = GridCells.Fixed(2),
+            contentPadding = PaddingValues(10.dp),
+            horizontalArrangement = Arrangement.spacedBy(10.dp),
+            verticalArrangement = Arrangement.spacedBy(10.dp),
+            modifier = Modifier.weight(1f)
+        ) {
+            items(uiState.selectedPids) { pid ->
+                val pidState = uiState.pidValues[pid] ?: PidDisplayState(pid)
+                PidDisplayCard(pidState = pidState)
+            }
         }
     }
 }
@@ -1055,6 +1084,136 @@ private fun LogSessionItem(
                         Icons.Default.Delete,
                         contentDescription = "Delete",
                         tint = RedError.copy(alpha = 0.7f)
+                    )
+                }
+            }
+        }
+    }
+}
+
+// ─── Live sensor chart ────────────────────────────────────────────────────────
+
+private val CHART_LINE_COLORS = listOf(
+    Color(0xFF00D4FF), // cyan
+    Color(0xFF00E676), // green
+    Color(0xFFFF8C00), // amber
+    Color(0xFFE040FB), // purple
+    Color(0xFFFF5252), // red
+    Color(0xFF40C4FF), // light blue
+    Color(0xFFFFFF00), // yellow
+    Color(0xFF69F0AE), // light green
+)
+
+@Composable
+private fun PidLineChart(
+    chartData: Map<ObdPid, List<ChartPoint>>,
+    selectedPids: List<ObdPid>,
+    onToggleChart: () -> Unit
+) {
+    val pidsWithData = selectedPids.filter { (chartData[it]?.size ?: 0) >= 2 }
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(DarkBackground)
+    ) {
+        // Toolbar
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 12.dp, vertical = 4.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                "Live Chart",
+                style = MaterialTheme.typography.titleSmall,
+                color = TextPrimary,
+                fontWeight = FontWeight.SemiBold,
+                modifier = Modifier.weight(1f)
+            )
+            TextButton(onClick = onToggleChart) {
+                Text("Grid View", style = MaterialTheme.typography.labelMedium, color = CyanPrimary)
+            }
+        }
+
+        HorizontalDivider(color = DarkBorder)
+
+        if (pidsWithData.isEmpty()) {
+            Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                Text("Collecting data...", color = TextSecondary, style = MaterialTheme.typography.bodyMedium)
+            }
+            return@Column
+        }
+
+        // Chart canvas
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(1f)
+                .padding(horizontal = 12.dp, vertical = 8.dp)
+                .drawWithCache {
+                    val width = size.width
+                    val height = size.height
+                    val padding = 8.dp.toPx()
+
+                    onDrawBehind {
+                        pidsWithData.forEachIndexed { idx, pid ->
+                            val points = chartData[pid] ?: return@forEachIndexed
+                            if (points.size < 2) return@forEachIndexed
+
+                            val color = CHART_LINE_COLORS[idx % CHART_LINE_COLORS.size]
+                            val values = points.map { it.value }
+                            val minVal = values.min()
+                            val maxVal = values.max()
+                            val range = (maxVal - minVal).takeIf { it > 0 } ?: 1.0
+
+                            val path = Path()
+                            points.forEachIndexed { i, pt ->
+                                val x = padding + (i.toFloat() / (points.size - 1)) * (width - 2 * padding)
+                                val y = height - padding - ((pt.value - minVal) / range * (height - 2 * padding)).toFloat()
+                                if (i == 0) path.moveTo(x, y) else path.lineTo(x, y)
+                            }
+                            drawPath(
+                                path = path,
+                                color = color,
+                                style = Stroke(
+                                    width = 2.dp.toPx(),
+                                    cap = StrokeCap.Round,
+                                    join = StrokeJoin.Round
+                                )
+                            )
+                        }
+                    }
+                }
+        ) {}
+
+        HorizontalDivider(color = DarkBorder)
+
+        // Legend
+        androidx.compose.foundation.layout.FlowRow(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 12.dp, vertical = 6.dp),
+            horizontalArrangement = Arrangement.spacedBy(12.dp),
+            verticalArrangement = Arrangement.spacedBy(4.dp)
+        ) {
+            pidsWithData.forEachIndexed { idx, pid ->
+                val color = CHART_LINE_COLORS[idx % CHART_LINE_COLORS.size]
+                val lastVal = chartData[pid]?.lastOrNull()?.value
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Box(
+                        Modifier
+                            .size(10.dp)
+                            .clip(CircleShape)
+                            .background(color)
+                    )
+                    Spacer(Modifier.width(4.dp))
+                    Text(
+                        text = "${pid.name}${if (lastVal != null) ": ${"%.1f".format(lastVal)} ${pid.unit}" else ""}",
+                        style = MaterialTheme.typography.labelSmall,
+                        color = color,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
                     )
                 }
             }

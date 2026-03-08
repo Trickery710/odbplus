@@ -129,32 +129,3 @@ data class VehicleInfo(
         fun empty() = VehicleInfo(vin = "")
     }
 }
-
-/**
- * Storage container for multiple vehicles indexed by VIN.
- */
-@Serializable
-data class VehicleDatabase(
-    val vehicles: Map<String, VehicleInfo> = emptyMap(),
-    val lastActiveVin: String? = null
-) {
-    fun getVehicle(vin: String): VehicleInfo? = vehicles[vin]
-
-    fun addOrUpdateVehicle(info: VehicleInfo): VehicleDatabase {
-        val existing = vehicles[info.vin]
-        val updated = if (existing != null) {
-            info.copy(
-                firstSeenTimestamp = existing.firstSeenTimestamp,
-                lastSeenTimestamp = System.currentTimeMillis()
-            )
-        } else {
-            info
-        }
-        return copy(
-            vehicles = vehicles + (info.vin to updated),
-            lastActiveVin = info.vin
-        )
-    }
-
-    fun isFirstTimeVehicle(vin: String): Boolean = !vehicles.containsKey(vin)
-}

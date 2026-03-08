@@ -2,6 +2,9 @@ package com.odbplus.app.diagnostics
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.odbplus.app.ai.VehicleInfoRepository
+import com.odbplus.app.data.db.dao.DtcLogDao
+import com.odbplus.app.data.db.entity.DtcLogEntity
 import com.odbplus.core.protocol.DiagnosticTroubleCode
 import com.odbplus.core.protocol.ObdService
 import com.odbplus.core.transport.ConnectionState
@@ -25,7 +28,9 @@ data class DiagnosticsUiState(
 
 @HiltViewModel
 class DiagnosticsViewModel @Inject constructor(
-    private val obdService: ObdService
+    private val obdService: ObdService,
+    private val dtcLogDao: DtcLogDao,
+    private val vehicleInfoRepository: VehicleInfoRepository
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(DiagnosticsUiState())
@@ -52,6 +57,7 @@ class DiagnosticsViewModel @Inject constructor(
                     errorMessage = null
                 )
             }
+            persistDtcs(stored + pending)
         }
     }
 
@@ -76,6 +82,27 @@ class DiagnosticsViewModel @Inject constructor(
                         errorMessage = "Clear command did not confirm"
                     )
                 }
+            }
+        }
+    }
+
+    private suspend fun persistDtcs(dtcs: List<DiagnosticTroubleCode>) {
+        val vin = vehicleInfoRepository.currentVehicle.value?.vin ?: return
+        if (dtcs.isEmpty()) return
+        val now = System.currentTimeMillis()
+        val oneDayAgo = now - 86_400_000L
+        for (dtc in dtcs) {
+            // Deduplicate: skip if same code was already logged in the last 24h
+            val recent = dtcLogDao.countRecent(vin, dtc.code, oneDayAgo)
+            if (recent == 0) {
+                dtcLogDao.insert(
+                    DtcLogEntity(
+                        vin = vin,
+                        dtcCode = dtc.code,
+                        description = dtc.description,
+                        timestamp = now
+                    )
+                )
             }
         }
     }
