@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 48" width="200" height="48">
+  <defs>
+    <linearGradient id="logo-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#2563EB"/>
+      <stop offset="100%" stop-color="#10B981"/>
+    </linearGradient>
+  </defs>
+  <!-- Circuit/diagnostic icon merged with + -->
+  <g transform="translate(4, 4)">
+    <!-- Outer circle -->
+    <circle cx="20" cy="20" r="18" fill="none" stroke="url(#logo-grad)" stroke-width="2.5"/>
+    <!-- Inner waveform/pulse -->
+    <polyline points="6,20 12,20 15,10 18,28 21,14 24,26 27,20 34,20"
+              fill="none" stroke="url(#logo-grad)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <!-- Circuit nodes -->
+    <circle cx="6" cy="20" r="2" fill="#2563EB"/>
+    <circle cx="34" cy="20" r="2" fill="#10B981"/>
+    <!-- Plus crosshair marks -->
+    <line x1="20" y1="2" x2="20" y2="8" stroke="#2563EB" stroke-width="1.5" stroke-linecap="round" opacity="0.5"/>
+    <line x1="20" y1="32" x2="20" y2="38" stroke="#10B981" stroke-width="1.5" stroke-linecap="round" opacity="0.5"/>
+    <line x1="2" y1="20" x2="6" y2="20" stroke="#2563EB" stroke-width="1.5" stroke-linecap="round" opacity="0.5"/>
+    <line x1="34" y1="20" x2="38" y2="20" stroke="#10B981" stroke-width="1.5" stroke-linecap="round" opacity="0.5"/>
+  </g>
+  <!-- Wordmark -->
+  <text x="54" y="34" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="28" font-weight="800" fill="#0F172A" letter-spacing="-1">
+    ODB
+  </text>
+  <text x="118" y="34" font-family="Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="28" font-weight="800" fill="url(#logo-grad)" letter-spacing="-1">
+    +
+  </text>
+</svg>

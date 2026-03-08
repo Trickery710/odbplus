@@ -3,14 +3,16 @@ package com.odbplus.app.nav
 import com.odbplus.app.ui.AiChatScreen
 import com.odbplus.app.ui.CodesScreen
 import com.odbplus.app.ui.ConnectScreen
+import com.odbplus.app.ui.DiagnosticHudScreen
 import com.odbplus.app.ui.GuidedRpmTestScreen
 import com.odbplus.app.ui.LiveScreen
-import com.odbplus.app.ui.TestsScreen
 import com.odbplus.app.ui.LogsScreen
 import com.odbplus.app.ui.OdbHubScreen
 import com.odbplus.app.ui.PartsScreen
 import com.odbplus.app.ui.TerminalScreen
 import com.odbplus.app.ui.ToolOrderingScreen
+import com.odbplus.app.ui.VehicleDetailScreen
+import com.odbplus.app.ui.VehicleHistoryScreen
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Icon
@@ -107,12 +109,7 @@ fun AppScreen() {
                     )
                 }
                 composable("odb_hub/tests") {
-                    TestsScreen(
-                        onNavigate = { route ->
-                            navController.navigate(route) {
-                                launchSingleTop = true
-                            }
-                        },
+                    DiagnosticHudScreen(
                         onBack = { navController.popBackStack() }
                     )
                 }
@@ -141,6 +138,28 @@ fun AppScreen() {
             // Tab 4: Tools
             composable(BottomNavItem.Tools.route) {
                 ToolOrderingScreen()
+            }
+
+            // Tab 5: Vehicle History
+            navigation(
+                startDestination = "vehicle/history",
+                route = BottomNavItem.Vehicle.route
+            ) {
+                composable("vehicle/history") {
+                    VehicleHistoryScreen(
+                        onVehicleClick = { vin ->
+                            navController.navigate("vehicle/detail/$vin") {
+                                launchSingleTop = true
+                            }
+                        }
+                    )
+                }
+                composable("vehicle/detail/{vin}") { backStackEntry ->
+                    VehicleDetailScreen(
+                        vin = backStackEntry.arguments?.getString("vin") ?: "",
+                        onBack = { navController.popBackStack() }
+                    )
+                }
             }
         }
     }

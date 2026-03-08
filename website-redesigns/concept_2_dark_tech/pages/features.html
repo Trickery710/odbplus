@@ -1,0 +1,833 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="ODB+ Features - AI diagnostics, live data monitoring, 18,000+ error codes, terminal mode, session logging, guided tests, forums, sensor library, and parts catalog.">
+  <meta name="theme-color" content="#0D1117">
+  <title>Features | ODB+</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500;600;700&family=Oxanium:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="../css/variables.css">
+  <link rel="stylesheet" href="../css/styles.css">
+
+  <style>
+    .features-hero {
+      padding-top: calc(80px + var(--space-16));
+      padding-bottom: var(--space-12);
+      text-align: center;
+      position: relative;
+    }
+
+    .features-hero::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--color-cyan), transparent);
+      opacity: 0.2;
+    }
+
+    .feature-detail {
+      padding-block: var(--section-gap);
+      position: relative;
+    }
+
+    .feature-detail:nth-child(even) {
+      background: var(--color-surface);
+    }
+
+    .feature-detail__inner {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-12);
+      align-items: center;
+      max-width: var(--container-max);
+      margin-inline: auto;
+      padding-inline: var(--space-6);
+    }
+
+    .feature-detail:nth-child(even) .feature-detail__inner {
+      direction: rtl;
+    }
+
+    .feature-detail:nth-child(even) .feature-detail__inner > * {
+      direction: ltr;
+    }
+
+    .feature-detail__content {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-4);
+    }
+
+    .feature-detail__number {
+      font-family: var(--font-display);
+      font-size: var(--text-4xl);
+      font-weight: 800;
+      color: var(--color-cyan);
+      opacity: 0.15;
+      line-height: 1;
+    }
+
+    .feature-detail__code {
+      margin-top: var(--space-4);
+    }
+
+    .feature-detail__visual {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .feature-detail__mockup {
+      width: 100%;
+      max-width: 480px;
+      background: var(--color-surface-2);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-xl);
+      overflow: hidden;
+    }
+
+    @media (max-width: 768px) {
+      .feature-detail__inner,
+      .feature-detail:nth-child(even) .feature-detail__inner {
+        grid-template-columns: 1fr;
+        direction: ltr;
+        gap: var(--space-8);
+      }
+      .feature-detail__visual {
+        order: -1;
+      }
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.6s var(--ease-out-expo), transform 0.6s var(--ease-out-expo);
+    }
+    .reveal.is-visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar" role="navigation" aria-label="Main navigation">
+    <div class="navbar__inner">
+      <a href="index.html" class="navbar__logo" aria-label="ODB+ Home">
+        <svg viewBox="0 0 300 80" width="120" height="32" aria-hidden="true">
+          <defs>
+            <filter id="navGlow"><feGaussianBlur in="SourceGraphic" stdDeviation="1.5" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+            <linearGradient id="navTrace" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#00D4FF" stop-opacity="0.1"/><stop offset="50%" stop-color="#00D4FF" stop-opacity="0.8"/><stop offset="100%" stop-color="#00D4FF" stop-opacity="0.1"/></linearGradient>
+          </defs>
+          <path d="M 30 10 L 18 20 L 18 60 L 30 70" fill="none" stroke="#00D4FF" stroke-width="2" stroke-linecap="round" opacity="0.7"/>
+          <path d="M 270 10 L 282 20 L 282 60 L 270 70" fill="none" stroke="#00D4FF" stroke-width="2" stroke-linecap="round" opacity="0.7"/>
+          <text x="90" y="52" font-family="Oxanium, sans-serif" font-size="42" font-weight="700" fill="#E6EDF3" letter-spacing="4" filter="url(#navGlow)">ODB</text>
+          <text x="220" y="52" font-family="Oxanium, sans-serif" font-size="42" font-weight="700" fill="#00D4FF" letter-spacing="2" filter="url(#navGlow)">+</text>
+          <line x1="40" y1="64" x2="260" y2="64" stroke="url(#navTrace)" stroke-width="1.5"/>
+          <circle cx="150" cy="64" r="2" fill="#00D4FF" opacity="0.6"/>
+        </svg>
+      </a>
+      <ul class="navbar__links" role="list">
+        <li><a href="index.html" class="navbar__link">Home</a></li>
+        <li><a href="features.html" class="navbar__link navbar__link--active">Features</a></li>
+        <li><a href="docs.html" class="navbar__link">Docs</a></li>
+        <li><a href="contact.html" class="navbar__link">Contact</a></li>
+      </ul>
+      <a href="#download" class="btn btn--primary navbar__cta">Download</a>
+      <button class="navbar__toggle" aria-label="Toggle navigation menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+    <div class="navbar__mobile-panel">
+      <a href="index.html" class="navbar__link">Home</a>
+      <a href="features.html" class="navbar__link navbar__link--active">Features</a>
+      <a href="docs.html" class="navbar__link">Docs</a>
+      <a href="contact.html" class="navbar__link">Contact</a>
+      <a href="#download" class="btn btn--primary" style="margin-top: var(--space-4); text-align: center;">Download</a>
+    </div>
+  </nav>
+
+
+  <!-- HERO -->
+  <section class="features-hero">
+    <div class="container">
+      <p class="section-label">All Features</p>
+      <h1 class="text-display">Every Tool You Need</h1>
+      <p class="text-body" style="max-width: 560px; margin-inline: auto; margin-top: var(--space-4);">
+        Ten integrated modules covering every aspect of OBD-II diagnostics,
+        from raw protocol access to AI-powered repair guidance.
+      </p>
+    </div>
+  </section>
+
+
+  <!-- FEATURE 1: AI Diagnostics -->
+  <div class="feature-detail reveal">
+    <div class="feature-detail__inner">
+      <div class="feature-detail__content">
+        <span class="feature-detail__number">01</span>
+        <span class="card__label">AI Engine</span>
+        <h2 class="text-h2">AI-Powered Diagnostics</h2>
+        <p class="text-body">
+          Chat with an AI that has direct access to your vehicle's live sensor data.
+          Describe a symptom -- "my car shakes at idle" -- and the AI correlates it with
+          real-time RPM variance, misfire counts, fuel trim drift, and O2 sensor patterns
+          to give you a targeted diagnosis.
+        </p>
+        <p class="text-body">
+          Unlike generic chatbots, ODB+'s AI sees the actual numbers. It knows
+          your coolant temp is 105C when it should be 90C. It sees your short-term
+          fuel trim at +18% when normal is +/-5%. It diagnoses from data, not guesses.
+        </p>
+        <div class="feature-detail__code">
+          <div class="code-block">
+            <div class="code-block__header">
+              <span class="code-block__lang">AI Session</span>
+            </div>
+            <div class="code-block__body">
+<pre><span class="cmt">// User query with live context</span>
+<span class="kw">User:</span> <span class="str">"Why is my engine running rough?"</span>
+
+<span class="cmt">// AI reads live PIDs</span>
+<span class="kw">Context:</span> RPM=<span class="num">847</span> (unstable +/-60)
+         STFT=<span class="num">+17.8%</span> (high)
+         O2_B1S1=<span class="num">0.12V</span> (lean)
+         MAP=<span class="num">28kPa</span> (low)
+
+<span class="kw">AI:</span> <span class="str">"Your engine is running lean. STFT is
+compensating at +17.8% -- well above normal.
+The O2 sensor confirms lean exhaust at 0.12V.
+Combined with low MAP reading, this suggests
+a vacuum leak. Check intake manifold gasket
+and all vacuum hoses."</span></pre>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="feature-detail__visual">
+        <div class="feature-detail__mockup">
+          <div class="preview__titlebar">
+            <span class="preview__dot preview__dot--red" aria-hidden="true"></span>
+            <span class="preview__dot preview__dot--yellow" aria-hidden="true"></span>
+            <span class="preview__dot preview__dot--green" aria-hidden="true"></span>
+            <span class="preview__title-text">AI Diagnostics</span>
+          </div>
+          <div style="padding: var(--space-6);">
+            <div style="background: rgba(0,212,255,0.05); border: 1px solid rgba(0,212,255,0.15); border-radius: var(--radius-lg); padding: var(--space-4); margin-bottom: var(--space-4);">
+              <p style="font-family: var(--font-mono); font-size: var(--text-xs); color: var(--color-cyan); margin-bottom: var(--space-2);">LIVE DATA CONTEXT</p>
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-2); font-family: var(--font-mono); font-size: var(--text-sm);">
+                <span style="color: var(--color-text-secondary);">RPM</span><span style="color: var(--color-amber); text-align: right;">847 (unstable)</span>
+                <span style="color: var(--color-text-secondary);">STFT</span><span style="color: var(--color-red); text-align: right;">+17.8%</span>
+                <span style="color: var(--color-text-secondary);">O2 B1S1</span><span style="color: var(--color-red); text-align: right;">0.12V</span>
+                <span style="color: var(--color-text-secondary);">MAP</span><span style="color: var(--color-amber); text-align: right;">28 kPa</span>
+              </div>
+            </div>
+            <div style="background: var(--color-surface); border-radius: var(--radius-md); padding: var(--space-3); font-size: var(--text-sm); color: var(--color-text-secondary); line-height: 1.6;">
+              Your engine is running lean. Short-term fuel trim is compensating at +17.8%. Check intake manifold gasket and vacuum hoses.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- FEATURE 2: Live Data -->
+  <div class="feature-detail reveal">
+    <div class="feature-detail__inner">
+      <div class="feature-detail__content">
+        <span class="feature-detail__number">02</span>
+        <span class="card__label">Real-Time</span>
+        <h2 class="text-h2">Live Data Monitoring</h2>
+        <p class="text-body">
+          Stream real-time sensor data from your vehicle's ECU. Monitor RPM, engine load,
+          coolant and intake air temperatures, O2 sensor voltages, mass air flow rate,
+          manifold absolute pressure, fuel trims, timing advance, and dozens more PIDs.
+        </p>
+        <p class="text-body">
+          Configurable refresh rates let you balance data density against adapter bandwidth.
+          Set threshold alerts to flag abnormal readings. View data as scrolling values,
+          live graphs, or a full-screen gauge HUD.
+        </p>
+        <div class="feature-detail__code">
+          <div class="code-block">
+            <div class="code-block__header">
+              <span class="code-block__lang">OBD-II Commands</span>
+            </div>
+            <div class="code-block__body">
+<pre><span class="cmt">// Query engine RPM (PID 0x0C)</span>
+<span class="kw">&gt;</span> <span class="str">010C</span>
+<span class="fn">84 F1 10</span> <span class="num">41 0C 0B 28</span>
+<span class="cmt">// Decode: (0x0B * 256 + 0x28) / 4 = 2842 RPM</span>
+
+<span class="cmt">// Query coolant temperature (PID 0x05)</span>
+<span class="kw">&gt;</span> <span class="str">0105</span>
+<span class="fn">84 F1 10</span> <span class="num">41 05 79</span>
+<span class="cmt">// Decode: 0x79 - 40 = 81 C</span>
+
+<span class="cmt">// Query O2 sensor Bank 1 Sensor 1</span>
+<span class="kw">&gt;</span> <span class="str">0114</span>
+<span class="fn">84 F1 10</span> <span class="num">41 14 5A FF</span>
+<span class="cmt">// Decode: 0x5A / 200 = 0.45V</span></pre>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="feature-detail__visual">
+        <div class="feature-detail__mockup">
+          <div class="preview__titlebar">
+            <span class="preview__dot preview__dot--red" aria-hidden="true"></span>
+            <span class="preview__dot preview__dot--yellow" aria-hidden="true"></span>
+            <span class="preview__dot preview__dot--green" aria-hidden="true"></span>
+            <span class="preview__title-text">Live Data Stream</span>
+          </div>
+          <div style="padding: var(--space-4); font-family: var(--font-mono); font-size: var(--text-sm);">
+            <div style="display: flex; justify-content: space-between; padding: var(--space-2) 0; border-bottom: 1px solid var(--color-border-subtle);">
+              <span style="color: var(--color-text-secondary);">ENGINE RPM</span>
+              <span style="color: var(--color-green); text-shadow: var(--glow-green-text);">2,842</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; padding: var(--space-2) 0; border-bottom: 1px solid var(--color-border-subtle);">
+              <span style="color: var(--color-text-secondary);">COOLANT TEMP</span>
+              <span style="color: var(--color-green);">81 C</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; padding: var(--space-2) 0; border-bottom: 1px solid var(--color-border-subtle);">
+              <span style="color: var(--color-text-secondary);">O2 BANK 1</span>
+              <span style="color: var(--color-green);">0.45V</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; padding: var(--space-2) 0; border-bottom: 1px solid var(--color-border-subtle);">
+              <span style="color: var(--color-text-secondary);">MAF RATE</span>
+              <span style="color: var(--color-green);">4.20 g/s</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; padding: var(--space-2) 0; border-bottom: 1px solid var(--color-border-subtle);">
+              <span style="color: var(--color-text-secondary);">INTAKE TEMP</span>
+              <span style="color: var(--color-green);">32 C</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; padding: var(--space-2) 0; border-bottom: 1px solid var(--color-border-subtle);">
+              <span style="color: var(--color-text-secondary);">ENGINE LOAD</span>
+              <span style="color: var(--color-cyan);">42.7%</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; padding: var(--space-2) 0; border-bottom: 1px solid var(--color-border-subtle);">
+              <span style="color: var(--color-text-secondary);">TIMING ADV</span>
+              <span style="color: var(--color-cyan);">14.5 deg</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; padding: var(--space-2) 0;">
+              <span style="color: var(--color-text-secondary);">FUEL TRIM</span>
+              <span style="color: var(--color-green);">+2.3%</span>
+            </div>
+          </div>
+          <div class="preview__status">
+            <span class="status-dot" aria-hidden="true"></span>
+            <span>Streaming 8 PIDs @ 4 Hz</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- FEATURE 3: Error Codes -->
+  <div class="feature-detail reveal">
+    <div class="feature-detail__inner">
+      <div class="feature-detail__content">
+        <span class="feature-detail__number">03</span>
+        <span class="card__label">Database</span>
+        <h2 class="text-h2">18,000+ Error Codes</h2>
+        <p class="text-body">
+          Comprehensive DTC database covering all standard OBD-II generic codes (P0xxx, P2xxx),
+          manufacturer-specific codes (P1xxx), body codes (Bxxxx), chassis codes (Cxxxx),
+          and network codes (Uxxxx).
+        </p>
+        <p class="text-body">
+          Each code entry includes a plain-language description, severity level,
+          common causes ranked by probability, affected components, recommended
+          diagnostic steps, and estimated repair cost ranges.
+        </p>
+        <div class="feature-detail__code">
+          <div class="code-block">
+            <div class="code-block__header">
+              <span class="code-block__lang">DTC Lookup</span>
+            </div>
+            <div class="code-block__body">
+<pre><span class="cmt">// Read stored DTCs</span>
+<span class="kw">&gt;</span> <span class="str">03</span>
+<span class="fn">84 F1 10</span> <span class="num">43 01 03 00 01 71 00</span>
+
+<span class="cmt">// Decoded:</span>
+<span class="op">P0300</span> Random/Multiple Cylinder Misfire
+  <span class="kw">Severity:</span> <span class="op">HIGH</span>
+  <span class="kw">Causes:</span>  Spark plugs, coils, injectors
+  <span class="kw">Status:</span>  Confirmed (MIL on)
+
+<span class="num">P0171</span> System Too Lean (Bank 1)
+  <span class="kw">Severity:</span> <span class="num">MEDIUM</span>
+  <span class="kw">Causes:</span>  Vacuum leak, MAF, fuel pump
+  <span class="kw">Status:</span>  Pending</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="feature-detail__visual">
+        <div style="display: flex; flex-direction: column; gap: var(--space-4); max-width: 480px; width: 100%;">
+          <article class="card--dtc">
+            <div style="display: flex; align-items: center; justify-content: space-between;">
+              <span class="dtc-code">P0300</span>
+              <span class="badge badge--error">Active</span>
+            </div>
+            <h4 class="dtc-title">Random/Multiple Cylinder Misfire Detected</h4>
+            <p class="dtc-desc">Check ignition coils, spark plugs, fuel injectors, and compression.</p>
+          </article>
+          <article class="card--dtc card--dtc-amber">
+            <div style="display: flex; align-items: center; justify-content: space-between;">
+              <span class="dtc-code">P0171</span>
+              <span class="badge badge--warning">Pending</span>
+            </div>
+            <h4 class="dtc-title">System Too Lean (Bank 1)</h4>
+            <p class="dtc-desc">Long-term fuel trim exceeding +25%. Check vacuum leak, MAF sensor, fuel pump.</p>
+          </article>
+          <article class="card--dtc" style="border-left-color: var(--color-green); opacity: 0.7;">
+            <div style="display: flex; align-items: center; justify-content: space-between;">
+              <span class="dtc-code" style="color: var(--color-green); text-shadow: 0 0 8px rgba(0,230,118,0.5);">P0420</span>
+              <span class="badge badge--connected">Cleared</span>
+            </div>
+            <h4 class="dtc-title">Catalyst System Efficiency Below Threshold</h4>
+            <p class="dtc-desc">Previously stored. Cleared after catalytic converter replacement.</p>
+          </article>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- FEATURE 4: Bluetooth -->
+  <div class="feature-detail reveal">
+    <div class="feature-detail__inner">
+      <div class="feature-detail__content">
+        <span class="feature-detail__number">04</span>
+        <span class="card__label">Connectivity</span>
+        <h2 class="text-h2">Bluetooth OBD-II Support</h2>
+        <p class="text-body">
+          Connect wirelessly via Bluetooth Classic or WiFi to any ELM327-compatible adapter.
+          ODB+ also supports STN-series and ESP32-based adapters with enhanced capabilities
+          through its Universal OBD-II Adapter Protocol Layer (UOAPL).
+        </p>
+        <p class="text-body">
+          The adapter fingerprinting system automatically identifies your adapter's capabilities,
+          selects the optimal driver, and configures communication parameters. No manual setup required.
+        </p>
+      </div>
+      <div class="feature-detail__visual">
+        <div class="feature-detail__mockup">
+          <div class="preview__titlebar">
+            <span class="preview__dot preview__dot--red" aria-hidden="true"></span>
+            <span class="preview__dot preview__dot--yellow" aria-hidden="true"></span>
+            <span class="preview__dot preview__dot--green" aria-hidden="true"></span>
+            <span class="preview__title-text">Connection Manager</span>
+          </div>
+          <div style="padding: var(--space-4);">
+            <div style="background: rgba(0,230,118,0.06); border: 1px solid rgba(0,230,118,0.2); border-radius: var(--radius-md); padding: var(--space-4); margin-bottom: var(--space-4); display: flex; align-items: center; gap: var(--space-3);">
+              <span style="width: 10px; height: 10px; border-radius: 50%; background: var(--color-green); box-shadow: var(--glow-green-sm); animation: pulse-glow 2s ease-in-out infinite; flex-shrink: 0;"></span>
+              <div>
+                <p style="font-family: var(--font-mono); font-size: var(--text-sm); font-weight: 600; color: var(--color-green);">Android-Vlink</p>
+                <p style="font-family: var(--font-mono); font-size: var(--text-xs); color: var(--color-text-tertiary);">13:E0:2F:8D:53:68 // ELM327 v2.3</p>
+              </div>
+            </div>
+            <div style="font-family: var(--font-mono); font-size: var(--text-xs); color: var(--color-text-tertiary); display: flex; flex-direction: column; gap: var(--space-1);">
+              <span><span style="color: var(--color-cyan);">Protocol:</span> ISO 14230-4 (KWP FAST)</span>
+              <span><span style="color: var(--color-cyan);">Driver:</span> ElmDriver v2.3</span>
+              <span><span style="color: var(--color-cyan);">Latency:</span> 23ms avg</span>
+              <span><span style="color: var(--color-cyan);">Session:</span> ACTIVE (12m 34s)</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- FEATURE 5: Session Logger -->
+  <div class="feature-detail reveal">
+    <div class="feature-detail__inner">
+      <div class="feature-detail__content">
+        <span class="feature-detail__number">05</span>
+        <span class="card__label">Recording</span>
+        <h2 class="text-h2">Session Logger & Replay</h2>
+        <p class="text-body">
+          Record complete diagnostic sessions with timestamped PID snapshots, DTC events,
+          and command history. Perfect for capturing intermittent issues that only appear
+          under specific driving conditions.
+        </p>
+        <p class="text-body">
+          Replay recorded sessions frame-by-frame with full timeline scrubbing.
+          Compare two sessions side-by-side to track changes after repairs.
+          Export logs as CSV for spreadsheet analysis or share with your mechanic.
+        </p>
+      </div>
+      <div class="feature-detail__visual">
+        <div class="feature-detail__mockup">
+          <div class="preview__titlebar">
+            <span class="preview__dot preview__dot--red" aria-hidden="true"></span>
+            <span class="preview__dot preview__dot--yellow" aria-hidden="true"></span>
+            <span class="preview__dot preview__dot--green" aria-hidden="true"></span>
+            <span class="preview__title-text">Session Replay</span>
+          </div>
+          <div style="padding: var(--space-4); font-family: var(--font-mono); font-size: var(--text-xs); color: var(--color-text-secondary);">
+            <div style="display: flex; justify-content: space-between; margin-bottom: var(--space-3);">
+              <span style="color: var(--color-cyan);">session_2026-03-06_14:23</span>
+              <span>Duration: 00:12:34</span>
+            </div>
+            <div style="height: 4px; background: var(--color-border); border-radius: 2px; margin-bottom: var(--space-4); position: relative;">
+              <div style="width: 65%; height: 100%; background: var(--color-cyan); border-radius: 2px; box-shadow: var(--glow-cyan-sm);"></div>
+              <div style="position: absolute; top: -3px; left: 65%; width: 10px; height: 10px; background: var(--color-cyan); border-radius: 50%; transform: translateX(-50%);"></div>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: var(--space-2);">
+              <div style="display: flex; gap: var(--space-2);"><span style="color: var(--color-text-tertiary); min-width: 65px;">00:08:12</span><span>RPM peaked at <span style="color: var(--color-amber);">4,200</span></span></div>
+              <div style="display: flex; gap: var(--space-2);"><span style="color: var(--color-text-tertiary); min-width: 65px;">00:08:14</span><span>Misfire event on cyl <span style="color: var(--color-red);">#3</span></span></div>
+              <div style="display: flex; gap: var(--space-2);"><span style="color: var(--color-text-tertiary); min-width: 65px;">00:08:15</span><span>STFT jumped to <span style="color: var(--color-amber);">+12.4%</span></span></div>
+              <div style="display: flex; gap: var(--space-2);"><span style="color: var(--color-text-tertiary); min-width: 65px;">00:08:17</span><span>RPM stabilized at <span style="color: var(--color-green);">2,100</span></span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- FEATURE 6: Terminal -->
+  <div class="feature-detail reveal">
+    <div class="feature-detail__inner">
+      <div class="feature-detail__content">
+        <span class="feature-detail__number">06</span>
+        <span class="card__label">Advanced</span>
+        <h2 class="text-h2">Terminal Mode</h2>
+        <p class="text-body">
+          For power users who need direct access to the OBD-II bus. Send any AT command
+          to configure the ELM327 adapter, or any standard OBD-II service command.
+          Full hex response display with optional header parsing.
+        </p>
+        <p class="text-body">
+          Persistent command history, command favorites, syntax highlighting, and
+          auto-completion for common AT and OBD commands. The terminal that every
+          automotive engineer wishes they had.
+        </p>
+        <div class="feature-detail__code">
+          <div class="code-block">
+            <div class="code-block__header"><span class="code-block__lang">Terminal Session</span></div>
+            <div class="code-block__body">
+<pre><span class="kw">&gt;</span> <span class="str">ATZ</span>              <span class="cmt">// Reset adapter</span>
+<span class="num">ELM327 v2.3</span>
+
+<span class="kw">&gt;</span> <span class="str">ATDP</span>             <span class="cmt">// Display protocol</span>
+<span class="num">AUTO, ISO 14230-4 (KWP FAST)</span>
+
+<span class="kw">&gt;</span> <span class="str">ATRV</span>             <span class="cmt">// Battery voltage</span>
+<span class="num">12.6V</span>
+
+<span class="kw">&gt;</span> <span class="str">0902</span>             <span class="cmt">// Request VIN</span>
+<span class="fn">84 F1 10</span> <span class="num">49 02 01</span>
+<span class="str">57 46 30 58 58 47 43 44</span>
+<span class="cmt">// VIN: WF0XXGCD...</span></pre>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="feature-detail__visual">
+        <div class="feature-detail__mockup" style="background: #0A0E14;">
+          <div class="preview__titlebar">
+            <span class="preview__dot preview__dot--red" aria-hidden="true"></span>
+            <span class="preview__dot preview__dot--yellow" aria-hidden="true"></span>
+            <span class="preview__dot preview__dot--green" aria-hidden="true"></span>
+            <span class="preview__title-text">odb+ terminal</span>
+          </div>
+          <div style="padding: var(--space-4); font-family: var(--font-mono); font-size: var(--text-sm); line-height: 1.8;">
+            <span style="color: var(--color-cyan);">&gt;</span> <span style="color: var(--color-text-primary);">ATZ</span><br>
+            <span style="color: var(--color-green);">ELM327 v2.3</span><br>
+            <span style="color: var(--color-cyan);">&gt;</span> <span style="color: var(--color-text-primary);">ATRV</span><br>
+            <span style="color: var(--color-green);">12.6V</span><br>
+            <span style="color: var(--color-cyan);">&gt;</span> <span style="color: var(--color-text-primary);">010C</span><br>
+            <span style="color: var(--color-cyan-dim);">84 F1 10 </span><span style="color: var(--color-green);">41 0C 0B 28</span><br>
+            <span style="color: var(--color-text-tertiary);">// RPM: 2,842</span><br>
+            <span style="color: var(--color-cyan);">&gt;</span> <span style="display: inline-block; width: 8px; height: 14px; background: var(--color-cyan); animation: cursor-blink 1s step-end infinite; vertical-align: text-bottom;"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- FEATURE 7: Guided Tests -->
+  <div class="feature-detail reveal">
+    <div class="feature-detail__inner">
+      <div class="feature-detail__content">
+        <span class="feature-detail__number">07</span>
+        <span class="card__label">Testing</span>
+        <h2 class="text-h2">Guided Tests & Diagnostic HUD</h2>
+        <p class="text-body">
+          Run structured diagnostic tests with real-time pass/fail evaluation.
+          The RPM test validates idle stability and throttle response.
+          The misfire counter tracks per-cylinder misfire rates during driving.
+          Component activation tests verify actuator operation.
+        </p>
+        <p class="text-body">
+          Full-screen HUD mode overlays critical data on a dark background
+          optimized for test drives. See RPM, speed, coolant temp, and active
+          DTCs at a glance while keeping your eyes on the road.
+        </p>
+      </div>
+      <div class="feature-detail__visual">
+        <div class="feature-detail__mockup" style="background: #0A0E14;">
+          <div style="padding: var(--space-6); text-align: center;">
+            <p style="font-family: var(--font-mono); font-size: var(--text-xs); color: var(--color-cyan); text-transform: uppercase; letter-spacing: 0.15em; margin-bottom: var(--space-4);">Diagnostic HUD</p>
+            <div style="font-family: var(--font-display); font-size: var(--text-4xl); font-weight: 800; color: var(--color-text-primary); text-shadow: var(--glow-cyan-text-lg); line-height: 1;">2847</div>
+            <div style="font-family: var(--font-mono); font-size: var(--text-xs); color: var(--color-text-tertiary); margin-bottom: var(--space-6);">RPM</div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: var(--space-4); font-family: var(--font-mono); font-size: var(--text-sm);">
+              <div>
+                <div style="color: var(--color-green); font-size: var(--text-xl); font-weight: 700; text-shadow: var(--glow-green-text);">89</div>
+                <div style="font-size: var(--text-xs); color: var(--color-text-tertiary);">COOLANT C</div>
+              </div>
+              <div>
+                <div style="color: var(--color-cyan); font-size: var(--text-xl); font-weight: 700; text-shadow: var(--glow-cyan-text);">62</div>
+                <div style="font-size: var(--text-xs); color: var(--color-text-tertiary);">KM/H</div>
+              </div>
+              <div>
+                <div style="color: var(--color-green); font-size: var(--text-xl); font-weight: 700; text-shadow: var(--glow-green-text);">0</div>
+                <div style="font-size: var(--text-xs); color: var(--color-text-tertiary);">DTCs</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- FEATURE 8: Forums -->
+  <div class="feature-detail reveal">
+    <div class="feature-detail__inner">
+      <div class="feature-detail__content">
+        <span class="feature-detail__number">08</span>
+        <span class="card__label">Community</span>
+        <h2 class="text-h2">Vehicle-Specific Forums</h2>
+        <p class="text-body">
+          Access community forums organized by manufacturer -- 50+ brands from Acura to Volvo.
+          Find vehicle-specific diagnostic tips, known issues, TSBs, and repair solutions
+          from other owners and mechanics who work on the same platform.
+        </p>
+        <p class="text-body">
+          Post your diagnostic session data directly to forum threads so other members
+          can analyze your readings and provide targeted advice.
+        </p>
+      </div>
+      <div class="feature-detail__visual">
+        <div class="feature-detail__mockup">
+          <div class="preview__titlebar">
+            <span class="preview__dot preview__dot--red" aria-hidden="true"></span>
+            <span class="preview__dot preview__dot--yellow" aria-hidden="true"></span>
+            <span class="preview__dot preview__dot--green" aria-hidden="true"></span>
+            <span class="preview__title-text">Forums</span>
+          </div>
+          <div style="padding: var(--space-4); display: flex; flex-direction: column; gap: var(--space-3);">
+            <div style="padding: var(--space-3); border: 1px solid var(--color-border-subtle); border-radius: var(--radius-md); cursor: pointer;">
+              <p style="font-size: var(--text-sm); font-weight: 600; color: var(--color-text-primary); margin-bottom: 2px;">P0300 Misfire on cold start -- Honda Civic 2018</p>
+              <p style="font-size: var(--text-xs); color: var(--color-text-tertiary);">12 replies // Last activity 2h ago</p>
+            </div>
+            <div style="padding: var(--space-3); border: 1px solid var(--color-border-subtle); border-radius: var(--radius-md); cursor: pointer;">
+              <p style="font-size: var(--text-sm); font-weight: 600; color: var(--color-text-primary); margin-bottom: 2px;">KWP2000 protocol tips for older VWs</p>
+              <p style="font-size: var(--text-xs); color: var(--color-text-tertiary);">8 replies // Last activity 6h ago</p>
+            </div>
+            <div style="padding: var(--space-3); border: 1px solid var(--color-border-subtle); border-radius: var(--radius-md); cursor: pointer;">
+              <p style="font-size: var(--text-sm); font-weight: 600; color: var(--color-text-primary); margin-bottom: 2px;">MAF sensor cleaning vs replacement -- Toyota</p>
+              <p style="font-size: var(--text-xs); color: var(--color-text-tertiary);">23 replies // Last activity 1d ago</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- FEATURE 9: Sensor Library -->
+  <div class="feature-detail reveal">
+    <div class="feature-detail__inner">
+      <div class="feature-detail__content">
+        <span class="feature-detail__number">09</span>
+        <span class="card__label">Reference</span>
+        <h2 class="text-h2">Sensor Reference Library</h2>
+        <p class="text-body">
+          Comprehensive reference guides for every common automotive sensor.
+          Learn what each sensor does, where it is located, normal operating ranges,
+          symptoms of failure, and how to test it with a multimeter.
+        </p>
+        <p class="text-body">
+          Cross-referenced with OBD-II PIDs so you can jump from a live reading
+          directly to the sensor reference for that parameter.
+        </p>
+      </div>
+      <div class="feature-detail__visual">
+        <div class="feature-detail__mockup">
+          <div class="preview__titlebar">
+            <span class="preview__dot preview__dot--red" aria-hidden="true"></span>
+            <span class="preview__dot preview__dot--yellow" aria-hidden="true"></span>
+            <span class="preview__dot preview__dot--green" aria-hidden="true"></span>
+            <span class="preview__title-text">Sensor: O2 Sensor (Bank 1, Sensor 1)</span>
+          </div>
+          <div style="padding: var(--space-4); font-family: var(--font-mono); font-size: var(--text-xs); line-height: 1.8; color: var(--color-text-secondary);">
+            <p style="color: var(--color-cyan); font-weight: 600; margin-bottom: var(--space-2);">OXYGEN SENSOR (LAMBDA)</p>
+            <p><span style="color: var(--color-text-tertiary);">PID:</span> <span style="color: var(--color-cyan);">0x14</span></p>
+            <p><span style="color: var(--color-text-tertiary);">Location:</span> Exhaust manifold, pre-catalytic converter</p>
+            <p><span style="color: var(--color-text-tertiary);">Type:</span> Narrowband zirconia (0-1V)</p>
+            <p><span style="color: var(--color-text-tertiary);">Normal range:</span> <span style="color: var(--color-green);">0.1V - 0.9V</span> (oscillating)</p>
+            <p><span style="color: var(--color-text-tertiary);">Failure symptoms:</span> Poor fuel economy, rough idle, failed emissions</p>
+            <p style="margin-top: var(--space-3); color: var(--color-text-tertiary);">TEST: Sensor should oscillate between 0.1V and 0.9V at idle. Stuck low = lean exhaust. Stuck high = rich exhaust.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- FEATURE 10: Parts Catalog -->
+  <div class="feature-detail reveal">
+    <div class="feature-detail__inner">
+      <div class="feature-detail__content">
+        <span class="feature-detail__number">10</span>
+        <span class="card__label">Parts</span>
+        <h2 class="text-h2">Parts Catalog</h2>
+        <p class="text-body">
+          When a diagnostic reveals a failed component, jump directly to the parts catalog
+          to find replacement parts. Cross-referenced with DTCs and sensor types for
+          targeted part suggestions.
+        </p>
+        <p class="text-body">
+          See OEM part numbers, aftermarket alternatives, and pricing from multiple
+          suppliers. Save parts to a list for easy ordering.
+        </p>
+      </div>
+      <div class="feature-detail__visual">
+        <div class="feature-detail__mockup">
+          <div class="preview__titlebar">
+            <span class="preview__dot preview__dot--red" aria-hidden="true"></span>
+            <span class="preview__dot preview__dot--yellow" aria-hidden="true"></span>
+            <span class="preview__dot preview__dot--green" aria-hidden="true"></span>
+            <span class="preview__title-text">Parts Catalog</span>
+          </div>
+          <div style="padding: var(--space-4);">
+            <p style="font-family: var(--font-mono); font-size: var(--text-xs); color: var(--color-cyan); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: var(--space-3);">Suggested for P0300</p>
+            <div style="display: flex; flex-direction: column; gap: var(--space-3);">
+              <div style="display: flex; justify-content: space-between; align-items: center; padding: var(--space-3); border: 1px solid var(--color-border-subtle); border-radius: var(--radius-md);">
+                <div>
+                  <p style="font-size: var(--text-sm); font-weight: 600; color: var(--color-text-primary);">Ignition Coil Pack</p>
+                  <p style="font-size: var(--text-xs); color: var(--color-text-tertiary);">OEM: 90919-02240</p>
+                </div>
+                <span style="font-family: var(--font-mono); font-size: var(--text-sm); color: var(--color-green);">$34.99</span>
+              </div>
+              <div style="display: flex; justify-content: space-between; align-items: center; padding: var(--space-3); border: 1px solid var(--color-border-subtle); border-radius: var(--radius-md);">
+                <div>
+                  <p style="font-size: var(--text-sm); font-weight: 600; color: var(--color-text-primary);">Spark Plug Set (x4)</p>
+                  <p style="font-size: var(--text-xs); color: var(--color-text-tertiary);">NGK Iridium IX</p>
+                </div>
+                <span style="font-family: var(--font-mono); font-size: var(--text-sm); color: var(--color-green);">$28.49</span>
+              </div>
+              <div style="display: flex; justify-content: space-between; align-items: center; padding: var(--space-3); border: 1px solid var(--color-border-subtle); border-radius: var(--radius-md);">
+                <div>
+                  <p style="font-size: var(--text-sm); font-weight: 600; color: var(--color-text-primary);">Fuel Injector</p>
+                  <p style="font-size: var(--text-xs); color: var(--color-text-tertiary);">Bosch 0280158028</p>
+                </div>
+                <span style="font-family: var(--font-mono); font-size: var(--text-sm); color: var(--color-green);">$42.00</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- CTA -->
+  <section class="cta-section section" id="download" style="padding-block: var(--section-gap);">
+    <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 400px; height: 400px; background: radial-gradient(circle, rgba(0, 212, 255, 0.06) 0%, transparent 70%); pointer-events: none;" aria-hidden="true"></div>
+    <div class="container" style="text-align: center; position: relative;">
+      <p class="section-label">Get Started</p>
+      <h2 class="text-h1">Ready to Diagnose?</h2>
+      <p class="text-body" style="max-width: 480px; margin-inline: auto; margin-top: var(--space-4);">
+        Download ODB+ for Android and start reading your vehicle like never before.
+      </p>
+      <div style="display: flex; gap: var(--space-4); justify-content: center; flex-wrap: wrap; margin-top: var(--space-6);">
+        <a href="#" class="btn btn--primary btn--lg">Download for Android</a>
+        <a href="docs.html" class="btn btn--secondary btn--lg">Read the Docs</a>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- FOOTER -->
+  <footer class="footer" role="contentinfo">
+    <div class="footer__grid">
+      <div class="footer__brand">
+        <a href="index.html" aria-label="ODB+ Home">
+          <svg viewBox="0 0 300 80" width="120" height="32" aria-hidden="true">
+            <defs><filter id="ftGlow"><feGaussianBlur in="SourceGraphic" stdDeviation="1.5" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter><linearGradient id="ftTrace" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#00D4FF" stop-opacity="0.1"/><stop offset="50%" stop-color="#00D4FF" stop-opacity="0.8"/><stop offset="100%" stop-color="#00D4FF" stop-opacity="0.1"/></linearGradient></defs>
+            <path d="M 30 10 L 18 20 L 18 60 L 30 70" fill="none" stroke="#00D4FF" stroke-width="2" stroke-linecap="round" opacity="0.7"/>
+            <path d="M 270 10 L 282 20 L 282 60 L 270 70" fill="none" stroke="#00D4FF" stroke-width="2" stroke-linecap="round" opacity="0.7"/>
+            <text x="90" y="52" font-family="Oxanium, sans-serif" font-size="42" font-weight="700" fill="#E6EDF3" letter-spacing="4" filter="url(#ftGlow)">ODB</text>
+            <text x="220" y="52" font-family="Oxanium, sans-serif" font-size="42" font-weight="700" fill="#00D4FF" letter-spacing="2" filter="url(#ftGlow)">+</text>
+            <line x1="40" y1="64" x2="260" y2="64" stroke="url(#ftTrace)" stroke-width="1.5"/>
+          </svg>
+        </a>
+        <p class="footer__tagline">Professional Android OBD-II diagnostics.</p>
+      </div>
+      <div class="footer__col">
+        <h3 class="footer__col-title">Product</h3>
+        <ul role="list"><li><a href="features.html">Features</a></li><li><a href="#">Download</a></li><li><a href="docs.html">Docs</a></li></ul>
+      </div>
+      <div class="footer__col">
+        <h3 class="footer__col-title">Resources</h3>
+        <ul role="list"><li><a href="docs.html">Getting Started</a></li><li><a href="#">OBD-II Reference</a></li><li><a href="#">Forums</a></li></ul>
+      </div>
+      <div class="footer__col">
+        <h3 class="footer__col-title">Company</h3>
+        <ul role="list"><li><a href="#">About</a></li><li><a href="contact.html">Contact</a></li><li><a href="#">Privacy</a></li></ul>
+      </div>
+    </div>
+    <div class="footer__bottom">
+      <p class="footer__copyright"><span class="prompt">&gt;</span> &copy; 2026 ODB+ // All rights reserved // v2.0.0</p>
+      <p class="footer__copyright">Built with obsession for diagnostics.</p>
+    </div>
+  </footer>
+
+  <script>
+    /* Mobile nav toggle */
+    (function() {
+      var toggle = document.querySelector('.navbar__toggle');
+      var panel = document.querySelector('.navbar__mobile-panel');
+      if (!toggle || !panel) return;
+      toggle.addEventListener('click', function() {
+        var isOpen = panel.classList.toggle('is-open');
+        toggle.setAttribute('aria-expanded', isOpen);
+        var spans = toggle.querySelectorAll('span');
+        spans[0].style.transform = isOpen ? 'rotate(45deg) translate(5px, 5px)' : '';
+        spans[1].style.opacity = isOpen ? '0' : '';
+        spans[2].style.transform = isOpen ? 'rotate(-45deg) translate(5px, -5px)' : '';
+      });
+    })();
+
+    /* Scroll reveal */
+    (function() {
+      var observer = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+          if (entry.isIntersecting) entry.target.classList.add('is-visible');
+        });
+      }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+      document.querySelectorAll('.reveal').forEach(function(el) { observer.observe(el); });
+    })();
+  </script>
+</body>
+</html>

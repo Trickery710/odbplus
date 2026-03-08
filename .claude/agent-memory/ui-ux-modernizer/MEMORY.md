@@ -18,6 +18,16 @@
 - **Text**: `#E6EDF3` primary, `#8B949E` secondary, `#6E7681` tertiary
 - Color tokens in `/app/src/main/java/com/odbplus/app/ui/theme/Color.kt`
 
+## Website Concept Series
+- Location: `/home/casey/Desktop/projects/odbplus/website-redesigns/`
+- Concept 5 (High Contrast Diagnostic Tool): `concept_5_high_contrast_tool/`
+  - Pure black (#000000) + matrix green (#00FF88) palette
+  - Scan-tool aesthetic (Snap-on Zeus, Autel MaxiSys inspired)
+  - Fonts: Rajdhani (headings), Share Tech Mono (data), Barlow Condensed (labels)
+  - Component pattern: bracket-style nav [ LINKS ], tabular data, PASS/FAIL/WARN badges
+  - Fully static HTML/CSS, zero JS frameworks, SVG assets only
+  - Pages: index, features, docs, contact
+
 ## Key Patterns
 - Cards use `DarkSurfaceVariant` bg with 1dp `DarkBorder` border, 14-16dp corner radius
 - Buttons: CyanPrimary with TextOnAccent, 12dp corner radius

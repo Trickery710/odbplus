@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Contact ODB+ - Get support, report bugs, or reach out to our team.">
+  <meta name="theme-color" content="#2563EB">
+  <title>Contact - ODB+</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/variables.css">
+  <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav class="navbar" role="navigation" aria-label="Main navigation">
+    <div class="container navbar__inner">
+      <a href="index.html" class="navbar__logo" aria-label="ODB+ Home">
+        <svg viewBox="0 0 200 48" width="140" height="34" aria-hidden="true">
+          <defs><linearGradient id="nav-logo-grad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#2563EB"/><stop offset="100%" stop-color="#10B981"/></linearGradient></defs>
+          <g transform="translate(4, 4)">
+            <circle cx="20" cy="20" r="18" fill="none" stroke="url(#nav-logo-grad)" stroke-width="2.5"/>
+            <polyline points="6,20 12,20 15,10 18,28 21,14 24,26 27,20 34,20" fill="none" stroke="url(#nav-logo-grad)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="6" cy="20" r="2" fill="#2563EB"/><circle cx="34" cy="20" r="2" fill="#10B981"/>
+          </g>
+          <text x="54" y="34" font-family="Inter, sans-serif" font-size="28" font-weight="800" fill="#0F172A" letter-spacing="-1">ODB</text>
+          <text x="118" y="34" font-family="Inter, sans-serif" font-size="28" font-weight="800" fill="url(#nav-logo-grad)" letter-spacing="-1">+</text>
+        </svg>
+      </a>
+      <div class="navbar__links" role="menubar">
+        <a href="features.html" role="menuitem">Features</a>
+        <a href="index.html#how-it-works" role="menuitem">How It Works</a>
+        <a href="docs.html" role="menuitem">Docs</a>
+        <a href="https://community.odbplus.com" role="menuitem">Community</a>
+        <a href="contact.html" role="menuitem" class="active">Contact</a>
+      </div>
+      <div class="navbar__actions">
+        <a href="#download" class="btn btn-primary btn-sm">Download App</a>
+        <button class="navbar__hamburger" aria-label="Open menu" aria-expanded="false" onclick="toggleMobileMenu()">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+    <div class="mobile-menu" id="mobile-menu" role="menu">
+      <a href="features.html">Features</a>
+      <a href="docs.html">Docs</a>
+      <a href="contact.html">Contact</a>
+    </div>
+  </nav>
+
+
+  <!-- Page Header -->
+  <section class="page-header">
+    <div class="container">
+      <h1>Get in Touch</h1>
+      <p>Have a question, found a bug, or want to collaborate? We would love to hear from you.</p>
+    </div>
+  </section>
+
+
+  <!-- Contact Content -->
+  <section class="section">
+    <div class="container">
+      <div class="contact-grid">
+
+        <!-- Contact Form -->
+        <div>
+          <h2 style="margin-bottom: var(--space-6);">Send a Message</h2>
+          <form action="#" method="POST" aria-label="Contact form" novalidate>
+            <div class="form-group">
+              <label for="contact-name">Name</label>
+              <input type="text" id="contact-name" name="name" class="form-input" placeholder="Your full name" required autocomplete="name">
+            </div>
+            <div class="form-group">
+              <label for="contact-email">Email</label>
+              <input type="email" id="contact-email" name="email" class="form-input" placeholder="you@example.com" required autocomplete="email">
+            </div>
+            <div class="form-group">
+              <label for="contact-subject">Subject</label>
+              <select id="contact-subject" name="subject" class="form-input form-select" required>
+                <option value="" disabled selected>Select a topic</option>
+                <option value="support">Technical Support</option>
+                <option value="bug">Bug Report</option>
+                <option value="feature">Feature Request</option>
+                <option value="adapter">Adapter Compatibility</option>
+                <option value="business">Business Inquiry</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="contact-message">Message</label>
+              <textarea id="contact-message" name="message" class="form-input form-textarea" placeholder="Describe your question or issue in detail. If reporting a bug, include your device model, adapter type, and steps to reproduce." required></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary btn-lg" style="width: 100%;">Send Message</button>
+          </form>
+        </div>
+
+        <!-- Support Channels + FAQ -->
+        <div>
+          <!-- Support Channels -->
+          <h2 style="margin-bottom: var(--space-6);">Other Ways to Reach Us</h2>
+          <div class="support-channels" style="margin-bottom: var(--space-12);">
+
+            <div class="support-channel">
+              <div class="support-channel__icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                </svg>
+              </div>
+              <div>
+                <div class="support-channel__title">Community Forums</div>
+                <p class="support-channel__desc">Post questions and get help from the ODB+ community. Active members and moderators respond within hours.</p>
+                <a href="https://community.odbplus.com" style="font-size: var(--text-sm); margin-top: var(--space-2); display: inline-block;">Visit Forums</a>
+              </div>
+            </div>
+
+            <div class="support-channel">
+              <div class="support-channel__icon" style="background: var(--color-accent-50); color: var(--color-accent);">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <rect x="2" y="3" width="20" height="18" rx="3"/>
+                  <polyline points="6,10 10,13 6,16"/><line x1="13" y1="16" x2="18" y2="16"/>
+                </svg>
+              </div>
+              <div>
+                <div class="support-channel__title">GitHub Issues</div>
+                <p class="support-channel__desc">Report bugs, request features, or contribute to ODB+ development on our open-source repository.</p>
+                <a href="https://github.com/odbplus/issues" style="font-size: var(--text-sm); margin-top: var(--space-2); display: inline-block;">Open an Issue</a>
+              </div>
+            </div>
+
+            <div class="support-channel">
+              <div class="support-channel__icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                  <polyline points="22,6 12,13 2,6"/>
+                </svg>
+              </div>
+              <div>
+                <div class="support-channel__title">Email</div>
+                <p class="support-channel__desc">For private matters or business inquiries, email us directly. We aim to respond within 24 hours.</p>
+                <a href="mailto:support@odbplus.com" style="font-size: var(--text-sm); margin-top: var(--space-2); display: inline-block;">support@odbplus.com</a>
+              </div>
+            </div>
+
+            <div class="support-channel">
+              <div class="support-channel__icon" style="background: var(--color-accent-50); color: var(--color-accent);">
+                <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" width="20" height="20">
+                  <path d="M20.317 4.3698a19.7913 19.7913 0 00-4.8851-1.5152.0741.0741 0 00-.0785.0371c-.211.3753-.4447.8648-.6083 1.2495-1.8447-.2762-3.68-.2762-5.4868 0-.1636-.3933-.4058-.8742-.6177-1.2495a.077.077 0 00-.0785-.037 19.7363 19.7363 0 00-4.8852 1.515.0699.0699 0 00-.0321.0277C.5334 9.0458-.319 13.5799.0992 18.0578a.0824.0824 0 00.0312.0561c2.0528 1.5076 4.0413 2.4228 5.9929 3.0294a.0777.0777 0 00.0842-.0276c.4616-.6304.8731-1.2952 1.226-1.9942a.076.076 0 00-.0416-.1057c-.6528-.2476-1.2743-.5495-1.8722-.8923a.077.077 0 01-.0076-.1277c.1258-.0943.2517-.1923.3718-.2914a.0743.0743 0 01.0776-.0105c3.9278 1.7933 8.18 1.7933 12.0614 0a.0739.0739 0 01.0785.0095c.1202.099.246.1981.3728.2924a.077.077 0 01-.0066.1276 12.2986 12.2986 0 01-1.873.8914.0766.0766 0 00-.0407.1067c.3604.698.7719 1.3628 1.225 1.9932a.076.076 0 00.0842.0286c1.961-.6067 3.9495-1.5219 6.0023-3.0294a.077.077 0 00.0313-.0552c.5004-5.177-.8382-9.6739-3.5485-13.6604a.061.061 0 00-.0312-.0286zM8.02 15.3312c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9555-2.4189 2.157-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.9555 2.4189-2.1569 2.4189zm7.9748 0c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9554-2.4189 2.1569-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.946 2.4189-2.1568 2.4189z"/>
+                </svg>
+              </div>
+              <div>
+                <div class="support-channel__title">Discord</div>
+                <p class="support-channel__desc">Join our Discord server for real-time chat with developers and fellow users.</p>
+                <a href="https://discord.gg/odbplus" style="font-size: var(--text-sm); margin-top: var(--space-2); display: inline-block;">Join Discord</a>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- FAQ Accordion -->
+          <h2 style="margin-bottom: var(--space-6);">Common Questions</h2>
+          <div class="accordion" role="list">
+
+            <div class="accordion__item" role="listitem">
+              <button class="accordion__trigger" aria-expanded="false" onclick="toggleAccordion(this)">
+                How long does support take to respond?
+              </button>
+              <div class="accordion__content">
+                <div class="accordion__body">
+                  We aim to respond to all support requests within 24 hours on business days. Community forum posts typically get answers within a few hours from other users. For urgent adapter compatibility issues, Discord is the fastest channel.
+                </div>
+              </div>
+            </div>
+
+            <div class="accordion__item" role="listitem">
+              <button class="accordion__trigger" aria-expanded="false" onclick="toggleAccordion(this)">
+                My adapter is not connecting. What should I include in a bug report?
+              </button>
+              <div class="accordion__content">
+                <div class="accordion__body">
+                  Please include: your Android device model and OS version, the adapter brand and model (or the name shown in Bluetooth settings), your vehicle year/make/model, and the exact error message shown in ODB+. If possible, also include a screenshot from Terminal mode showing the response to the ATI command.
+                </div>
+              </div>
+            </div>
+
+            <div class="accordion__item" role="listitem">
+              <button class="accordion__trigger" aria-expanded="false" onclick="toggleAccordion(this)">
+                Can I request support for a specific vehicle or adapter?
+              </button>
+              <div class="accordion__content">
+                <div class="accordion__body">
+                  Absolutely. If your vehicle or adapter is not working with ODB+, submit a feature request through this form or open a GitHub issue. We prioritize adapter compatibility based on user demand. Please include the adapter firmware version (send ATI in Terminal mode) and your vehicle's protocol (send ATDP).
+                </div>
+              </div>
+            </div>
+
+            <div class="accordion__item" role="listitem">
+              <button class="accordion__trigger" aria-expanded="false" onclick="toggleAccordion(this)">
+                Is ODB+ open source? Can I contribute?
+              </button>
+              <div class="accordion__content">
+                <div class="accordion__body">
+                  Core protocol and transport layers are open source on GitHub. We welcome contributions, especially for new adapter drivers, protocol improvements, and DTC database entries. Check our contributing guide on GitHub for details on code style, testing requirements, and pull request process.
+                </div>
+              </div>
+            </div>
+
+            <div class="accordion__item" role="listitem">
+              <button class="accordion__trigger" aria-expanded="false" onclick="toggleAccordion(this)">
+                Do you offer enterprise or fleet licensing?
+              </button>
+              <div class="accordion__content">
+                <div class="accordion__body">
+                  Yes. For fleet management companies, repair shops, and automotive businesses, we offer volume licensing with additional features like centralized device management, API access, and custom reporting. Contact us through the business inquiry option in the form above.
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- Footer -->
+  <footer class="site-footer" role="contentinfo">
+    <div class="container">
+      <div class="footer__top">
+        <div class="footer__brand">
+          <a href="index.html" aria-label="ODB+ Home">
+            <svg viewBox="0 0 200 48" width="120" height="30" aria-hidden="true">
+              <defs><linearGradient id="f-logo-grad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#2563EB"/><stop offset="100%" stop-color="#10B981"/></linearGradient></defs>
+              <g transform="translate(4, 4)"><circle cx="20" cy="20" r="18" fill="none" stroke="url(#f-logo-grad)" stroke-width="2.5"/><polyline points="6,20 12,20 15,10 18,28 21,14 24,26 27,20 34,20" fill="none" stroke="url(#f-logo-grad)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="6" cy="20" r="2" fill="#2563EB"/><circle cx="34" cy="20" r="2" fill="#10B981"/></g>
+              <text x="54" y="34" font-family="Inter, sans-serif" font-size="28" font-weight="800" fill="#0F172A" letter-spacing="-1">ODB</text>
+              <text x="118" y="34" font-family="Inter, sans-serif" font-size="28" font-weight="800" fill="url(#f-logo-grad)" letter-spacing="-1">+</text>
+            </svg>
+          </a>
+          <p>Professional-grade vehicle diagnostics powered by AI.</p>
+        </div>
+        <div class="footer__col"><h5>Product</h5><ul><li><a href="features.html">Features</a></li><li><a href="#download">Download</a></li></ul></div>
+        <div class="footer__col"><h5>Resources</h5><ul><li><a href="docs.html">Documentation</a></li><li><a href="docs.html#faq">FAQ</a></li></ul></div>
+        <div class="footer__col"><h5>Community</h5><ul><li><a href="https://community.odbplus.com">Forums</a></li><li><a href="https://github.com/odbplus">GitHub</a></li></ul></div>
+        <div class="footer__col"><h5>Company</h5><ul><li><a href="contact.html">Contact</a></li><li><a href="#">Privacy</a></li></ul></div>
+      </div>
+      <div class="footer__bottom">
+        <p class="footer__copyright">2026 ODB+. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    function toggleMobileMenu() {
+      const menu = document.getElementById('mobile-menu');
+      const btn = document.querySelector('.navbar__hamburger');
+      const isOpen = menu.classList.toggle('is-open');
+      btn.setAttribute('aria-expanded', isOpen);
+    }
+
+    function toggleAccordion(trigger) {
+      const item = trigger.parentElement;
+      const isOpen = item.classList.contains('is-open');
+
+      /* Close all */
+      document.querySelectorAll('.accordion__item').forEach(function(el) {
+        el.classList.remove('is-open');
+        el.querySelector('.accordion__trigger').setAttribute('aria-expanded', 'false');
+      });
+
+      /* Open clicked if it was closed */
+      if (!isOpen) {
+        item.classList.add('is-open');
+        trigger.setAttribute('aria-expanded', 'true');
+      }
+    }
+  </script>
+</body>
+</html>

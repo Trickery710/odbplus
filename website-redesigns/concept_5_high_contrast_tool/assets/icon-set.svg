@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 120" width="600" height="120">
+  <defs>
+    <style>
+      .icon-fill { fill: #00FF88; }
+      .icon-label { fill: #888888; font-family: monospace; font-size: 8px; text-anchor: middle; }
+    </style>
+  </defs>
+
+  <!-- icon-connect: filled signal bars -->
+  <g id="icon-connect" transform="translate(10, 10)">
+    <rect x="0" y="30" width="6" height="10" class="icon-fill" rx="1"/>
+    <rect x="9" y="24" width="6" height="16" class="icon-fill" rx="1"/>
+    <rect x="18" y="16" width="6" height="24" class="icon-fill" rx="1"/>
+    <rect x="27" y="6" width="6" height="34" class="icon-fill" rx="1"/>
+    <!-- WiFi arcs -->
+    <path d="M36,36 Q42,20 48,36" fill="none" stroke="#00FF88" stroke-width="2"/>
+    <path d="M33,38 Q42,14 51,38" fill="none" stroke="#00FF88" stroke-width="2"/>
+    <circle cx="42" cy="38" r="2.5" class="icon-fill"/>
+    <text x="25" y="60" class="icon-label">CONNECT</text>
+  </g>
+
+  <!-- icon-live: solid waveform -->
+  <g id="icon-live" transform="translate(70, 10)">
+    <rect x="0" y="0" width="50" height="44" fill="#111111" stroke="#00FF88" stroke-width="1.5" rx="2"/>
+    <polyline points="4,22 10,22 14,8 18,36 22,14 26,30 30,18 34,26 38,20 42,22 46,22"
+              fill="none" stroke="#00FF88" stroke-width="2.5" stroke-linejoin="round"/>
+    <!-- Scan dot -->
+    <circle cx="46" cy="22" r="3" fill="#00FF88" opacity="0.8"/>
+    <text x="25" y="60" class="icon-label">LIVE</text>
+  </g>
+
+  <!-- icon-codes: filled document with DTC -->
+  <g id="icon-codes" transform="translate(130, 10)">
+    <path d="M6,0 L38,0 L44,6 L44,44 L6,44 Z" class="icon-fill"/>
+    <path d="M38,0 L38,6 L44,6" fill="none" stroke="#000000" stroke-width="1.5"/>
+    <rect x="12" y="10" width="26" height="8" fill="#000000" rx="1"/>
+    <text x="25" y="16.5" fill="#FF2222" font-family="monospace" font-size="6" font-weight="bold" text-anchor="middle">P0300</text>
+    <rect x="12" y="22" width="26" height="3" fill="#000000" rx="1"/>
+    <rect x="12" y="28" width="20" height="3" fill="#000000" rx="1"/>
+    <rect x="12" y="34" width="24" height="3" fill="#000000" rx="1"/>
+    <text x="25" y="60" class="icon-label">CODES</text>
+  </g>
+
+  <!-- icon-ai: filled brain/circuit -->
+  <g id="icon-ai" transform="translate(190, 10)">
+    <path d="M25,2 C14,2 6,10 6,20 C6,28 10,34 16,38 L20,44 L30,44 L34,38 C40,34 44,28 44,20 C44,10 36,2 25,2Z" class="icon-fill"/>
+    <!-- Circuit lines inside -->
+    <line x1="25" y1="10" x2="25" y2="34" stroke="#000000" stroke-width="1.5"/>
+    <line x1="14" y1="20" x2="36" y2="20" stroke="#000000" stroke-width="1.5"/>
+    <circle cx="25" cy="20" r="3" fill="#000000"/>
+    <circle cx="18" cy="14" r="2" fill="#000000"/>
+    <circle cx="32" cy="14" r="2" fill="#000000"/>
+    <circle cx="18" cy="28" r="2" fill="#000000"/>
+    <circle cx="32" cy="28" r="2" fill="#000000"/>
+    <line x1="18" y1="14" x2="25" y2="20" stroke="#000000" stroke-width="1"/>
+    <line x1="32" y1="14" x2="25" y2="20" stroke="#000000" stroke-width="1"/>
+    <line x1="18" y1="28" x2="25" y2="20" stroke="#000000" stroke-width="1"/>
+    <line x1="32" y1="28" x2="25" y2="20" stroke="#000000" stroke-width="1"/>
+    <text x="25" y="60" class="icon-label">AI</text>
+  </g>
+
+  <!-- icon-logs: filled tape/record -->
+  <g id="icon-logs" transform="translate(250, 10)">
+    <rect x="2" y="6" width="46" height="32" class="icon-fill" rx="2"/>
+    <circle cx="16" cy="22" r="8" fill="#000000"/>
+    <circle cx="34" cy="22" r="8" fill="#000000"/>
+    <circle cx="16" cy="22" r="3" class="icon-fill"/>
+    <circle cx="34" cy="22" r="3" class="icon-fill"/>
+    <rect x="16" y="18" width="18" height="8" fill="#000000"/>
+    <rect x="18" y="20" width="14" height="4" fill="#111111"/>
+    <!-- Record indicator -->
+    <circle cx="42" cy="12" r="3" fill="#FF2222"/>
+    <text x="25" y="60" class="icon-label">LOGS</text>
+  </g>
+
+  <!-- icon-terminal: filled terminal box -->
+  <g id="icon-terminal" transform="translate(310, 10)">
+    <rect x="2" y="2" width="46" height="40" class="icon-fill" rx="2"/>
+    <rect x="5" y="10" width="40" height="29" fill="#000000" rx="1"/>
+    <!-- Title bar dots -->
+    <circle cx="10" cy="6" r="1.5" fill="#000000"/>
+    <circle cx="16" cy="6" r="1.5" fill="#000000"/>
+    <circle cx="22" cy="6" r="1.5" fill="#000000"/>
+    <!-- Terminal content -->
+    <text x="10" y="20" fill="#00FF88" font-family="monospace" font-size="6">&gt; ATZ</text>
+    <text x="10" y="28" fill="#00FF88" font-family="monospace" font-size="6">ELM327</text>
+    <text x="10" y="36" fill="#00FF88" font-family="monospace" font-size="6">&gt;_</text>
+    <text x="25" y="60" class="icon-label">TERMINAL</text>
+  </g>
+
+  <!-- icon-tests: filled dial gauge -->
+  <g id="icon-tests" transform="translate(370, 10)">
+    <circle cx="25" cy="24" r="20" class="icon-fill"/>
+    <circle cx="25" cy="24" r="16" fill="#000000"/>
+    <!-- Gauge marks -->
+    <line x1="10" y1="24" x2="14" y2="24" stroke="#00FF88" stroke-width="2"/>
+    <line x1="25" y1="8" x2="25" y2="12" stroke="#00FF88" stroke-width="2"/>
+    <line x1="40" y1="24" x2="36" y2="24" stroke="#00FF88" stroke-width="2"/>
+    <line x1="14" y1="34" x2="17" y2="31" stroke="#00FF88" stroke-width="2"/>
+    <line x1="36" y1="34" x2="33" y2="31" stroke="#00FF88" stroke-width="2"/>
+    <!-- Needle -->
+    <line x1="25" y1="24" x2="34" y2="14" stroke="#FF2222" stroke-width="2.5" stroke-linecap="round"/>
+    <circle cx="25" cy="24" r="3" class="icon-fill"/>
+    <!-- Value -->
+    <text x="25" y="38" fill="#00FF88" font-family="monospace" font-size="5" text-anchor="middle">2847</text>
+    <text x="25" y="60" class="icon-label">TESTS</text>
+  </g>
+
+  <!-- icon-parts: filled wrench -->
+  <g id="icon-parts" transform="translate(430, 10)">
+    <path d="M38,6 C34,2 28,2 24,4 L30,16 L26,20 L14,14 C12,18 12,24 16,28 C20,32 26,32 30,28 L40,38 C42,40 46,40 48,38 C50,36 50,32 48,30 L38,20 Z" class="icon-fill"/>
+    <!-- Bolt head detail -->
+    <rect x="4" y="32" width="12" height="12" class="icon-fill" rx="1" transform="rotate(-20, 10, 38)"/>
+    <rect x="6" y="34" width="8" height="8" fill="#000000" rx="1" transform="rotate(-20, 10, 38)"/>
+    <text x="25" y="60" class="icon-label">PARTS</text>
+  </g>
+
+  <!-- icon-forums: filled chat bubble -->
+  <g id="icon-forums" transform="translate(490, 10)">
+    <path d="M6,6 L44,6 L44,30 L22,30 L12,40 L12,30 L6,30 Z" class="icon-fill" rx="2"/>
+    <!-- Chat lines -->
+    <rect x="12" y="12" width="22" height="3" fill="#000000" rx="1"/>
+    <rect x="12" y="18" width="16" height="3" fill="#000000" rx="1"/>
+    <rect x="12" y="24" width="20" height="3" fill="#000000" rx="1"/>
+    <text x="25" y="60" class="icon-label">FORUMS</text>
+  </g>
+
+  <!-- icon-sensors: filled chip -->
+  <g id="icon-sensors" transform="translate(550, 10)">
+    <rect x="10" y="10" width="30" height="24" class="icon-fill" rx="2"/>
+    <!-- Chip center -->
+    <rect x="16" y="16" width="18" height="12" fill="#000000" rx="1"/>
+    <text x="25" y="24" fill="#00FF88" font-family="monospace" font-size="6" text-anchor="middle">IC</text>
+    <!-- Pins left -->
+    <rect x="4" y="14" width="8" height="3" class="icon-fill"/>
+    <rect x="4" y="21" width="8" height="3" class="icon-fill"/>
+    <rect x="4" y="28" width="8" height="3" class="icon-fill"/>
+    <!-- Pins right -->
+    <rect x="38" y="14" width="8" height="3" class="icon-fill"/>
+    <rect x="38" y="21" width="8" height="3" class="icon-fill"/>
+    <rect x="38" y="28" width="8" height="3" class="icon-fill"/>
+    <!-- Pins top -->
+    <rect x="16" y="4" width="3" height="8" class="icon-fill"/>
+    <rect x="23" y="4" width="3" height="8" class="icon-fill"/>
+    <rect x="30" y="4" width="3" height="8" class="icon-fill"/>
+    <!-- Pins bottom -->
+    <rect x="16" y="32" width="3" height="8" class="icon-fill"/>
+    <rect x="23" y="32" width="3" height="8" class="icon-fill"/>
+    <rect x="30" y="32" width="3" height="8" class="icon-fill"/>
+    <text x="25" y="60" class="icon-label">SENSORS</text>
+  </g>
+</svg>

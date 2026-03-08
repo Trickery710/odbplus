@@ -1,0 +1,103 @@
+<section class="dashboard-preview" id="app-preview" aria-labelledby="preview-title">
+  <div class="container">
+
+    <div class="section-header">
+      <span class="badge badge--accent">Live Preview</span>
+      <h2 id="preview-title">See It In Action</h2>
+      <p>Real-time sensor data streaming at your fingertips. Watch gauges update live, monitor fuel trims, and catch anomalies before they become problems.</p>
+    </div>
+
+    <div class="dashboard-preview__frame" data-reveal>
+
+      <!-- App Mockup (dark dashboard) -->
+      <div class="dashboard-preview__mockup">
+        <!-- Window chrome -->
+        <div class="dashboard-preview__toolbar">
+          <span class="dashboard-preview__dot dashboard-preview__dot--red"></span>
+          <span class="dashboard-preview__dot dashboard-preview__dot--yellow"></span>
+          <span class="dashboard-preview__dot dashboard-preview__dot--green"></span>
+        </div>
+
+        <div class="dashboard-preview__screen">
+
+          <!-- Status bar -->
+          <div class="mock-status">
+            <div class="mock-status__label">
+              <span class="mock-status__dot"></span>
+              ELM327 v2.3 - Bluetooth
+            </div>
+            <span class="mock-status__badge">ISO 14230-4 KWP</span>
+          </div>
+
+          <!-- Gauge grid -->
+          <div class="mock-grid">
+            <div class="mock-gauge">
+              <div class="mock-gauge__label">RPM</div>
+              <div class="mock-gauge__value">2,847</div>
+              <div class="mock-gauge__unit">rev/min</div>
+            </div>
+            <div class="mock-gauge">
+              <div class="mock-gauge__label">Speed</div>
+              <div class="mock-gauge__value">62</div>
+              <div class="mock-gauge__unit">mph</div>
+            </div>
+            <div class="mock-gauge">
+              <div class="mock-gauge__label">Coolant</div>
+              <div class="mock-gauge__value--green mock-gauge__value">192</div>
+              <div class="mock-gauge__unit">&#176;F</div>
+            </div>
+            <div class="mock-gauge">
+              <div class="mock-gauge__label">Throttle</div>
+              <div class="mock-gauge__value">18.4</div>
+              <div class="mock-gauge__unit">%</div>
+            </div>
+            <div class="mock-gauge">
+              <div class="mock-gauge__label">MAF Rate</div>
+              <div class="mock-gauge__value">14.2</div>
+              <div class="mock-gauge__unit">g/s</div>
+            </div>
+            <div class="mock-gauge">
+              <div class="mock-gauge__label">Fuel Trim</div>
+              <div class="mock-gauge__value--green mock-gauge__value">+2.3</div>
+              <div class="mock-gauge__unit">% (ST)</div>
+            </div>
+            <div class="mock-gauge">
+              <div class="mock-gauge__label">Intake Temp</div>
+              <div class="mock-gauge__value">78</div>
+              <div class="mock-gauge__unit">&#176;F</div>
+            </div>
+            <div class="mock-gauge">
+              <div class="mock-gauge__label">Timing Adv.</div>
+              <div class="mock-gauge__value--amber mock-gauge__value">14.5</div>
+              <div class="mock-gauge__unit">&#176; BTDC</div>
+            </div>
+            <div class="mock-gauge">
+              <div class="mock-gauge__label">O2 Bank 1</div>
+              <div class="mock-gauge__value">0.68</div>
+              <div class="mock-gauge__unit">V</div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Callouts -->
+    <div class="dashboard-preview__callouts" data-reveal>
+      <div class="callout">
+        <div class="callout__number" data-count="40">40+</div>
+        <div class="callout__label">Real-time Parameters</div>
+      </div>
+      <div class="callout">
+        <div class="callout__number" data-count="100">&lt;100ms</div>
+        <div class="callout__label">Refresh Latency</div>
+      </div>
+      <div class="callout">
+        <div class="callout__number" data-count="5">5</div>
+        <div class="callout__label">OBD-II Protocols Supported</div>
+      </div>
+    </div>
+
+  </div>
+</section>

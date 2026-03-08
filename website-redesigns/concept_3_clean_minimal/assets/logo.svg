@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 250 60" width="250" height="60">
+  <defs>
+    <style>
+      .logo-text { font-family: -apple-system, 'SF Pro Display', 'Helvetica Neue', system-ui, sans-serif; font-weight: 600; font-size: 36px; fill: #1D1D1F; letter-spacing: -0.5px; }
+      .logo-plus { font-family: -apple-system, 'SF Pro Display', 'Helvetica Neue', system-ui, sans-serif; font-weight: 300; font-size: 36px; fill: #0066CC; }
+      .logo-pulse { fill: none; stroke: #0066CC; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+    </style>
+  </defs>
+  <text x="16" y="42" class="logo-text">ODB</text>
+  <text x="107" y="42" class="logo-plus">+</text>
+  <path class="logo-pulse" d="M140 30 L148 30 L152 18 L156 42 L160 24 L164 36 L168 30 L176 30" />
+</svg>

@@ -1,0 +1,65 @@
+<section class="preview section" id="preview" aria-labelledby="preview-heading">
+  <div class="container" style="text-align: center; margin-bottom: var(--space-10);">
+    <p class="section-label">App Preview</p>
+    <h2 id="preview-heading" class="section-heading" style="display: inline-block;">Live Diagnostics</h2>
+    <p class="text-body" style="max-width: 520px; margin-inline: auto; margin-top: var(--space-4);">
+      See what a real diagnostic session looks like. Raw protocol communication,
+      parsed PID data, and intelligent status reporting.
+    </p>
+  </div>
+
+  <div class="preview__screen">
+    <div class="preview__titlebar">
+      <span class="preview__dot preview__dot--red" aria-hidden="true"></span>
+      <span class="preview__dot preview__dot--yellow" aria-hidden="true"></span>
+      <span class="preview__dot preview__dot--green" aria-hidden="true"></span>
+      <span class="preview__title-text">odb+ terminal -- session_2026-03-06_14:23</span>
+    </div>
+
+    <div class="preview__body scan-overlay" role="img" aria-label="Terminal output showing OBD-II diagnostic session with adapter initialization, protocol negotiation, and live PID data">
+      <span class="line"><span class="comment">// Adapter Initialization</span></span>
+      <span class="line"><span class="prompt">&gt; </span><span class="cmd">ATZ</span></span>
+      <span class="line"><span class="response">ELM327 v2.3</span></span>
+      <span class="line"><span class="prompt">&gt; </span><span class="cmd">ATE0</span>          <span class="comment">// Echo off</span></span>
+      <span class="line"><span class="response">OK</span></span>
+      <span class="line"><span class="prompt">&gt; </span><span class="cmd">ATL0</span>          <span class="comment">// Linefeeds off</span></span>
+      <span class="line"><span class="response">OK</span></span>
+      <span class="line"><span class="prompt">&gt; </span><span class="cmd">ATS1</span>          <span class="comment">// Spaces on</span></span>
+      <span class="line"><span class="response">OK</span></span>
+      <span class="line"><span class="prompt">&gt; </span><span class="cmd">ATH1</span>          <span class="comment">// Headers on</span></span>
+      <span class="line"><span class="response">OK</span></span>
+      <span class="line"></span>
+      <span class="line"><span class="comment">// Protocol Negotiation</span></span>
+      <span class="line"><span class="prompt">&gt; </span><span class="cmd">ATDP</span></span>
+      <span class="line"><span class="response">AUTO, ISO 14230-4 (KWP FAST)</span></span>
+      <span class="line"><span class="prompt">&gt; </span><span class="cmd">0100</span>          <span class="comment">// Supported PIDs [01-20]</span></span>
+      <span class="line"><span class="header">84 F1 10 </span><span class="response">41 00 BE 3E B8 11</span></span>
+      <span class="line"><span class="status">BUS INIT: OK</span></span>
+      <span class="line"></span>
+      <span class="line"><span class="comment">// Live PID Queries</span></span>
+      <span class="line"><span class="prompt">&gt; </span><span class="cmd">010C</span>          <span class="comment">// Engine RPM</span></span>
+      <span class="line"><span class="header">84 F1 10 </span><span class="response">41 0C 0B 28</span>     <span class="comment">// = 2,842 RPM</span></span>
+      <span class="line"><span class="prompt">&gt; </span><span class="cmd">0105</span>          <span class="comment">// Coolant Temp</span></span>
+      <span class="line"><span class="header">84 F1 10 </span><span class="response">41 05 79</span>        <span class="comment">// = 81 C (offset -40)</span></span>
+      <span class="line"><span class="prompt">&gt; </span><span class="cmd">0114</span>          <span class="comment">// O2 Sensor B1S1</span></span>
+      <span class="line"><span class="header">84 F1 10 </span><span class="response">41 14 5A FF</span>    <span class="comment">// = 0.45V</span></span>
+      <span class="line"><span class="prompt">&gt; </span><span class="cmd">0110</span>          <span class="comment">// MAF Air Flow</span></span>
+      <span class="line"><span class="header">84 F1 10 </span><span class="response">41 10 01 A4</span>    <span class="comment">// = 4.20 g/s</span></span>
+      <span class="line"><span class="prompt">&gt; </span><span class="cmd">0106</span>          <span class="comment">// Short Term Fuel Trim</span></span>
+      <span class="line"><span class="header">84 F1 10 </span><span class="response">41 06 83</span>        <span class="comment">// = +2.34%</span></span>
+      <span class="line"><span class="prompt">&gt; </span><span class="cmd">010B</span>          <span class="comment">// Intake MAP</span></span>
+      <span class="line"><span class="header">84 F1 10 </span><span class="response">41 0B 22</span>        <span class="comment">// = 34 kPa</span></span>
+      <span class="line"></span>
+      <span class="line"><span class="prompt">&gt; </span><span class="cmd">03</span>            <span class="comment">// Read DTCs</span></span>
+      <span class="line"><span class="header">84 F1 10 </span><span class="response">43 01 03 00 00 00 00 00</span></span>
+      <span class="line"><span class="warning">DTC: P0300 -- Random/Multiple Cylinder Misfire Detected</span></span>
+      <span class="line"></span>
+      <span class="line"><span class="status">Session active | 6 PIDs streaming @ 4 Hz | 1 DTC stored</span></span>
+    </div>
+
+    <div class="preview__status">
+      <span class="status-dot" aria-hidden="true"></span>
+      <span>CONNECTED  |  KWP2000 Fast Init  |  ELM327 v2.3  |  Android-Vlink [13:E0:2F:8D:53:68]  |  Latency: 23ms</span>
+    </div>
+  </div>
+</section>

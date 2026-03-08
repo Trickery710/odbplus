@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="ODB+ documentation. Command reference, protocol specifications, adapter setup guides, and API documentation.">
+  <meta name="theme-color" content="#000000">
+  <title>ODB+ | Documentation &amp; Command Reference</title>
+  <link rel="stylesheet" href="../css/styles.css">
+  <style>
+    .docs-layout {
+      display: grid;
+      grid-template-columns: 220px 1fr;
+      gap: var(--space-8);
+      align-items: start;
+    }
+    @media (max-width: 768px) {
+      .docs-layout {
+        grid-template-columns: 1fr;
+      }
+      .docs-sidebar { position: static; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Status Bar -->
+  <div class="system-status-bar" role="status" aria-label="System status">
+    <span class="status-dot" aria-hidden="true"></span>
+    <span>SYSTEM ONLINE</span>
+    <span class="divider" aria-hidden="true">|</span>
+    <span>VER 2.3.1</span>
+    <span class="divider" aria-hidden="true">|</span>
+    <span>MODULE: DOCUMENTATION</span>
+  </div>
+
+  <!-- Navigation -->
+  <nav class="navbar" aria-label="Main navigation">
+    <div class="navbar__inner">
+      <a href="/pages/index.html" aria-label="ODB+ Home">
+        <img src="../assets/logo.svg" alt="ODB+ Diagnostic System" class="navbar__logo" width="280" height="70">
+      </a>
+      <button class="navbar__toggle" aria-expanded="false" aria-controls="main-nav" aria-label="Toggle navigation menu">[=]</button>
+      <ul class="navbar__links" id="main-nav" role="list">
+        <li><a href="/pages/index.html" class="navbar__link">HOME</a></li>
+        <li><a href="/pages/features.html" class="navbar__link">FEATURES</a></li>
+        <li><a href="/pages/docs.html" class="navbar__link" aria-current="page">DOCS</a></li>
+        <li><a href="/pages/contact.html" class="navbar__link">SUPPORT</a></li>
+        <li><a href="#download" class="navbar__cta">DOWNLOAD v2.3</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <main id="main-content">
+    <section class="section" aria-labelledby="docs-title">
+      <div class="container">
+        <div class="section__header">
+          <p class="section__label">REFERENCE MANUAL</p>
+          <h1 id="docs-title" class="section__title">SYSTEM <span>DOCUMENTATION</span></h1>
+          <p class="section__subtitle">&gt; Command reference, protocol specifications, and adapter configuration.</p>
+        </div>
+
+        <div class="docs-layout">
+
+          <!-- Sidebar navigation -->
+          <aside class="docs-sidebar" aria-label="Documentation sections">
+            <nav>
+              <ul class="docs-sidebar__list">
+                <li><a href="#getting-started" class="active">GETTING STARTED</a></li>
+                <li><a href="#adapter-setup">ADAPTER SETUP</a></li>
+                <li><a href="#at-commands">AT COMMAND REFERENCE</a></li>
+                <li><a href="#obd-pids">OBD-II PID REFERENCE</a></li>
+                <li><a href="#protocols">PROTOCOL SPECS</a></li>
+                <li><a href="#troubleshooting">TROUBLESHOOTING</a></li>
+              </ul>
+            </nav>
+          </aside>
+
+          <!-- Documentation content -->
+          <div class="docs-content">
+
+            <!-- Getting Started -->
+            <h2 id="getting-started">GETTING STARTED</h2>
+
+            <h3>REQUIREMENTS</h3>
+            <div class="table-wrap" style="margin-bottom: 24px;">
+              <table class="data-table" aria-label="System requirements">
+                <thead>
+                  <tr>
+                    <th scope="col">COMPONENT</th>
+                    <th scope="col">REQUIREMENT</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>ANDROID VERSION</td>
+                    <td class="td-value">8.0+ (API 26)</td>
+                  </tr>
+                  <tr>
+                    <td>BLUETOOTH</td>
+                    <td class="td-value">BLUETOOTH CLASSIC (SPP) OR BLUETOOTH LE</td>
+                  </tr>
+                  <tr>
+                    <td>OBD ADAPTER</td>
+                    <td class="td-value">ELM327 V1.0+ COMPATIBLE</td>
+                  </tr>
+                  <tr>
+                    <td>VEHICLE</td>
+                    <td class="td-value">OBD-II COMPLIANT (1996+ US, 2001+ EU)</td>
+                  </tr>
+                  <tr>
+                    <td>STORAGE</td>
+                    <td class="td-value">50 MB FREE SPACE</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <h3>QUICK START SEQUENCE</h3>
+            <pre><code>1. Install ODB+ from Google Play
+2. Plug OBD-II adapter into vehicle diagnostic port
+3. Turn vehicle ignition to ON (engine running or ACC)
+4. Open ODB+ &gt; Settings &gt; Bluetooth &gt; Select adapter
+5. Tap CONNECT on main screen
+6. Wait for protocol negotiation (~2-30 seconds)
+7. System ready. Begin diagnostics.</code></pre>
+
+            <p>The app will automatically detect your adapter type (ELM327, STN, ESP32) and negotiate the correct vehicle protocol. No manual configuration required for most vehicles.</p>
+
+            <!-- Adapter Setup -->
+            <h2 id="adapter-setup">ADAPTER SETUP</h2>
+
+            <h3>SUPPORTED ADAPTERS</h3>
+            <div class="table-wrap" style="margin-bottom: 24px;">
+              <table class="data-table" aria-label="Supported adapter families">
+                <thead>
+                  <tr>
+                    <th scope="col">ADAPTER FAMILY</th>
+                    <th scope="col">FIRMWARE</th>
+                    <th scope="col">CONNECTION</th>
+                    <th scope="col">STATUS</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="td-pid">ELM327</td>
+                    <td>v1.0 - v2.3+</td>
+                    <td>BT / WiFi</td>
+                    <td><span class="badge badge--pass badge--outline">SUPPORTED</span></td>
+                  </tr>
+                  <tr>
+                    <td class="td-pid">STN1110</td>
+                    <td>v4.0+</td>
+                    <td>BT / USB</td>
+                    <td><span class="badge badge--pass badge--outline">SUPPORTED</span></td>
+                  </tr>
+                  <tr>
+                    <td class="td-pid">STN2120</td>
+                    <td>v5.0+</td>
+                    <td>BT / USB</td>
+                    <td><span class="badge badge--pass badge--outline">SUPPORTED</span></td>
+                  </tr>
+                  <tr>
+                    <td class="td-pid">ESP32</td>
+                    <td>Custom FW</td>
+                    <td>WiFi / BLE</td>
+                    <td><span class="badge badge--pass badge--outline">SUPPORTED</span></td>
+                  </tr>
+                  <tr>
+                    <td class="td-pid">OBDLink MX+</td>
+                    <td>v6.0+</td>
+                    <td>BT</td>
+                    <td><span class="badge badge--pass badge--outline">SUPPORTED</span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <h3>BLUETOOTH PAIRING</h3>
+            <pre><code>&gt; Android Settings &gt; Bluetooth &gt; Pair New Device
+&gt; Select adapter (common names: "OBDII", "Android-Vlink", "OBDLink MX+")
+&gt; PIN: 1234 (default for most ELM327 adapters)
+&gt; Return to ODB+ &gt; Settings &gt; Connection &gt; Select paired device
+&gt; Tap CONNECT</code></pre>
+
+            <p>If pairing fails, power-cycle the adapter by unplugging it from the OBD port for 10 seconds. Some adapters require the vehicle ignition to be ON during pairing.</p>
+
+            <!-- AT Command Reference -->
+            <h2 id="at-commands">AT COMMAND REFERENCE</h2>
+
+            <p>These commands can be sent directly via Terminal Mode. AT commands configure the OBD adapter. OBD commands (hex values) query the vehicle ECU.</p>
+
+            <h3>ADAPTER CONFIGURATION</h3>
+            <div class="table-wrap" style="margin-bottom: 24px;">
+              <table class="data-table" aria-label="AT command reference">
+                <thead>
+                  <tr>
+                    <th scope="col">COMMAND</th>
+                    <th scope="col">DESCRIPTION</th>
+                    <th scope="col">RESPONSE</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="td-pid">ATZ</td>
+                    <td>Reset adapter to defaults</td>
+                    <td class="td-value">ELM327 v2.3</td>
+                  </tr>
+                  <tr>
+                    <td class="td-pid">ATE0</td>
+                    <td>Echo off (disable command echo)</td>
+                    <td class="td-value">OK</td>
+                  </tr>
+                  <tr>
+                    <td class="td-pid">ATE1</td>
+                    <td>Echo on (enable command echo)</td>
+                    <td class="td-value">OK</td>
+                  </tr>
+                  <tr>
+                    <td class="td-pid">ATL0</td>
+                    <td>Linefeeds off</td>
+                    <td class="td-value">OK</td>
+                  </tr>
+                  <tr>
+                    <td class="td-pid">ATS0</td>
+                    <td>Spaces off in responses</td>
+                    <td class="td-value">OK</td>
+                  </tr>
+                  <tr>
+                    <td class="td-pid">ATS1</td>
+                    <td>Spaces on in responses (recommended)</td>
+                    <td class="td-value">OK</td>
+                  </tr>
+                  <tr>
+                    <td class="td-pid">ATH0</td>
+                    <td>Headers off</td>
+                    <td class="td-value">OK</td>
+                  </tr>
+                  <tr>
+                    <td class="td-pid">ATH1</td>
+                    <td>Headers on (show protocol headers)</td>
+                    <td class="td-value">OK</td>
+                  </tr>
+                  <tr>
+                    <td class="td-pid">ATSP0</td>
+                    <td>Set protocol to automatic</td>
+                    <td class="td-value">OK</td>
+                  </tr>
+                  <tr>
+                    <td class="td-pid">ATSP5</td>
+                    <td>Set protocol to KWP2000 fast init</td>
+                    <td class="td-value">OK</td>
+                  </tr>
+                  <tr>
+                    <td class="td-pid">ATSP6</td>
+                    <td>Set protocol to CAN 11-bit 500kbps</td>
+                    <td class="td-value">OK</td>
+                  </tr>
+                  <tr>
+                    <td class="td-pid">ATDP</td>
+                    <td>Display current protocol</td>
+                    <td class="td-value">AUTO, ISO 15765-4 (CAN 11/500)</td>
+                  </tr>
+                  <tr>
+                    <td class="td-pid">ATRV</td>
+                    <td>Read battery voltage</td>
+                    <td class="td-value">12.6V</td>
+                  </tr>
+                  <tr>
+                    <td class="td-pid">ATI</td>
+                    <td>Print adapter ID</td>
+                    <td class="td-value">ELM327 v2.3</td>
+                  </tr>
+                  <tr>
+                    <td class="td-pid">ATCAF1</td>
+                    <td>CAN auto-formatting on (required for CAN)</td>
+                    <td class="td-value">OK</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <h3>OBD-II SERVICE COMMANDS</h3>
+            <div class="table-wrap" style="margin-bottom: 24px;">
+              <table class="data-table" aria-label="OBD-II service commands">
+                <thead>
+                  <tr>
+                    <th scope="col">MODE</th>
+                    <th scope="col">DESCRIPTION</th>
+                    <th scope="col">EXAMPLE</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="td-pid">01</td>
+                    <td>Show current data (live PIDs)</td>
+                    <td class="td-value">010C (request RPM)</td>
+                  </tr>
+                  <tr>
+                    <td class="td-pid">02</td>
+                    <td>Show freeze frame data</td>
+                    <td class="td-value">020C (RPM at freeze)</td>
+                  </tr>
+                  <tr>
+                    <td class="td-pid">03</td>
+                    <td>Show stored DTCs</td>
+                    <td class="td-value">03 (read all stored DTCs)</td>
+                  </tr>
+                  <tr>
+                    <td class="td-pid">04</td>
+                    <td>Clear DTCs and freeze frame</td>
+                    <td class="td-value">04 (clear all codes)</td>
+                  </tr>
+                  <tr>
+                    <td class="td-pid">07</td>
+                    <td>Show pending DTCs</td>
+                    <td class="td-value">07 (read pending codes)</td>
+                  </tr>
+                  <tr>
+                    <td class="td-pid">09</td>
+                    <td>Request vehicle information</td>
+                    <td class="td-value">0902 (request VIN)</td>
+                  </tr>
+                  <tr>
+                    <td class="td-pid">0A</td>
+                    <td>Permanent DTCs (cannot be cleared)</td>
+                    <td class="td-value">0A (read permanent codes)</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <!-- OBD-II PID Reference -->
+            <h2 id="obd-pids">OBD-II PID REFERENCE</h2>
+
+            <h3>MODE 01 COMMON PIDs</h3>
+            <div class="table-wrap" style="margin-bottom: 24px;">
+              <table class="data-table" aria-label="Mode 01 PID reference">
+                <thead>
+                  <tr>
+                    <th scope="col">PID</th>
+                    <th scope="col">PARAMETER</th>
+                    <th scope="col">BYTES</th>
+                    <th scope="col">FORMULA</th>
+                    <th scope="col">RANGE</th>
+                    <th scope="col">UNIT</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="td-pid">0100</td>
+                    <td>Supported PIDs [01-20]</td>
+                    <td>4</td>
+                    <td class="td-value">Bit-encoded</td>
+                    <td>N/A</td>
+                    <td>Bitmap</td>
+                  </tr>
+                  <tr>
+                    <td class="td-pid">0104</td>
+                    <td>Calculated engine load</td>
+                    <td>1</td>
+                    <td class="td-value">A * 100 / 255</td>
+                    <td>0 - 100</td>
+                    <td>%</td>
+                  </tr>
+                  <tr>
+                    <td class="td-pid">0105</td>
+                    <td>Engine coolant temperature</td>
+                    <td>1</td>
+                    <td class="td-value">A - 40</td>
+                    <td>-40 - 215</td>
+                    <td>&deg;C</td>
+                  </tr>
+                  <tr>
+                    <td class="td-pid">0106</td>
+                    <td>Short term fuel trim B1</td>
+                    <td>1</td>
+                    <td class="td-value">(A - 128) * 100 / 128</td>
+                    <td>-100 - 99.2</td>
+                    <td>%</td>
+                  </tr>
+                  <tr>
+                    <td class="td-pid">010B</td>
+                    <td>Intake manifold pressure</td>
+                    <td>1</td>
+                    <td class="td-value">A</td>
+                    <td>0 - 255</td>
+                    <td>kPa</td>
+                  </tr>
+                  <tr>
+                    <td class="td-pid">010C</td>
+                    <td>Engine RPM</td>
+                    <td>2</td>
+                    <td class="td-value">(A * 256 + B) / 4</td>
+                    <td>0 - 16383.75</td>
+                    <td>rpm</td>
+                  </tr>
+                  <tr>
+                    <td class="td-pid">010D</td>
+                    <td>Vehicle speed</td>
+                    <td>1</td>
+                    <td class="td-value">A</td>
+                    <td>0 - 255</td>
+                    <td>km/h</td>
+                  </tr>
+                  <tr>
+                    <td class="td-pid">010E</td>
+                    <td>Timing advance</td>
+                    <td>1</td>
+                    <td class="td-value">A / 2 - 64</td>
+                    <td>-64 - 63.5</td>
+                    <td>&deg;</td>
+                  </tr>
+                  <tr>
+                    <td class="td-pid">010F</td>
+                    <td>Intake air temperature</td>
+                    <td>1</td>
+                    <td class="td-value">A - 40</td>
+                    <td>-40 - 215</td>
+                    <td>&deg;C</td>
+                  </tr>
+                  <tr>
+                    <td class="td-pid">0110</td>
+                    <td>MAF air flow rate</td>
+                    <td>2</td>
+                    <td class="td-value">(A * 256 + B) / 100</td>
+                    <td>0 - 655.35</td>
+                    <td>g/s</td>
+                  </tr>
+                  <tr>
+                    <td class="td-pid">0111</td>
+                    <td>Throttle position</td>
+                    <td>1</td>
+                    <td class="td-value">A * 100 / 255</td>
+                    <td>0 - 100</td>
+                    <td>%</td>
+                  </tr>
+                  <tr>
+                    <td class="td-pid">0114</td>
+                    <td>O2 sensor voltage B1S1</td>
+                    <td>2</td>
+                    <td class="td-value">A / 200</td>
+                    <td>0 - 1.275</td>
+                    <td>V</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Protocols -->
+            <h2 id="protocols">PROTOCOL SPECIFICATIONS</h2>
+
+            <h3>OBD-II COMMUNICATION PROTOCOLS</h3>
+            <div class="table-wrap" style="margin-bottom: 24px;">
+              <table class="data-table" aria-label="OBD-II protocol specifications">
+                <thead>
+                  <tr>
+                    <th scope="col">ATSP</th>
+                    <th scope="col">PROTOCOL</th>
+                    <th scope="col">SPEED</th>
+                    <th scope="col">INIT TIME</th>
+                    <th scope="col">COMMON VEHICLES</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="td-pid">1</td>
+                    <td>SAE J1850 PWM</td>
+                    <td>41.6 kbps</td>
+                    <td class="td-value">~200ms</td>
+                    <td>Ford (pre-2008)</td>
+                  </tr>
+                  <tr>
+                    <td class="td-pid">2</td>
+                    <td>SAE J1850 VPW</td>
+                    <td>10.4 kbps</td>
+                    <td class="td-value">~200ms</td>
+                    <td>GM (pre-2008)</td>
+                  </tr>
+                  <tr>
+                    <td class="td-pid">3</td>
+                    <td>ISO 9141-2</td>
+                    <td>10.4 kbps</td>
+                    <td class="td-value">~2700ms</td>
+                    <td>Asian/European (pre-2008)</td>
+                  </tr>
+                  <tr>
+                    <td class="td-pid">4</td>
+                    <td>ISO 14230-4 KWP (5-baud)</td>
+                    <td>10.4 kbps</td>
+                    <td class="td-value">~2700ms</td>
+                    <td>Asian/European (pre-2008)</td>
+                  </tr>
+                  <tr>
+                    <td class="td-pid">5</td>
+                    <td>ISO 14230-4 KWP (fast)</td>
+                    <td>10.4 kbps</td>
+                    <td class="td-value">~200ms</td>
+                    <td>Asian/European (2000-2010)</td>
+                  </tr>
+                  <tr>
+                    <td class="td-pid">6</td>
+                    <td>ISO 15765-4 CAN (11-bit/500k)</td>
+                    <td>500 kbps</td>
+                    <td class="td-value">~100ms</td>
+                    <td>Most 2008+ vehicles</td>
+                  </tr>
+                  <tr>
+                    <td class="td-pid">7</td>
+                    <td>ISO 15765-4 CAN (29-bit/500k)</td>
+                    <td>500 kbps</td>
+                    <td class="td-value">~100ms</td>
+                    <td>Some trucks, heavy duty</td>
+                  </tr>
+                  <tr>
+                    <td class="td-pid">8</td>
+                    <td>ISO 15765-4 CAN (11-bit/250k)</td>
+                    <td>250 kbps</td>
+                    <td class="td-value">~100ms</td>
+                    <td>Rare, some European</td>
+                  </tr>
+                  <tr>
+                    <td class="td-pid">9</td>
+                    <td>ISO 15765-4 CAN (29-bit/250k)</td>
+                    <td>250 kbps</td>
+                    <td class="td-value">~100ms</td>
+                    <td>Rare</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <h3>PROTOCOL NEGOTIATION NOTES</h3>
+            <pre><code>&gt; RECOMMENDED: Do NOT send ATSP0 first on KWP2000 vehicles.
+&gt; The ELM retains last-used protocol after ATZ.
+&gt; Send 0100 directly to use cached protocol hint.
+&gt; If 0100 fails, fall back to protocol-specific ATSP commands.
+&gt; Fallback order: ATSP5 (KWP fast) BEFORE ATSP3 (ISO 9141).
+&gt; ISO 5-baud init = ~2.7s x 3 retries. KWP fast = ~200ms.
+&gt; Wrong order can delay connection past 30s timeout.</code></pre>
+
+            <!-- Troubleshooting -->
+            <h2 id="troubleshooting">TROUBLESHOOTING</h2>
+
+            <h3>COMMON ISSUES</h3>
+            <div class="table-wrap">
+              <table class="data-table" aria-label="Troubleshooting guide">
+                <thead>
+                  <tr>
+                    <th scope="col">SYMPTOM</th>
+                    <th scope="col">CAUSE</th>
+                    <th scope="col">SOLUTION</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>UNABLE TO CONNECT</td>
+                    <td>Adapter not powered / wrong Bluetooth device</td>
+                    <td class="td-value">Verify adapter LED is on. Re-pair Bluetooth. Check OBD port fuse.</td>
+                  </tr>
+                  <tr>
+                    <td>NO DATA on all PIDs</td>
+                    <td>Protocol mismatch / ATCAF0 active</td>
+                    <td class="td-value">Send ATZ to reset. Verify ATCAF1 is set. Try ATSP0.</td>
+                  </tr>
+                  <tr>
+                    <td>BUS INIT: ERROR</td>
+                    <td>Wrong protocol / corrupted headers</td>
+                    <td class="td-value">Send ATZ, then ATSP5 for KWP or ATSP6 for CAN. Do not send ATSH commands on ISO protocols.</td>
+                  </tr>
+                  <tr>
+                    <td>Slow response (&gt;5s)</td>
+                    <td>ISO 9141 5-baud init / wrong protocol order</td>
+                    <td class="td-value">Verify correct protocol. KWP fast (ATSP5) should be tried before ISO 9141 (ATSP3).</td>
+                  </tr>
+                  <tr>
+                    <td>Response too short: 0 bytes</td>
+                    <td>ATS0 active / unspaced responses</td>
+                    <td class="td-value">Send ATS1 to enable spaces. Required for KWP2000 response parsing.</td>
+                  </tr>
+                  <tr>
+                    <td>Adapter disconnects</td>
+                    <td>Bluetooth timeout / power saving</td>
+                    <td class="td-value">Disable Android battery optimization for ODB+. Move closer to adapter.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer" role="contentinfo">
+    <div class="container">
+      <div class="footer__inner">
+        <a href="/pages/index.html" aria-label="ODB+ Home">
+          <img src="../assets/logo.svg" alt="ODB+" class="footer__logo" width="280" height="70">
+        </a>
+        <ul class="footer__links" role="list">
+          <li><a href="/pages/index.html" class="footer__link">HOME</a></li>
+          <li><a href="/pages/features.html" class="footer__link">FEATURES</a></li>
+          <li><a href="/pages/docs.html" class="footer__link">DOCS</a></li>
+          <li><a href="/pages/contact.html" class="footer__link">SUPPORT</a></li>
+        </ul>
+        <div class="footer__status" role="status">
+          SYSTEM STATUS: <span class="text-primary">ONLINE</span>
+          <span aria-hidden="true">|</span>
+          BUILD: 2026.03
+          <span aria-hidden="true">|</span>
+          &copy; 2026 ODB+ DIAGNOSTIC SYSTEMS
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      /* Mobile nav toggle */
+      var toggle = document.querySelector('.navbar__toggle');
+      var nav = document.getElementById('main-nav');
+      if (toggle && nav) {
+        toggle.addEventListener('click', function() {
+          var expanded = toggle.getAttribute('aria-expanded') === 'true';
+          toggle.setAttribute('aria-expanded', String(!expanded));
+          nav.classList.toggle('active');
+          toggle.textContent = expanded ? '[=]' : '[X]';
+        });
+      }
+
+      /* Sidebar active link tracking */
+      var sidebarLinks = document.querySelectorAll('.docs-sidebar__list a');
+      var sections = document.querySelectorAll('.docs-content h2[id]');
+      if (sections.length > 0 && sidebarLinks.length > 0) {
+        var observer = new IntersectionObserver(function(entries) {
+          entries.forEach(function(entry) {
+            if (entry.isIntersecting) {
+              sidebarLinks.forEach(function(link) { link.classList.remove('active'); });
+              var activeLink = document.querySelector('.docs-sidebar__list a[href="#' + entry.target.id + '"]');
+              if (activeLink) activeLink.classList.add('active');
+            }
+          });
+        }, { rootMargin: '-80px 0px -60% 0px' });
+        sections.forEach(function(section) { observer.observe(section); });
+      }
+    });
+  </script>
+
+</body>
+</html>

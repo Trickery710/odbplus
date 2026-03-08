@@ -1,0 +1,85 @@
+<nav class="navbar" role="navigation" aria-label="Main navigation">
+  <div class="navbar__inner">
+    <a href="/pages/index.html" class="navbar__logo" aria-label="ODB+ Home">
+      <svg viewBox="0 0 300 80" width="120" height="32" aria-hidden="true">
+        <defs>
+          <filter id="navGlow">
+            <feGaussianBlur in="SourceGraphic" stdDeviation="1.5" result="blur"/>
+            <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+          <linearGradient id="navTrace" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="#00D4FF" stop-opacity="0.1"/>
+            <stop offset="50%" stop-color="#00D4FF" stop-opacity="0.8"/>
+            <stop offset="100%" stop-color="#00D4FF" stop-opacity="0.1"/>
+          </linearGradient>
+        </defs>
+        <path d="M 30 10 L 18 20 L 18 60 L 30 70" fill="none" stroke="#00D4FF" stroke-width="2" stroke-linecap="round" opacity="0.7"/>
+        <path d="M 270 10 L 282 20 L 282 60 L 270 70" fill="none" stroke="#00D4FF" stroke-width="2" stroke-linecap="round" opacity="0.7"/>
+        <text x="90" y="52" font-family="Oxanium, sans-serif" font-size="42" font-weight="700" fill="#E6EDF3" letter-spacing="4" filter="url(#navGlow)">ODB</text>
+        <text x="220" y="52" font-family="Oxanium, sans-serif" font-size="42" font-weight="700" fill="#00D4FF" letter-spacing="2" filter="url(#navGlow)">+</text>
+        <line x1="40" y1="64" x2="260" y2="64" stroke="url(#navTrace)" stroke-width="1.5"/>
+        <circle cx="150" cy="64" r="2" fill="#00D4FF" opacity="0.6"/>
+      </svg>
+    </a>
+
+    <ul class="navbar__links" role="list">
+      <li><a href="/pages/index.html" class="navbar__link navbar__link--active">Home</a></li>
+      <li><a href="/pages/features.html" class="navbar__link">Features</a></li>
+      <li><a href="/pages/docs.html" class="navbar__link">Docs</a></li>
+      <li><a href="/pages/contact.html" class="navbar__link">Contact</a></li>
+    </ul>
+
+    <a href="#download" class="btn btn--primary navbar__cta">Download</a>
+
+    <button class="navbar__toggle" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="mobile-nav">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+  </div>
+
+  <div id="mobile-nav" class="navbar__mobile-panel" role="dialog" aria-label="Navigation menu">
+    <a href="/pages/index.html" class="navbar__link navbar__link--active">Home</a>
+    <a href="/pages/features.html" class="navbar__link">Features</a>
+    <a href="/pages/docs.html" class="navbar__link">Docs</a>
+    <a href="/pages/contact.html" class="navbar__link">Contact</a>
+    <a href="#download" class="btn btn--primary" style="margin-top: var(--space-4); text-align: center;">Download</a>
+  </div>
+</nav>
+
+<script>
+  (function() {
+    const toggle = document.querySelector('.navbar__toggle');
+    const panel = document.querySelector('.navbar__mobile-panel');
+    if (!toggle || !panel) return;
+
+    toggle.addEventListener('click', function() {
+      const isOpen = panel.classList.toggle('is-open');
+      toggle.setAttribute('aria-expanded', isOpen);
+
+      /* Animate hamburger to X */
+      const spans = toggle.querySelectorAll('span');
+      if (isOpen) {
+        spans[0].style.transform = 'rotate(45deg) translate(5px, 5px)';
+        spans[1].style.opacity = '0';
+        spans[2].style.transform = 'rotate(-45deg) translate(5px, -5px)';
+      } else {
+        spans[0].style.transform = '';
+        spans[1].style.opacity = '';
+        spans[2].style.transform = '';
+      }
+    });
+
+    /* Close on link click */
+    panel.querySelectorAll('.navbar__link, .btn').forEach(function(link) {
+      link.addEventListener('click', function() {
+        panel.classList.remove('is-open');
+        toggle.setAttribute('aria-expanded', 'false');
+        toggle.querySelectorAll('span').forEach(function(s) {
+          s.style.transform = '';
+          s.style.opacity = '';
+        });
+      });
+    });
+  })();
+</script>

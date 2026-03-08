@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="ODB+ support ticket system. Report bugs, request features, or get help with your OBD-II diagnostic setup.">
+  <meta name="theme-color" content="#000000">
+  <title>ODB+ | Support Ticket System</title>
+  <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+
+  <!-- Status Bar -->
+  <div class="system-status-bar" role="status" aria-label="System status">
+    <span class="status-dot" aria-hidden="true"></span>
+    <span>SYSTEM ONLINE</span>
+    <span class="divider" aria-hidden="true">|</span>
+    <span>VER 2.3.1</span>
+    <span class="divider" aria-hidden="true">|</span>
+    <span>MODULE: SUPPORT TICKET SYSTEM</span>
+  </div>
+
+  <!-- Navigation -->
+  <nav class="navbar" aria-label="Main navigation">
+    <div class="navbar__inner">
+      <a href="/pages/index.html" aria-label="ODB+ Home">
+        <img src="../assets/logo.svg" alt="ODB+ Diagnostic System" class="navbar__logo" width="280" height="70">
+      </a>
+      <button class="navbar__toggle" aria-expanded="false" aria-controls="main-nav" aria-label="Toggle navigation menu">[=]</button>
+      <ul class="navbar__links" id="main-nav" role="list">
+        <li><a href="/pages/index.html" class="navbar__link">HOME</a></li>
+        <li><a href="/pages/features.html" class="navbar__link">FEATURES</a></li>
+        <li><a href="/pages/docs.html" class="navbar__link">DOCS</a></li>
+        <li><a href="/pages/contact.html" class="navbar__link" aria-current="page">SUPPORT</a></li>
+        <li><a href="#download" class="navbar__cta">DOWNLOAD v2.3</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <main id="main-content">
+    <section class="section" aria-labelledby="contact-title">
+      <div class="container container--narrow">
+        <div class="section__header">
+          <p class="section__label">SUPPORT INTERFACE</p>
+          <h1 id="contact-title" class="section__title">SUBMIT <span>SUPPORT TICKET</span></h1>
+          <p class="section__subtitle">&gt; Report issues, request features, or get diagnostic help. Average response time: 4 hours.</p>
+        </div>
+
+        <!-- Ticket status overview -->
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; margin-bottom: 48px;">
+          <div class="card" style="text-align: center; padding: 20px;">
+            <p style="font-family: var(--font-label); font-size: var(--text-xs); text-transform: uppercase; letter-spacing: 0.1em; color: var(--color-text-muted);">OPEN TICKETS</p>
+            <p style="font-family: var(--font-mono); font-size: var(--text-2xl); color: var(--color-primary); margin-top: 4px;">247</p>
+          </div>
+          <div class="card" style="text-align: center; padding: 20px;">
+            <p style="font-family: var(--font-label); font-size: var(--text-xs); text-transform: uppercase; letter-spacing: 0.1em; color: var(--color-text-muted);">RESOLVED (30D)</p>
+            <p style="font-family: var(--font-mono); font-size: var(--text-2xl); color: var(--color-success); margin-top: 4px;">1,842</p>
+          </div>
+          <div class="card" style="text-align: center; padding: 20px;">
+            <p style="font-family: var(--font-label); font-size: var(--text-xs); text-transform: uppercase; letter-spacing: 0.1em; color: var(--color-text-muted);">AVG RESPONSE</p>
+            <p style="font-family: var(--font-mono); font-size: var(--text-2xl); color: var(--color-secondary); margin-top: 4px;">4.2h</p>
+          </div>
+          <div class="card" style="text-align: center; padding: 20px;">
+            <p style="font-family: var(--font-label); font-size: var(--text-xs); text-transform: uppercase; letter-spacing: 0.1em; color: var(--color-text-muted);">SATISFACTION</p>
+            <p style="font-family: var(--font-mono); font-size: var(--text-2xl); color: var(--color-success); margin-top: 4px;">98.4%</p>
+          </div>
+        </div>
+
+        <!-- Ticket form -->
+        <div class="card" style="border-color: var(--color-border);">
+          <div class="card__header">
+            <h2 class="card__title">NEW TICKET</h2>
+            <span class="badge badge--info">TICKET #AUTO</span>
+          </div>
+
+          <form action="#" method="POST" novalidate>
+            <div class="form-group">
+              <label for="ticket-category" class="form-label">CATEGORY</label>
+              <select id="ticket-category" name="category" class="form-select" required>
+                <option value="" disabled selected>SELECT TICKET CATEGORY</option>
+                <option value="bug">BUG REPORT</option>
+                <option value="connection">CONNECTION ISSUE</option>
+                <option value="adapter">ADAPTER COMPATIBILITY</option>
+                <option value="feature">FEATURE REQUEST</option>
+                <option value="dtc">DTC / CODE QUESTION</option>
+                <option value="general">GENERAL SUPPORT</option>
+              </select>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+              <div class="form-group">
+                <label for="ticket-name" class="form-label">IDENTIFIER</label>
+                <input type="text" id="ticket-name" name="name" class="form-input" placeholder="YOUR NAME" required autocomplete="name">
+              </div>
+
+              <div class="form-group">
+                <label for="ticket-email" class="form-label">CONTACT ADDRESS</label>
+                <input type="email" id="ticket-email" name="email" class="form-input" placeholder="EMAIL ADDRESS" required autocomplete="email">
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="ticket-subject" class="form-label">SUBJECT</label>
+              <input type="text" id="ticket-subject" name="subject" class="form-input" placeholder="BRIEF DESCRIPTION OF ISSUE" required>
+            </div>
+
+            <div class="form-group">
+              <label for="ticket-adapter" class="form-label">ADAPTER TYPE (IF APPLICABLE)</label>
+              <select id="ticket-adapter" name="adapter" class="form-select">
+                <option value="" disabled selected>SELECT ADAPTER</option>
+                <option value="elm327-bt">ELM327 - BLUETOOTH</option>
+                <option value="elm327-wifi">ELM327 - WIFI</option>
+                <option value="stn1110">STN1110</option>
+                <option value="stn2120">STN2120</option>
+                <option value="obdlink-mx">OBDLINK MX+</option>
+                <option value="esp32">ESP32</option>
+                <option value="other">OTHER</option>
+                <option value="na">NOT APPLICABLE</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="ticket-vehicle" class="form-label">VEHICLE (YEAR / MAKE / MODEL)</label>
+              <input type="text" id="ticket-vehicle" name="vehicle" class="form-input" placeholder="e.g. 2019 TOYOTA CAMRY">
+            </div>
+
+            <div class="form-group">
+              <label for="ticket-description" class="form-label">DETAILED DESCRIPTION</label>
+              <textarea id="ticket-description" name="description" class="form-textarea" placeholder="DESCRIBE THE ISSUE IN DETAIL. INCLUDE:&#10;- STEPS TO REPRODUCE&#10;- ERROR MESSAGES&#10;- ADAPTER FIRMWARE VERSION (ATI)&#10;- PROTOCOL IN USE (ATDP)&#10;- APP VERSION" required></textarea>
+            </div>
+
+            <div class="form-group">
+              <label for="ticket-severity" class="form-label">SEVERITY</label>
+              <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+                <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-family: var(--font-mono); font-size: var(--text-sm); color: var(--color-text-secondary);">
+                  <input type="radio" name="severity" value="critical" style="accent-color: var(--color-danger);">
+                  <span class="badge badge--critical">CRITICAL</span>
+                </label>
+                <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-family: var(--font-mono); font-size: var(--text-sm); color: var(--color-text-secondary);">
+                  <input type="radio" name="severity" value="high" style="accent-color: var(--color-warning);">
+                  <span class="badge badge--warning">HIGH</span>
+                </label>
+                <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-family: var(--font-mono); font-size: var(--text-sm); color: var(--color-text-secondary);">
+                  <input type="radio" name="severity" value="normal" checked style="accent-color: var(--color-primary);">
+                  <span class="badge badge--pass">NORMAL</span>
+                </label>
+                <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-family: var(--font-mono); font-size: var(--text-sm); color: var(--color-text-secondary);">
+                  <input type="radio" name="severity" value="low" style="accent-color: var(--color-text-muted);">
+                  <span class="badge badge--pending">LOW</span>
+                </label>
+              </div>
+            </div>
+
+            <div style="display: flex; gap: 16px; margin-top: 32px; flex-wrap: wrap;">
+              <button type="submit" class="btn btn--primary btn--lg">SUBMIT TICKET</button>
+              <button type="reset" class="btn btn--outline">CLEAR FORM</button>
+            </div>
+          </form>
+        </div>
+
+        <!-- Quick help section -->
+        <div style="margin-top: 48px;">
+          <h2 style="font-family: var(--font-heading); font-size: var(--text-xl); text-transform: uppercase; color: var(--color-text); margin-bottom: 16px;">QUICK DIAGNOSTICS</h2>
+          <p style="font-family: var(--font-mono); font-size: var(--text-sm); color: var(--color-text-muted); margin-bottom: 24px;">&gt; Before submitting a ticket, try these common solutions:</p>
+
+          <div class="table-wrap">
+            <table class="data-table" aria-label="Quick diagnostics">
+              <thead>
+                <tr>
+                  <th scope="col">ISSUE</th>
+                  <th scope="col">QUICK FIX</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Cannot connect to adapter</td>
+                  <td class="td-value">Re-pair Bluetooth. Check adapter LED. Verify OBD port has power (key ON).</td>
+                </tr>
+                <tr>
+                  <td>NO DATA on all PIDs</td>
+                  <td class="td-value">Open Terminal. Send ATZ then ATS1 then ATCAF1. Retry scan.</td>
+                </tr>
+                <tr>
+                  <td>Connection drops frequently</td>
+                  <td class="td-value">Disable battery optimization for ODB+ in Android Settings.</td>
+                </tr>
+                <tr>
+                  <td>BUS INIT: ERROR</td>
+                  <td class="td-value">Send ATZ. Do not send ATSH commands on ISO/KWP protocols.</td>
+                </tr>
+                <tr>
+                  <td>App crashes on startup</td>
+                  <td class="td-value">Clear app data: Settings &gt; Apps &gt; ODB+ &gt; Clear Data. Reinstall if needed.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Contact info -->
+        <div style="margin-top: 48px; padding: 24px; border: 1px solid var(--color-border); background: var(--color-surface);">
+          <h2 style="font-family: var(--font-heading); font-size: var(--text-lg); text-transform: uppercase; color: var(--color-text); margin-bottom: 12px;">DIRECT CONTACT</h2>
+          <div style="font-family: var(--font-mono); font-size: var(--text-sm); color: var(--color-text-secondary); line-height: 2;">
+            <p>EMAIL: <a href="mailto:support@odbplus.dev" style="color: var(--color-primary);">support@odbplus.dev</a></p>
+            <p>GITHUB: <a href="https://github.com/odbplus" style="color: var(--color-primary);">github.com/odbplus</a></p>
+            <p>RESPONSE: <span style="color: var(--color-primary);">TYPICALLY WITHIN 4 HOURS</span></p>
+          </div>
+        </div>
+
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer" role="contentinfo">
+    <div class="container">
+      <div class="footer__inner">
+        <a href="/pages/index.html" aria-label="ODB+ Home">
+          <img src="../assets/logo.svg" alt="ODB+" class="footer__logo" width="280" height="70">
+        </a>
+        <ul class="footer__links" role="list">
+          <li><a href="/pages/index.html" class="footer__link">HOME</a></li>
+          <li><a href="/pages/features.html" class="footer__link">FEATURES</a></li>
+          <li><a href="/pages/docs.html" class="footer__link">DOCS</a></li>
+          <li><a href="/pages/contact.html" class="footer__link">SUPPORT</a></li>
+        </ul>
+        <div class="footer__status" role="status">
+          SYSTEM STATUS: <span class="text-primary">ONLINE</span>
+          <span aria-hidden="true">|</span>
+          BUILD: 2026.03
+          <span aria-hidden="true">|</span>
+          &copy; 2026 ODB+ DIAGNOSTIC SYSTEMS
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      var toggle = document.querySelector('.navbar__toggle');
+      var nav = document.getElementById('main-nav');
+      if (toggle && nav) {
+        toggle.addEventListener('click', function() {
+          var expanded = toggle.getAttribute('aria-expanded') === 'true';
+          toggle.setAttribute('aria-expanded', String(!expanded));
+          nav.classList.toggle('active');
+          toggle.textContent = expanded ? '[=]' : '[X]';
+        });
+      }
+    });
+  </script>
+
+</body>
+</html>

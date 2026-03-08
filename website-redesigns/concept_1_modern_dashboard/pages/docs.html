@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="ODB+ Documentation - Getting started guide, adapter setup, FAQ, and API reference for ODB+ vehicle diagnostics.">
+  <meta name="theme-color" content="#2563EB">
+  <title>Documentation - ODB+</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/variables.css">
+  <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav class="navbar" role="navigation" aria-label="Main navigation">
+    <div class="container navbar__inner">
+      <a href="index.html" class="navbar__logo" aria-label="ODB+ Home">
+        <svg viewBox="0 0 200 48" width="140" height="34" aria-hidden="true">
+          <defs><linearGradient id="nav-logo-grad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#2563EB"/><stop offset="100%" stop-color="#10B981"/></linearGradient></defs>
+          <g transform="translate(4, 4)">
+            <circle cx="20" cy="20" r="18" fill="none" stroke="url(#nav-logo-grad)" stroke-width="2.5"/>
+            <polyline points="6,20 12,20 15,10 18,28 21,14 24,26 27,20 34,20" fill="none" stroke="url(#nav-logo-grad)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="6" cy="20" r="2" fill="#2563EB"/><circle cx="34" cy="20" r="2" fill="#10B981"/>
+          </g>
+          <text x="54" y="34" font-family="Inter, sans-serif" font-size="28" font-weight="800" fill="#0F172A" letter-spacing="-1">ODB</text>
+          <text x="118" y="34" font-family="Inter, sans-serif" font-size="28" font-weight="800" fill="url(#nav-logo-grad)" letter-spacing="-1">+</text>
+        </svg>
+      </a>
+      <div class="navbar__links" role="menubar">
+        <a href="features.html" role="menuitem">Features</a>
+        <a href="index.html#how-it-works" role="menuitem">How It Works</a>
+        <a href="docs.html" role="menuitem" class="active">Docs</a>
+        <a href="https://community.odbplus.com" role="menuitem">Community</a>
+        <a href="contact.html" role="menuitem">Contact</a>
+      </div>
+      <div class="navbar__actions">
+        <a href="#download" class="btn btn-primary btn-sm">Download App</a>
+        <button class="navbar__hamburger" aria-label="Open menu" aria-expanded="false" onclick="toggleMobileMenu()">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+    <div class="mobile-menu" id="mobile-menu" role="menu">
+      <a href="features.html">Features</a>
+      <a href="docs.html">Docs</a>
+      <a href="contact.html">Contact</a>
+    </div>
+  </nav>
+
+
+  <!-- Page Header -->
+  <section class="page-header">
+    <div class="container">
+      <span class="badge" style="margin-bottom: var(--space-4); display: inline-flex;">Documentation</span>
+      <h1>Get Started with ODB+</h1>
+      <p>Everything you need to connect, configure, and start diagnosing your vehicle.</p>
+    </div>
+  </section>
+
+
+  <!-- Docs Layout -->
+  <section class="section">
+    <div class="container">
+      <div class="docs-layout">
+
+        <!-- Sidebar Navigation -->
+        <aside class="docs-sidebar" aria-label="Documentation navigation">
+          <nav class="docs-sidebar__nav">
+            <a href="#getting-started" class="active">Getting Started</a>
+            <a href="#adapters">Adapter Setup</a>
+            <a href="#connecting">Connecting to Your Vehicle</a>
+            <a href="#live-data">Reading Live Data</a>
+            <a href="#trouble-codes">Trouble Codes</a>
+            <a href="#terminal">Terminal Mode</a>
+            <a href="#api">API Reference</a>
+            <a href="#faq">FAQ</a>
+          </nav>
+        </aside>
+
+        <!-- Content -->
+        <main class="docs-content">
+
+          <h2 id="getting-started">Getting Started</h2>
+          <p>ODB+ connects to your vehicle through an OBD-II diagnostic adapter. Here is what you need to get started:</p>
+
+          <h3>Requirements</h3>
+          <ul>
+            <li>Android device running Android 8.0 (Oreo) or later</li>
+            <li>An ELM327-compatible OBD-II Bluetooth or WiFi adapter</li>
+            <li>A 1996 or newer vehicle with an OBD-II diagnostic port (all US vehicles 1996+, EU vehicles 2001+)</li>
+          </ul>
+
+          <h3>Installation</h3>
+          <ol>
+            <li>Download ODB+ from the Google Play Store or from our website</li>
+            <li>Open the app and grant Bluetooth permissions when prompted</li>
+            <li>Plug your OBD-II adapter into your vehicle's diagnostic port (usually located under the dashboard on the driver's side)</li>
+            <li>Turn on your vehicle's ignition (engine running is recommended for live data)</li>
+          </ol>
+
+          <h3>Quick Start</h3>
+          <pre><code>1. Open ODB+ and tap "Connect"
+2. Select your adapter from the Bluetooth list
+3. Wait for protocol negotiation (~2-5 seconds)
+4. Start reading data!</code></pre>
+
+
+          <h2 id="adapters">Adapter Setup</h2>
+          <p>ODB+ supports any ELM327-compatible adapter over Bluetooth Classic or WiFi. Here is what you should know about choosing and configuring an adapter.</p>
+
+          <h3>Recommended Adapters</h3>
+          <p>ODB+ uses the Universal OBD-II Adapter Protocol Layer (UOAPL) to automatically detect and configure your adapter. The following adapter families are supported:</p>
+          <ul>
+            <li><strong>ELM327</strong> -- The most common and widely available. Look for genuine v1.5 or v2.1+ chips. Avoid cheap clones labeled "v2.1" that are actually v1.0 internals.</li>
+            <li><strong>STN11xx/STN21xx</strong> -- Higher performance adapters from OBDLink. Faster command throughput and better CAN support.</li>
+            <li><strong>ESP32-based</strong> -- Custom adapters using ESP32 microcontrollers. Used by some open-source projects.</li>
+          </ul>
+
+          <h3>Bluetooth Pairing</h3>
+          <ol>
+            <li>Go to your Android device's Bluetooth settings</li>
+            <li>Ensure your OBD-II adapter is plugged in and the vehicle ignition is on</li>
+            <li>Scan for devices -- your adapter will appear as something like "OBD-II", "OBDII", "Android-Vlink", or "ELM327"</li>
+            <li>Pair with the default PIN: <code>1234</code> or <code>0000</code></li>
+            <li>Return to ODB+ and tap Connect</li>
+          </ol>
+
+          <h3>WiFi Adapters</h3>
+          <p>For WiFi-based adapters, connect to the adapter's WiFi network first (usually named something like "WiFi_OBDII" or "CLinkV200"), then open ODB+ and connect via TCP. The default address is <code>192.168.0.10:35000</code>.</p>
+
+          <h3>Troubleshooting Adapters</h3>
+          <pre><code># If connection fails, try these steps in order:
+1. Unplug and re-plug the adapter
+2. Turn vehicle ignition off, wait 10s, turn back on
+3. Remove Bluetooth pairing, re-pair the device
+4. In ODB+, go to Terminal and send: ATZ
+   - Should respond: "ELM327 v2.x" or similar
+5. Try: ATDP
+   - Shows detected protocol</code></pre>
+
+
+          <h2 id="connecting">Connecting to Your Vehicle</h2>
+          <p>When you tap Connect in ODB+, here is what happens behind the scenes:</p>
+
+          <ol>
+            <li><strong>Transport layer</strong> -- Establishes Bluetooth or TCP socket connection to the adapter hardware</li>
+            <li><strong>Adapter fingerprinting</strong> -- Identifies the adapter family (ELM327, STN, ESP32) and firmware version</li>
+            <li><strong>Driver initialization</strong> -- Configures the adapter with optimal settings (echo off, line feeds off, headers on)</li>
+            <li><strong>Protocol negotiation</strong> -- Discovers which OBD-II protocol your vehicle uses (CAN, KWP2000, ISO 9141, J1850)</li>
+            <li><strong>PID discovery</strong> -- Queries the ECU for supported parameter IDs and builds a list of available sensors</li>
+          </ol>
+
+          <p>The entire process typically takes 3-8 seconds depending on your vehicle and adapter.</p>
+
+          <h3>Supported Protocols</h3>
+          <ul>
+            <li><strong>CAN (ISO 15765-4)</strong> -- Used by most vehicles 2008+. 11-bit and 29-bit addressing supported.</li>
+            <li><strong>KWP2000 Fast Init (ISO 14230-4)</strong> -- Common in European and Asian vehicles 2001-2010.</li>
+            <li><strong>ISO 9141-2</strong> -- Older European vehicles, uses 5-baud initialization.</li>
+            <li><strong>SAE J1850 PWM</strong> -- Primarily Ford vehicles pre-2008.</li>
+            <li><strong>SAE J1850 VPW</strong> -- Primarily GM vehicles pre-2008.</li>
+          </ul>
+
+
+          <h2 id="live-data">Reading Live Data</h2>
+          <p>Once connected, navigate to the Live Data screen to see real-time sensor readings. ODB+ automatically discovers which PIDs your vehicle supports and displays them in a scrollable list.</p>
+
+          <h3>Understanding PID Values</h3>
+          <p>Each parameter ID (PID) corresponds to a specific sensor or calculated value from the ECU:</p>
+          <ul>
+            <li><code>010C</code> -- Engine RPM (0-16,383 rev/min)</li>
+            <li><code>010D</code> -- Vehicle Speed (0-255 km/h)</li>
+            <li><code>0105</code> -- Engine Coolant Temperature (-40 to 215 C)</li>
+            <li><code>0110</code> -- Mass Air Flow Rate (0-655.35 g/s)</li>
+            <li><code>0106</code> -- Short Term Fuel Trim (-100% to +99.2%)</li>
+            <li><code>010B</code> -- Intake Manifold Pressure (0-255 kPa)</li>
+          </ul>
+
+          <h3>Customizing the Display</h3>
+          <p>Tap the gear icon on the Live Data screen to customize which PIDs are displayed, their order, and the display format (gauge view, list view, or graph view). You can create multiple dashboard layouts and switch between them.</p>
+
+
+          <h2 id="trouble-codes">Trouble Codes</h2>
+          <p>The DTC screen reads diagnostic trouble codes from your vehicle's ECU. Codes are organized into three categories:</p>
+          <ul>
+            <li><strong>Stored/Active</strong> -- Currently triggering the check engine light (Mode 03)</li>
+            <li><strong>Pending</strong> -- Detected but not yet confirmed after multiple drive cycles (Mode 07)</li>
+            <li><strong>Permanent</strong> -- Codes that remain until the issue is verified fixed by the ECU (Mode 0A)</li>
+          </ul>
+
+          <h3>Clearing Codes</h3>
+          <p>You can clear stored and pending codes by tapping the "Clear Codes" button. This sends Mode 04 to the ECU, which:</p>
+          <ul>
+            <li>Clears all stored DTCs</li>
+            <li>Resets the MIL (check engine light)</li>
+            <li>Clears all freeze frame data</li>
+            <li>Resets all readiness monitors to "not complete"</li>
+          </ul>
+          <p><strong>Note:</strong> Clearing codes does not fix the underlying problem. If the issue persists, the code will return after one or more drive cycles.</p>
+
+
+          <h2 id="terminal">Terminal Mode</h2>
+          <p>Terminal mode provides direct command-line access to the OBD-II adapter. You can send any AT command or OBD-II PID request and see the raw response.</p>
+
+          <h3>Common Commands</h3>
+          <pre><code># Adapter info
+ATZ          # Reset adapter
+ATI          # Print firmware version
+ATDP         # Display current protocol
+ATRV         # Read vehicle voltage
+
+# OBD-II queries
+0100         # Supported PIDs (01-20)
+0120         # Supported PIDs (21-40)
+0140         # Supported PIDs (41-60)
+010C         # Engine RPM
+010D         # Vehicle speed
+0105         # Coolant temperature
+03           # Read stored DTCs
+07           # Read pending DTCs
+04           # Clear DTCs (use with caution)
+
+# Configuration
+ATE0         # Echo off
+ATH1         # Headers on (shows protocol headers)
+ATS1         # Spaces on (readable hex format)
+ATSP0        # Auto-detect protocol</code></pre>
+
+
+          <h2 id="api">API Reference</h2>
+          <p>ODB+ provides an intent-based API for other Android apps to request diagnostic data. This is useful for integration with fleet management tools, custom dashboards, or data logging applications.</p>
+
+          <h3>Requesting Data</h3>
+          <pre><code>// Send an intent to request live data
+val intent = Intent("com.odbplus.ACTION_READ_PID")
+intent.putExtra("pid", "010C") // Engine RPM
+intent.setPackage("com.odbplus.app")
+startActivityForResult(intent, REQUEST_PID)</code></pre>
+
+          <h3>Receiving Data</h3>
+          <pre><code>override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+    if (requestCode == REQUEST_PID && resultCode == RESULT_OK) {
+        val pidValue = data?.getFloatExtra("value", 0f)
+        val pidUnit = data?.getStringExtra("unit")
+        val pidName = data?.getStringExtra("name")
+        // pidValue = 2847.0, pidUnit = "RPM", pidName = "Engine RPM"
+    }
+}</code></pre>
+
+          <h3>Available Intents</h3>
+          <ul>
+            <li><code>com.odbplus.ACTION_READ_PID</code> -- Read a single PID value</li>
+            <li><code>com.odbplus.ACTION_READ_DTCS</code> -- Read all stored trouble codes</li>
+            <li><code>com.odbplus.ACTION_CLEAR_DTCS</code> -- Clear trouble codes (requires user confirmation)</li>
+            <li><code>com.odbplus.ACTION_CONNECTION_STATUS</code> -- Check if ODB+ is connected</li>
+          </ul>
+
+
+          <h2 id="faq">Frequently Asked Questions</h2>
+
+          <h3>What adapters work with ODB+?</h3>
+          <p>Any ELM327-compatible Bluetooth or WiFi OBD-II adapter. We recommend adapters with genuine ELM327 v1.5+ or STN11xx chips. Avoid ultra-cheap adapters from unbranded sellers -- many advertise "v2.1" but contain v1.0 firmware that lacks support for some protocols.</p>
+
+          <h3>Why does it say "UNABLE TO CONNECT"?</h3>
+          <p>This usually means the adapter cannot establish communication with your vehicle's ECU. Common causes:</p>
+          <ul>
+            <li>Ignition is not turned on (must be in ON or RUN position)</li>
+            <li>Adapter is not fully seated in the OBD-II port</li>
+            <li>Vehicle uses a protocol that requires a specific initialization sequence (ODB+ handles this automatically, but some very old vehicles may need manual protocol selection)</li>
+          </ul>
+
+          <h3>Does ODB+ work with diesel vehicles?</h3>
+          <p>Yes. ODB+ supports all OBD-II compliant vehicles regardless of fuel type, including diesel, gasoline, hybrid, and electric vehicles. Some diesel-specific PIDs (like DPF pressure or EGR rate) are available if supported by the vehicle.</p>
+
+          <h3>Can I use ODB+ while driving?</h3>
+          <p>Yes, but safety first. Use the HUD (heads-up display) mode which provides a simplified overlay, or have a passenger operate the app. Never interact with the full app interface while driving.</p>
+
+          <h3>Will ODB+ void my warranty?</h3>
+          <p>No. ODB+ only reads data from your vehicle's ECU using standardized OBD-II commands. It does not modify any ECU parameters, reflash firmware, or alter vehicle settings. Reading diagnostic data is the same thing your dealership's scan tool does.</p>
+
+          <h3>Is my vehicle data stored or shared?</h3>
+          <p>All diagnostic data stays on your device. ODB+ does not upload vehicle data to any server. Session logs are stored locally and can only be shared if you explicitly export them. The AI diagnostics feature sends anonymized sensor snapshots for analysis but never VINs or location data.</p>
+
+        </main>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- Footer -->
+  <footer class="site-footer" role="contentinfo">
+    <div class="container">
+      <div class="footer__top">
+        <div class="footer__brand">
+          <a href="index.html" aria-label="ODB+ Home">
+            <svg viewBox="0 0 200 48" width="120" height="30" aria-hidden="true">
+              <defs><linearGradient id="f-logo-grad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#2563EB"/><stop offset="100%" stop-color="#10B981"/></linearGradient></defs>
+              <g transform="translate(4, 4)"><circle cx="20" cy="20" r="18" fill="none" stroke="url(#f-logo-grad)" stroke-width="2.5"/><polyline points="6,20 12,20 15,10 18,28 21,14 24,26 27,20 34,20" fill="none" stroke="url(#f-logo-grad)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="6" cy="20" r="2" fill="#2563EB"/><circle cx="34" cy="20" r="2" fill="#10B981"/></g>
+              <text x="54" y="34" font-family="Inter, sans-serif" font-size="28" font-weight="800" fill="#0F172A" letter-spacing="-1">ODB</text>
+              <text x="118" y="34" font-family="Inter, sans-serif" font-size="28" font-weight="800" fill="url(#f-logo-grad)" letter-spacing="-1">+</text>
+            </svg>
+          </a>
+          <p>Professional-grade vehicle diagnostics powered by AI.</p>
+        </div>
+        <div class="footer__col"><h5>Product</h5><ul><li><a href="features.html">Features</a></li><li><a href="#download">Download</a></li></ul></div>
+        <div class="footer__col"><h5>Resources</h5><ul><li><a href="docs.html">Documentation</a></li><li><a href="docs.html#faq">FAQ</a></li></ul></div>
+        <div class="footer__col"><h5>Community</h5><ul><li><a href="https://community.odbplus.com">Forums</a></li><li><a href="https://github.com/odbplus">GitHub</a></li></ul></div>
+        <div class="footer__col"><h5>Company</h5><ul><li><a href="contact.html">Contact</a></li><li><a href="#">Privacy</a></li></ul></div>
+      </div>
+      <div class="footer__bottom">
+        <p class="footer__copyright">2026 ODB+. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    function toggleMobileMenu() {
+      const menu = document.getElementById('mobile-menu');
+      const btn = document.querySelector('.navbar__hamburger');
+      const isOpen = menu.classList.toggle('is-open');
+      btn.setAttribute('aria-expanded', isOpen);
+    }
+
+    /* Active sidebar link tracking */
+    (function() {
+      const links = document.querySelectorAll('.docs-sidebar__nav a');
+      const sections = [];
+      links.forEach(function(link) {
+        const id = link.getAttribute('href').replace('#', '');
+        const section = document.getElementById(id);
+        if (section) sections.push({ link: link, el: section });
+      });
+
+      function updateActive() {
+        var current = sections[0];
+        for (var i = 0; i < sections.length; i++) {
+          if (sections[i].el.getBoundingClientRect().top <= 120) {
+            current = sections[i];
+          }
+        }
+        links.forEach(function(l) { l.classList.remove('active'); });
+        if (current) current.link.classList.add('active');
+      }
+
+      window.addEventListener('scroll', updateActive, { passive: true });
+      updateActive();
+    })();
+  </script>
+</body>
+</html>

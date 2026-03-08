@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="ODB+ Professional OBD-II diagnostics for Android. AI-powered fault analysis, live data monitoring, 18,000+ error codes, and raw terminal mode.">
+  <meta name="theme-color" content="#1C1C1C">
+  <title>ODB+ Diagnostic Systems | Professional OBD-II Scanner for Android</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="../css/variables.css">
+  <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+
+  <!-- ===== NAVIGATION ===== -->
+  <nav class="nav" role="navigation" aria-label="Main navigation">
+    <div class="nav__inner">
+      <a href="index.html" class="nav__logo" aria-label="ODB+ Diagnostic Systems - Home">
+        <svg viewBox="0 0 180 36" width="180" height="36" aria-hidden="true">
+          <defs>
+            <linearGradient id="nBolt" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#FF8C1A"/><stop offset="100%" stop-color="#CC5500"/>
+            </linearGradient>
+            <linearGradient id="nText" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#FFF"/><stop offset="50%" stop-color="#E0E0E0"/><stop offset="100%" stop-color="#B0B0B0"/>
+            </linearGradient>
+          </defs>
+          <polygon points="12,2 18,5 18,13 12,16 6,13 6,5" fill="url(#nBolt)" stroke="#CC5500" stroke-width="1"/>
+          <circle cx="12" cy="9" r="3" fill="#1C1C1C" stroke="#FF6B00" stroke-width="0.8"/>
+          <text x="28" y="15" font-family="'Bebas Neue','Oswald',Impact,sans-serif" font-size="20" font-weight="700" letter-spacing="2" fill="url(#nText)">ODB</text>
+          <text x="82" y="15" font-family="'Bebas Neue','Oswald',Impact,sans-serif" font-size="20" font-weight="700" fill="#FF6B00">+</text>
+          <line x1="28" y1="20" x2="94" y2="20" stroke="#FF6B00" stroke-width="0.5" opacity="0.4"/>
+          <text x="29" y="28" font-family="'Rajdhani','Barlow Condensed',sans-serif" font-size="5.5" font-weight="600" letter-spacing="2.2" fill="#888">DIAGNOSTIC SYSTEMS</text>
+        </svg>
+      </a>
+      <div class="nav__links" id="navLinks">
+        <a href="index.html" class="nav__link nav__link--active">Home</a>
+        <a href="features.html" class="nav__link">Features</a>
+        <a href="docs.html" class="nav__link">Docs</a>
+        <a href="contact.html" class="nav__link">Contact</a>
+        <a href="#download" class="btn btn--stripe btn--sm">Download</a>
+      </div>
+      <button class="nav__toggle" id="navToggle" aria-expanded="false" aria-controls="navDrawer" aria-label="Toggle navigation menu">
+        <span class="nav__toggle-bar"></span>
+        <span class="nav__toggle-bar"></span>
+        <span class="nav__toggle-bar"></span>
+      </button>
+    </div>
+    <div class="nav__drawer" id="navDrawer" aria-hidden="true">
+      <a href="index.html" class="nav__link nav__link--active">Home</a>
+      <a href="features.html" class="nav__link">Features</a>
+      <a href="docs.html" class="nav__link">Docs</a>
+      <a href="contact.html" class="nav__link">Contact</a>
+      <a href="#download" class="btn btn--stripe">Download</a>
+    </div>
+  </nav>
+
+  <!-- ===== HERO ===== -->
+  <section class="hero" aria-labelledby="heroHeadline">
+    <div class="hero__grid-overlay" aria-hidden="true"></div>
+    <div class="container hero__content">
+      <div class="hero__text">
+        <span class="section-label">System Status: Online</span>
+        <h1 id="heroHeadline" class="hero__headline">
+          Raw Power.
+          <span class="accent">Real Diagnosis.</span>
+        </h1>
+        <p class="hero__sub">
+          Professional OBD-II diagnostics for Android. AI-powered fault analysis,
+          live data monitoring, and 18,000+ error codes at your fingertips.
+        </p>
+        <div class="hero__actions">
+          <a href="#download" class="btn btn--stripe btn--lg">Get Started</a>
+          <a href="#dashboard-preview" class="btn btn--secondary btn--lg">View Demo</a>
+        </div>
+        <div class="hero__badges" aria-label="Supported protocols and features">
+          <span class="hero__badge">ELM327</span>
+          <span class="hero__badge">KWP2000</span>
+          <span class="hero__badge">CAN Bus</span>
+          <span class="hero__badge">AI Analysis</span>
+        </div>
+      </div>
+      <div class="hero__illustration" aria-hidden="true">
+        <svg viewBox="0 0 400 420" width="400" height="420">
+          <defs>
+            <radialGradient id="hGauge" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stop-color="#2A2A2A"/><stop offset="100%" stop-color="#1C1C1C"/>
+            </radialGradient>
+            <filter id="hGlow">
+              <feGaussianBlur stdDeviation="2.5" result="b"/>
+              <feFlood flood-color="#FF6B00" flood-opacity="0.3"/>
+              <feComposite in2="b" operator="in"/>
+              <feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
+            </filter>
+            <radialGradient id="hRivet" cx="35%" cy="35%">
+              <stop offset="0%" stop-color="#888"/><stop offset="100%" stop-color="#333"/>
+            </radialGradient>
+          </defs>
+
+          <!-- Blueprint bg -->
+          <rect width="400" height="420" fill="#151A20" rx="4"/>
+          <g stroke="#2A3A4A" stroke-width="0.35" opacity="0.45">
+            <line x1="0" y1="0" x2="0" y2="420"/><line x1="20" y1="0" x2="20" y2="420"/><line x1="40" y1="0" x2="40" y2="420"/><line x1="60" y1="0" x2="60" y2="420"/><line x1="80" y1="0" x2="80" y2="420"/><line x1="100" y1="0" x2="100" y2="420"/><line x1="120" y1="0" x2="120" y2="420"/><line x1="140" y1="0" x2="140" y2="420"/><line x1="160" y1="0" x2="160" y2="420"/><line x1="180" y1="0" x2="180" y2="420"/><line x1="200" y1="0" x2="200" y2="420"/><line x1="220" y1="0" x2="220" y2="420"/><line x1="240" y1="0" x2="240" y2="420"/><line x1="260" y1="0" x2="260" y2="420"/><line x1="280" y1="0" x2="280" y2="420"/><line x1="300" y1="0" x2="300" y2="420"/><line x1="320" y1="0" x2="320" y2="420"/><line x1="340" y1="0" x2="340" y2="420"/><line x1="360" y1="0" x2="360" y2="420"/><line x1="380" y1="0" x2="380" y2="420"/><line x1="400" y1="0" x2="400" y2="420"/>
+            <line x1="0" y1="0" x2="400" y2="0"/><line x1="0" y1="20" x2="400" y2="20"/><line x1="0" y1="40" x2="400" y2="40"/><line x1="0" y1="60" x2="400" y2="60"/><line x1="0" y1="80" x2="400" y2="80"/><line x1="0" y1="100" x2="400" y2="100"/><line x1="0" y1="120" x2="400" y2="120"/><line x1="0" y1="140" x2="400" y2="140"/><line x1="0" y1="160" x2="400" y2="160"/><line x1="0" y1="180" x2="400" y2="180"/><line x1="0" y1="200" x2="400" y2="200"/><line x1="0" y1="220" x2="400" y2="220"/><line x1="0" y1="240" x2="400" y2="240"/><line x1="0" y1="260" x2="400" y2="260"/><line x1="0" y1="280" x2="400" y2="280"/><line x1="0" y1="300" x2="400" y2="300"/><line x1="0" y1="320" x2="400" y2="320"/><line x1="0" y1="340" x2="400" y2="340"/><line x1="0" y1="360" x2="400" y2="360"/><line x1="0" y1="380" x2="400" y2="380"/><line x1="0" y1="400" x2="400" y2="400"/><line x1="0" y1="420" x2="400" y2="420"/>
+          </g>
+
+          <!-- Rivet plate -->
+          <rect x="35" y="15" width="330" height="390" rx="14" fill="#2A2A2A" stroke="#444" stroke-width="2"/>
+          <circle cx="50" cy="30" r="6" fill="url(#hRivet)" stroke="#555" stroke-width="1"/><circle cx="50" cy="30" r="2" fill="#444"/>
+          <circle cx="350" cy="30" r="6" fill="url(#hRivet)" stroke="#555" stroke-width="1"/><circle cx="350" cy="30" r="2" fill="#444"/>
+          <circle cx="50" cy="390" r="6" fill="url(#hRivet)" stroke="#555" stroke-width="1"/><circle cx="50" cy="390" r="2" fill="#444"/>
+          <circle cx="350" cy="390" r="6" fill="url(#hRivet)" stroke="#555" stroke-width="1"/><circle cx="350" cy="390" r="2" fill="#444"/>
+
+          <!-- Phone -->
+          <rect x="50" y="24" width="300" height="372" rx="12" fill="#1A1A1A" stroke="#444" stroke-width="1.5"/>
+          <rect x="60" y="34" width="280" height="20" rx="3" fill="#111"/>
+          <text x="70" y="48" font-family="'Roboto Mono',monospace" font-size="8" fill="#FF6B00" font-weight="700">ODB+ DIAGNOSTICS</text>
+          <circle cx="310" cy="44" r="3.5" fill="#4CAF50" opacity="0.3"/><circle cx="310" cy="44" r="1.8" fill="#4CAF50"/>
+          <text x="317" y="47" font-family="'Roboto Mono',monospace" font-size="6" fill="#4CAF50">LIVE</text>
+          <rect x="60" y="58" width="280" height="330" rx="3" fill="#111"/>
+
+          <!-- Main RPM gauge -->
+          <g transform="translate(200, 150)">
+            <circle cx="0" cy="0" r="64" fill="url(#hGauge)" stroke="#444" stroke-width="2"/>
+            <circle cx="0" cy="0" r="58" fill="none" stroke="#333" stroke-width="1"/>
+            <line x1="-52" y1="12" x2="-44" y2="10" stroke="#666" stroke-width="1.4"/>
+            <line x1="-48" y1="-12" x2="-40" y2="-10" stroke="#666" stroke-width="1.4"/>
+            <line x1="-34" y1="-34" x2="-28" y2="-28" stroke="#666" stroke-width="1.4"/>
+            <line x1="-14" y1="-48" x2="-12" y2="-40" stroke="#666" stroke-width="1.4"/>
+            <line x1="0" y1="-52" x2="0" y2="-44" stroke="#666" stroke-width="1.4"/>
+            <line x1="14" y1="-48" x2="12" y2="-40" stroke="#666" stroke-width="1.4"/>
+            <line x1="34" y1="-34" x2="28" y2="-28" stroke="#FF6B00" stroke-width="1.4"/>
+            <line x1="48" y1="-12" x2="40" y2="-10" stroke="#FF6B00" stroke-width="1.4"/>
+            <line x1="52" y1="12" x2="44" y2="10" stroke="#CC2200" stroke-width="1.8"/>
+            <line x1="0" y1="8" x2="12" y2="-40" stroke="#FF6B00" stroke-width="2.5" stroke-linecap="round" filter="url(#hGlow)"/>
+            <circle cx="0" cy="0" r="6" fill="#242424" stroke="#FF6B00" stroke-width="1.5"/>
+            <circle cx="0" cy="0" r="2.5" fill="#FF6B00"/>
+            <text x="0" y="26" text-anchor="middle" font-family="'Roboto Mono',monospace" font-size="15" font-weight="700" fill="#FF6B00">2847</text>
+            <text x="0" y="36" text-anchor="middle" font-family="'Roboto Mono',monospace" font-size="6" fill="#777">RPM x1000</text>
+          </g>
+
+          <!-- Temp gauge -->
+          <g transform="translate(110, 280)">
+            <circle cx="0" cy="0" r="32" fill="url(#hGauge)" stroke="#444" stroke-width="1.5"/>
+            <path d="M-26,14 A30,30 0 0,1 -22,-18" fill="none" stroke="#4A7FA5" stroke-width="2.5"/>
+            <path d="M-22,-18 A30,30 0 0,1 22,-18" fill="none" stroke="#4CAF50" stroke-width="2.5"/>
+            <path d="M22,-18 A30,30 0 0,1 26,14" fill="none" stroke="#CC2200" stroke-width="2.5"/>
+            <line x1="0" y1="5" x2="5" y2="-24" stroke="#FF6B00" stroke-width="1.8" stroke-linecap="round" filter="url(#hGlow)"/>
+            <circle cx="0" cy="0" r="3.5" fill="#242424" stroke="#FF6B00" stroke-width="1"/>
+            <text x="0" y="16" text-anchor="middle" font-family="'Roboto Mono',monospace" font-size="10" font-weight="700" fill="#F0F0F0">195</text>
+            <text x="0" y="23" text-anchor="middle" font-family="'Roboto Mono',monospace" font-size="5.5" fill="#777">COOLANT F</text>
+          </g>
+
+          <!-- Oil gauge -->
+          <g transform="translate(290, 280)">
+            <circle cx="0" cy="0" r="32" fill="url(#hGauge)" stroke="#444" stroke-width="1.5"/>
+            <path d="M-26,14 A30,30 0 0,1 -22,-18" fill="none" stroke="#CC2200" stroke-width="2.5"/>
+            <path d="M-22,-18 A30,30 0 0,1 26,14" fill="none" stroke="#4CAF50" stroke-width="2.5"/>
+            <line x1="0" y1="5" x2="16" y2="-18" stroke="#FF6B00" stroke-width="1.8" stroke-linecap="round" filter="url(#hGlow)"/>
+            <circle cx="0" cy="0" r="3.5" fill="#242424" stroke="#FF6B00" stroke-width="1"/>
+            <text x="0" y="16" text-anchor="middle" font-family="'Roboto Mono',monospace" font-size="10" font-weight="700" fill="#F0F0F0">42</text>
+            <text x="0" y="23" text-anchor="middle" font-family="'Roboto Mono',monospace" font-size="5.5" fill="#777">OIL PSI</text>
+          </g>
+
+          <!-- Bottom strip -->
+          <g transform="translate(60, 340)">
+            <rect x="0" y="0" width="280" height="38" rx="3" fill="#0A0E14" stroke="#333" stroke-width="0.5"/>
+            <text x="10" y="14" font-family="'Roboto Mono',monospace" font-size="7.5" fill="#4A7FA5">SPEED</text>
+            <text x="170" y="14" font-family="'Roboto Mono',monospace" font-size="7.5" fill="#FF6B00" text-anchor="end">62 MPH</text>
+            <line x1="6" y1="18" x2="270" y2="18" stroke="#333" stroke-width="0.4"/>
+            <text x="10" y="32" font-family="'Roboto Mono',monospace" font-size="7.5" fill="#4A7FA5">FUEL TRIM</text>
+            <text x="170" y="32" font-family="'Roboto Mono',monospace" font-size="7.5" fill="#4CAF50" text-anchor="end">+2.3%</text>
+            <circle cx="210" cy="10" r="3" fill="#4CAF50" opacity="0.25"/><circle cx="210" cy="10" r="1.5" fill="#4CAF50"/>
+            <text x="217" y="13" font-family="'Roboto Mono',monospace" font-size="5.5" fill="#4CAF50">ECU CONNECTED</text>
+          </g>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== STAT STRIP ===== -->
+  <section class="stat-strip" aria-label="Key statistics">
+    <div class="container">
+      <div class="stat-strip__grid">
+        <div class="stat-strip__item">
+          <div class="stat-strip__number">18,000+</div>
+          <div class="stat-strip__label">Error Codes</div>
+        </div>
+        <div class="stat-strip__item">
+          <div class="stat-strip__number">10+</div>
+          <div class="stat-strip__label">Diagnostic Features</div>
+        </div>
+        <div class="stat-strip__item">
+          <div class="stat-strip__number">50+</div>
+          <div class="stat-strip__label">Brands Covered</div>
+        </div>
+        <div class="stat-strip__item">
+          <div class="stat-strip__number">200ms</div>
+          <div class="stat-strip__label">Refresh Rate</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== FEATURES ===== -->
+  <section class="features" id="features" aria-labelledby="featuresTitle">
+    <div class="container">
+      <div class="features__header">
+        <span class="section-label">Active Systems</span>
+        <h2 id="featuresTitle">Diagnostic Arsenal</h2>
+        <p class="subheading" style="margin-top: var(--space-sm);">Professional-grade tools for every scenario</p>
+      </div>
+      <div class="features__grid">
+        <div class="feature-card">
+          <div class="feature-card__header">
+            <div class="feature-card__icon" aria-hidden="true">
+              <svg viewBox="0 0 48 48" width="24" height="24"><path d="M24,8 L26,4 L28,4 L28,8 L32,10 L36,8 L38,10 L34,14 L36,18 L40,18 L40,20 L36,22 L36,26 L40,28 L38,30 L34,28 L30,32 L30,36 L28,36 L26,32 L22,32 L20,36 L18,36 L18,32 L14,28 L10,30 L8,28 L12,26 L12,22 L8,20 L8,18 L12,18 L14,14 L10,10 L12,8 L16,10 L20,8 L22,4 L24,4 Z" fill="none" stroke="#FF6B00" stroke-width="1.8"/><circle cx="24" cy="20" r="6" fill="none" stroke="#FF6B00" stroke-width="1.8"/><circle cx="24" cy="20" r="2" fill="#FF6B00"/></svg>
+            </div>
+            <span class="status-badge status-badge--active">Active System</span>
+          </div>
+          <h3 class="feature-card__title">AI-Powered Diagnostics</h3>
+          <p class="feature-card__desc">Chat with an AI that reads your vehicle's live sensor data. Get instant fault analysis, repair suggestions, and severity assessments based on actual ECU readings.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-card__header">
+            <div class="feature-card__icon" aria-hidden="true">
+              <svg viewBox="0 0 48 48" width="24" height="24"><rect x="6" y="6" width="36" height="30" rx="3" fill="none" stroke="#FF6B00" stroke-width="2.2"/><polyline points="10,24 14,24 16,12 20,32 24,18 28,28 30,20 34,20 38,20" fill="none" stroke="#FF6B00" stroke-width="2.4"/><line x1="24" y1="36" x2="24" y2="42" stroke="#FF6B00" stroke-width="2.2"/><line x1="18" y1="42" x2="30" y2="42" stroke="#FF6B00" stroke-width="2.2"/></svg>
+            </div>
+            <span class="status-badge status-badge--active">Active System</span>
+          </div>
+          <h3 class="feature-card__title">Live Data Monitoring</h3>
+          <p class="feature-card__desc">Real-time RPM, coolant, O2 sensors, MAF, MAP, fuel trims, and dozens more PIDs. Gauge, graph, and raw data views with configurable refresh rates.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-card__header">
+            <div class="feature-card__icon" aria-hidden="true">
+              <svg viewBox="0 0 48 48" width="24" height="24"><rect x="8" y="4" width="24" height="32" rx="2" fill="none" stroke="#FF6B00" stroke-width="2.2"/><line x1="14" y1="12" x2="26" y2="12" stroke="#FF6B00" stroke-width="1.8"/><line x1="14" y1="18" x2="26" y2="18" stroke="#FF6B00" stroke-width="1.8"/><line x1="14" y1="24" x2="22" y2="24" stroke="#FF6B00" stroke-width="1.8"/><circle cx="34" cy="32" r="8" fill="none" stroke="#FF6B00" stroke-width="2.2"/><line x1="40" y1="38" x2="44" y2="42" stroke="#FF6B00" stroke-width="2.8"/></svg>
+            </div>
+            <span class="status-badge status-badge--active">Active System</span>
+          </div>
+          <h3 class="feature-card__title">18,000+ Error Codes</h3>
+          <p class="feature-card__desc">Complete DTC database with full descriptions, probable causes, repair procedures, and severity ratings. Read, clear, and monitor pending codes.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-card__header">
+            <div class="feature-card__icon" aria-hidden="true">
+              <svg viewBox="0 0 48 48" width="24" height="24"><rect x="6" y="6" width="36" height="32" rx="3" fill="none" stroke="#FF6B00" stroke-width="2.2"/><line x1="6" y1="14" x2="42" y2="14" stroke="#FF6B00" stroke-width="1.5"/><polyline points="12,22 18,26 12,30" fill="none" stroke="#FF6B00" stroke-width="2.2"/><line x1="22" y1="26" x2="34" y2="26" stroke="#FF6B00" stroke-width="2"/></svg>
+            </div>
+            <span class="status-badge status-badge--warning">Advanced</span>
+          </div>
+          <h3 class="feature-card__title">Raw Terminal Mode</h3>
+          <p class="feature-card__desc">Direct AT command and OBD-II PID entry. Send raw commands, view hex responses, and debug adapter communication with full protocol transparency.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-card__header">
+            <div class="feature-card__icon" aria-hidden="true">
+              <svg viewBox="0 0 48 48" width="24" height="24"><rect x="6" y="8" width="36" height="28" rx="3" fill="none" stroke="#FF6B00" stroke-width="2.2"/><circle cx="18" cy="22" r="6" fill="none" stroke="#FF6B00" stroke-width="2.2"/><circle cx="30" cy="22" r="6" fill="none" stroke="#FF6B00" stroke-width="2.2"/><circle cx="18" cy="22" r="2" fill="#FF6B00"/><circle cx="30" cy="22" r="2" fill="#FF6B00"/><circle cx="38" cy="12" r="2" fill="#CC2200"/></svg>
+            </div>
+            <span class="status-badge status-badge--active">Active System</span>
+          </div>
+          <h3 class="feature-card__title">Session Logger & Replay</h3>
+          <p class="feature-card__desc">Record complete diagnostic sessions with timestamped data. Replay readings, compare snapshots, export to CSV, and share with mechanics.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-card__header">
+            <div class="feature-card__icon" aria-hidden="true">
+              <svg viewBox="0 0 48 48" width="24" height="24"><circle cx="24" cy="24" r="18" fill="none" stroke="#FF6B00" stroke-width="2.2"/><circle cx="24" cy="24" r="15" fill="none" stroke="#FF6B00" stroke-width="1.5"/><line x1="24" y1="24" x2="33" y2="15" stroke="#FF6B00" stroke-width="2.5"/><circle cx="24" cy="24" r="3" fill="#FF6B00"/></svg>
+            </div>
+            <span class="status-badge status-badge--active">Active System</span>
+          </div>
+          <h3 class="feature-card__title">Guided Tests & HUD</h3>
+          <p class="feature-card__desc">Step-by-step diagnostic procedures: RPM tests, HUD overlay, O2 response tests, and catalyst efficiency checks. Follow guided workflows to isolate faults.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== HOW IT WORKS ===== -->
+  <section class="how-it-works" aria-labelledby="howTitle">
+    <div class="container">
+      <div style="text-align: center;">
+        <span class="section-label">Procedure</span>
+        <h2 id="howTitle">How It Works</h2>
+      </div>
+      <div class="how-it-works__steps">
+        <div class="step">
+          <div class="step__number">01</div>
+          <h3 class="step__title">Plug In</h3>
+          <p class="step__desc">Connect an ELM327-compatible OBD-II adapter to your vehicle's diagnostic port (under the dashboard, driver's side).</p>
+        </div>
+        <div class="step">
+          <div class="step__number">02</div>
+          <h3 class="step__title">Pair</h3>
+          <p class="step__desc">Open ODB+ and tap Connect. The app auto-detects your adapter via Bluetooth or WiFi and establishes a secure data link.</p>
+        </div>
+        <div class="step">
+          <div class="step__number">03</div>
+          <h3 class="step__title">Diagnose</h3>
+          <p class="step__desc">Read live sensor data, pull error codes, run guided tests, or ask the AI assistant about your vehicle's health.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== BENEFITS ===== -->
+  <section class="benefits" aria-labelledby="benefitsTitle">
+    <div class="container">
+      <div style="text-align: center; margin-bottom: var(--space-3xl);">
+        <span class="section-label">Advantages</span>
+        <h2 id="benefitsTitle">Built for Professionals</h2>
+      </div>
+      <div class="benefits__grid">
+        <div class="benefit-item">
+          <div class="benefit-item__marker">01</div>
+          <div class="benefit-item__text">
+            <h4>Universal Compatibility</h4>
+            <p>Works with every OBD-II vehicle (1996+). Supports CAN, KWP2000, ISO 9141, J1850 VPW/PWM protocols automatically.</p>
+          </div>
+        </div>
+        <div class="benefit-item">
+          <div class="benefit-item__marker">02</div>
+          <div class="benefit-item__text">
+            <h4>No Subscriptions</h4>
+            <p>One-time purchase. No monthly fees, no data harvesting. Your vehicle data stays on your device.</p>
+          </div>
+        </div>
+        <div class="benefit-item">
+          <div class="benefit-item__marker">03</div>
+          <div class="benefit-item__text">
+            <h4>Offline Capable</h4>
+            <p>Full error code database and diagnostic tools work without internet. AI features require connectivity for advanced analysis.</p>
+          </div>
+        </div>
+        <div class="benefit-item">
+          <div class="benefit-item__marker">04</div>
+          <div class="benefit-item__text">
+            <h4>Open Protocol</h4>
+            <p>Raw terminal mode gives you direct access to AT commands and hex-level protocol communication. Full transparency.</p>
+          </div>
+        </div>
+        <div class="benefit-item">
+          <div class="benefit-item__marker">05</div>
+          <div class="benefit-item__text">
+            <h4>Community Forums</h4>
+            <p>Access vehicle-specific forums covering 50+ manufacturers. Share diagnostic sessions and get advice from experienced mechanics.</p>
+          </div>
+        </div>
+        <div class="benefit-item">
+          <div class="benefit-item__marker">06</div>
+          <div class="benefit-item__text">
+            <h4>Parts & Repair Guides</h4>
+            <p>Integrated parts catalog and sensor testing reference library. From diagnosis to repair in one workflow.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== TERMINAL PREVIEW ===== -->
+  <section class="terminal-section blueprint-bg" aria-labelledby="termTitle">
+    <div class="container">
+      <div style="text-align: center; margin-bottom: var(--space-2xl); position: relative; z-index: 1;">
+        <span class="section-label">Raw Access</span>
+        <h2 id="termTitle">Terminal Mode</h2>
+        <p class="subheading" style="margin-top: var(--space-sm);">Direct AT command and OBD-II PID entry for power users</p>
+      </div>
+      <div class="terminal" style="position: relative; z-index: 1;">
+        <div class="terminal__titlebar">
+          <span class="terminal__dot terminal__dot--red"></span>
+          <span class="terminal__dot terminal__dot--yellow"></span>
+          <span class="terminal__dot terminal__dot--green"></span>
+          <span class="terminal__title">ODB+ Terminal // Connected via Bluetooth</span>
+        </div>
+        <div class="terminal__body">
+          <div class="terminal__line"><span class="terminal__comment">// Initialize adapter</span></div>
+          <div class="terminal__line"><span class="terminal__prompt">ODB+&gt; </span><span class="terminal__cmd">ATZ</span></div>
+          <div class="terminal__line"><span class="terminal__response">ELM327 v2.3</span></div>
+          <div class="terminal__line"><span class="terminal__prompt">ODB+&gt; </span><span class="terminal__cmd">ATDP</span></div>
+          <div class="terminal__line"><span class="terminal__response">AUTO, ISO 14230-4 (KWP FAST)</span></div>
+          <div class="terminal__line"></div>
+          <div class="terminal__line"><span class="terminal__comment">// Read supported PIDs</span></div>
+          <div class="terminal__line"><span class="terminal__prompt">ODB+&gt; </span><span class="terminal__cmd">0100</span></div>
+          <div class="terminal__line"><span class="terminal__response">84 F1 10 41 00 BE 3E B8 13</span></div>
+          <div class="terminal__line"></div>
+          <div class="terminal__line"><span class="terminal__comment">// Read engine RPM</span></div>
+          <div class="terminal__line"><span class="terminal__prompt">ODB+&gt; </span><span class="terminal__cmd">010C</span></div>
+          <div class="terminal__line"><span class="terminal__response">84 F1 10 41 0C 0B 28</span></div>
+          <div class="terminal__line"><span class="terminal__comment">// Decoded: 2,842 RPM</span></div>
+          <div class="terminal__line"></div>
+          <div class="terminal__line"><span class="terminal__comment">// Read DTC codes</span></div>
+          <div class="terminal__line"><span class="terminal__prompt">ODB+&gt; </span><span class="terminal__cmd">03</span></div>
+          <div class="terminal__line"><span class="terminal__error">84 F1 10 43 03 00 01 71 00 00</span></div>
+          <div class="terminal__line"><span class="terminal__comment">// Decoded: P0300 (Misfire), P0171 (Lean B1)</span></div>
+          <div class="terminal__line"></div>
+          <div class="terminal__line"><span class="terminal__prompt">ODB+&gt; </span><span class="terminal__cursor"></span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== DASHBOARD PREVIEW ===== -->
+  <section class="dashboard-preview blueprint-bg" id="dashboard-preview" aria-labelledby="dashTitle">
+    <div class="container" style="position: relative; z-index: 1;">
+      <div style="text-align: center; margin-bottom: var(--space-2xl);">
+        <span class="section-label">Interface Preview</span>
+        <h2 id="dashTitle">Systems Online</h2>
+      </div>
+      <div class="dashboard-panel">
+        <div class="dashboard-panel__header">
+          <span class="dashboard-panel__title">ECU Data Monitor</span>
+          <div style="display: flex; align-items: center; gap: var(--space-md); flex-wrap: wrap;">
+            <span class="status-badge status-badge--active">Connected to ECU</span>
+            <span class="label-text">Protocol: ISO 14230-4 KWP Fast</span>
+          </div>
+        </div>
+        <div style="overflow-x: auto;">
+          <table class="pid-table" aria-label="Live PID data readings">
+            <thead>
+              <tr><th scope="col">PID</th><th scope="col">Parameter</th><th scope="col">Value</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>010C</td><td>Engine RPM</td><td>2,847 rpm</td></tr>
+              <tr><td>010D</td><td>Vehicle Speed</td><td>62 mph</td></tr>
+              <tr><td>0105</td><td>Coolant Temperature</td><td>195 F</td></tr>
+              <tr><td>0110</td><td>MAF Air Flow Rate</td><td>14.2 g/s</td></tr>
+              <tr><td>010B</td><td>Intake Manifold Pressure</td><td>101 kPa</td></tr>
+              <tr><td>0111</td><td>Throttle Position</td><td>22.7%</td></tr>
+              <tr><td>0106</td><td>Short Term Fuel Trim B1</td><td>+2.3%</td></tr>
+              <tr><td>0114</td><td>O2 Sensor B1S1 Voltage</td><td>0.68 V</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== CTA ===== -->
+  <section class="cta-section" id="download" aria-labelledby="ctaTitle">
+    <div class="container">
+      <div class="cta-panel">
+        <h2 id="ctaTitle" style="margin-bottom: var(--space-md);">Ready to Diagnose?</h2>
+        <p class="subheading" style="margin-bottom: var(--space-xl); max-width: 500px; margin-inline: auto;">
+          Download ODB+ and turn your phone into a professional diagnostic tool.
+        </p>
+        <div style="display: flex; gap: var(--space-md); justify-content: center; flex-wrap: wrap;">
+          <a href="#" class="btn btn--stripe btn--lg">Download for Android</a>
+          <a href="docs.html" class="btn btn--secondary btn--lg">Read the Docs</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="footer" role="contentinfo">
+    <div class="container">
+      <div class="footer__grid">
+        <div class="footer__brand">
+          <svg viewBox="0 0 160 36" width="160" height="36" aria-label="ODB+ Diagnostic Systems">
+            <defs><linearGradient id="fBolt" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#FF8C1A"/><stop offset="100%" stop-color="#CC5500"/></linearGradient></defs>
+            <polygon points="12,2 18,5 18,13 12,16 6,13 6,5" fill="url(#fBolt)" stroke="#CC5500" stroke-width="1"/>
+            <circle cx="12" cy="9" r="3" fill="#1C1C1C" stroke="#FF6B00" stroke-width="0.8"/>
+            <text x="26" y="15" font-family="'Bebas Neue','Oswald',Impact,sans-serif" font-size="20" font-weight="700" letter-spacing="2" fill="#E0E0E0">ODB</text>
+            <text x="80" y="15" font-family="'Bebas Neue','Oswald',Impact,sans-serif" font-size="20" font-weight="700" fill="#FF6B00">+</text>
+            <line x1="26" y1="20" x2="90" y2="20" stroke="#FF6B00" stroke-width="0.5" opacity="0.5"/>
+            <text x="27" y="28" font-family="'Rajdhani','Barlow Condensed',sans-serif" font-size="6" font-weight="600" letter-spacing="2" fill="#777">DIAGNOSTIC SYSTEMS</text>
+          </svg>
+          <p class="footer__brand-desc">Professional-grade OBD-II diagnostics for Android. Built for mechanics, engineers, and enthusiasts who demand precision.</p>
+        </div>
+        <div>
+          <h3 class="footer__col-title">Product</h3>
+          <ul class="footer__links">
+            <li><a href="features.html" class="footer__link">Features</a></li>
+            <li><a href="#download" class="footer__link">Download</a></li>
+            <li><a href="#pricing" class="footer__link">Pricing</a></li>
+            <li><a href="#changelog" class="footer__link">Changelog</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="footer__col-title">Resources</h3>
+          <ul class="footer__links">
+            <li><a href="docs.html" class="footer__link">Documentation</a></li>
+            <li><a href="#api" class="footer__link">API Reference</a></li>
+            <li><a href="#forums" class="footer__link">Forums</a></li>
+            <li><a href="#support" class="footer__link">Support</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="footer__col-title">Company</h3>
+          <ul class="footer__links">
+            <li><a href="#about" class="footer__link">About</a></li>
+            <li><a href="contact.html" class="footer__link">Contact</a></li>
+            <li><a href="#privacy" class="footer__link">Privacy</a></li>
+            <li><a href="#terms" class="footer__link">Terms</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer__bottom">
+        <span class="footer__version">System Version: 2.4.1-release // Build 20260306</span>
+        <span class="footer__copy">2024-2026 ODB+ Diagnostic Systems. All rights reserved.</span>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    /* Mobile nav toggle */
+    (function() {
+      var toggle = document.getElementById('navToggle');
+      var drawer = document.getElementById('navDrawer');
+      if (!toggle || !drawer) return;
+      toggle.addEventListener('click', function() {
+        var isOpen = drawer.classList.toggle('nav__drawer--open');
+        toggle.setAttribute('aria-expanded', isOpen);
+        drawer.setAttribute('aria-hidden', !isOpen);
+        var bars = toggle.querySelectorAll('.nav__toggle-bar');
+        if (isOpen) {
+          bars[0].style.transform = 'rotate(45deg) translate(5px, 5px)';
+          bars[1].style.opacity = '0';
+          bars[2].style.transform = 'rotate(-45deg) translate(5px, -5px)';
+        } else {
+          bars[0].style.transform = '';
+          bars[1].style.opacity = '';
+          bars[2].style.transform = '';
+        }
+      });
+    })();
+
+    /* Scroll-triggered fade-in for cards */
+    (function() {
+      if (!('IntersectionObserver' in window)) return;
+      var targets = document.querySelectorAll('.feature-card, .step, .benefit-item, .stat-strip__item');
+      var observer = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+          if (entry.isIntersecting) {
+            entry.target.style.animation = 'fadeInUp 0.5s ease forwards';
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+
+      targets.forEach(function(t) {
+        t.style.opacity = '0';
+        observer.observe(t);
+      });
+
+      /* Respect reduced motion */
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        targets.forEach(function(t) { t.style.opacity = '1'; t.style.animation = 'none'; });
+      }
+    })();
+
+    /* Nav background on scroll */
+    (function() {
+      var nav = document.querySelector('.nav');
+      if (!nav) return;
+      window.addEventListener('scroll', function() {
+        if (window.scrollY > 20) {
+          nav.style.background = 'rgba(28, 28, 28, 0.95)';
+          nav.style.backdropFilter = 'blur(8px)';
+        } else {
+          nav.style.background = '';
+          nav.style.backdropFilter = '';
+        }
+      }, { passive: true });
+    })();
+  </script>
+</body>
+</html>

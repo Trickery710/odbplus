@@ -1,0 +1,156 @@
+<section class="dashboard-preview blueprint-bg" aria-labelledby="dashPreviewTitle">
+  <div class="container">
+    <div style="text-align: center; margin-bottom: var(--space-2xl);">
+      <span class="section-label">Interface Preview</span>
+      <h2 id="dashPreviewTitle">Systems Online</h2>
+    </div>
+
+    <div class="dashboard-panel">
+      <!-- Panel header -->
+      <div class="dashboard-panel__header">
+        <span class="dashboard-panel__title">ECU Data Monitor</span>
+        <div style="display: flex; align-items: center; gap: var(--space-md);">
+          <span class="status-badge status-badge--active">Connected to ECU</span>
+          <span class="label-text">Protocol: ISO 14230-4 KWP Fast</span>
+        </div>
+      </div>
+
+      <!-- Two-column layout: gauges + data table -->
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-2xl); align-items: start;">
+
+        <!-- Gauge cluster (SVG) -->
+        <div style="display: flex; justify-content: center; align-items: center; padding: var(--space-xl);" aria-hidden="true">
+          <svg viewBox="0 0 320 200" width="320" height="200">
+            <defs>
+              <radialGradient id="dpGauge" cx="50%" cy="50%" r="50%">
+                <stop offset="0%" stop-color="#2A2A2A"/>
+                <stop offset="100%" stop-color="#181818"/>
+              </radialGradient>
+              <filter id="dpGlow">
+                <feGaussianBlur stdDeviation="2" result="b"/>
+                <feFlood flood-color="#FF6B00" flood-opacity="0.35"/>
+                <feComposite in2="b" operator="in"/>
+                <feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
+              </filter>
+            </defs>
+
+            <!-- RPM Gauge -->
+            <g transform="translate(80, 80)">
+              <circle cx="0" cy="0" r="66" fill="url(#dpGauge)" stroke="#444" stroke-width="2"/>
+              <circle cx="0" cy="0" r="60" fill="none" stroke="#333" stroke-width="1"/>
+              <!-- Ticks -->
+              <line x1="-54" y1="12" x2="-46" y2="10" stroke="#666" stroke-width="1.5"/>
+              <line x1="-50" y1="-14" x2="-42" y2="-12" stroke="#666" stroke-width="1.5"/>
+              <line x1="-36" y1="-36" x2="-30" y2="-30" stroke="#666" stroke-width="1.5"/>
+              <line x1="-14" y1="-50" x2="-12" y2="-42" stroke="#666" stroke-width="1.5"/>
+              <line x1="0" y1="-54" x2="0" y2="-46" stroke="#666" stroke-width="1.5"/>
+              <line x1="14" y1="-50" x2="12" y2="-42" stroke="#666" stroke-width="1.5"/>
+              <line x1="36" y1="-36" x2="30" y2="-30" stroke="#FF6B00" stroke-width="1.5"/>
+              <line x1="50" y1="-14" x2="42" y2="-12" stroke="#FF6B00" stroke-width="1.5"/>
+              <line x1="54" y1="12" x2="46" y2="10" stroke="#CC2200" stroke-width="2"/>
+              <!-- Needle at ~2800rpm -->
+              <line x1="0" y1="8" x2="12" y2="-42" stroke="#FF6B00" stroke-width="2.5" stroke-linecap="round" filter="url(#dpGlow)"/>
+              <circle cx="0" cy="0" r="6" fill="#242424" stroke="#FF6B00" stroke-width="1.5"/>
+              <circle cx="0" cy="0" r="2.5" fill="#FF6B00"/>
+              <!-- Digital readout -->
+              <text x="0" y="28" text-anchor="middle" font-family="'Roboto Mono',monospace" font-size="16" font-weight="700" fill="#FF6B00">2847</text>
+              <text x="0" y="38" text-anchor="middle" font-family="'Roboto Mono',monospace" font-size="6" fill="#777">RPM</text>
+            </g>
+
+            <!-- Speed Gauge -->
+            <g transform="translate(240, 80)">
+              <circle cx="0" cy="0" r="50" fill="url(#dpGauge)" stroke="#444" stroke-width="2"/>
+              <circle cx="0" cy="0" r="44" fill="none" stroke="#333" stroke-width="1"/>
+              <line x1="-40" y1="10" x2="-34" y2="8" stroke="#666" stroke-width="1.2"/>
+              <line x1="-36" y1="-12" x2="-30" y2="-10" stroke="#666" stroke-width="1.2"/>
+              <line x1="-22" y1="-30" x2="-18" y2="-26" stroke="#666" stroke-width="1.2"/>
+              <line x1="0" y1="-40" x2="0" y2="-34" stroke="#666" stroke-width="1.2"/>
+              <line x1="22" y1="-30" x2="18" y2="-26" stroke="#666" stroke-width="1.2"/>
+              <line x1="36" y1="-12" x2="30" y2="-10" stroke="#666" stroke-width="1.2"/>
+              <line x1="40" y1="10" x2="34" y2="8" stroke="#CC2200" stroke-width="1.5"/>
+              <!-- Needle at ~62mph -->
+              <line x1="0" y1="6" x2="20" y2="-26" stroke="#FF6B00" stroke-width="2" stroke-linecap="round" filter="url(#dpGlow)"/>
+              <circle cx="0" cy="0" r="5" fill="#242424" stroke="#FF6B00" stroke-width="1.5"/>
+              <circle cx="0" cy="0" r="2" fill="#FF6B00"/>
+              <text x="0" y="22" text-anchor="middle" font-family="'Roboto Mono',monospace" font-size="13" font-weight="700" fill="#F0F0F0">62</text>
+              <text x="0" y="30" text-anchor="middle" font-family="'Roboto Mono',monospace" font-size="6" fill="#777">MPH</text>
+            </g>
+
+            <!-- Bottom indicators -->
+            <g transform="translate(40, 180)">
+              <rect x="0" y="0" width="240" height="16" rx="2" fill="#111" stroke="#333" stroke-width="0.5"/>
+              <circle cx="10" cy="8" r="3" fill="#4CAF50"/>
+              <text x="18" y="11" font-family="'Roboto Mono',monospace" font-size="7" fill="#4CAF50">MIL OFF</text>
+              <text x="80" y="11" font-family="'Roboto Mono',monospace" font-size="7" fill="#4A7FA5">ELM327 v2.3</text>
+              <text x="165" y="11" font-family="'Roboto Mono',monospace" font-size="7" fill="#777">REFRESH: 200ms</text>
+            </g>
+          </svg>
+        </div>
+
+        <!-- PID Data Table -->
+        <div>
+          <table class="pid-table" aria-label="Live PID data readings">
+            <thead>
+              <tr>
+                <th scope="col">PID</th>
+                <th scope="col">Parameter</th>
+                <th scope="col">Value</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>010C</td>
+                <td>Engine RPM</td>
+                <td>2847 rpm</td>
+              </tr>
+              <tr>
+                <td>010D</td>
+                <td>Vehicle Speed</td>
+                <td>62 mph</td>
+              </tr>
+              <tr>
+                <td>0105</td>
+                <td>Coolant Temperature</td>
+                <td>195 F</td>
+              </tr>
+              <tr>
+                <td>0110</td>
+                <td>MAF Air Flow Rate</td>
+                <td>14.2 g/s</td>
+              </tr>
+              <tr>
+                <td>010B</td>
+                <td>Intake MAP</td>
+                <td>101 kPa</td>
+              </tr>
+              <tr>
+                <td>0111</td>
+                <td>Throttle Position</td>
+                <td>22.7%</td>
+              </tr>
+              <tr>
+                <td>0106</td>
+                <td>Short Term Fuel Trim B1</td>
+                <td>+2.3%</td>
+              </tr>
+              <tr>
+                <td>0114</td>
+                <td>O2 Sensor B1S1 Voltage</td>
+                <td>0.68 V</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Responsive: stack on mobile -->
+      <style>
+        @media (max-width: 768px) {
+          .dashboard-panel [style*="grid-template-columns: 1fr 1fr"] {
+            grid-template-columns: 1fr !important;
+          }
+        }
+      </style>
+    </div>
+  </div>
+</section>

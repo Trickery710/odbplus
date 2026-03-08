@@ -1,0 +1,154 @@
+<!-- ODB+ High Contrast Diagnostic Tool — Features Section -->
+<!-- System component list style: each feature as a row with status badge -->
+
+<section class="section" aria-labelledby="features-title">
+  <div class="container">
+    <div class="section__header">
+      <p class="section__label">SYSTEM MODULES</p>
+      <h2 id="features-title" class="section__title">DIAGNOSTIC <span>CAPABILITIES</span></h2>
+      <p class="section__subtitle">&gt; All modules loaded and operational. Select module for details.</p>
+    </div>
+
+    <div class="features-grid" role="list">
+
+      <!-- Feature 1: AI Diagnostics -->
+      <article class="card card--feature" role="listitem">
+        <div class="feature-icon" aria-hidden="true">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+            <path d="M12 2C7 2 3 6 3 11c0 3 1.5 5.5 4 7l1 3h8l1-3c2.5-1.5 4-4 4-7 0-5-4-9-9-9z" fill="#00FF88"/>
+            <circle cx="9" cy="10" r="1.5" fill="#000"/>
+            <circle cx="15" cy="10" r="1.5" fill="#000"/>
+            <line x1="12" y1="7" x2="12" y2="15" stroke="#000" stroke-width="1"/>
+            <line x1="8" y1="11" x2="16" y2="11" stroke="#000" stroke-width="1"/>
+          </svg>
+        </div>
+        <div class="feature-content">
+          <h3 class="feature-name">AI-Powered Diagnostics</h3>
+          <p class="feature-desc">
+            Chat with an AI engine that has real-time access to your vehicle sensor data. Ask why your check engine light is on. Get manufacturer-specific repair guidance backed by live PID analysis.
+          </p>
+        </div>
+        <span class="badge badge--active">
+          <span class="status-dot blink" aria-hidden="true"></span>
+          ACTIVE
+        </span>
+      </article>
+
+      <!-- Feature 2: Live Data Monitoring -->
+      <article class="card card--feature" role="listitem">
+        <div class="feature-icon" aria-hidden="true">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+            <rect x="1" y="3" width="22" height="18" rx="1" fill="#00FF88"/>
+            <polyline points="4,12 7,6 10,16 13,8 16,14 19,10 22,12" stroke="#000" stroke-width="2" fill="none" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <div class="feature-content">
+          <h3 class="feature-name">Live Data Monitoring</h3>
+          <p class="feature-desc">
+            Stream real-time RPM, coolant temperature, O2 sensors, MAF, MAP, fuel trims, timing advance, and 200+ PIDs at up to 60Hz refresh rate. Graphing, gauges, and raw hex modes.
+          </p>
+        </div>
+        <span class="badge badge--active">
+          <span class="status-dot blink" aria-hidden="true"></span>
+          ACTIVE
+        </span>
+      </article>
+
+      <!-- Feature 3: DTC Database -->
+      <article class="card card--feature" role="listitem">
+        <div class="feature-icon" aria-hidden="true">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+            <path d="M4 2h12l4 4v16H4V2z" fill="#00FF88"/>
+            <path d="M16 2v4h4" fill="none" stroke="#000" stroke-width="1.5"/>
+            <rect x="7" y="9" width="10" height="3" rx="1" fill="#000"/>
+            <rect x="7" y="14" width="7" height="2" rx="1" fill="#000"/>
+            <rect x="7" y="18" width="9" height="2" rx="1" fill="#000"/>
+          </svg>
+        </div>
+        <div class="feature-content">
+          <h3 class="feature-name">18,247 Error Code Database</h3>
+          <p class="feature-desc">
+            Complete DTC library: generic OBD-II (P0xxx, P2xxx), manufacturer-specific (P1xxx), body (Bxxxx), chassis (Cxxxx), and network (Uxxxx). Full descriptions, severity ratings, and step-by-step repair procedures.
+          </p>
+        </div>
+        <span class="badge badge--active">
+          <span class="status-dot blink" aria-hidden="true"></span>
+          ACTIVE
+        </span>
+      </article>
+
+      <!-- Feature 4: Terminal Mode -->
+      <article class="card card--feature" role="listitem">
+        <div class="feature-icon" aria-hidden="true">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+            <rect x="1" y="2" width="22" height="20" rx="1" fill="#00FF88"/>
+            <rect x="3" y="6" width="18" height="14" fill="#000"/>
+            <text x="5" y="13" fill="#00FF88" font-family="monospace" font-size="5">&gt; ATZ</text>
+            <text x="5" y="18" fill="#00FF88" font-family="monospace" font-size="5">&gt;_</text>
+          </svg>
+        </div>
+        <div class="feature-content">
+          <h3 class="feature-name">Terminal Mode</h3>
+          <p class="feature-desc">
+            Direct command-line access to your OBD adapter. Send raw AT commands, custom PIDs, and protocol-level queries. Full command history, response parsing, and hex/ASCII view modes.
+          </p>
+        </div>
+        <span class="badge badge--active">
+          <span class="status-dot blink" aria-hidden="true"></span>
+          ACTIVE
+        </span>
+      </article>
+
+      <!-- Feature 5: Session Logger -->
+      <article class="card card--feature" role="listitem">
+        <div class="feature-icon" aria-hidden="true">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+            <rect x="2" y="4" width="20" height="16" rx="1" fill="#00FF88"/>
+            <circle cx="8" cy="12" r="4" fill="#000"/>
+            <circle cx="16" cy="12" r="4" fill="#000"/>
+            <circle cx="8" cy="12" r="1.5" fill="#00FF88"/>
+            <circle cx="16" cy="12" r="1.5" fill="#00FF88"/>
+            <rect x="8" y="10" width="8" height="4" fill="#000"/>
+          </svg>
+        </div>
+        <div class="feature-content">
+          <h3 class="feature-name">Session Logger &amp; Replay</h3>
+          <p class="feature-desc">
+            Record complete diagnostic sessions — every PID reading, every DTC, every command. Replay sessions for analysis. Export to CSV for spreadsheet analysis. Share with mechanics.
+          </p>
+        </div>
+        <span class="badge badge--active">
+          <span class="status-dot blink" aria-hidden="true"></span>
+          ACTIVE
+        </span>
+      </article>
+
+      <!-- Feature 6: Guided Tests -->
+      <article class="card card--feature" role="listitem">
+        <div class="feature-icon" aria-hidden="true">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+            <circle cx="12" cy="12" r="10" fill="#00FF88"/>
+            <circle cx="12" cy="12" r="7" fill="#000"/>
+            <line x1="12" y1="6" x2="12" y2="8" stroke="#00FF88" stroke-width="2"/>
+            <line x1="12" y1="16" x2="12" y2="18" stroke="#00FF88" stroke-width="2"/>
+            <line x1="6" y1="12" x2="8" y2="12" stroke="#00FF88" stroke-width="2"/>
+            <line x1="16" y1="12" x2="18" y2="12" stroke="#00FF88" stroke-width="2"/>
+            <line x1="12" y1="12" x2="16" y2="7" stroke="#FF2222" stroke-width="2" stroke-linecap="round"/>
+            <circle cx="12" cy="12" r="1.5" fill="#00FF88"/>
+          </svg>
+        </div>
+        <div class="feature-content">
+          <h3 class="feature-name">Guided Diagnostic Tests</h3>
+          <p class="feature-desc">
+            Step-by-step test procedures: RPM stability test, O2 sensor response test, catalytic converter efficiency, fuel system monitor, EVAP leak test. Real-time HUD overlay mode for under-hood work.
+          </p>
+        </div>
+        <span class="badge badge--active">
+          <span class="status-dot blink" aria-hidden="true"></span>
+          ACTIVE
+        </span>
+      </article>
+
+    </div>
+  </div>
+</section>

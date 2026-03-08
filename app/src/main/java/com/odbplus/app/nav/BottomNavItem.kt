@@ -2,7 +2,8 @@ package com.odbplus.app.nav
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Build
-import androidx.compose.material.icons.filled.DirectionsCar
+import androidx.compose.material.icons.filled.Cable
+import androidx.compose.material.icons.filled.History
 import androidx.compose.material.icons.filled.Psychology
 import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -21,7 +22,7 @@ sealed class BottomNavItem(
     object OdbConnection : BottomNavItem(
         route = "odb_hub",
         title = "ODB",
-        icon = Icons.Filled.DirectionsCar
+        icon = Icons.Filled.Cable
     )
 
     object Parts : BottomNavItem(
@@ -36,7 +37,13 @@ sealed class BottomNavItem(
         icon = Icons.Filled.Build
     )
 
+    object Vehicle : BottomNavItem(
+        route = "vehicle",
+        title = "Vehicle",
+        icon = Icons.Filled.History
+    )
+
     companion object {
-        val items = listOf(AiChat, OdbConnection, Parts, Tools)
+        val items = listOf(AiChat, OdbConnection, Parts, Tools, Vehicle)
     }
 }

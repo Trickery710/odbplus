@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 400" width="500" height="400">
+  <defs>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&amp;display=swap');
+      .mono { font-family: 'Share Tech Mono', monospace; }
+      .label { font-family: 'Share Tech Mono', monospace; fill: #888888; }
+      .value { font-family: 'Share Tech Mono', monospace; fill: #00FF88; }
+      .header-text { font-family: 'Share Tech Mono', monospace; fill: #000000; font-weight: bold; }
+      @keyframes pulse-dot {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.4; }
+      }
+    </style>
+  </defs>
+
+  <!-- Device outer shell - thick border scan tool tablet -->
+  <rect x="20" y="10" width="460" height="380" rx="4" fill="#0D0D0D" stroke="#333333" stroke-width="4"/>
+  <!-- Inner bezel -->
+  <rect x="30" y="20" width="440" height="360" rx="2" fill="#000000" stroke="#222222" stroke-width="2"/>
+
+  <!-- Screen area -->
+  <rect x="40" y="30" width="420" height="340" fill="#000000" rx="1"/>
+
+  <!-- === TOP STATUS BAR === -->
+  <rect x="40" y="30" width="420" height="28" fill="#00FF88"/>
+  <!-- Connected indicator -->
+  <circle cx="56" cy="44" r="5" fill="#000000">
+    <animate attributeName="opacity" values="1;0.5;1" dur="2s" repeatCount="indefinite"/>
+  </circle>
+  <text x="68" y="48" class="header-text" font-size="12">VEHICLE CONNECTED</text>
+  <!-- Protocol badge -->
+  <rect x="220" y="35" width="90" height="18" fill="#000000" rx="1"/>
+  <text x="230" y="48" class="value" font-size="10">KWP2000</text>
+  <!-- Signal strength -->
+  <rect x="392" y="44" width="4" height="6" fill="#000000"/>
+  <rect x="398" y="40" width="4" height="10" fill="#000000"/>
+  <rect x="404" y="36" width="4" height="14" fill="#000000"/>
+  <rect x="410" y="32" width="4" height="18" fill="#000000"/>
+  <!-- Timestamp -->
+  <text x="430" y="48" class="header-text" font-size="9" text-anchor="end">14:23:07</text>
+
+  <!-- === PID DATA TABLE === -->
+  <!-- Table header -->
+  <rect x="50" y="68" width="400" height="20" fill="#111111"/>
+  <text x="60" y="82" class="label" font-size="10">PID</text>
+  <text x="140" y="82" class="label" font-size="10">PARAMETER</text>
+  <text x="300" y="82" class="label" font-size="10">VALUE</text>
+  <text x="390" y="82" class="label" font-size="10">STATUS</text>
+
+  <!-- Divider line -->
+  <line x1="50" y1="88" x2="450" y2="88" stroke="#333333" stroke-width="1"/>
+
+  <!-- Row 1: RPM -->
+  <rect x="50" y="90" width="400" height="28" fill="#0A0A0A"/>
+  <text x="60" y="108" class="value" font-size="11">010C</text>
+  <text x="140" y="108" fill="#CCCCCC" class="mono" font-size="11">ENGINE RPM</text>
+  <text x="300" y="108" class="value" font-size="14" font-weight="bold">2,847</text>
+  <text x="370" y="108" class="value" font-size="9">rpm</text>
+  <!-- Status: OK -->
+  <rect x="400" y="97" width="40" height="14" fill="#00FF88" rx="1"/>
+  <text x="410" y="107" fill="#000000" class="mono" font-size="8" font-weight="bold">OK</text>
+
+  <!-- Row 2: Coolant -->
+  <rect x="50" y="120" width="400" height="28" fill="#000000"/>
+  <text x="60" y="138" class="value" font-size="11">0105</text>
+  <text x="140" y="138" fill="#CCCCCC" class="mono" font-size="11">COOLANT TEMP</text>
+  <text x="300" y="138" class="value" font-size="14" font-weight="bold">89</text>
+  <text x="330" y="138" class="value" font-size="9">degC</text>
+  <rect x="400" y="127" width="40" height="14" fill="#00FF88" rx="1"/>
+  <text x="410" y="137" fill="#000000" class="mono" font-size="8" font-weight="bold">OK</text>
+
+  <!-- Row 3: O2 Sensor -->
+  <rect x="50" y="150" width="400" height="28" fill="#0A0A0A"/>
+  <text x="60" y="168" class="value" font-size="11">0114</text>
+  <text x="140" y="168" fill="#CCCCCC" class="mono" font-size="11">O2 B1S1</text>
+  <text x="300" y="168" class="value" font-size="14" font-weight="bold">0.45</text>
+  <text x="345" y="168" class="value" font-size="9">V</text>
+  <rect x="400" y="157" width="40" height="14" fill="#00FF88" rx="1"/>
+  <text x="410" y="167" fill="#000000" class="mono" font-size="8" font-weight="bold">OK</text>
+
+  <!-- Row 4: Fuel Trim -->
+  <rect x="50" y="180" width="400" height="28" fill="#000000"/>
+  <text x="60" y="198" class="value" font-size="11">0106</text>
+  <text x="140" y="198" fill="#CCCCCC" class="mono" font-size="11">FUEL TRIM LT</text>
+  <text x="300" y="198" class="value" font-size="14" font-weight="bold">-2.3</text>
+  <text x="342" y="198" class="value" font-size="9">%</text>
+  <rect x="400" y="187" width="40" height="14" fill="#00FF88" rx="1"/>
+  <text x="410" y="197" fill="#000000" class="mono" font-size="8" font-weight="bold">OK</text>
+
+  <!-- Row 5: MAP -->
+  <rect x="50" y="210" width="400" height="28" fill="#0A0A0A"/>
+  <text x="60" y="228" class="value" font-size="11">010B</text>
+  <text x="140" y="228" fill="#CCCCCC" class="mono" font-size="11">INTAKE MAP</text>
+  <text x="300" y="228" class="value" font-size="14" font-weight="bold">101</text>
+  <text x="334" y="228" class="value" font-size="9">kPa</text>
+  <rect x="400" y="217" width="40" height="14" fill="#00FF88" rx="1"/>
+  <text x="410" y="227" fill="#000000" class="mono" font-size="8" font-weight="bold">OK</text>
+
+  <!-- Row 6: Vehicle Speed -->
+  <rect x="50" y="240" width="400" height="28" fill="#000000"/>
+  <text x="60" y="258" class="value" font-size="11">010D</text>
+  <text x="140" y="258" fill="#CCCCCC" class="mono" font-size="11">VEHICLE SPEED</text>
+  <text x="300" y="258" class="value" font-size="14" font-weight="bold">0</text>
+  <text x="316" y="258" class="value" font-size="9">km/h</text>
+  <rect x="400" y="247" width="40" height="14" fill="#888888" rx="1"/>
+  <text x="405" y="257" fill="#000000" class="mono" font-size="8" font-weight="bold">IDLE</text>
+
+  <!-- Row 7: MAF -->
+  <rect x="50" y="270" width="400" height="28" fill="#0A0A0A"/>
+  <text x="60" y="288" class="value" font-size="11">0110</text>
+  <text x="140" y="288" fill="#CCCCCC" class="mono" font-size="11">MAF RATE</text>
+  <text x="300" y="288" class="value" font-size="14" font-weight="bold">4.12</text>
+  <text x="344" y="288" class="value" font-size="9">g/s</text>
+  <rect x="400" y="277" width="40" height="14" fill="#00FF88" rx="1"/>
+  <text x="410" y="287" fill="#000000" class="mono" font-size="8" font-weight="bold">OK</text>
+
+  <!-- === BOTTOM STATUS BAR === -->
+  <rect x="40" y="308" width="420" height="24" fill="#0D0D0D" stroke="#333333" stroke-width="0.5"/>
+  <text x="56" y="324" class="value" font-size="11">DTC SCAN: 0 CODES FOUND</text>
+  <!-- Green checkmark -->
+  <rect x="250" y="313" width="52" height="14" fill="#00FF88" rx="1"/>
+  <text x="258" y="324" fill="#000000" class="mono" font-size="9" font-weight="bold">PASS</text>
+  <!-- Refresh indicator -->
+  <text x="400" y="324" fill="#888888" class="mono" font-size="9">60Hz</text>
+  <!-- Activity dot -->
+  <circle cx="438" cy="320" r="4" fill="#00FF88">
+    <animate attributeName="opacity" values="1;0.2;1" dur="0.5s" repeatCount="indefinite"/>
+  </circle>
+
+  <!-- === BOTTOM INFO BAR === -->
+  <rect x="40" y="334" width="420" height="26" fill="#111111"/>
+  <text x="56" y="351" fill="#888888" class="mono" font-size="9">ADAPTER: ELM327 v2.3</text>
+  <text x="220" y="351" fill="#888888" class="mono" font-size="9">PROTOCOL: ISO 14230-4</text>
+  <text x="400" y="351" fill="#888888" class="mono" font-size="9">BT</text>
+  <!-- Bluetooth icon simplified -->
+  <rect x="416" y="340" width="14" height="18" fill="none" stroke="#00AAFF" stroke-width="1" rx="2"/>
+  <text x="419" y="353" fill="#00AAFF" class="mono" font-size="9">B</text>
+
+  <!-- Device side buttons -->
+  <rect x="476" y="80" width="6" height="30" fill="#222222" rx="1"/>
+  <rect x="476" y="130" width="6" height="20" fill="#222222" rx="1"/>
+
+  <!-- Corner screws -->
+  <circle cx="36" cy="26" r="3" fill="none" stroke="#333333" stroke-width="1"/>
+  <circle cx="464" cy="26" r="3" fill="none" stroke="#333333" stroke-width="1"/>
+  <circle cx="36" cy="374" r="3" fill="none" stroke="#333333" stroke-width="1"/>
+  <circle cx="464" cy="374" r="3" fill="none" stroke="#333333" stroke-width="1"/>
+</svg>

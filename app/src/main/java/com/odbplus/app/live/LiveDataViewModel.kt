@@ -5,6 +5,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.odbplus.app.ai.VehicleContextProvider
 import com.odbplus.app.ai.data.VehicleInfo
+import com.odbplus.app.session.SensorLoggingService
+import com.odbplus.app.session.VehicleSessionManager
 import com.odbplus.core.protocol.ObdPid
 import com.odbplus.core.protocol.ObdService
 import com.odbplus.core.protocol.PidDiscoveryState
@@ -90,7 +92,9 @@ class LiveDataViewModel @Inject constructor(
     private val obdService: ObdService,
     private val repository: LogSessionRepository,
     private val vehicleContextProvider: VehicleContextProvider,
-    private val savedStateHandle: SavedStateHandle
+    private val savedStateHandle: SavedStateHandle,
+    private val sensorLoggingService: SensorLoggingService,
+    private val sessionManager: VehicleSessionManager
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(LiveDataUiState())
@@ -100,6 +104,11 @@ class LiveDataViewModel @Inject constructor(
         mgr.onPollCycle = { pidValues ->
             logSession.addPoint(pidValues)
             repository.updatePidValues(_uiState.value.pidValues)
+            // Record each non-null PID value to the sensor log DB
+            for ((pid, v) in pidValues) {
+                val value = v ?: continue
+                sensorLoggingService.record(pid.name, value)
+            }
         }
     }
     private val logSession = LogSessionManager(repository)
@@ -251,11 +260,15 @@ class LiveDataViewModel @Inject constructor(
         val pollablePids = state.selectedPids.filter { it in availablePidSet }
         if (pollablePids.isNotEmpty()) {
             polling.start(pollablePids, viewModelScope)
+            sessionManager.activeSessionId.value?.let { sid ->
+                sensorLoggingService.startLogging(sid)
+            }
         }
     }
 
     fun stopPolling() {
         polling.stop()
+        sensorLoggingService.stopLogging()
         if (logSession.isLogging.value) logSession.stop(viewModelScope)
     }
 

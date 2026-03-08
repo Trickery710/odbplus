@@ -1,0 +1,56 @@
+<nav class="navbar" role="navigation" aria-label="Main navigation">
+  <div class="container navbar__inner">
+
+    <!-- Logo -->
+    <a href="../pages/index.html" class="navbar__logo" aria-label="ODB+ Home">
+      <svg viewBox="0 0 200 48" width="140" height="34" aria-hidden="true">
+        <defs>
+          <linearGradient id="nav-logo-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#2563EB"/>
+            <stop offset="100%" stop-color="#10B981"/>
+          </linearGradient>
+        </defs>
+        <g transform="translate(4, 4)">
+          <circle cx="20" cy="20" r="18" fill="none" stroke="url(#nav-logo-grad)" stroke-width="2.5"/>
+          <polyline points="6,20 12,20 15,10 18,28 21,14 24,26 27,20 34,20"
+                    fill="none" stroke="url(#nav-logo-grad)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <circle cx="6" cy="20" r="2" fill="#2563EB"/>
+          <circle cx="34" cy="20" r="2" fill="#10B981"/>
+        </g>
+        <text x="54" y="34" font-family="Inter, -apple-system, sans-serif" font-size="28" font-weight="800" fill="#0F172A" letter-spacing="-1">ODB</text>
+        <text x="118" y="34" font-family="Inter, -apple-system, sans-serif" font-size="28" font-weight="800" fill="url(#nav-logo-grad)" letter-spacing="-1">+</text>
+      </svg>
+    </a>
+
+    <!-- Desktop Links -->
+    <div class="navbar__links" role="menubar">
+      <a href="../pages/features.html" role="menuitem">Features</a>
+      <a href="../pages/index.html#how-it-works" role="menuitem">How It Works</a>
+      <a href="../pages/docs.html" role="menuitem">Docs</a>
+      <a href="https://community.odbplus.com" role="menuitem">Community</a>
+      <a href="../pages/contact.html" role="menuitem">Contact</a>
+    </div>
+
+    <!-- Actions -->
+    <div class="navbar__actions">
+      <a href="#download" class="btn btn-primary btn-sm">Download App</a>
+
+      <!-- Mobile hamburger -->
+      <button class="navbar__hamburger" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-menu" onclick="toggleMobileMenu()">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Mobile Menu -->
+  <div class="mobile-menu" id="mobile-menu" role="menu" aria-label="Mobile navigation">
+    <a href="../pages/features.html" role="menuitem">Features</a>
+    <a href="../pages/index.html#how-it-works" role="menuitem">How It Works</a>
+    <a href="../pages/docs.html" role="menuitem">Docs</a>
+    <a href="https://community.odbplus.com" role="menuitem">Community</a>
+    <a href="../pages/contact.html" role="menuitem">Contact</a>
+    <a href="#download" class="btn btn-primary" style="margin-top: 1rem; text-align: center;">Download App</a>
+  </div>
+</nav>

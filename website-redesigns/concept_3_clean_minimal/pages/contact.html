@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Get in touch with the ODB+ team. Send us feedback, report bugs, or ask about partnerships.">
+  <meta name="theme-color" content="#FFFFFF">
+  <title>Contact — ODB+</title>
+  <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+  <a href="#main" class="skip-link">Skip to main content</a>
+
+  <svg xmlns="http://www.w3.org/2000/svg" style="display:none">
+    <symbol id="icon-download" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 3v12"/><polyline points="8 11 12 15 16 11"/>
+      <path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/>
+    </symbol>
+    <symbol id="icon-menu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
+    </symbol>
+    <symbol id="icon-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+    </symbol>
+  </svg>
+
+  <!-- Navigation -->
+  <nav class="navbar" role="navigation" aria-label="Main navigation">
+    <div class="navbar__inner">
+      <a href="index.html" class="navbar__logo" aria-label="ODB+ Home">
+        <svg viewBox="0 0 250 60" width="120" height="28" aria-hidden="true">
+          <style>.nl-text{font-family:-apple-system,'SF Pro Display','Helvetica Neue',system-ui,sans-serif;font-weight:600;font-size:36px;fill:#1D1D1F;letter-spacing:-0.5px}.nl-plus{font-family:-apple-system,'SF Pro Display','Helvetica Neue',system-ui,sans-serif;font-weight:300;font-size:36px;fill:#0066CC}.nl-pulse{fill:none;stroke:#0066CC;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}</style>
+          <text x="16" y="42" class="nl-text">ODB</text>
+          <text x="107" y="42" class="nl-plus">+</text>
+          <path class="nl-pulse" d="M140 30 L148 30 L152 18 L156 42 L160 24 L164 36 L168 30 L176 30"/>
+        </svg>
+      </a>
+      <ul class="navbar__links" role="list">
+        <li><a href="features.html" class="navbar__link">Features</a></li>
+        <li><a href="docs.html" class="navbar__link">Docs</a></li>
+        <li><a href="index.html#how-it-works" class="navbar__link">How It Works</a></li>
+        <li><a href="contact.html" class="navbar__link" aria-current="page">Contact</a></li>
+      </ul>
+      <div class="navbar__actions">
+        <a href="index.html#download" class="btn btn--primary btn--small">
+          <svg width="16" height="16" aria-hidden="true"><use href="#icon-download"/></svg>
+          Download
+        </a>
+        <button class="navbar__mobile-toggle" aria-label="Toggle menu" aria-expanded="false" aria-controls="mobile-menu-contact">
+          <svg width="24" height="24" aria-hidden="true"><use href="#icon-menu"/></svg>
+        </button>
+      </div>
+    </div>
+    <div class="navbar__mobile-menu" id="mobile-menu-contact" aria-hidden="true">
+      <ul class="navbar__links" role="list">
+        <li><a href="features.html" class="navbar__link">Features</a></li>
+        <li><a href="docs.html" class="navbar__link">Docs</a></li>
+        <li><a href="index.html#how-it-works" class="navbar__link">How It Works</a></li>
+        <li><a href="contact.html" class="navbar__link">Contact</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <main id="main">
+    <section class="section" style="padding-top: calc(var(--nav-height) + var(--space-4xl));">
+      <div class="container container--narrow">
+        <div class="text-center mb-3xl">
+          <p class="text-label mb-sm">Contact</p>
+          <h1 class="text-display">Get in touch.</h1>
+          <p class="text-large text-secondary mt-md mx-auto" style="max-width: 460px;">
+            Have a question, feature request, or found a bug? We would love to hear from you.
+          </p>
+        </div>
+
+        <form action="#" method="POST" novalidate style="max-width: 540px; margin-inline: auto;">
+          <div class="grid grid--2">
+            <div class="form-group">
+              <label for="first-name" class="form-label">First name</label>
+              <input type="text" id="first-name" name="first_name" class="form-input" placeholder="Jane" autocomplete="given-name" required>
+            </div>
+            <div class="form-group">
+              <label for="last-name" class="form-label">Last name</label>
+              <input type="text" id="last-name" name="last_name" class="form-input" placeholder="Smith" autocomplete="family-name" required>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="email" class="form-label">Email</label>
+            <input type="email" id="email" name="email" class="form-input" placeholder="jane@example.com" autocomplete="email" required>
+          </div>
+
+          <div class="form-group">
+            <label for="subject" class="form-label">Subject</label>
+            <select id="subject" name="subject" class="form-input" required>
+              <option value="" disabled selected>Select a topic</option>
+              <option value="general">General Inquiry</option>
+              <option value="bug">Bug Report</option>
+              <option value="feature">Feature Request</option>
+              <option value="adapter">Adapter Compatibility</option>
+              <option value="partnership">Partnership</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="message" class="form-label">Message</label>
+            <textarea id="message" name="message" class="form-textarea" placeholder="Tell us what is on your mind..." required></textarea>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" style="display: flex; align-items: flex-start; gap: var(--space-sm); font-weight: var(--weight-regular); color: var(--color-text-secondary); cursor: pointer;">
+              <input type="checkbox" name="device_info" style="margin-top: 3px; accent-color: var(--color-accent);" checked>
+              <span class="text-small">Include device and adapter information (helps us diagnose issues faster)</span>
+            </label>
+          </div>
+
+          <button type="submit" class="btn btn--primary btn--large" style="width: 100%;">
+            Send Message
+          </button>
+
+          <p class="text-small text-tertiary text-center mt-lg">
+            We typically respond within 24 hours. For urgent adapter issues,
+            check the <a href="docs.html#troubleshooting">troubleshooting guide</a> first.
+          </p>
+        </form>
+
+        <!-- Alternative contact methods -->
+        <div class="grid grid--3 mt-3xl" style="padding-top: var(--space-3xl); border-top: var(--border-light);">
+          <div class="text-center">
+            <h3 class="text-h3 mb-xs">GitHub</h3>
+            <p class="text-small text-secondary">
+              Report bugs and track issues on our public repository.
+            </p>
+            <a href="#" class="text-small mt-sm" style="display: inline-block;">Open an issue</a>
+          </div>
+          <div class="text-center">
+            <h3 class="text-h3 mb-xs">Forums</h3>
+            <p class="text-small text-secondary">
+              Join the community discussion for help and feature ideas.
+            </p>
+            <a href="#" class="text-small mt-sm" style="display: inline-block;">Visit forums</a>
+          </div>
+          <div class="text-center">
+            <h3 class="text-h3 mb-xs">Email</h3>
+            <p class="text-small text-secondary">
+              Reach us directly for partnership or press inquiries.
+            </p>
+            <a href="mailto:hello@odbplus.app" class="text-small mt-sm" style="display: inline-block;">hello@odbplus.app</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer" role="contentinfo">
+    <div class="container">
+      <div class="footer__grid">
+        <div class="footer__brand">
+          <a href="index.html" aria-label="ODB+ Home">
+            <svg viewBox="0 0 250 60" width="100" height="24" aria-hidden="true">
+              <style>.fl-text{font-family:-apple-system,'SF Pro Display','Helvetica Neue',system-ui,sans-serif;font-weight:600;font-size:36px;fill:#1D1D1F;letter-spacing:-0.5px}.fl-plus{font-family:-apple-system,'SF Pro Display','Helvetica Neue',system-ui,sans-serif;font-weight:300;font-size:36px;fill:#0066CC}</style>
+              <text x="16" y="42" class="fl-text">ODB</text>
+              <text x="107" y="42" class="fl-plus">+</text>
+            </svg>
+          </a>
+          <p>Professional automotive diagnostics for Android.</p>
+        </div>
+        <div class="footer__col">
+          <h4>Product</h4>
+          <ul role="list">
+            <li><a href="features.html">Features</a></li>
+            <li><a href="docs.html">Documentation</a></li>
+            <li><a href="index.html#download">Download</a></li>
+          </ul>
+        </div>
+        <div class="footer__col">
+          <h4>Resources</h4>
+          <ul role="list">
+            <li><a href="#">Adapter Guide</a></li>
+            <li><a href="#">DTC Database</a></li>
+            <li><a href="#">Forums</a></li>
+          </ul>
+        </div>
+        <div class="footer__col">
+          <h4>Company</h4>
+          <ul role="list">
+            <li><a href="contact.html">Contact</a></li>
+            <li><a href="#">About</a></li>
+            <li><a href="#">Support</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer__bottom">
+        <span class="footer__legal">2026 ODB+. All rights reserved.</span>
+        <ul class="footer__legal-links" role="list">
+          <li><a href="#">Privacy Policy</a></li>
+          <li><a href="#">Terms of Service</a></li>
+        </ul>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    (function() {
+      var toggle = document.querySelector('.navbar__mobile-toggle');
+      var menu = document.getElementById('mobile-menu-contact');
+      if (!toggle || !menu) return;
+      toggle.addEventListener('click', function() {
+        var isOpen = menu.classList.toggle('is-open');
+        toggle.setAttribute('aria-expanded', isOpen);
+        menu.setAttribute('aria-hidden', !isOpen);
+        var useEl = toggle.querySelector('use');
+        if (useEl) useEl.setAttribute('href', isOpen ? '#icon-close' : '#icon-menu');
+      });
+    })();
+
+    /* Basic form validation feedback */
+    (function() {
+      var form = document.querySelector('form');
+      if (!form) return;
+      form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        var btn = form.querySelector('button[type="submit"]');
+        btn.textContent = 'Message Sent';
+        btn.style.backgroundColor = 'var(--color-success)';
+        btn.disabled = true;
+        setTimeout(function() {
+          btn.textContent = 'Send Message';
+          btn.style.backgroundColor = '';
+          btn.disabled = false;
+        }, 3000);
+      });
+    })();
+  </script>
+</body>
+</html>

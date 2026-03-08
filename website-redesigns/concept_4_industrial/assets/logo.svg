@@ -1,0 +1,70 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 80" width="300" height="80">
+  <defs>
+    <!-- Metal emboss filter -->
+    <filter id="metalEmboss" x="-5%" y="-5%" width="110%" height="110%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="1" result="blur"/>
+      <feSpecularLighting in="blur" surfaceScale="3" specularConstant="0.6" specularExponent="20" result="spec">
+        <fePointLight x="80" y="-30" z="120"/>
+      </feSpecularLighting>
+      <feComposite in="spec" in2="SourceAlpha" operator="in" result="specIn"/>
+      <feComposite in="SourceGraphic" in2="specIn" operator="arithmetic" k1="0" k2="1" k3="1" k4="0"/>
+    </filter>
+    <!-- Subtle inner shadow for depth -->
+    <filter id="innerGlow">
+      <feFlood flood-color="#FF6B00" flood-opacity="0.3"/>
+      <feComposite in2="SourceAlpha" operator="in"/>
+      <feGaussianBlur stdDeviation="2"/>
+      <feComposite in2="SourceAlpha" operator="in"/>
+      <feMerge>
+        <feMergeNode/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <!-- Bolt gradient -->
+    <linearGradient id="boltGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#FF8C1A"/>
+      <stop offset="100%" stop-color="#CC5500"/>
+    </linearGradient>
+    <!-- Steel text gradient -->
+    <linearGradient id="steelText" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#FFFFFF"/>
+      <stop offset="40%" stop-color="#E0E0E0"/>
+      <stop offset="100%" stop-color="#B0B0B0"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Bolt/wrench icon -->
+  <g transform="translate(10, 8)" filter="url(#innerGlow)">
+    <!-- Hex bolt head -->
+    <polygon points="22,4 34,10 34,24 22,30 10,24 10,10" fill="url(#boltGrad)" stroke="#CC5500" stroke-width="1.5"/>
+    <!-- Bolt center circle -->
+    <circle cx="22" cy="17" r="6" fill="#1C1C1C" stroke="#FF6B00" stroke-width="1"/>
+    <!-- Circuit lines from bolt -->
+    <line x1="28" y1="17" x2="42" y2="17" stroke="#FF6B00" stroke-width="1.5" stroke-dasharray="2,2"/>
+    <line x1="22" y1="30" x2="22" y2="42" stroke="#FF6B00" stroke-width="1.5" stroke-dasharray="2,2"/>
+    <circle cx="42" cy="17" r="2" fill="#FF6B00"/>
+    <circle cx="22" cy="42" r="2" fill="#FF6B00"/>
+    <!-- Small wrench overlay -->
+    <path d="M16,11 L12,7 L10,9 L14,13 Z" fill="#FFD700" opacity="0.6"/>
+    <path d="M28,23 L32,27 L34,25 L30,21 Z" fill="#FFD700" opacity="0.6"/>
+  </g>
+
+  <!-- Main wordmark: ODB+ -->
+  <g filter="url(#metalEmboss)">
+    <text x="60" y="42" font-family="'Bebas Neue', 'Oswald', 'Arial Narrow', Impact, sans-serif"
+          font-size="48" font-weight="700" letter-spacing="3" fill="url(#steelText)">ODB</text>
+    <text x="185" y="42" font-family="'Bebas Neue', 'Oswald', 'Arial Narrow', Impact, sans-serif"
+          font-size="48" font-weight="700" fill="#FF6B00">+</text>
+  </g>
+
+  <!-- Sublabel: DIAGNOSTIC SYSTEMS -->
+  <rect x="60" y="50" width="148" height="1" fill="#FF6B00" opacity="0.6"/>
+  <text x="62" y="63" font-family="'Rajdhani', 'Barlow Condensed', 'Arial Narrow', sans-serif"
+        font-size="11" font-weight="600" letter-spacing="4" fill="#AAAAAA">DIAGNOSTIC SYSTEMS</text>
+
+  <!-- Decorative corner brackets -->
+  <path d="M56,6 L56,2 L68,2" fill="none" stroke="#444444" stroke-width="1"/>
+  <path d="M210,6 L210,2 L198,2" fill="none" stroke="#444444" stroke-width="1"/>
+  <path d="M56,68 L56,72 L68,72" fill="none" stroke="#444444" stroke-width="1"/>
+  <path d="M210,68 L210,72 L198,72" fill="none" stroke="#444444" stroke-width="1"/>
+</svg>

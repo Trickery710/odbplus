@@ -1,0 +1,157 @@
+<div class="cards-showcase">
+
+  <!-- Feature Card with Hex Border -->
+  <div class="card--hex-wrap">
+    <article class="card--hex card--feature" style="padding: 2rem 1.5rem;">
+      <div class="card__icon" aria-hidden="true">
+        <svg viewBox="0 0 48 48" width="28" height="28">
+          <circle cx="10" cy="14" r="3" fill="none" stroke="#00D4FF" stroke-width="1.5"/>
+          <circle cx="10" cy="24" r="3" fill="none" stroke="#00D4FF" stroke-width="1.5"/>
+          <circle cx="10" cy="34" r="3" fill="none" stroke="#00D4FF" stroke-width="1.5"/>
+          <circle cx="24" cy="24" r="3.5" fill="#00D4FF" fill-opacity="0.2" stroke="#00D4FF" stroke-width="1.5"/>
+          <circle cx="38" cy="19" r="3" fill="none" stroke="#00D4FF" stroke-width="1.5"/>
+          <circle cx="38" cy="29" r="3" fill="none" stroke="#00D4FF" stroke-width="1.5"/>
+          <line x1="13" y1="14" x2="21" y2="24" stroke="#00D4FF" stroke-width="0.7" opacity="0.4"/>
+          <line x1="13" y1="24" x2="21" y2="24" stroke="#00D4FF" stroke-width="0.7" opacity="0.4"/>
+          <line x1="13" y1="34" x2="21" y2="24" stroke="#00D4FF" stroke-width="0.7" opacity="0.4"/>
+          <line x1="27" y1="24" x2="35" y2="19" stroke="#00D4FF" stroke-width="0.7" opacity="0.4"/>
+          <line x1="27" y1="24" x2="35" y2="29" stroke="#00D4FF" stroke-width="0.7" opacity="0.4"/>
+        </svg>
+      </div>
+      <span class="card__label">AI Engine</span>
+      <h3 class="card__title">AI-Powered Diagnostics</h3>
+      <p class="card__desc">
+        Chat with an AI that understands live vehicle sensor data.
+        Get repair recommendations grounded in real PID readings.
+      </p>
+    </article>
+  </div>
+
+  <!-- Stat Card with Animated Counter -->
+  <article class="card--stat">
+    <div class="stat-value" data-target="18247" aria-label="18,247 error codes in database">
+      <span class="counter" data-count="18247">18,247</span>
+    </div>
+    <p class="stat-label">Error Codes in Database</p>
+  </article>
+
+  <article class="card--stat">
+    <div class="stat-value" data-target="50" aria-label="50+ vehicle manufacturers supported">
+      <span class="counter" data-count="50">50+</span>
+    </div>
+    <p class="stat-label">Vehicle Manufacturers</p>
+  </article>
+
+  <article class="card--stat">
+    <div class="stat-value" data-target="96" aria-label="96 supported OBD-II PIDs">
+      <span class="counter" data-count="96">96</span>
+    </div>
+    <p class="stat-label">Supported PIDs</p>
+  </article>
+
+  <!-- DTC Alert Card - Critical -->
+  <article class="card--dtc" role="alert">
+    <div style="display: flex; align-items: center; justify-content: space-between;">
+      <span class="dtc-code">P0300</span>
+      <span class="badge badge--error">
+        <span class="status-dot" style="width:6px;height:6px;border-radius:50%;background:#FF1744;box-shadow:0 0 6px rgba(255,23,68,0.3);animation:pulse-glow 2s ease-in-out infinite;" aria-hidden="true"></span>
+        Active
+      </span>
+    </div>
+    <h4 class="dtc-title">Random/Multiple Cylinder Misfire Detected</h4>
+    <p class="dtc-desc">
+      Multiple cylinders reporting misfire events. Check ignition coils,
+      spark plugs, fuel injectors, and compression. May indicate vacuum leak
+      or failing crankshaft position sensor.
+    </p>
+    <div class="dtc-status">
+      <span class="status-dot" aria-hidden="true"></span>
+      <span style="color: var(--color-red);">Confirmed -- 47 misfire events in last 200 revolutions</span>
+    </div>
+  </article>
+
+  <!-- DTC Alert Card - Pending (Amber) -->
+  <article class="card--dtc card--dtc-amber">
+    <div style="display: flex; align-items: center; justify-content: space-between;">
+      <span class="dtc-code">P0171</span>
+      <span class="badge badge--warning">
+        <span style="width:6px;height:6px;border-radius:50%;background:#FF8C00;box-shadow:0 0 6px rgba(255,140,0,0.3);" aria-hidden="true"></span>
+        Pending
+      </span>
+    </div>
+    <h4 class="dtc-title">System Too Lean (Bank 1)</h4>
+    <p class="dtc-desc">
+      Long-term fuel trim exceeding +25%. Engine compensating with
+      excessive fuel enrichment. Common causes: vacuum leak, weak fuel pump,
+      dirty MAF sensor, or exhaust leak before O2 sensor.
+    </p>
+    <div class="dtc-status">
+      <span class="status-dot" aria-hidden="true"></span>
+      <span style="color: var(--color-amber);">Pending -- LTFT Bank 1: +27.3%</span>
+    </div>
+  </article>
+
+  <!-- DTC Alert Card - Cleared -->
+  <article class="card--dtc" style="border-left-color: var(--color-green); opacity: 0.7;">
+    <div style="display: flex; align-items: center; justify-content: space-between;">
+      <span class="dtc-code" style="color: var(--color-green); text-shadow: 0 0 8px rgba(0,230,118,0.5);">P0420</span>
+      <span class="badge badge--connected">Cleared</span>
+    </div>
+    <h4 class="dtc-title">Catalyst System Efficiency Below Threshold (Bank 1)</h4>
+    <p class="dtc-desc">
+      Previously stored. Catalytic converter efficiency has recovered
+      after replacement. Code cleared successfully.
+    </p>
+    <div class="dtc-status">
+      <span style="width:6px;height:6px;border-radius:50%;background:var(--color-green);display:inline-block;" aria-hidden="true"></span>
+      <span style="color: var(--color-green); margin-left: 0.5rem;">Cleared -- 3 drive cycles completed without recurrence</span>
+    </div>
+  </article>
+</div>
+
+<script>
+  /* Counter animation -- counts up from 0 to target value */
+  (function() {
+    function animateCounters() {
+      var counters = document.querySelectorAll('.counter[data-count]');
+      counters.forEach(function(counter) {
+        var target = parseInt(counter.getAttribute('data-count'), 10);
+        if (isNaN(target)) return;
+
+        var duration = 2000;
+        var startTime = null;
+        var originalText = counter.textContent;
+        var hasSuffix = originalText.includes('+');
+
+        function step(timestamp) {
+          if (!startTime) startTime = timestamp;
+          var progress = Math.min((timestamp - startTime) / duration, 1);
+          var eased = 1 - Math.pow(1 - progress, 3);
+          var current = Math.floor(eased * target);
+          counter.textContent = current.toLocaleString() + (hasSuffix ? '+' : '');
+          if (progress < 1) {
+            requestAnimationFrame(step);
+          }
+        }
+
+        /* Use Intersection Observer to trigger on visibility */
+        var observer = new IntersectionObserver(function(entries) {
+          entries.forEach(function(entry) {
+            if (entry.isIntersecting) {
+              requestAnimationFrame(step);
+              observer.unobserve(counter);
+            }
+          });
+        }, { threshold: 0.5 });
+
+        observer.observe(counter);
+      });
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', animateCounters);
+    } else {
+      animateCounters();
+    }
+  })();
+</script>

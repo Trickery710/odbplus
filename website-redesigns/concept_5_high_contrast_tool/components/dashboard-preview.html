@@ -1,0 +1,163 @@
+<!-- ODB+ High Contrast Diagnostic Tool — Dashboard Preview -->
+<!-- Full-width scan-tool style readout table with filter tabs -->
+
+<section class="section section--panel" aria-labelledby="dashboard-title">
+  <div class="container">
+    <div class="section__header">
+      <p class="section__label">APP PREVIEW</p>
+      <h2 id="dashboard-title" class="section__title">LIVE SYSTEM <span>READOUT</span></h2>
+    </div>
+
+    <div class="dashboard-preview scan-line-effect">
+      <!-- Header bar -->
+      <div class="dashboard-preview__header">
+        <div style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap;">
+          <h3 class="dashboard-preview__title">PID MONITOR</h3>
+          <span class="badge badge--pass">
+            <span class="status-dot blink" aria-hidden="true"></span>
+            CONNECTED
+          </span>
+          <span class="badge badge--outline badge--pass">0 DTCs</span>
+          <span style="font-family: var(--font-mono); font-size: var(--text-xs); color: var(--color-text-muted);">
+            PROTOCOL: KWP2000 FAST
+          </span>
+        </div>
+
+        <!-- Filter tabs -->
+        <div class="filter-tabs" role="tablist" aria-label="Data category filter">
+          <button class="filter-tab active" role="tab" aria-selected="true">ALL</button>
+          <button class="filter-tab" role="tab" aria-selected="false">ENGINE</button>
+          <button class="filter-tab" role="tab" aria-selected="false">EMISSIONS</button>
+          <button class="filter-tab" role="tab" aria-selected="false">SENSORS</button>
+          <button class="filter-tab" role="tab" aria-selected="false">FUEL</button>
+        </div>
+      </div>
+
+      <!-- Data table -->
+      <div class="table-wrap">
+        <table class="data-table" aria-label="Live PID data readout">
+          <thead>
+            <tr>
+              <th scope="col">PID</th>
+              <th scope="col">PARAMETER</th>
+              <th scope="col">VALUE</th>
+              <th scope="col">UNIT</th>
+              <th scope="col">MIN</th>
+              <th scope="col">MAX</th>
+              <th scope="col">STATUS</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="td-pid">010C</td>
+              <td>ENGINE RPM</td>
+              <td class="td-value">2,847</td>
+              <td>rpm</td>
+              <td style="color: var(--color-text-dim);">780</td>
+              <td style="color: var(--color-text-dim);">4,210</td>
+              <td><span class="badge badge--pass badge--outline">OK</span></td>
+            </tr>
+            <tr>
+              <td class="td-pid">0105</td>
+              <td>COOLANT TEMPERATURE</td>
+              <td class="td-value">89</td>
+              <td>&deg;C</td>
+              <td style="color: var(--color-text-dim);">42</td>
+              <td style="color: var(--color-text-dim);">92</td>
+              <td><span class="badge badge--pass badge--outline">OK</span></td>
+            </tr>
+            <tr>
+              <td class="td-pid">010D</td>
+              <td>VEHICLE SPEED</td>
+              <td class="td-value">0</td>
+              <td>km/h</td>
+              <td style="color: var(--color-text-dim);">0</td>
+              <td style="color: var(--color-text-dim);">0</td>
+              <td><span class="badge badge--pending badge--outline">IDLE</span></td>
+            </tr>
+            <tr>
+              <td class="td-pid">0114</td>
+              <td>O2 SENSOR B1S1 VOLTAGE</td>
+              <td class="td-value">0.45</td>
+              <td>V</td>
+              <td style="color: var(--color-text-dim);">0.12</td>
+              <td style="color: var(--color-text-dim);">0.89</td>
+              <td><span class="badge badge--pass badge--outline">OK</span></td>
+            </tr>
+            <tr>
+              <td class="td-pid">0106</td>
+              <td>SHORT TERM FUEL TRIM B1</td>
+              <td class="td-value">-2.3</td>
+              <td>%</td>
+              <td style="color: var(--color-text-dim);">-4.8</td>
+              <td style="color: var(--color-text-dim);">3.1</td>
+              <td><span class="badge badge--pass badge--outline">OK</span></td>
+            </tr>
+            <tr>
+              <td class="td-pid">010B</td>
+              <td>INTAKE MANIFOLD PRESSURE</td>
+              <td class="td-value">101</td>
+              <td>kPa</td>
+              <td style="color: var(--color-text-dim);">28</td>
+              <td style="color: var(--color-text-dim);">101</td>
+              <td><span class="badge badge--pass badge--outline">OK</span></td>
+            </tr>
+            <tr>
+              <td class="td-pid">0110</td>
+              <td>MAF AIR FLOW RATE</td>
+              <td class="td-value">4.12</td>
+              <td>g/s</td>
+              <td style="color: var(--color-text-dim);">1.24</td>
+              <td style="color: var(--color-text-dim);">12.6</td>
+              <td><span class="badge badge--pass badge--outline">OK</span></td>
+            </tr>
+            <tr>
+              <td class="td-pid">010E</td>
+              <td>TIMING ADVANCE</td>
+              <td class="td-value">14.5</td>
+              <td>&deg;</td>
+              <td style="color: var(--color-text-dim);">-2.0</td>
+              <td style="color: var(--color-text-dim);">32.0</td>
+              <td><span class="badge badge--pass badge--outline">OK</span></td>
+            </tr>
+            <tr>
+              <td class="td-pid">010F</td>
+              <td>INTAKE AIR TEMPERATURE</td>
+              <td class="td-value">34</td>
+              <td>&deg;C</td>
+              <td style="color: var(--color-text-dim);">22</td>
+              <td style="color: var(--color-text-dim);">38</td>
+              <td><span class="badge badge--pass badge--outline">OK</span></td>
+            </tr>
+            <tr>
+              <td class="td-pid">0104</td>
+              <td>CALCULATED ENGINE LOAD</td>
+              <td class="td-value">32.5</td>
+              <td>%</td>
+              <td style="color: var(--color-text-dim);">12.1</td>
+              <td style="color: var(--color-text-dim);">78.4</td>
+              <td><span class="badge badge--pass badge--outline">OK</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Bottom status bar -->
+      <div style="background: var(--color-surface); padding: 8px 20px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; font-family: var(--font-mono); font-size: var(--text-xs); border-top: 1px solid var(--color-border-dim);">
+        <span style="color: var(--color-text-muted);">
+          SHOWING 10 / 24 SUPPORTED PIDS
+        </span>
+        <span style="color: var(--color-text-muted);">
+          ADAPTER: ELM327 v2.3
+          <span aria-hidden="true">|</span>
+          REFRESH: 60Hz
+          <span aria-hidden="true">|</span>
+          <span style="color: var(--color-primary);">
+            <span class="status-dot blink" style="width:6px; height:6px; border-radius:50%; background:var(--color-primary); display:inline-block;" aria-hidden="true"></span>
+            STREAMING
+          </span>
+        </span>
+      </div>
+    </div>
+  </div>
+</section>

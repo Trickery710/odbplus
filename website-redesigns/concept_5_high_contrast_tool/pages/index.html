@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="ODB+ Professional OBD-II Diagnostics. Connect to any vehicle via Bluetooth. Read live sensor data, pull DTCs, AI-powered repair advice, terminal mode. 18,000+ error codes.">
+  <meta name="theme-color" content="#000000">
+  <title>ODB+ | Professional OBD-II Diagnostic System</title>
+  <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+
+  <!-- ================================================================
+       SYSTEM STATUS BAR
+       ================================================================ -->
+  <div class="system-status-bar" role="status" aria-label="System status">
+    <span class="status-dot" aria-hidden="true"></span>
+    <span>SYSTEM ONLINE</span>
+    <span class="divider" aria-hidden="true">|</span>
+    <span>VER 2.3.1</span>
+    <span class="divider" aria-hidden="true">|</span>
+    <span>PROTOCOLS: ELM327 / KWP2000 / CAN / ISO 9141</span>
+    <span class="divider" aria-hidden="true">|</span>
+    <span>18,247 CODES LOADED</span>
+  </div>
+
+  <!-- ================================================================
+       NAVIGATION
+       ================================================================ -->
+  <nav class="navbar" aria-label="Main navigation">
+    <div class="navbar__inner">
+      <a href="/pages/index.html" aria-label="ODB+ Home">
+        <img src="../assets/logo.svg" alt="ODB+ Diagnostic System" class="navbar__logo" width="280" height="70">
+      </a>
+      <button class="navbar__toggle" aria-expanded="false" aria-controls="main-nav" aria-label="Toggle navigation menu">[=]</button>
+      <ul class="navbar__links" id="main-nav" role="list">
+        <li><a href="/pages/index.html" class="navbar__link" aria-current="page">HOME</a></li>
+        <li><a href="/pages/features.html" class="navbar__link">FEATURES</a></li>
+        <li><a href="/pages/docs.html" class="navbar__link">DOCS</a></li>
+        <li><a href="/pages/contact.html" class="navbar__link">SUPPORT</a></li>
+        <li><a href="#download" class="navbar__cta">DOWNLOAD v2.3</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <main id="main-content">
+
+    <!-- ================================================================
+         HERO
+         ================================================================ -->
+    <section class="hero" aria-labelledby="hero-headline">
+      <div class="container">
+        <div class="hero__inner">
+          <div class="hero__content">
+            <div class="hero__status-bar">
+              <span class="status-dot" aria-hidden="true"></span>
+              <span>DIAGNOSTIC SYSTEM READY</span>
+            </div>
+
+            <h1 id="hero-headline" class="hero__headline">
+              PROFESSIONAL<br>
+              <span>OBD-II</span><br>
+              DIAGNOSTICS
+            </h1>
+
+            <p class="hero__subtitle">
+              &gt; Connect to any vehicle via Bluetooth OBD-II adapter.
+              Read live sensor data. Pull diagnostic trouble codes.
+              AI-powered repair analysis. Session logging. Terminal mode.
+              18,000+ error codes. One app.
+            </p>
+
+            <div class="hero__actions">
+              <a href="#download" class="btn btn--primary btn--lg">DOWNLOAD FREE</a>
+              <a href="#demo" class="btn btn--outline btn--lg">VIEW LIVE DEMO</a>
+            </div>
+
+            <div class="data-stream" aria-hidden="true">
+              <div class="data-stream__content">
+                <div class="data-stream__line">&gt; ATZ ... ELM327 v2.3 OK</div>
+                <div class="data-stream__line">&gt; 0100 ... 41 00 BE 3E B8 13</div>
+                <div class="data-stream__line">&gt; 010C ... 41 0C 0B 28 [RPM: 2,844]</div>
+                <div class="data-stream__line">&gt; 0105 ... 41 05 59 [COOLANT: 89C]</div>
+                <div class="data-stream__line">&gt; 0114 ... 41 14 72 80 [O2: 0.45V]</div>
+                <div class="data-stream__line">&gt; 010B ... 41 0B 65 [MAP: 101kPa]</div>
+                <div class="data-stream__line">&gt; 0110 ... 41 10 01 0C [MAF: 4.12g/s]</div>
+                <div class="data-stream__line">&gt; 03 ... NO DTC FOUND [PASS]</div>
+                <div class="data-stream__line">&gt; ATZ ... ELM327 v2.3 OK</div>
+                <div class="data-stream__line">&gt; 0100 ... 41 00 BE 3E B8 13</div>
+                <div class="data-stream__line">&gt; 010C ... 41 0C 0B 28 [RPM: 2,844]</div>
+                <div class="data-stream__line">&gt; 0105 ... 41 05 59 [COOLANT: 89C]</div>
+                <div class="data-stream__line">&gt; 0114 ... 41 14 72 80 [O2: 0.45V]</div>
+                <div class="data-stream__line">&gt; 010B ... 41 0B 65 [MAP: 101kPa]</div>
+                <div class="data-stream__line">&gt; 0110 ... 41 10 01 0C [MAF: 4.12g/s]</div>
+                <div class="data-stream__line">&gt; 03 ... NO DTC FOUND [PASS]</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="hero__illustration">
+            <img src="../assets/hero-illustration.svg" alt="ODB+ scan tool interface showing live vehicle diagnostics with PID data table, connected status, and DTC scan results" width="500" height="400" loading="eager">
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================================================================
+         LIVE SYSTEM READOUT (Dashboard Preview)
+         ================================================================ -->
+    <section class="section section--panel" aria-labelledby="dashboard-title">
+      <div class="container">
+        <div class="section__header">
+          <p class="section__label">APP PREVIEW</p>
+          <h2 id="dashboard-title" class="section__title">LIVE SYSTEM <span>READOUT</span></h2>
+        </div>
+
+        <div class="dashboard-preview scan-line-effect">
+          <div class="dashboard-preview__header">
+            <div style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap;">
+              <h3 class="dashboard-preview__title">PID MONITOR</h3>
+              <span class="badge badge--pass">
+                <span class="status-dot blink" aria-hidden="true"></span>
+                CONNECTED
+              </span>
+              <span class="badge badge--outline badge--pass">0 DTCs</span>
+              <span style="font-family: var(--font-mono); font-size: var(--text-xs); color: var(--color-text-muted);">
+                PROTOCOL: KWP2000 FAST
+              </span>
+            </div>
+            <div class="filter-tabs" role="tablist" aria-label="Data category filter">
+              <button class="filter-tab active" role="tab" aria-selected="true">ALL</button>
+              <button class="filter-tab" role="tab" aria-selected="false">ENGINE</button>
+              <button class="filter-tab" role="tab" aria-selected="false">EMISSIONS</button>
+              <button class="filter-tab" role="tab" aria-selected="false">SENSORS</button>
+            </div>
+          </div>
+
+          <div class="table-wrap">
+            <table class="data-table" aria-label="Live PID data readout">
+              <thead>
+                <tr>
+                  <th scope="col">PID</th>
+                  <th scope="col">PARAMETER</th>
+                  <th scope="col">VALUE</th>
+                  <th scope="col">UNIT</th>
+                  <th scope="col">STATUS</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="td-pid">010C</td>
+                  <td>ENGINE RPM</td>
+                  <td class="td-value">2,847</td>
+                  <td>rpm</td>
+                  <td><span class="badge badge--pass badge--outline">OK</span></td>
+                </tr>
+                <tr>
+                  <td class="td-pid">0105</td>
+                  <td>COOLANT TEMPERATURE</td>
+                  <td class="td-value">89</td>
+                  <td>&deg;C</td>
+                  <td><span class="badge badge--pass badge--outline">OK</span></td>
+                </tr>
+                <tr>
+                  <td class="td-pid">010D</td>
+                  <td>VEHICLE SPEED</td>
+                  <td class="td-value">0</td>
+                  <td>km/h</td>
+                  <td><span class="badge badge--pending badge--outline">IDLE</span></td>
+                </tr>
+                <tr>
+                  <td class="td-pid">0114</td>
+                  <td>O2 SENSOR B1S1</td>
+                  <td class="td-value">0.45</td>
+                  <td>V</td>
+                  <td><span class="badge badge--pass badge--outline">OK</span></td>
+                </tr>
+                <tr>
+                  <td class="td-pid">0106</td>
+                  <td>SHORT TERM FUEL TRIM</td>
+                  <td class="td-value">-2.3</td>
+                  <td>%</td>
+                  <td><span class="badge badge--pass badge--outline">OK</span></td>
+                </tr>
+                <tr>
+                  <td class="td-pid">010B</td>
+                  <td>INTAKE MAP</td>
+                  <td class="td-value">101</td>
+                  <td>kPa</td>
+                  <td><span class="badge badge--pass badge--outline">OK</span></td>
+                </tr>
+                <tr>
+                  <td class="td-pid">0110</td>
+                  <td>MAF AIR FLOW</td>
+                  <td class="td-value">4.12</td>
+                  <td>g/s</td>
+                  <td><span class="badge badge--pass badge--outline">OK</span></td>
+                </tr>
+                <tr>
+                  <td class="td-pid">010E</td>
+                  <td>TIMING ADVANCE</td>
+                  <td class="td-value">14.5</td>
+                  <td>&deg;</td>
+                  <td><span class="badge badge--pass badge--outline">OK</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div style="background: var(--color-surface); padding: 8px 20px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; font-family: var(--font-mono); font-size: var(--text-xs); border-top: 1px solid var(--color-border-dim);">
+            <span style="color: var(--color-text-muted);">8 / 24 SUPPORTED PIDS</span>
+            <span style="color: var(--color-text-muted);">
+              ELM327 v2.3
+              <span aria-hidden="true">|</span>
+              60Hz
+              <span aria-hidden="true">|</span>
+              <span style="color: var(--color-primary);" class="blink">STREAMING</span>
+            </span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================================================================
+         FEATURES
+         ================================================================ -->
+    <section class="section" aria-labelledby="features-title">
+      <div class="container">
+        <div class="section__header">
+          <p class="section__label">SYSTEM MODULES</p>
+          <h2 id="features-title" class="section__title">DIAGNOSTIC <span>CAPABILITIES</span></h2>
+          <p class="section__subtitle">&gt; All modules loaded and operational.</p>
+        </div>
+
+        <div class="features-grid" role="list">
+          <article class="card card--feature" role="listitem">
+            <div class="feature-icon" aria-hidden="true">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M12 2C7 2 3 6 3 11c0 3 1.5 5.5 4 7l1 3h8l1-3c2.5-1.5 4-4 4-7 0-5-4-9-9-9z" fill="#00FF88"/><circle cx="9" cy="10" r="1.5" fill="#000"/><circle cx="15" cy="10" r="1.5" fill="#000"/><line x1="12" y1="7" x2="12" y2="15" stroke="#000" stroke-width="1"/><line x1="8" y1="11" x2="16" y2="11" stroke="#000" stroke-width="1"/></svg>
+            </div>
+            <div class="feature-content">
+              <h3 class="feature-name">AI-Powered Diagnostics</h3>
+              <p class="feature-desc">Chat with an AI that has real-time access to your vehicle sensor data. Get manufacturer-specific repair guidance backed by live PID analysis.</p>
+            </div>
+            <span class="badge badge--active"><span class="status-dot blink" aria-hidden="true"></span>ACTIVE</span>
+          </article>
+
+          <article class="card card--feature" role="listitem">
+            <div class="feature-icon" aria-hidden="true">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><rect x="1" y="3" width="22" height="18" rx="1" fill="#00FF88"/><polyline points="4,12 7,6 10,16 13,8 16,14 19,10 22,12" stroke="#000" stroke-width="2" fill="none" stroke-linejoin="round"/></svg>
+            </div>
+            <div class="feature-content">
+              <h3 class="feature-name">Live Data Monitoring</h3>
+              <p class="feature-desc">Stream real-time RPM, coolant, O2, MAF, MAP, fuel trims, and 200+ PIDs at up to 60Hz. Graphing, gauges, and raw hex modes.</p>
+            </div>
+            <span class="badge badge--active"><span class="status-dot blink" aria-hidden="true"></span>ACTIVE</span>
+          </article>
+
+          <article class="card card--feature" role="listitem">
+            <div class="feature-icon" aria-hidden="true">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M4 2h12l4 4v16H4V2z" fill="#00FF88"/><path d="M16 2v4h4" fill="none" stroke="#000" stroke-width="1.5"/><rect x="7" y="9" width="10" height="3" rx="1" fill="#000"/><rect x="7" y="14" width="7" height="2" rx="1" fill="#000"/><rect x="7" y="18" width="9" height="2" rx="1" fill="#000"/></svg>
+            </div>
+            <div class="feature-content">
+              <h3 class="feature-name">18,247 Error Code Database</h3>
+              <p class="feature-desc">Complete DTC library: generic OBD-II, manufacturer-specific, body, chassis, and network codes. Full descriptions, severity ratings, repair procedures.</p>
+            </div>
+            <span class="badge badge--active"><span class="status-dot blink" aria-hidden="true"></span>ACTIVE</span>
+          </article>
+
+          <article class="card card--feature" role="listitem">
+            <div class="feature-icon" aria-hidden="true">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><rect x="1" y="2" width="22" height="20" rx="1" fill="#00FF88"/><rect x="3" y="6" width="18" height="14" fill="#000"/><text x="5" y="13" fill="#00FF88" font-family="monospace" font-size="5">&gt; ATZ</text><text x="5" y="18" fill="#00FF88" font-family="monospace" font-size="5">&gt;_</text></svg>
+            </div>
+            <div class="feature-content">
+              <h3 class="feature-name">Terminal Mode</h3>
+              <p class="feature-desc">Direct command-line access to your OBD adapter. Send raw AT commands, custom PIDs, and protocol-level queries. Full history and hex view.</p>
+            </div>
+            <span class="badge badge--active"><span class="status-dot blink" aria-hidden="true"></span>ACTIVE</span>
+          </article>
+
+          <article class="card card--feature" role="listitem">
+            <div class="feature-icon" aria-hidden="true">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><rect x="2" y="4" width="20" height="16" rx="1" fill="#00FF88"/><circle cx="8" cy="12" r="4" fill="#000"/><circle cx="16" cy="12" r="4" fill="#000"/><circle cx="8" cy="12" r="1.5" fill="#00FF88"/><circle cx="16" cy="12" r="1.5" fill="#00FF88"/></svg>
+            </div>
+            <div class="feature-content">
+              <h3 class="feature-name">Session Logger &amp; Replay</h3>
+              <p class="feature-desc">Record complete diagnostic sessions. Replay for analysis. Export to CSV. Share with mechanics.</p>
+            </div>
+            <span class="badge badge--active"><span class="status-dot blink" aria-hidden="true"></span>ACTIVE</span>
+          </article>
+
+          <article class="card card--feature" role="listitem">
+            <div class="feature-icon" aria-hidden="true">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" fill="#00FF88"/><circle cx="12" cy="12" r="7" fill="#000"/><line x1="12" y1="6" x2="12" y2="8" stroke="#00FF88" stroke-width="2"/><line x1="12" y1="16" x2="12" y2="18" stroke="#00FF88" stroke-width="2"/><line x1="6" y1="12" x2="8" y2="12" stroke="#00FF88" stroke-width="2"/><line x1="16" y1="12" x2="18" y2="12" stroke="#00FF88" stroke-width="2"/><line x1="12" y1="12" x2="16" y2="7" stroke="#FF2222" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="12" r="1.5" fill="#00FF88"/></svg>
+            </div>
+            <div class="feature-content">
+              <h3 class="feature-name">Guided Diagnostic Tests</h3>
+              <p class="feature-desc">Step-by-step test procedures: RPM stability, O2 response, catalytic efficiency, fuel system, EVAP leak. Real-time HUD overlay mode.</p>
+            </div>
+            <span class="badge badge--active"><span class="status-dot blink" aria-hidden="true"></span>ACTIVE</span>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================================================================
+         HOW IT WORKS
+         ================================================================ -->
+    <section class="section section--surface" aria-labelledby="steps-title">
+      <div class="container">
+        <div class="section__header">
+          <p class="section__label">WORKFLOW</p>
+          <h2 id="steps-title" class="section__title">DIAGNOSTIC <span>PROCEDURE</span></h2>
+          <p class="section__subtitle">&gt; Three-step scan sequence. Total time: under 30 seconds.</p>
+        </div>
+
+        <div class="steps">
+          <div class="step">
+            <div class="step__number" aria-label="Step 1">// CONNECT</div>
+            <h3 class="step__title">CONNECT</h3>
+            <p class="step__desc">
+              Plug any ELM327-compatible Bluetooth or WiFi OBD-II adapter into your vehicle diagnostic port. Open ODB+ and pair. Auto-detection of adapter type: ELM327, STN11xx, STN21xx, ESP32.
+            </p>
+            <div style="margin-top: 16px; font-family: var(--font-mono); font-size: var(--text-xs); color: var(--color-primary);">
+              &gt; ATZ<br>
+              ELM327 v2.3<br>
+              <span style="color: var(--color-success);">ADAPTER READY</span>
+            </div>
+          </div>
+
+          <div class="step">
+            <div class="step__number" aria-label="Step 2">// SCAN</div>
+            <h3 class="step__title">SCAN</h3>
+            <p class="step__desc">
+              Automatic protocol negotiation (CAN, KWP2000, ISO 9141). PID discovery identifies every sensor your ECU supports. DTC scan pulls all stored, pending, and permanent codes.
+            </p>
+            <div style="margin-top: 16px; font-family: var(--font-mono); font-size: var(--text-xs); color: var(--color-primary);">
+              &gt; 0100<br>
+              41 00 BE 3E B8 13<br>
+              <span style="color: var(--color-success);">24 PIDs DISCOVERED</span>
+            </div>
+          </div>
+
+          <div class="step">
+            <div class="step__number" aria-label="Step 3">// ANALYZE</div>
+            <h3 class="step__title">ANALYZE</h3>
+            <p class="step__desc">
+              Live data streams to your screen. DTCs decoded with full descriptions and repair guides. AI assistant analyzes sensor patterns and suggests root cause. Export session data.
+            </p>
+            <div style="margin-top: 16px; font-family: var(--font-mono); font-size: var(--text-xs); color: var(--color-primary);">
+              &gt; ANALYSIS COMPLETE<br>
+              0 DTCs | 24 PIDs OK<br>
+              <span style="color: var(--color-success);">VEHICLE HEALTHY</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================================================================
+         DTC DATABASE PROMO
+         ================================================================ -->
+    <section class="section" aria-labelledby="dtc-title">
+      <div class="container">
+        <div class="section__header">
+          <p class="section__label">CODE DATABASE</p>
+          <h2 id="dtc-title" class="section__title">18,247 <span>ERROR CODES</span></h2>
+          <p class="section__subtitle">&gt; Complete OBD-II DTC coverage. Generic + manufacturer-specific.</p>
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px;">
+          <!-- DTC Sample Card 1 -->
+          <article class="card card--dtc">
+            <div class="card__header">
+              <div>
+                <span class="section-label">POWERTRAIN</span>
+                <p class="dtc-code">P0300</p>
+              </div>
+              <span class="badge badge--critical">CRITICAL</span>
+            </div>
+            <div class="card__body">
+              <p class="dtc-description">RANDOM/MULTIPLE CYLINDER MISFIRE DETECTED</p>
+              <p style="margin-top: 8px; font-family: var(--font-mono); font-size: var(--text-xs); color: var(--color-text-dim);">SYSTEM: FUEL &amp; AIR METERING | SEVERITY: HIGH</p>
+            </div>
+          </article>
+
+          <!-- DTC Sample Card 2 -->
+          <article class="card card--dtc" style="border-left-color: var(--color-warning);">
+            <div class="card__header">
+              <div>
+                <span class="section-label">EMISSIONS</span>
+                <p class="dtc-code" style="color: var(--color-warning);">P0420</p>
+              </div>
+              <span class="badge badge--warning">WARNING</span>
+            </div>
+            <div class="card__body">
+              <p class="dtc-description">CATALYST SYSTEM EFFICIENCY BELOW THRESHOLD B1</p>
+              <p style="margin-top: 8px; font-family: var(--font-mono); font-size: var(--text-xs); color: var(--color-text-dim);">SYSTEM: EMISSIONS | SEVERITY: MODERATE</p>
+            </div>
+          </article>
+
+          <!-- DTC Sample Card 3 -->
+          <article class="card card--dtc" style="border-left-color: var(--color-info);">
+            <div class="card__header">
+              <div>
+                <span class="section-label">NETWORK</span>
+                <p class="dtc-code" style="color: var(--color-info);">U0100</p>
+              </div>
+              <span class="badge badge--info">INFO</span>
+            </div>
+            <div class="card__body">
+              <p class="dtc-description">LOST COMMUNICATION WITH ECM/PCM "A"</p>
+              <p style="margin-top: 8px; font-family: var(--font-mono); font-size: var(--text-xs); color: var(--color-text-dim);">SYSTEM: NETWORK | SEVERITY: DIAGNOSTIC</p>
+            </div>
+          </article>
+        </div>
+
+        <!-- Code coverage table -->
+        <div class="table-wrap" style="margin-top: 32px;">
+          <table class="data-table" aria-label="DTC database coverage">
+            <thead>
+              <tr>
+                <th scope="col">CODE PREFIX</th>
+                <th scope="col">CATEGORY</th>
+                <th scope="col">COUNT</th>
+                <th scope="col">COVERAGE</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="td-pid">P0xxx</td>
+                <td>GENERIC POWERTRAIN (SAE)</td>
+                <td class="td-value">4,096</td>
+                <td><span class="badge badge--pass badge--outline">100%</span></td>
+              </tr>
+              <tr>
+                <td class="td-pid">P1xxx</td>
+                <td>MANUFACTURER-SPECIFIC POWERTRAIN</td>
+                <td class="td-value">6,847</td>
+                <td><span class="badge badge--pass badge--outline">98%</span></td>
+              </tr>
+              <tr>
+                <td class="td-pid">P2xxx</td>
+                <td>GENERIC POWERTRAIN (ISO/SAE)</td>
+                <td class="td-value">2,304</td>
+                <td><span class="badge badge--pass badge--outline">100%</span></td>
+              </tr>
+              <tr>
+                <td class="td-pid">Bxxxx</td>
+                <td>BODY CODES</td>
+                <td class="td-value">2,100</td>
+                <td><span class="badge badge--warn badge--outline">92%</span></td>
+              </tr>
+              <tr>
+                <td class="td-pid">Cxxxx</td>
+                <td>CHASSIS CODES</td>
+                <td class="td-value">1,680</td>
+                <td><span class="badge badge--warn badge--outline">90%</span></td>
+              </tr>
+              <tr>
+                <td class="td-pid">Uxxxx</td>
+                <td>NETWORK CODES</td>
+                <td class="td-value">1,220</td>
+                <td><span class="badge badge--pass badge--outline">95%</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================================================================
+         BENEFITS (Data Table Format)
+         ================================================================ -->
+    <section class="section section--surface" aria-labelledby="benefits-title">
+      <div class="container">
+        <div class="section__header">
+          <p class="section__label">SPECIFICATIONS</p>
+          <h2 id="benefits-title" class="section__title">SYSTEM <span>PARAMETERS</span></h2>
+        </div>
+
+        <div class="table-wrap">
+          <table class="data-table" aria-label="ODB+ specifications">
+            <thead>
+              <tr>
+                <th scope="col">PARAMETER</th>
+                <th scope="col">VALUE</th>
+                <th scope="col">STATUS</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>SUPPORTED ADAPTERS</td>
+                <td class="td-value">ELM327 / STN1110 / STN2120 / ESP32</td>
+                <td><span class="badge badge--pass badge--outline">OK</span></td>
+              </tr>
+              <tr>
+                <td>PROTOCOLS</td>
+                <td class="td-value">CAN (11/29-bit) / KWP2000 / ISO 9141 / J1850</td>
+                <td><span class="badge badge--pass badge--outline">OK</span></td>
+              </tr>
+              <tr>
+                <td>PID REFRESH RATE</td>
+                <td class="td-value">UP TO 60 Hz</td>
+                <td><span class="badge badge--pass badge--outline">OK</span></td>
+              </tr>
+              <tr>
+                <td>SUPPORTED PIDs</td>
+                <td class="td-value">200+ (MODE 01, 02, 09)</td>
+                <td><span class="badge badge--pass badge--outline">OK</span></td>
+              </tr>
+              <tr>
+                <td>DTC DATABASE</td>
+                <td class="td-value">18,247 CODES</td>
+                <td><span class="badge badge--pass badge--outline">OK</span></td>
+              </tr>
+              <tr>
+                <td>MANUFACTURER COVERAGE</td>
+                <td class="td-value">50+ BRANDS (1996-2026)</td>
+                <td><span class="badge badge--pass badge--outline">OK</span></td>
+              </tr>
+              <tr>
+                <td>AI ENGINE</td>
+                <td class="td-value">GPT-4 CLASS / LIVE DATA CONTEXT</td>
+                <td><span class="badge badge--pass badge--outline">OK</span></td>
+              </tr>
+              <tr>
+                <td>SESSION EXPORT</td>
+                <td class="td-value">CSV / JSON / PDF</td>
+                <td><span class="badge badge--pass badge--outline">OK</span></td>
+              </tr>
+              <tr>
+                <td>PLATFORM</td>
+                <td class="td-value">ANDROID 8.0+ (API 26)</td>
+                <td><span class="badge badge--pass badge--outline">OK</span></td>
+              </tr>
+              <tr>
+                <td>PRICE</td>
+                <td class="td-value" style="color: var(--color-success);">FREE (OPEN SOURCE)</td>
+                <td><span class="badge badge--pass">FREE</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================================================================
+         DOWNLOAD CTA
+         ================================================================ -->
+    <section class="cta-section" id="download" aria-labelledby="cta-title">
+      <div class="container">
+        <p class="section__label" style="margin-bottom: 16px;">READY TO INSTALL</p>
+        <h2 id="cta-title" class="cta-section__title">INITIALIZE <span class="text-primary">DIAGNOSTIC SYSTEM</span></h2>
+        <p class="cta-section__desc">
+          &gt; Download ODB+ free from Google Play. Connect your ELM327 adapter. Start scanning in under 30 seconds.
+        </p>
+        <div style="display: flex; gap: 16px; justify-content: center; flex-wrap: wrap;">
+          <a href="#download" class="btn btn--primary btn--lg">DOWNLOAD FREE &mdash; GOOGLE PLAY</a>
+          <a href="/pages/docs.html" class="btn btn--outline btn--lg">READ DOCUMENTATION</a>
+        </div>
+        <p style="margin-top: 24px; font-family: var(--font-mono); font-size: var(--text-xs); color: var(--color-text-dim);">
+          VERSION 2.3.1 | 12.4 MB | REQUIRES ANDROID 8.0+ | NO ADS | NO TRACKING
+        </p>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ================================================================
+       FOOTER
+       ================================================================ -->
+  <footer class="footer" role="contentinfo">
+    <div class="container">
+      <div class="footer__inner">
+        <a href="/pages/index.html" aria-label="ODB+ Home">
+          <img src="../assets/logo.svg" alt="ODB+" class="footer__logo" width="280" height="70">
+        </a>
+        <ul class="footer__links" role="list">
+          <li><a href="/pages/index.html" class="footer__link">HOME</a></li>
+          <li><a href="/pages/features.html" class="footer__link">FEATURES</a></li>
+          <li><a href="/pages/docs.html" class="footer__link">DOCS</a></li>
+          <li><a href="/pages/contact.html" class="footer__link">SUPPORT</a></li>
+          <li><a href="#download" class="footer__link">DOWNLOAD</a></li>
+          <li><a href="#privacy" class="footer__link">PRIVACY</a></li>
+        </ul>
+        <div class="footer__status" role="status">
+          SYSTEM STATUS: <span class="text-primary">ONLINE</span>
+          <span aria-hidden="true">|</span>
+          BUILD: 2026.03
+          <span aria-hidden="true">|</span>
+          PROTOCOLS: ELM327 / STN / ESP32
+          <span aria-hidden="true">|</span>
+          &copy; 2026 ODB+ DIAGNOSTIC SYSTEMS
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Minimal JS: mobile nav toggle only -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      var toggle = document.querySelector('.navbar__toggle');
+      var nav = document.getElementById('main-nav');
+      if (toggle && nav) {
+        toggle.addEventListener('click', function() {
+          var expanded = toggle.getAttribute('aria-expanded') === 'true';
+          toggle.setAttribute('aria-expanded', String(!expanded));
+          nav.classList.toggle('active');
+          toggle.textContent = expanded ? '[=]' : '[X]';
+        });
+      }
+    });
+  </script>
+
+</body>
+</html>

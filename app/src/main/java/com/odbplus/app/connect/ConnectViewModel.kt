@@ -7,6 +7,8 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.odbplus.app.ai.VehicleInfoRepository
 import com.odbplus.app.ai.data.VehicleInfo
+import com.odbplus.app.session.DtcMonitorService
+import com.odbplus.app.session.VehicleSessionManager
 import com.odbplus.core.protocol.ObdService
 import com.odbplus.core.protocol.PidDiscoveryState
 import com.odbplus.core.protocol.adapter.ProtocolSessionState
@@ -26,7 +28,9 @@ class ConnectViewModel @Inject constructor(
     application: Application,
     private val repo: TransportRepository,
     private val obdService: ObdService,
-    private val vehicleInfoRepository: VehicleInfoRepository
+    private val vehicleInfoRepository: VehicleInfoRepository,
+    private val sessionManager: VehicleSessionManager,
+    private val dtcMonitorService: DtcMonitorService
 ) : AndroidViewModel(application) {
 
     val connectionState: StateFlow<ConnectionState> = repo.connectionState
@@ -47,10 +51,6 @@ class ConnectViewModel @Inject constructor(
             repo.connect(host, port, isBluetooth = false)
             if (repo.connectionState.value == ConnectionState.CONNECTED) {
                 obdService.onTransportReady("tcp:$host:$port")
-                // Run PID discovery immediately after the session is active.
-                // Discovery results are cached in ObdService.supportedPids and reused
-                // by LiveDataViewModel to build the selectable PID list. Only supported
-                // PIDs are ever shown in the UI or polled.
                 obdService.runPidDiscovery()
             }
         }
@@ -62,10 +62,6 @@ class ConnectViewModel @Inject constructor(
             repo.connect(macAddress, 0, isBluetooth = true)
             if (repo.connectionState.value == ConnectionState.CONNECTED) {
                 obdService.onTransportReady("bt:$macAddress")
-                // Run PID discovery immediately after the session is active.
-                // Discovery results are cached in ObdService.supportedPids and reused
-                // by LiveDataViewModel to build the selectable PID list. Only supported
-                // PIDs are ever shown in the UI or polled.
                 obdService.runPidDiscovery()
             }
         }
@@ -73,7 +69,7 @@ class ConnectViewModel @Inject constructor(
 
     /**
      * Read VIN from the ECU. If new, also fetches calibration ID, CVN, and ECU name.
-     * Saves the result to [VehicleInfoRepository].
+     * Saves the result to [VehicleInfoRepository] and starts a session + DTC monitoring.
      */
     fun acquireVehicleInfo() {
         viewModelScope.launch {
@@ -96,6 +92,11 @@ class ConnectViewModel @Inject constructor(
                             ?: VehicleInfo(vin = vin)
                     }
                     vehicleInfoRepository.saveVehicle(info)
+
+                    // Start session and DTC monitoring
+                    val sessionId = sessionManager.startSession(vin)
+                    dtcMonitorService.startMonitoring(vin, sessionId)
+
                     _acquireStatus.value = "VIN acquired: $vin"
                 } else {
                     _acquireStatus.value = "VIN not available from vehicle"
@@ -129,6 +130,8 @@ class ConnectViewModel @Inject constructor(
 
     fun disconnect() {
         viewModelScope.launch {
+            dtcMonitorService.stopMonitoring()
+            sessionManager.endSession()
             obdService.onTransportDisconnected()
             repo.disconnect()
         }

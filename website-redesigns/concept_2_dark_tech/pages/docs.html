@@ -1,0 +1,833 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="ODB+ Documentation - Getting started guide, OBD-II command reference, protocol details, and adapter configuration.">
+  <meta name="theme-color" content="#0D1117">
+  <title>Documentation | ODB+</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500;600;700&family=Oxanium:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="../css/variables.css">
+  <link rel="stylesheet" href="../css/styles.css">
+
+  <style>
+    .docs-layout {
+      display: grid;
+      grid-template-columns: 260px 1fr;
+      gap: var(--space-10);
+      max-width: var(--container-wide);
+      margin-inline: auto;
+      padding-inline: var(--space-6);
+      padding-top: calc(80px + var(--space-8));
+      padding-bottom: var(--space-16);
+      min-height: 100vh;
+    }
+
+    /* Sidebar */
+    .docs-sidebar {
+      position: sticky;
+      top: calc(64px + var(--space-6));
+      max-height: calc(100vh - 80px);
+      overflow-y: auto;
+      padding-right: var(--space-4);
+      border-right: 1px solid var(--color-border-subtle);
+    }
+
+    .docs-sidebar__section {
+      margin-bottom: var(--space-6);
+    }
+
+    .docs-sidebar__title {
+      font-family: var(--font-mono);
+      font-size: var(--text-xs);
+      text-transform: uppercase;
+      letter-spacing: var(--tracking-caps);
+      color: var(--color-text-tertiary);
+      margin-bottom: var(--space-3);
+    }
+
+    .docs-sidebar__links {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-1);
+    }
+
+    .docs-sidebar__link {
+      display: block;
+      padding: var(--space-2) var(--space-3);
+      font-size: var(--text-sm);
+      color: var(--color-text-secondary);
+      border-radius: var(--radius-md);
+      transition: all var(--duration-fast) var(--ease-in-out);
+      text-decoration: none;
+      border-left: 2px solid transparent;
+    }
+
+    .docs-sidebar__link:hover {
+      color: var(--color-cyan);
+      background: rgba(0, 212, 255, 0.04);
+      text-shadow: none;
+    }
+
+    .docs-sidebar__link--active {
+      color: var(--color-cyan);
+      border-left-color: var(--color-cyan);
+      background: rgba(0, 212, 255, 0.06);
+    }
+
+    /* Main content */
+    .docs-content {
+      max-width: 780px;
+    }
+
+    .docs-content h1 {
+      font-family: var(--font-display);
+      font-size: var(--text-3xl);
+      margin-bottom: var(--space-6);
+    }
+
+    .docs-content h2 {
+      font-family: var(--font-heading);
+      font-size: var(--text-xl);
+      margin-top: var(--space-12);
+      margin-bottom: var(--space-4);
+      padding-bottom: var(--space-3);
+      border-bottom: 1px solid var(--color-border-subtle);
+    }
+
+    .docs-content h3 {
+      font-size: var(--text-lg);
+      margin-top: var(--space-8);
+      margin-bottom: var(--space-3);
+    }
+
+    .docs-content p {
+      color: var(--color-text-secondary);
+      line-height: var(--leading-relaxed);
+      margin-bottom: var(--space-4);
+    }
+
+    .docs-content ul, .docs-content ol {
+      color: var(--color-text-secondary);
+      padding-left: var(--space-6);
+      margin-bottom: var(--space-4);
+      line-height: var(--leading-relaxed);
+    }
+
+    .docs-content li {
+      margin-bottom: var(--space-2);
+    }
+
+    .docs-content code {
+      font-family: var(--font-mono);
+      font-size: 0.9em;
+      background: rgba(0, 212, 255, 0.06);
+      color: var(--color-cyan);
+      padding: 2px 6px;
+      border-radius: var(--radius-sm);
+    }
+
+    .docs-content .note {
+      background: rgba(0, 212, 255, 0.04);
+      border: 1px solid rgba(0, 212, 255, 0.15);
+      border-radius: var(--radius-md);
+      padding: var(--space-4) var(--space-5);
+      margin-bottom: var(--space-6);
+    }
+
+    .docs-content .note-label {
+      font-family: var(--font-mono);
+      font-size: var(--text-xs);
+      text-transform: uppercase;
+      letter-spacing: var(--tracking-wide);
+      color: var(--color-cyan);
+      margin-bottom: var(--space-2);
+      font-weight: 600;
+    }
+
+    .docs-content .warning {
+      background: rgba(255, 140, 0, 0.04);
+      border: 1px solid rgba(255, 140, 0, 0.15);
+      border-radius: var(--radius-md);
+      padding: var(--space-4) var(--space-5);
+      margin-bottom: var(--space-6);
+    }
+
+    .docs-content .warning .note-label {
+      color: var(--color-amber);
+    }
+
+    @media (max-width: 900px) {
+      .docs-layout {
+        grid-template-columns: 1fr;
+      }
+      .docs-sidebar {
+        position: static;
+        max-height: none;
+        border-right: none;
+        border-bottom: 1px solid var(--color-border-subtle);
+        padding-bottom: var(--space-6);
+        padding-right: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar" role="navigation" aria-label="Main navigation">
+    <div class="navbar__inner">
+      <a href="index.html" class="navbar__logo" aria-label="ODB+ Home">
+        <svg viewBox="0 0 300 80" width="120" height="32" aria-hidden="true">
+          <defs>
+            <filter id="navGlow"><feGaussianBlur in="SourceGraphic" stdDeviation="1.5" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+            <linearGradient id="navTrace" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#00D4FF" stop-opacity="0.1"/><stop offset="50%" stop-color="#00D4FF" stop-opacity="0.8"/><stop offset="100%" stop-color="#00D4FF" stop-opacity="0.1"/></linearGradient>
+          </defs>
+          <path d="M 30 10 L 18 20 L 18 60 L 30 70" fill="none" stroke="#00D4FF" stroke-width="2" stroke-linecap="round" opacity="0.7"/>
+          <path d="M 270 10 L 282 20 L 282 60 L 270 70" fill="none" stroke="#00D4FF" stroke-width="2" stroke-linecap="round" opacity="0.7"/>
+          <text x="90" y="52" font-family="Oxanium, sans-serif" font-size="42" font-weight="700" fill="#E6EDF3" letter-spacing="4" filter="url(#navGlow)">ODB</text>
+          <text x="220" y="52" font-family="Oxanium, sans-serif" font-size="42" font-weight="700" fill="#00D4FF" letter-spacing="2" filter="url(#navGlow)">+</text>
+          <line x1="40" y1="64" x2="260" y2="64" stroke="url(#navTrace)" stroke-width="1.5"/>
+          <circle cx="150" cy="64" r="2" fill="#00D4FF" opacity="0.6"/>
+        </svg>
+      </a>
+      <ul class="navbar__links" role="list">
+        <li><a href="index.html" class="navbar__link">Home</a></li>
+        <li><a href="features.html" class="navbar__link">Features</a></li>
+        <li><a href="docs.html" class="navbar__link navbar__link--active">Docs</a></li>
+        <li><a href="contact.html" class="navbar__link">Contact</a></li>
+      </ul>
+      <a href="#download" class="btn btn--primary navbar__cta">Download</a>
+      <button class="navbar__toggle" aria-label="Toggle navigation menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+    <div class="navbar__mobile-panel">
+      <a href="index.html" class="navbar__link">Home</a>
+      <a href="features.html" class="navbar__link">Features</a>
+      <a href="docs.html" class="navbar__link navbar__link--active">Docs</a>
+      <a href="contact.html" class="navbar__link">Contact</a>
+    </div>
+  </nav>
+
+
+  <div class="docs-layout">
+    <!-- SIDEBAR -->
+    <aside class="docs-sidebar" aria-label="Documentation navigation">
+      <div class="docs-sidebar__section">
+        <h2 class="docs-sidebar__title">Getting Started</h2>
+        <ul class="docs-sidebar__links" role="list">
+          <li><a href="#overview" class="docs-sidebar__link docs-sidebar__link--active">Overview</a></li>
+          <li><a href="#requirements" class="docs-sidebar__link">Requirements</a></li>
+          <li><a href="#installation" class="docs-sidebar__link">Installation</a></li>
+          <li><a href="#first-connection" class="docs-sidebar__link">First Connection</a></li>
+        </ul>
+      </div>
+      <div class="docs-sidebar__section">
+        <h2 class="docs-sidebar__title">OBD-II Reference</h2>
+        <ul class="docs-sidebar__links" role="list">
+          <li><a href="#protocols" class="docs-sidebar__link">Protocols</a></li>
+          <li><a href="#pid-reference" class="docs-sidebar__link">PID Reference</a></li>
+          <li><a href="#at-commands" class="docs-sidebar__link">AT Commands</a></li>
+          <li><a href="#dtc-format" class="docs-sidebar__link">DTC Format</a></li>
+        </ul>
+      </div>
+      <div class="docs-sidebar__section">
+        <h2 class="docs-sidebar__title">Advanced</h2>
+        <ul class="docs-sidebar__links" role="list">
+          <li><a href="#terminal-usage" class="docs-sidebar__link">Terminal Usage</a></li>
+          <li><a href="#adapter-compat" class="docs-sidebar__link">Adapter Compatibility</a></li>
+          <li><a href="#troubleshooting" class="docs-sidebar__link">Troubleshooting</a></li>
+        </ul>
+      </div>
+    </aside>
+
+
+    <!-- MAIN CONTENT -->
+    <main class="docs-content">
+      <h1 id="overview">ODB+ Documentation</h1>
+
+      <div class="note">
+        <p class="note-label">About this documentation</p>
+        <p style="margin-bottom: 0;">
+          This guide covers ODB+ setup, OBD-II protocol fundamentals, command reference,
+          and troubleshooting. Written for both beginners and experienced automotive diagnosticians.
+        </p>
+      </div>
+
+      <p>
+        ODB+ is a professional-grade Android OBD-II diagnostic application. It connects to your
+        vehicle's ECU via Bluetooth or WiFi OBD-II adapters and provides real-time sensor data,
+        error code reading and clearing, AI-powered diagnostic analysis, and raw terminal access.
+      </p>
+
+
+      <h2 id="requirements">Requirements</h2>
+
+      <ul>
+        <li>Android 8.0 (Oreo) or higher</li>
+        <li>ELM327-compatible OBD-II adapter (Bluetooth Classic or WiFi)</li>
+        <li>Vehicle with OBD-II port (all cars sold in the US from 1996+, EU from 2001+)</li>
+        <li>Bluetooth permission granted in Android settings</li>
+      </ul>
+
+      <div class="note">
+        <p class="note-label">Recommended adapters</p>
+        <p style="margin-bottom: 0;">
+          Genuine ELM327 v2.1+ adapters work best. ODB+ also supports STN1100/STN2100 and
+          ESP32-based adapters through its UOAPL (Universal OBD-II Adapter Protocol Layer).
+          Avoid cheap clones that advertise v2.1 but actually run v1.5 firmware.
+        </p>
+      </div>
+
+
+      <h2 id="installation">Installation</h2>
+
+      <ol>
+        <li>Download ODB+ from the Google Play Store or install the APK directly</li>
+        <li>Grant Bluetooth and Location permissions when prompted</li>
+        <li>Plug your OBD-II adapter into the vehicle's diagnostic port (usually under the dash)</li>
+        <li>Turn the vehicle's ignition to ON (engine can be off for code reading, must be running for live data)</li>
+      </ol>
+
+
+      <h2 id="first-connection">First Connection</h2>
+
+      <p>
+        On first launch, ODB+ will scan for available Bluetooth OBD-II adapters.
+        Select your adapter from the list. The app will then:
+      </p>
+
+      <ol>
+        <li>Establish Bluetooth connection to the adapter</li>
+        <li>Send initialization commands (<code>ATZ</code>, <code>ATE0</code>, <code>ATL0</code>, <code>ATS1</code>)</li>
+        <li>Fingerprint the adapter to identify its capabilities</li>
+        <li>Detect the vehicle's OBD-II protocol</li>
+        <li>Discover supported PIDs</li>
+      </ol>
+
+      <div class="code-block" style="margin-bottom: var(--space-6);">
+        <div class="code-block__header">
+          <span class="code-block__lang">Initialization Sequence</span>
+        </div>
+        <div class="code-block__body">
+<pre><span class="cmt">// 1. Reset adapter</span>
+<span class="kw">&gt;</span> <span class="str">ATZ</span>
+<span class="num">ELM327 v2.3</span>
+
+<span class="cmt">// 2. Configure adapter</span>
+<span class="kw">&gt;</span> <span class="str">ATE0</span>          <span class="cmt">// Echo off</span>
+<span class="num">OK</span>
+<span class="kw">&gt;</span> <span class="str">ATL0</span>          <span class="cmt">// Linefeeds off</span>
+<span class="num">OK</span>
+<span class="kw">&gt;</span> <span class="str">ATS1</span>          <span class="cmt">// Spaces on</span>
+<span class="num">OK</span>
+<span class="kw">&gt;</span> <span class="str">ATH1</span>          <span class="cmt">// Headers on</span>
+<span class="num">OK</span>
+
+<span class="cmt">// 3. Detect protocol</span>
+<span class="kw">&gt;</span> <span class="str">ATDP</span>
+<span class="num">AUTO, ISO 14230-4 (KWP FAST)</span>
+
+<span class="cmt">// 4. Query supported PIDs</span>
+<span class="kw">&gt;</span> <span class="str">0100</span>
+<span class="fn">84 F1 10</span> <span class="num">41 00 BE 3E B8 11</span>
+<span class="cmt">// Bitmap: PIDs 01-20 supported mask</span></pre>
+        </div>
+      </div>
+
+      <div class="warning">
+        <p class="note-label">Important</p>
+        <p style="margin-bottom: 0;">
+          Do not send <code>ATSP0</code> before the first PID query. This resets the adapter's
+          stored protocol hint and forces a full protocol scan, which can fail on some vehicles.
+          ODB+ sends <code>0100</code> directly to leverage the adapter's last-known protocol.
+        </p>
+      </div>
+
+
+      <h2 id="protocols">OBD-II Protocols</h2>
+
+      <p>
+        OBD-II defines five communication protocols. Your vehicle uses exactly one.
+        ODB+ auto-detects the correct protocol during connection.
+      </p>
+
+      <div class="table-wrap" style="margin-bottom: var(--space-6);">
+        <table>
+          <thead>
+            <tr>
+              <th>Protocol</th>
+              <th>AT Command</th>
+              <th>Speed</th>
+              <th>Common Vehicles</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>ISO 15765-4 (CAN 11-bit)</td>
+              <td><code>ATSP6</code></td>
+              <td>500 kbps</td>
+              <td>Most 2008+ vehicles worldwide</td>
+            </tr>
+            <tr>
+              <td>ISO 15765-4 (CAN 29-bit)</td>
+              <td><code>ATSP7</code></td>
+              <td>500 kbps</td>
+              <td>Some European vehicles</td>
+            </tr>
+            <tr>
+              <td>ISO 14230-4 (KWP2000 Fast)</td>
+              <td><code>ATSP5</code></td>
+              <td>10.4 kbps</td>
+              <td>2003-2008 Asian and European</td>
+            </tr>
+            <tr>
+              <td>ISO 9141-2</td>
+              <td><code>ATSP3</code></td>
+              <td>10.4 kbps</td>
+              <td>1996-2004 European and Asian</td>
+            </tr>
+            <tr>
+              <td>SAE J1850 PWM</td>
+              <td><code>ATSP1</code></td>
+              <td>41.6 kbps</td>
+              <td>Ford vehicles (1996-2007)</td>
+            </tr>
+            <tr>
+              <td>SAE J1850 VPW</td>
+              <td><code>ATSP2</code></td>
+              <td>10.4 kbps</td>
+              <td>GM vehicles (1996-2007)</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+
+      <h2 id="pid-reference">PID Reference</h2>
+
+      <p>
+        Parameter IDs (PIDs) are the standard codes used to request specific data from the vehicle's ECU.
+        Service 01 PIDs request current (live) data. Below are the most commonly used PIDs.
+      </p>
+
+      <div class="table-wrap" style="margin-bottom: var(--space-6);">
+        <table>
+          <thead>
+            <tr>
+              <th>PID</th>
+              <th>Description</th>
+              <th>Formula</th>
+              <th>Unit</th>
+              <th>Range</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>0x04</code></td>
+              <td>Calculated Engine Load</td>
+              <td>A * 100 / 255</td>
+              <td>%</td>
+              <td>0 - 100</td>
+            </tr>
+            <tr>
+              <td><code>0x05</code></td>
+              <td>Engine Coolant Temperature</td>
+              <td>A - 40</td>
+              <td>C</td>
+              <td>-40 - 215</td>
+            </tr>
+            <tr>
+              <td><code>0x06</code></td>
+              <td>Short Term Fuel Trim (Bank 1)</td>
+              <td>(A - 128) * 100 / 128</td>
+              <td>%</td>
+              <td>-100 - 99.2</td>
+            </tr>
+            <tr>
+              <td><code>0x0B</code></td>
+              <td>Intake Manifold Absolute Pressure</td>
+              <td>A</td>
+              <td>kPa</td>
+              <td>0 - 255</td>
+            </tr>
+            <tr>
+              <td><code>0x0C</code></td>
+              <td>Engine RPM</td>
+              <td>(A * 256 + B) / 4</td>
+              <td>RPM</td>
+              <td>0 - 16,383</td>
+            </tr>
+            <tr>
+              <td><code>0x0D</code></td>
+              <td>Vehicle Speed</td>
+              <td>A</td>
+              <td>km/h</td>
+              <td>0 - 255</td>
+            </tr>
+            <tr>
+              <td><code>0x0F</code></td>
+              <td>Intake Air Temperature</td>
+              <td>A - 40</td>
+              <td>C</td>
+              <td>-40 - 215</td>
+            </tr>
+            <tr>
+              <td><code>0x10</code></td>
+              <td>MAF Air Flow Rate</td>
+              <td>(A * 256 + B) / 100</td>
+              <td>g/s</td>
+              <td>0 - 655.35</td>
+            </tr>
+            <tr>
+              <td><code>0x11</code></td>
+              <td>Throttle Position</td>
+              <td>A * 100 / 255</td>
+              <td>%</td>
+              <td>0 - 100</td>
+            </tr>
+            <tr>
+              <td><code>0x14</code></td>
+              <td>O2 Sensor Voltage (Bank 1, Sensor 1)</td>
+              <td>A / 200</td>
+              <td>V</td>
+              <td>0 - 1.275</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+
+      <h2 id="at-commands">AT Command Reference</h2>
+
+      <p>
+        AT commands configure the ELM327 adapter. They always start with "AT" and are not
+        sent to the vehicle's ECU. These are the most useful commands.
+      </p>
+
+      <div class="table-wrap" style="margin-bottom: var(--space-6);">
+        <table>
+          <thead>
+            <tr>
+              <th>Command</th>
+              <th>Description</th>
+              <th>Response</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>ATZ</code></td>
+              <td>Reset adapter to defaults</td>
+              <td>ELM327 vX.X</td>
+            </tr>
+            <tr>
+              <td><code>ATE0</code> / <code>ATE1</code></td>
+              <td>Echo off / on</td>
+              <td>OK</td>
+            </tr>
+            <tr>
+              <td><code>ATL0</code> / <code>ATL1</code></td>
+              <td>Linefeeds off / on</td>
+              <td>OK</td>
+            </tr>
+            <tr>
+              <td><code>ATS0</code> / <code>ATS1</code></td>
+              <td>Spaces off / on in responses</td>
+              <td>OK</td>
+            </tr>
+            <tr>
+              <td><code>ATH0</code> / <code>ATH1</code></td>
+              <td>Headers off / on</td>
+              <td>OK</td>
+            </tr>
+            <tr>
+              <td><code>ATDP</code></td>
+              <td>Display current protocol name</td>
+              <td>Protocol name string</td>
+            </tr>
+            <tr>
+              <td><code>ATSP<var>n</var></code></td>
+              <td>Set protocol (0=auto, 1-9=specific)</td>
+              <td>OK</td>
+            </tr>
+            <tr>
+              <td><code>ATRV</code></td>
+              <td>Read battery voltage</td>
+              <td>XX.XV</td>
+            </tr>
+            <tr>
+              <td><code>ATI</code></td>
+              <td>Print firmware version</td>
+              <td>ELM327 vX.X</td>
+            </tr>
+            <tr>
+              <td><code>ATCAF0</code> / <code>ATCAF1</code></td>
+              <td>CAN auto formatting off / on</td>
+              <td>OK</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="warning">
+        <p class="note-label">Caution</p>
+        <p style="margin-bottom: 0;">
+          Do not send <code>ATCAF0</code> unless you understand CAN framing. With CAN auto formatting
+          disabled, all CAN PID queries will return "NO DATA". ODB+ always re-enables <code>ATCAF1</code>
+          after adapter fingerprinting to prevent this issue.
+        </p>
+      </div>
+
+
+      <h2 id="dtc-format">DTC Format</h2>
+
+      <p>
+        Diagnostic Trouble Codes (DTCs) follow a standard 5-character format.
+        The first character indicates the system, followed by 4 hex digits.
+      </p>
+
+      <div class="code-block" style="margin-bottom: var(--space-6);">
+        <div class="code-block__header">
+          <span class="code-block__lang">DTC Structure</span>
+        </div>
+        <div class="code-block__body">
+<pre><span class="cmt">// DTC format: X0000</span>
+<span class="cmt">//             |||||</span>
+<span class="cmt">//             ||||+-- Fault index (00-99)</span>
+<span class="cmt">//             |||+--- Sub-system</span>
+<span class="cmt">//             ||+---- System (0-3)</span>
+<span class="cmt">//             |+----- Type: 0=SAE, 1=Manufacturer</span>
+<span class="cmt">//             +------ Category</span>
+
+<span class="kw">P</span> = Powertrain   (engine, transmission)
+<span class="kw">B</span> = Body          (airbags, lighting, HVAC)
+<span class="kw">C</span> = Chassis       (ABS, steering, suspension)
+<span class="kw">U</span> = Network       (CAN bus communication)
+
+<span class="cmt">// Example: P0300</span>
+<span class="kw">P</span>  = Powertrain
+<span class="num">0</span>  = SAE standard code
+<span class="num">3</span>  = Ignition system / misfire
+<span class="num">00</span> = Random/multiple cylinder misfire</pre>
+        </div>
+      </div>
+
+      <p>
+        ODB-II defines three DTC query services:
+      </p>
+
+      <ul>
+        <li><code>03</code> -- Read stored (confirmed) DTCs. These have illuminated the MIL (Check Engine Light).</li>
+        <li><code>07</code> -- Read pending DTCs. The fault has occurred but not enough times to confirm.</li>
+        <li><code>0A</code> -- Read permanent DTCs (CAN only). Cannot be cleared until the fault condition is resolved.</li>
+      </ul>
+
+
+      <h2 id="terminal-usage">Terminal Usage</h2>
+
+      <p>
+        The Terminal screen provides direct access to the OBD-II bus. Type commands
+        and see raw hex responses. Useful for advanced diagnostics, protocol debugging,
+        and accessing manufacturer-specific data.
+      </p>
+
+      <h3>Common Workflows</h3>
+
+      <div class="code-block" style="margin-bottom: var(--space-6);">
+        <div class="code-block__header">
+          <span class="code-block__lang">Read and Clear DTCs</span>
+        </div>
+        <div class="code-block__body">
+<pre><span class="cmt">// Read stored DTCs</span>
+<span class="kw">&gt;</span> <span class="str">03</span>
+<span class="fn">84 F1 10</span> <span class="num">43 01 03 00 01 71 00</span>
+<span class="cmt">// Decoded: P0300, P0171</span>
+
+<span class="cmt">// Clear DTCs and reset MIL</span>
+<span class="kw">&gt;</span> <span class="str">04</span>
+<span class="fn">84 F1 10</span> <span class="num">44</span>
+<span class="cmt">// DTCs cleared. MIL will turn off.</span>
+
+<span class="cmt">// Verify cleared</span>
+<span class="kw">&gt;</span> <span class="str">03</span>
+<span class="fn">84 F1 10</span> <span class="num">43 00</span>
+<span class="cmt">// No DTCs stored</span></pre>
+        </div>
+      </div>
+
+      <div class="code-block" style="margin-bottom: var(--space-6);">
+        <div class="code-block__header">
+          <span class="code-block__lang">Request Vehicle Information</span>
+        </div>
+        <div class="code-block__body">
+<pre><span class="cmt">// Request VIN (Service 09, PID 02)</span>
+<span class="kw">&gt;</span> <span class="str">0902</span>
+<span class="fn">84 F1 10</span> <span class="num">49 02 01 57 46 30</span>
+<span class="fn">84 F1 10</span> <span class="num">49 02 02 58 58 47</span>
+<span class="fn">84 F1 10</span> <span class="num">49 02 03 43 44 35</span>
+<span class="cmt">// Multi-frame ISO-TP response</span>
+<span class="cmt">// Decoded VIN: WF0XXGCD5...</span>
+
+<span class="cmt">// Request calibration ID</span>
+<span class="kw">&gt;</span> <span class="str">0904</span>
+<span class="cmt">// ECU calibration identifier</span></pre>
+        </div>
+      </div>
+
+
+      <h2 id="adapter-compat">Adapter Compatibility</h2>
+
+      <p>
+        ODB+ uses its UOAPL (Universal OBD-II Adapter Protocol Layer) to support
+        multiple adapter families transparently.
+      </p>
+
+      <div class="table-wrap" style="margin-bottom: var(--space-6);">
+        <table>
+          <thead>
+            <tr>
+              <th>Adapter Family</th>
+              <th>Driver</th>
+              <th>Features</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>ELM327 v2.x</td>
+              <td><code>ElmDriver</code></td>
+              <td>Full protocol support, AT commands</td>
+              <td><span class="badge badge--connected" style="font-size: 10px;">Supported</span></td>
+            </tr>
+            <tr>
+              <td>ELM327 v1.5</td>
+              <td><code>ElmDriver</code></td>
+              <td>Basic PIDs, limited protocol detection</td>
+              <td><span class="badge badge--warning" style="font-size: 10px;">Limited</span></td>
+            </tr>
+            <tr>
+              <td>STN1100 / STN2100</td>
+              <td><code>StnDriver</code></td>
+              <td>Enhanced PIDs, faster CAN, ST commands</td>
+              <td><span class="badge badge--connected" style="font-size: 10px;">Supported</span></td>
+            </tr>
+            <tr>
+              <td>ESP32-based</td>
+              <td><code>Esp32Driver</code></td>
+              <td>Custom firmware, direct CAN access</td>
+              <td><span class="badge badge--connected" style="font-size: 10px;">Supported</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+
+      <h2 id="troubleshooting">Troubleshooting</h2>
+
+      <h3>Connection Issues</h3>
+
+      <ul>
+        <li><strong>"UNABLE TO CONNECT"</strong> -- The adapter could not establish protocol communication. Try turning the engine on (running), then reconnect. Some vehicles require the engine running for bus initialization.</li>
+        <li><strong>"BUS INIT: ERROR"</strong> -- Protocol bus initialization failed. This can happen if the wrong protocol was selected. ODB+ will automatically try other protocols. If persistent, try a full adapter reset.</li>
+        <li><strong>"NO DATA" on all PIDs</strong> -- Check that <code>ATCAF1</code> is enabled (CAN auto formatting). Also verify the adapter is genuinely connected to the vehicle and not just powered by the OBD port.</li>
+        <li><strong>Bluetooth disconnects frequently</strong> -- Move the phone closer to the adapter. Some cheap adapters have weak Bluetooth radios. Ensure no other apps are competing for the Bluetooth connection.</li>
+      </ul>
+
+      <h3>Data Issues</h3>
+
+      <ul>
+        <li><strong>RPM reads 0 with engine running</strong> -- Some KWP2000 vehicles require <code>ATS1</code> (spaces on) for correct response parsing. ODB+ enables this by default, but check if a terminal command disabled it.</li>
+        <li><strong>Temperature reads -40 C</strong> -- The sensor is not responding. This is the default "no data" value (0x00 - 40 = -40). The ECU may not support this PID, or the sensor is disconnected.</li>
+        <li><strong>Supported PID count shows 0</strong> -- The initial <code>0100</code> query failed. This can happen if <code>ATCAF0</code> was sent. Reconnect to reset the adapter configuration.</li>
+      </ul>
+
+    </main>
+  </div>
+
+
+  <!-- FOOTER -->
+  <footer class="footer" role="contentinfo">
+    <div class="footer__grid">
+      <div class="footer__brand">
+        <a href="index.html" aria-label="ODB+ Home">
+          <svg viewBox="0 0 300 80" width="120" height="32" aria-hidden="true">
+            <defs><filter id="ftGlow"><feGaussianBlur in="SourceGraphic" stdDeviation="1.5" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter><linearGradient id="ftTrace" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#00D4FF" stop-opacity="0.1"/><stop offset="50%" stop-color="#00D4FF" stop-opacity="0.8"/><stop offset="100%" stop-color="#00D4FF" stop-opacity="0.1"/></linearGradient></defs>
+            <path d="M 30 10 L 18 20 L 18 60 L 30 70" fill="none" stroke="#00D4FF" stroke-width="2" stroke-linecap="round" opacity="0.7"/>
+            <path d="M 270 10 L 282 20 L 282 60 L 270 70" fill="none" stroke="#00D4FF" stroke-width="2" stroke-linecap="round" opacity="0.7"/>
+            <text x="90" y="52" font-family="Oxanium, sans-serif" font-size="42" font-weight="700" fill="#E6EDF3" letter-spacing="4" filter="url(#ftGlow)">ODB</text>
+            <text x="220" y="52" font-family="Oxanium, sans-serif" font-size="42" font-weight="700" fill="#00D4FF" letter-spacing="2" filter="url(#ftGlow)">+</text>
+            <line x1="40" y1="64" x2="260" y2="64" stroke="url(#ftTrace)" stroke-width="1.5"/>
+          </svg>
+        </a>
+        <p class="footer__tagline">Professional Android OBD-II diagnostics.</p>
+      </div>
+      <div class="footer__col">
+        <h3 class="footer__col-title">Product</h3>
+        <ul role="list"><li><a href="features.html">Features</a></li><li><a href="#">Download</a></li><li><a href="docs.html">Docs</a></li></ul>
+      </div>
+      <div class="footer__col">
+        <h3 class="footer__col-title">Resources</h3>
+        <ul role="list"><li><a href="docs.html">Getting Started</a></li><li><a href="#">OBD-II Reference</a></li><li><a href="#">Forums</a></li></ul>
+      </div>
+      <div class="footer__col">
+        <h3 class="footer__col-title">Company</h3>
+        <ul role="list"><li><a href="#">About</a></li><li><a href="contact.html">Contact</a></li><li><a href="#">Privacy</a></li></ul>
+      </div>
+    </div>
+    <div class="footer__bottom">
+      <p class="footer__copyright"><span class="prompt">&gt;</span> &copy; 2026 ODB+ // All rights reserved // v2.0.0</p>
+      <p class="footer__copyright">Built with obsession for diagnostics.</p>
+    </div>
+  </footer>
+
+
+  <script>
+    /* Mobile nav */
+    (function() {
+      var toggle = document.querySelector('.navbar__toggle');
+      var panel = document.querySelector('.navbar__mobile-panel');
+      if (!toggle || !panel) return;
+      toggle.addEventListener('click', function() {
+        var isOpen = panel.classList.toggle('is-open');
+        toggle.setAttribute('aria-expanded', isOpen);
+        var spans = toggle.querySelectorAll('span');
+        spans[0].style.transform = isOpen ? 'rotate(45deg) translate(5px, 5px)' : '';
+        spans[1].style.opacity = isOpen ? '0' : '';
+        spans[2].style.transform = isOpen ? 'rotate(-45deg) translate(5px, -5px)' : '';
+      });
+    })();
+
+    /* Sidebar active link tracking on scroll */
+    (function() {
+      var links = document.querySelectorAll('.docs-sidebar__link');
+      var headings = [];
+      links.forEach(function(link) {
+        var id = link.getAttribute('href');
+        if (id && id.startsWith('#')) {
+          var el = document.querySelector(id);
+          if (el) headings.push({ el: el, link: link });
+        }
+      });
+
+      function updateActive() {
+        var scrollY = window.scrollY + 120;
+        var active = headings[0];
+        headings.forEach(function(h) {
+          if (h.el.offsetTop <= scrollY) active = h;
+        });
+        links.forEach(function(l) { l.classList.remove('docs-sidebar__link--active'); });
+        if (active) active.link.classList.add('docs-sidebar__link--active');
+      }
+
+      window.addEventListener('scroll', updateActive, { passive: true });
+      updateActive();
+    })();
+  </script>
+</body>
+</html>

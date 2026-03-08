@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="ODB+ features: AI diagnostics, live data monitoring, 18,000+ error codes, terminal mode, session logging, and universal adapter support.">
+  <meta name="theme-color" content="#FFFFFF">
+  <title>Features — ODB+</title>
+  <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+  <a href="#main" class="skip-link">Skip to main content</a>
+
+  <!-- Inline SVG sprite -->
+  <svg xmlns="http://www.w3.org/2000/svg" style="display:none">
+    <symbol id="icon-ai" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 2l1.8 5.2L19 9l-5.2 1.8L12 16l-1.8-5.2L5 9l5.2-1.8L12 2z"/>
+      <path d="M18 14l.9 2.6L21.5 17.5l-2.6.9L18 21l-.9-2.6-2.6-.9 2.6-.9L18 14z"/>
+    </symbol>
+    <symbol id="icon-live" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M2 12h3l2-6 3 12 3-9 2 6 2-3h5"/>
+    </symbol>
+    <symbol id="icon-codes" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M6 2h8l6 6v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2z"/>
+      <path d="M14 2v6h6"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="13" y2="17"/>
+    </symbol>
+    <symbol id="icon-terminal" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="2" y="4" width="20" height="16" rx="2"/>
+      <polyline points="7 9 10 12 7 15"/><line x1="13" y1="15" x2="17" y2="15"/>
+    </symbol>
+    <symbol id="icon-logs" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M3 12a9 9 0 1 1 1.7 5.3"/>
+      <polyline points="3 17 3 12 8 12"/><polyline points="12 7 12 12 15.5 14"/>
+    </symbol>
+    <symbol id="icon-connect" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="19" r="1.5" fill="currentColor" stroke="none"/>
+      <path d="M8.5 15.5a5 5 0 0 1 7 0"/><path d="M5 12a9 9 0 0 1 14 0"/><path d="M1.5 8.5a13 13 0 0 1 21 0"/>
+    </symbol>
+    <symbol id="icon-tests" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="10"/><polyline points="8 12 11 15 16 9"/>
+    </symbol>
+    <symbol id="icon-parts" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94L6.73 20.15a2.13 2.13 0 0 1-3-3l6.79-6.79a6 6 0 0 1 7.94-7.94l-3.76 3.88z"/>
+    </symbol>
+    <symbol id="icon-forums" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
+    </symbol>
+    <symbol id="icon-sensors" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="2.5" fill="currentColor" stroke="none"/>
+      <path d="M7.8 7.8a6 6 0 0 0 0 8.4"/><path d="M16.2 7.8a6 6 0 0 1 0 8.4"/>
+      <path d="M4.9 4.9a10 10 0 0 0 0 14.2"/><path d="M19.1 4.9a10 10 0 0 1 0 14.2"/>
+    </symbol>
+    <symbol id="icon-download" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 3v12"/><polyline points="8 11 12 15 16 11"/>
+      <path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/>
+    </symbol>
+    <symbol id="icon-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="4 12 9 17 20 6"/>
+    </symbol>
+    <symbol id="icon-menu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
+    </symbol>
+    <symbol id="icon-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+    </symbol>
+  </svg>
+
+  <!-- Navigation -->
+  <nav class="navbar" role="navigation" aria-label="Main navigation">
+    <div class="navbar__inner">
+      <a href="index.html" class="navbar__logo" aria-label="ODB+ Home">
+        <svg viewBox="0 0 250 60" width="120" height="28" aria-hidden="true">
+          <style>.nl-text{font-family:-apple-system,'SF Pro Display','Helvetica Neue',system-ui,sans-serif;font-weight:600;font-size:36px;fill:#1D1D1F;letter-spacing:-0.5px}.nl-plus{font-family:-apple-system,'SF Pro Display','Helvetica Neue',system-ui,sans-serif;font-weight:300;font-size:36px;fill:#0066CC}.nl-pulse{fill:none;stroke:#0066CC;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}</style>
+          <text x="16" y="42" class="nl-text">ODB</text>
+          <text x="107" y="42" class="nl-plus">+</text>
+          <path class="nl-pulse" d="M140 30 L148 30 L152 18 L156 42 L160 24 L164 36 L168 30 L176 30"/>
+        </svg>
+      </a>
+      <ul class="navbar__links" role="list">
+        <li><a href="features.html" class="navbar__link" aria-current="page">Features</a></li>
+        <li><a href="docs.html" class="navbar__link">Docs</a></li>
+        <li><a href="index.html#how-it-works" class="navbar__link">How It Works</a></li>
+        <li><a href="contact.html" class="navbar__link">Contact</a></li>
+      </ul>
+      <div class="navbar__actions">
+        <a href="index.html#download" class="btn btn--primary btn--small">
+          <svg width="16" height="16" aria-hidden="true"><use href="#icon-download"/></svg>
+          Download
+        </a>
+        <button class="navbar__mobile-toggle" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="mobile-menu-feat">
+          <svg width="24" height="24" aria-hidden="true"><use href="#icon-menu"/></svg>
+        </button>
+      </div>
+    </div>
+    <div class="navbar__mobile-menu" id="mobile-menu-feat" aria-hidden="true">
+      <ul class="navbar__links" role="list">
+        <li><a href="features.html" class="navbar__link">Features</a></li>
+        <li><a href="docs.html" class="navbar__link">Docs</a></li>
+        <li><a href="index.html#how-it-works" class="navbar__link">How It Works</a></li>
+        <li><a href="contact.html" class="navbar__link">Contact</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <main id="main">
+
+    <!-- Page Header -->
+    <section class="hero" style="padding-bottom: var(--space-2xl);" aria-labelledby="feat-page-title">
+      <div class="container">
+        <p class="text-label mb-sm">Features</p>
+        <h1 id="feat-page-title" class="text-hero">Professional tools.<br>In your pocket.</h1>
+        <p class="hero__subtitle">
+          Every feature in ODB+ is designed with one goal: helping you understand your vehicle
+          without needing a $5,000 scan tool or an engineering degree.
+        </p>
+      </div>
+    </section>
+
+    <!-- Feature: AI Diagnostics -->
+    <section class="section" aria-labelledby="feat-ai">
+      <div class="container">
+        <div class="content-row">
+          <div class="content-row__text">
+            <div class="feature-card__icon mb-md" aria-hidden="true" style="color: var(--color-accent);">
+              <svg width="36" height="36"><use href="#icon-ai"/></svg>
+            </div>
+            <h2 id="feat-ai">AI-Powered Diagnostics</h2>
+            <p>
+              ODB+ includes a conversational AI assistant that has access to your vehicle's live sensor
+              data. Ask it anything: "Why is my check engine light on?", "Is this coolant temperature
+              normal?", or "What does P0171 mean for my specific car?"
+            </p>
+            <p>
+              The AI cross-references trouble codes with your live data to provide contextual,
+              vehicle-specific guidance. It can suggest repair procedures, estimate severity, and
+              help you decide whether to drive to the shop or call a tow truck.
+            </p>
+            <ul class="content-row__list">
+              <li><svg aria-hidden="true"><use href="#icon-check"/></svg> Context-aware responses using live data</li>
+              <li><svg aria-hidden="true"><use href="#icon-check"/></svg> Plain-language repair explanations</li>
+              <li><svg aria-hidden="true"><use href="#icon-check"/></svg> Severity assessment for each code</li>
+              <li><svg aria-hidden="true"><use href="#icon-check"/></svg> Step-by-step troubleshooting guides</li>
+            </ul>
+          </div>
+          <div class="content-row__media">
+            <svg viewBox="0 0 380 420" width="380" height="420" aria-hidden="true" style="border-radius: var(--radius-xl);">
+              <rect width="380" height="420" rx="16" fill="#F5F5F7"/>
+              <text x="24" y="40" font-family="-apple-system, system-ui, sans-serif" font-size="11" fill="#AEAEB2" font-weight="500" letter-spacing="0.5">AI CHAT</text>
+              <!-- User message -->
+              <rect x="100" y="60" width="256" height="48" rx="12" fill="#0066CC"/>
+              <text x="116" y="80" font-family="-apple-system, system-ui, sans-serif" font-size="12" fill="#FFF">Why is my check engine light on?</text>
+              <text x="116" y="96" font-family="-apple-system, system-ui, sans-serif" font-size="10" fill="rgba(255,255,255,0.7)">Just now</text>
+              <!-- AI response -->
+              <rect x="24" y="124" width="300" height="140" rx="12" fill="#FFF" stroke="#D2D2D7" stroke-width="1"/>
+              <text x="40" y="148" font-family="-apple-system, system-ui, sans-serif" font-size="10" fill="#0066CC" font-weight="600" letter-spacing="0.5">ODB+ AI</text>
+              <text x="40" y="168" font-family="-apple-system, system-ui, sans-serif" font-size="12" fill="#1D1D1F">Your vehicle has code P0171 active,</text>
+              <text x="40" y="184" font-family="-apple-system, system-ui, sans-serif" font-size="12" fill="#1D1D1F">indicating a lean condition on Bank 1.</text>
+              <text x="40" y="206" font-family="-apple-system, system-ui, sans-serif" font-size="12" fill="#6E6E73">Looking at your live O2 data, the short</text>
+              <text x="40" y="222" font-family="-apple-system, system-ui, sans-serif" font-size="12" fill="#6E6E73">term fuel trim is +18%, which confirms</text>
+              <text x="40" y="238" font-family="-apple-system, system-ui, sans-serif" font-size="12" fill="#6E6E73">the ECU is compensating for a lean mix.</text>
+              <text x="40" y="254" font-family="-apple-system, system-ui, sans-serif" font-size="11" fill="#0066CC">View suggested repairs...</text>
+              <!-- Live data badge -->
+              <rect x="24" y="280" width="332" height="48" rx="10" fill="#E8F0FE" stroke="#0066CC" stroke-width="0.5" stroke-opacity="0.3"/>
+              <circle cx="44" cy="304" r="6" fill="#34C759"/>
+              <text x="56" y="300" font-family="-apple-system, system-ui, sans-serif" font-size="9" fill="#0066CC" font-weight="600" letter-spacing="0.3">LIVE DATA REFERENCED</text>
+              <text x="56" y="314" font-family="-apple-system, system-ui, sans-serif" font-size="11" fill="#6E6E73">STFT1: +18.0% | LTFT1: +12.3% | O2 B1S1: 0.12V</text>
+              <!-- Input -->
+              <rect x="24" y="352" width="332" height="44" rx="22" fill="#FFF" stroke="#D2D2D7" stroke-width="1"/>
+              <text x="48" y="378" font-family="-apple-system, system-ui, sans-serif" font-size="13" fill="#AEAEB2">Ask about your vehicle...</text>
+              <circle cx="336" cy="374" r="14" fill="#0066CC"/>
+              <path d="M330 374 L336 368 L342 374" fill="none" stroke="#FFF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" transform="rotate(90 336 374)"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Feature: Live Data -->
+    <section class="section section--surface" aria-labelledby="feat-live">
+      <div class="container">
+        <div class="content-row">
+          <div class="content-row__text">
+            <div class="feature-card__icon mb-md" aria-hidden="true" style="color: var(--color-accent);">
+              <svg width="36" height="36"><use href="#icon-live"/></svg>
+            </div>
+            <h2 id="feat-live">Live Data Monitoring</h2>
+            <p>
+              Watch your vehicle's vital signs in real time. ODB+ displays over 120 standard OBD-II
+              parameters with clean, readable gauges that update multiple times per second. Monitor
+              everything from engine RPM and coolant temperature to oxygen sensor voltages and
+              catalytic converter efficiency.
+            </p>
+            <p>
+              Group sensors by system, create custom dashboards, and set alerts when values
+              leave normal ranges. The app highlights anomalies automatically so you can focus
+              on what matters.
+            </p>
+            <ul class="content-row__list">
+              <li><svg aria-hidden="true"><use href="#icon-check"/></svg> 120+ supported parameters</li>
+              <li><svg aria-hidden="true"><use href="#icon-check"/></svg> Real-time updates at up to 10Hz</li>
+              <li><svg aria-hidden="true"><use href="#icon-check"/></svg> Custom dashboard layouts</li>
+              <li><svg aria-hidden="true"><use href="#icon-check"/></svg> Automatic anomaly detection</li>
+            </ul>
+          </div>
+          <div class="content-row__media">
+            <svg viewBox="0 0 380 320" width="380" height="320" aria-hidden="true" style="border-radius: var(--radius-xl);">
+              <rect width="380" height="320" rx="16" fill="#F5F5F7"/>
+              <text x="24" y="36" font-family="-apple-system, system-ui, sans-serif" font-size="11" fill="#AEAEB2" font-weight="500" letter-spacing="0.5">LIVE DASHBOARD</text>
+              <!-- RPM gauge -->
+              <rect x="24" y="52" width="164" height="100" rx="12" fill="#FFF" stroke="#D2D2D7" stroke-width="1"/>
+              <text x="40" y="74" font-family="-apple-system, system-ui, sans-serif" font-size="9" fill="#AEAEB2" font-weight="500">RPM</text>
+              <text x="40" y="116" font-family="-apple-system, system-ui, sans-serif" font-size="36" fill="#1D1D1F" font-weight="300">847</text>
+              <rect x="40" y="128" width="100" height="4" rx="2" fill="#E8E8ED"/>
+              <rect x="40" y="128" width="14" height="4" rx="2" fill="#34C759"/>
+              <text x="40" y="144" font-family="-apple-system, system-ui, sans-serif" font-size="10" fill="#34C759" font-weight="500">Idle</text>
+              <!-- Coolant gauge -->
+              <rect x="196" y="52" width="164" height="100" rx="12" fill="#FFF" stroke="#D2D2D7" stroke-width="1"/>
+              <text x="212" y="74" font-family="-apple-system, system-ui, sans-serif" font-size="9" fill="#AEAEB2" font-weight="500">COOLANT TEMP</text>
+              <text x="212" y="116" font-family="-apple-system, system-ui, sans-serif" font-size="36" fill="#1D1D1F" font-weight="300">92</text>
+              <text x="254" y="116" font-family="-apple-system, system-ui, sans-serif" font-size="16" fill="#AEAEB2" font-weight="300">&#x00B0;C</text>
+              <rect x="212" y="128" width="100" height="4" rx="2" fill="#E8E8ED"/>
+              <rect x="212" y="128" width="72" height="4" rx="2" fill="#34C759"/>
+              <text x="212" y="144" font-family="-apple-system, system-ui, sans-serif" font-size="10" fill="#34C759" font-weight="500">Normal</text>
+              <!-- O2 Sensor -->
+              <rect x="24" y="164" width="164" height="100" rx="12" fill="#FFF" stroke="#D2D2D7" stroke-width="1"/>
+              <text x="40" y="186" font-family="-apple-system, system-ui, sans-serif" font-size="9" fill="#AEAEB2" font-weight="500">O2 SENSOR B1S1</text>
+              <text x="40" y="228" font-family="-apple-system, system-ui, sans-serif" font-size="36" fill="#1D1D1F" font-weight="300">0.72</text>
+              <text x="118" y="228" font-family="-apple-system, system-ui, sans-serif" font-size="16" fill="#AEAEB2" font-weight="300">V</text>
+              <text x="40" y="254" font-family="-apple-system, system-ui, sans-serif" font-size="10" fill="#34C759" font-weight="500">Rich</text>
+              <!-- STFT -->
+              <rect x="196" y="164" width="164" height="100" rx="12" fill="#FFF" stroke="#D2D2D7" stroke-width="1"/>
+              <text x="212" y="186" font-family="-apple-system, system-ui, sans-serif" font-size="9" fill="#AEAEB2" font-weight="500">SHORT FUEL TRIM 1</text>
+              <text x="212" y="228" font-family="-apple-system, system-ui, sans-serif" font-size="36" fill="#FF9500" font-weight="300">+18</text>
+              <text x="270" y="228" font-family="-apple-system, system-ui, sans-serif" font-size="16" fill="#AEAEB2" font-weight="300">%</text>
+              <text x="212" y="254" font-family="-apple-system, system-ui, sans-serif" font-size="10" fill="#FF9500" font-weight="500">Above normal</text>
+              <!-- Streaming indicator -->
+              <circle cx="350" y="30" r="4" fill="#34C759"/>
+              <text x="334" y="34" font-family="-apple-system, system-ui, sans-serif" font-size="9" fill="#34C759" text-anchor="end" font-weight="500">LIVE</text>
+              <!-- Bottom waveform -->
+              <path d="M24 296 L60 296 L72 280 L84 310 L96 286 L108 302 L120 290 L132 296 L380 296" fill="none" stroke="#D2D2D7" stroke-width="1"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Feature: Error Code Database -->
+    <section class="section" aria-labelledby="feat-codes">
+      <div class="container">
+        <div class="content-row">
+          <div class="content-row__text">
+            <div class="feature-card__icon mb-md" aria-hidden="true" style="color: var(--color-accent);">
+              <svg width="36" height="36"><use href="#icon-codes"/></svg>
+            </div>
+            <h2 id="feat-codes">18,000+ Error Code Database</h2>
+            <p>
+              Every standard OBD-II generic code, plus thousands of manufacturer-specific codes for
+              over 50 makes. Each entry includes a plain-language description, common causes ranked
+              by likelihood, and community-verified repair procedures with difficulty ratings.
+            </p>
+            <p>
+              Search by code number, symptom description, or affected system. Bookmark frequently
+              referenced codes and share them with your mechanic or community forums.
+            </p>
+            <ul class="content-row__list">
+              <li><svg aria-hidden="true"><use href="#icon-check"/></svg> Generic and manufacturer-specific codes</li>
+              <li><svg aria-hidden="true"><use href="#icon-check"/></svg> Ranked common causes</li>
+              <li><svg aria-hidden="true"><use href="#icon-check"/></svg> Community repair procedures</li>
+              <li><svg aria-hidden="true"><use href="#icon-check"/></svg> Full-text search</li>
+            </ul>
+          </div>
+          <div class="content-row__media">
+            <svg viewBox="0 0 380 340" width="380" height="340" aria-hidden="true" style="border-radius: var(--radius-xl);">
+              <rect width="380" height="340" rx="16" fill="#F5F5F7"/>
+              <!-- Search bar -->
+              <rect x="24" y="20" width="332" height="40" rx="20" fill="#FFF" stroke="#D2D2D7" stroke-width="1"/>
+              <text x="48" y="44" font-family="-apple-system, system-ui, sans-serif" font-size="13" fill="#AEAEB2">Search 18,000+ codes...</text>
+              <!-- Code entries -->
+              <rect x="24" y="76" width="332" height="56" rx="10" fill="#FFF" stroke="#D2D2D7" stroke-width="1"/>
+              <text x="40" y="98" font-family="ui-monospace, 'SF Mono', monospace" font-size="13" fill="#1D1D1F" font-weight="600">P0300</text>
+              <text x="100" y="98" font-family="-apple-system, system-ui, sans-serif" font-size="12" fill="#6E6E73">Random/Multiple Cylinder Misfire</text>
+              <circle cx="340" cy="98" r="5" fill="#FF3B30"/>
+              <text x="40" y="118" font-family="-apple-system, system-ui, sans-serif" font-size="10" fill="#AEAEB2">Powertrain | Generic | Critical</text>
+
+              <rect x="24" y="140" width="332" height="56" rx="10" fill="#FFF" stroke="#D2D2D7" stroke-width="1"/>
+              <text x="40" y="162" font-family="ui-monospace, 'SF Mono', monospace" font-size="13" fill="#1D1D1F" font-weight="600">P0171</text>
+              <text x="100" y="162" font-family="-apple-system, system-ui, sans-serif" font-size="12" fill="#6E6E73">System Too Lean (Bank 1)</text>
+              <circle cx="340" cy="162" r="5" fill="#FF9500"/>
+              <text x="40" y="182" font-family="-apple-system, system-ui, sans-serif" font-size="10" fill="#AEAEB2">Powertrain | Generic | Moderate</text>
+
+              <rect x="24" y="204" width="332" height="56" rx="10" fill="#FFF" stroke="#D2D2D7" stroke-width="1"/>
+              <text x="40" y="226" font-family="ui-monospace, 'SF Mono', monospace" font-size="13" fill="#1D1D1F" font-weight="600">P0420</text>
+              <text x="100" y="226" font-family="-apple-system, system-ui, sans-serif" font-size="12" fill="#6E6E73">Catalyst Efficiency Below Threshold</text>
+              <circle cx="340" cy="226" r="5" fill="#FF9500"/>
+              <text x="40" y="246" font-family="-apple-system, system-ui, sans-serif" font-size="10" fill="#AEAEB2">Powertrain | Generic | Moderate</text>
+
+              <rect x="24" y="268" width="332" height="56" rx="10" fill="#FFF" stroke="#D2D2D7" stroke-width="1"/>
+              <text x="40" y="290" font-family="ui-monospace, 'SF Mono', monospace" font-size="13" fill="#1D1D1F" font-weight="600">P0128</text>
+              <text x="100" y="290" font-family="-apple-system, system-ui, sans-serif" font-size="12" fill="#6E6E73">Thermostat Below Regulating Temp</text>
+              <circle cx="340" cy="290" r="5" fill="#34C759"/>
+              <text x="40" y="310" font-family="-apple-system, system-ui, sans-serif" font-size="10" fill="#AEAEB2">Powertrain | Generic | Low</text>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Feature: Terminal Mode -->
+    <section class="section section--surface" aria-labelledby="feat-terminal">
+      <div class="container">
+        <div class="content-row">
+          <div class="content-row__text">
+            <div class="feature-card__icon mb-md" aria-hidden="true" style="color: var(--color-accent);">
+              <svg width="36" height="36"><use href="#icon-terminal"/></svg>
+            </div>
+            <h2 id="feat-terminal">Terminal Mode</h2>
+            <p>
+              For users who want raw control, Terminal Mode provides direct access to OBD-II PIDs
+              and ELM327 AT commands. Send any command, see the raw response, and inspect headers
+              and byte-level data.
+            </p>
+            <p>
+              Includes full command history with search, autocomplete for common commands, and
+              syntax-colored output that distinguishes headers, data bytes, and status messages.
+            </p>
+            <ul class="content-row__list">
+              <li><svg aria-hidden="true"><use href="#icon-check"/></svg> Raw OBD-II and AT command access</li>
+              <li><svg aria-hidden="true"><use href="#icon-check"/></svg> Syntax-highlighted responses</li>
+              <li><svg aria-hidden="true"><use href="#icon-check"/></svg> Command history and autocomplete</li>
+              <li><svg aria-hidden="true"><use href="#icon-check"/></svg> Hex/ASCII response parsing</li>
+            </ul>
+          </div>
+          <div class="content-row__media">
+            <svg viewBox="0 0 380 320" width="380" height="320" aria-hidden="true" style="border-radius: var(--radius-xl);">
+              <rect width="380" height="320" rx="16" fill="#0A0E14"/>
+              <text x="24" y="32" font-family="ui-monospace, 'SF Mono', monospace" font-size="10" fill="#6E7681">$ ODB+ Terminal v2.0</text>
+              <text x="24" y="56" font-family="ui-monospace, 'SF Mono', monospace" font-size="11" fill="#34C759">></text>
+              <text x="36" y="56" font-family="ui-monospace, 'SF Mono', monospace" font-size="11" fill="#E6EDF3"> 010C</text>
+              <text x="24" y="76" font-family="ui-monospace, 'SF Mono', monospace" font-size="11" fill="#8B949E">84 F1 10</text>
+              <text x="96" y="76" font-family="ui-monospace, 'SF Mono', monospace" font-size="11" fill="#00D4FF">41 0C</text>
+              <text x="144" y="76" font-family="ui-monospace, 'SF Mono', monospace" font-size="11" fill="#FF9500">0D 48</text>
+              <text x="24" y="96" font-family="ui-monospace, 'SF Mono', monospace" font-size="10" fill="#6E7681">RPM: 848 rev/min</text>
+              <text x="24" y="124" font-family="ui-monospace, 'SF Mono', monospace" font-size="11" fill="#34C759">></text>
+              <text x="36" y="124" font-family="ui-monospace, 'SF Mono', monospace" font-size="11" fill="#E6EDF3"> 0105</text>
+              <text x="24" y="144" font-family="ui-monospace, 'SF Mono', monospace" font-size="11" fill="#8B949E">84 F1 10</text>
+              <text x="96" y="144" font-family="ui-monospace, 'SF Mono', monospace" font-size="11" fill="#00D4FF">41 05</text>
+              <text x="144" y="144" font-family="ui-monospace, 'SF Mono', monospace" font-size="11" fill="#FF9500">7C</text>
+              <text x="24" y="164" font-family="ui-monospace, 'SF Mono', monospace" font-size="10" fill="#6E7681">Coolant: 84 C (183 F)</text>
+              <text x="24" y="192" font-family="ui-monospace, 'SF Mono', monospace" font-size="11" fill="#34C759">></text>
+              <text x="36" y="192" font-family="ui-monospace, 'SF Mono', monospace" font-size="11" fill="#E6EDF3"> ATDP</text>
+              <text x="24" y="212" font-family="ui-monospace, 'SF Mono', monospace" font-size="11" fill="#E6EDF3">AUTO, ISO 14230-4 (KWP FAST)</text>
+              <text x="24" y="240" font-family="ui-monospace, 'SF Mono', monospace" font-size="11" fill="#34C759">></text>
+              <text x="36" y="240" font-family="ui-monospace, 'SF Mono', monospace" font-size="11" fill="#E6EDF3"> 03</text>
+              <text x="24" y="260" font-family="ui-monospace, 'SF Mono', monospace" font-size="11" fill="#8B949E">84 F1 10</text>
+              <text x="96" y="260" font-family="ui-monospace, 'SF Mono', monospace" font-size="11" fill="#00D4FF">43</text>
+              <text x="120" y="260" font-family="ui-monospace, 'SF Mono', monospace" font-size="11" fill="#34C759">00 00 00 00 00 00</text>
+              <text x="24" y="280" font-family="ui-monospace, 'SF Mono', monospace" font-size="10" fill="#34C759">No stored DTCs</text>
+              <!-- Cursor -->
+              <text x="24" y="308" font-family="ui-monospace, 'SF Mono', monospace" font-size="11" fill="#34C759">></text>
+              <rect x="36" y="296" width="8" height="14" fill="#00D4FF" opacity="0.8">
+                <animate attributeName="opacity" values="0.8;0;0.8" dur="1.2s" repeatCount="indefinite"/>
+              </rect>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Feature: Session Logger -->
+    <section class="section" aria-labelledby="feat-logs">
+      <div class="container">
+        <div class="content-row">
+          <div class="content-row__text">
+            <div class="feature-card__icon mb-md" aria-hidden="true" style="color: var(--color-accent);">
+              <svg width="36" height="36"><use href="#icon-logs"/></svg>
+            </div>
+            <h2 id="feat-logs">Session Logger and Replay</h2>
+            <p>
+              Record entire diagnostic sessions -- every command, every response, every sensor
+              reading -- with precise timestamps. Review sessions later to track intermittent
+              issues or compare readings before and after repairs.
+            </p>
+            <p>
+              Share session files with mechanics, forums, or other ODB+ users. Replay mode lets
+              you scrub through time to see exactly what your vehicle was doing at any moment.
+            </p>
+            <ul class="content-row__list">
+              <li><svg aria-hidden="true"><use href="#icon-check"/></svg> Full session recording with timestamps</li>
+              <li><svg aria-hidden="true"><use href="#icon-check"/></svg> Timeline scrubbing and replay</li>
+              <li><svg aria-hidden="true"><use href="#icon-check"/></svg> Export and share session files</li>
+              <li><svg aria-hidden="true"><use href="#icon-check"/></svg> Before/after comparison</li>
+            </ul>
+          </div>
+          <div class="content-row__media">
+            <svg viewBox="0 0 380 280" width="380" height="280" aria-hidden="true" style="border-radius: var(--radius-xl);">
+              <rect width="380" height="280" rx="16" fill="#F5F5F7"/>
+              <text x="24" y="36" font-family="-apple-system, system-ui, sans-serif" font-size="11" fill="#AEAEB2" font-weight="500" letter-spacing="0.5">SESSION LOG</text>
+              <!-- Timeline bar -->
+              <rect x="24" y="48" width="332" height="4" rx="2" fill="#D2D2D7"/>
+              <rect x="24" y="48" width="200" height="4" rx="2" fill="#0066CC"/>
+              <circle cx="224" cy="50" r="7" fill="#0066CC"/>
+              <text x="24" y="72" font-family="ui-monospace, 'SF Mono', monospace" font-size="9" fill="#AEAEB2">00:00</text>
+              <text x="180" y="72" font-family="ui-monospace, 'SF Mono', monospace" font-size="9" fill="#0066CC">03:24</text>
+              <text x="332" y="72" font-family="ui-monospace, 'SF Mono', monospace" font-size="9" fill="#AEAEB2" text-anchor="end">05:30</text>
+              <!-- Log entries -->
+              <rect x="24" y="88" width="332" height="36" rx="8" fill="#FFF" stroke="#D2D2D7" stroke-width="0.5"/>
+              <text x="40" y="110" font-family="ui-monospace, 'SF Mono', monospace" font-size="10" fill="#AEAEB2">00:02</text>
+              <text x="90" y="110" font-family="-apple-system, system-ui, sans-serif" font-size="11" fill="#34C759" font-weight="500">Connected</text>
+              <text x="160" y="110" font-family="-apple-system, system-ui, sans-serif" font-size="11" fill="#6E6E73">KWP2000 Fast Init</text>
+              <rect x="24" y="130" width="332" height="36" rx="8" fill="#FFF" stroke="#D2D2D7" stroke-width="0.5"/>
+              <text x="40" y="152" font-family="ui-monospace, 'SF Mono', monospace" font-size="10" fill="#AEAEB2">00:03</text>
+              <text x="90" y="152" font-family="-apple-system, system-ui, sans-serif" font-size="11" fill="#0066CC" font-weight="500">PID Scan</text>
+              <text x="160" y="152" font-family="-apple-system, system-ui, sans-serif" font-size="11" fill="#6E6E73">42 supported PIDs found</text>
+              <rect x="24" y="172" width="332" height="36" rx="8" fill="#FFF" stroke="#D2D2D7" stroke-width="0.5"/>
+              <text x="40" y="194" font-family="ui-monospace, 'SF Mono', monospace" font-size="10" fill="#AEAEB2">01:15</text>
+              <text x="90" y="194" font-family="-apple-system, system-ui, sans-serif" font-size="11" fill="#FF9500" font-weight="500">DTC Read</text>
+              <text x="160" y="194" font-family="-apple-system, system-ui, sans-serif" font-size="11" fill="#6E6E73">0 stored codes</text>
+              <rect x="24" y="214" width="332" height="36" rx="8" fill="#FFF" stroke="#D2D2D7" stroke-width="0.5"/>
+              <text x="40" y="236" font-family="ui-monospace, 'SF Mono', monospace" font-size="10" fill="#AEAEB2">03:24</text>
+              <text x="90" y="236" font-family="-apple-system, system-ui, sans-serif" font-size="11" fill="#1D1D1F" font-weight="500">Streaming</text>
+              <text x="160" y="236" font-family="-apple-system, system-ui, sans-serif" font-size="11" fill="#6E6E73">RPM: 2,450 | Coolant: 94C</text>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Additional features grid -->
+    <section class="section section--surface" aria-labelledby="more-features-title">
+      <div class="container">
+        <div class="features__header">
+          <p class="text-label mb-sm">And More</p>
+          <h2 id="more-features-title">Everything else<br>you would expect.</h2>
+        </div>
+
+        <div class="grid grid--3">
+          <article class="feature-card">
+            <div class="feature-card__icon" aria-hidden="true">
+              <svg><use href="#icon-tests"/></svg>
+            </div>
+            <h3 class="feature-card__title">Guided Tests</h3>
+            <p class="feature-card__desc">
+              Step-by-step diagnostic procedures including RPM tests, sensor verification,
+              and a real-time diagnostic HUD overlay.
+            </p>
+          </article>
+
+          <article class="feature-card">
+            <div class="feature-card__icon" aria-hidden="true">
+              <svg><use href="#icon-forums"/></svg>
+            </div>
+            <h3 class="feature-card__title">Community Forums</h3>
+            <p class="feature-card__desc">
+              Vehicle-specific forums covering 50+ manufacturers. Share diagnostic data,
+              ask questions, and learn from experienced mechanics.
+            </p>
+          </article>
+
+          <article class="feature-card">
+            <div class="feature-card__icon" aria-hidden="true">
+              <svg><use href="#icon-sensors"/></svg>
+            </div>
+            <h3 class="feature-card__title">Sensor Reference</h3>
+            <p class="feature-card__desc">
+              A complete reference library for every OBD-II sensor: what it measures, normal
+              ranges, testing procedures, and common failure modes.
+            </p>
+          </article>
+
+          <article class="feature-card">
+            <div class="feature-card__icon" aria-hidden="true">
+              <svg><use href="#icon-parts"/></svg>
+            </div>
+            <h3 class="feature-card__title">Parts Catalog</h3>
+            <p class="feature-card__desc">
+              Find the right replacement parts for your vehicle. Cross-referenced with
+              diagnostic codes for quick identification.
+            </p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="cta section--dark" aria-labelledby="feat-cta-title">
+      <div class="container">
+        <h2 id="feat-cta-title" class="text-display">Start diagnosing today.</h2>
+        <p class="text-large" style="max-width: 480px;">
+          Download ODB+ for free. All you need is an ELM327-compatible adapter and a vehicle.
+        </p>
+        <a href="index.html#download" class="btn btn--primary btn--large">
+          <svg width="18" height="18" aria-hidden="true"><use href="#icon-download"/></svg>
+          Download for Android
+        </a>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer" role="contentinfo">
+    <div class="container">
+      <div class="footer__grid">
+        <div class="footer__brand">
+          <a href="index.html" aria-label="ODB+ Home">
+            <svg viewBox="0 0 250 60" width="100" height="24" aria-hidden="true">
+              <style>.fl-text{font-family:-apple-system,'SF Pro Display','Helvetica Neue',system-ui,sans-serif;font-weight:600;font-size:36px;fill:#1D1D1F;letter-spacing:-0.5px}.fl-plus{font-family:-apple-system,'SF Pro Display','Helvetica Neue',system-ui,sans-serif;font-weight:300;font-size:36px;fill:#0066CC}</style>
+              <text x="16" y="42" class="fl-text">ODB</text>
+              <text x="107" y="42" class="fl-plus">+</text>
+            </svg>
+          </a>
+          <p>Professional automotive diagnostics for Android. Connect, diagnose, understand.</p>
+        </div>
+        <div class="footer__col">
+          <h4>Product</h4>
+          <ul role="list">
+            <li><a href="features.html">Features</a></li>
+            <li><a href="docs.html">Documentation</a></li>
+            <li><a href="index.html#download">Download</a></li>
+          </ul>
+        </div>
+        <div class="footer__col">
+          <h4>Resources</h4>
+          <ul role="list">
+            <li><a href="#">Adapter Guide</a></li>
+            <li><a href="#">DTC Database</a></li>
+            <li><a href="#">Forums</a></li>
+          </ul>
+        </div>
+        <div class="footer__col">
+          <h4>Company</h4>
+          <ul role="list">
+            <li><a href="contact.html">Contact</a></li>
+            <li><a href="#">About</a></li>
+            <li><a href="#">Support</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer__bottom">
+        <span class="footer__legal">2026 ODB+. All rights reserved.</span>
+        <ul class="footer__legal-links" role="list">
+          <li><a href="#">Privacy Policy</a></li>
+          <li><a href="#">Terms of Service</a></li>
+        </ul>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    (function() {
+      var toggle = document.querySelector('.navbar__mobile-toggle');
+      var menu = document.getElementById('mobile-menu-feat');
+      if (!toggle || !menu) return;
+      toggle.addEventListener('click', function() {
+        var isOpen = menu.classList.toggle('is-open');
+        toggle.setAttribute('aria-expanded', isOpen);
+        menu.setAttribute('aria-hidden', !isOpen);
+        var useEl = toggle.querySelector('use');
+        if (useEl) useEl.setAttribute('href', isOpen ? '#icon-close' : '#icon-menu');
+      });
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,72 @@
+<nav class="nav" role="navigation" aria-label="Main navigation">
+  <div class="nav__inner">
+    <a href="index.html" class="nav__logo" aria-label="ODB+ Diagnostic Systems - Home">
+      <svg viewBox="0 0 180 40" width="180" height="40" aria-hidden="true">
+        <defs>
+          <linearGradient id="navBoltGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#FF8C1A"/>
+            <stop offset="100%" stop-color="#CC5500"/>
+          </linearGradient>
+          <linearGradient id="navTextGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#FFFFFF"/>
+            <stop offset="50%" stop-color="#E0E0E0"/>
+            <stop offset="100%" stop-color="#B0B0B0"/>
+          </linearGradient>
+        </defs>
+        <polygon points="12,2 18,5 18,13 12,16 6,13 6,5" fill="url(#navBoltGrad)" stroke="#CC5500" stroke-width="1"/>
+        <circle cx="12" cy="9" r="3" fill="#1C1C1C" stroke="#FF6B00" stroke-width="0.8"/>
+        <text x="28" y="16" font-family="'Bebas Neue','Oswald','Arial Narrow',Impact,sans-serif" font-size="22" font-weight="700" letter-spacing="2" fill="url(#navTextGrad)">ODB</text>
+        <text x="86" y="16" font-family="'Bebas Neue','Oswald','Arial Narrow',Impact,sans-serif" font-size="22" font-weight="700" fill="#FF6B00">+</text>
+        <line x1="28" y1="22" x2="98" y2="22" stroke="#FF6B00" stroke-width="0.5" opacity="0.5"/>
+        <text x="29" y="30" font-family="'Rajdhani','Barlow Condensed',sans-serif" font-size="6" font-weight="600" letter-spacing="2.5" fill="#AAAAAA">DIAGNOSTIC SYSTEMS</text>
+      </svg>
+    </a>
+
+    <div class="nav__links" id="navLinks">
+      <a href="index.html" class="nav__link nav__link--active">Home</a>
+      <a href="features.html" class="nav__link">Features</a>
+      <a href="docs.html" class="nav__link">Docs</a>
+      <a href="contact.html" class="nav__link">Contact</a>
+      <a href="#download" class="btn btn--stripe btn--sm">Download</a>
+    </div>
+
+    <button class="nav__toggle" id="navToggle" aria-expanded="false" aria-controls="navDrawer" aria-label="Toggle navigation menu">
+      <span class="nav__toggle-bar"></span>
+      <span class="nav__toggle-bar"></span>
+      <span class="nav__toggle-bar"></span>
+    </button>
+  </div>
+
+  <div class="nav__drawer" id="navDrawer" aria-hidden="true">
+    <a href="index.html" class="nav__link nav__link--active">Home</a>
+    <a href="features.html" class="nav__link">Features</a>
+    <a href="docs.html" class="nav__link">Docs</a>
+    <a href="contact.html" class="nav__link">Contact</a>
+    <a href="#download" class="btn btn--stripe">Download</a>
+  </div>
+</nav>
+
+<script>
+  (function() {
+    var toggle = document.getElementById('navToggle');
+    var drawer = document.getElementById('navDrawer');
+    if (!toggle || !drawer) return;
+
+    toggle.addEventListener('click', function() {
+      var isOpen = drawer.classList.toggle('nav__drawer--open');
+      toggle.setAttribute('aria-expanded', isOpen);
+      drawer.setAttribute('aria-hidden', !isOpen);
+
+      var bars = toggle.querySelectorAll('.nav__toggle-bar');
+      if (isOpen) {
+        bars[0].style.transform = 'rotate(45deg) translate(5px, 5px)';
+        bars[1].style.opacity = '0';
+        bars[2].style.transform = 'rotate(-45deg) translate(5px, -5px)';
+      } else {
+        bars[0].style.transform = '';
+        bars[1].style.opacity = '';
+        bars[2].style.transform = '';
+      }
+    });
+  })();
+</script>

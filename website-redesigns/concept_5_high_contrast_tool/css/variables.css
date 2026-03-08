@@ -1,0 +1,103 @@
+/* ==========================================================================
+   ODB+ High Contrast Diagnostic Tool — Design Tokens
+   Pure black + matrix green. Maximum readability. Zero fluff.
+   ========================================================================== */
+
+:root {
+  /* --- Color Tokens --- */
+  --color-bg:            #000000;
+  --color-surface:       #111111;
+  --color-surface-2:     #1A1A1A;
+  --color-panel:         #0D0D0D;
+  --color-surface-alt:   #0A0A0A;
+
+  --color-primary:       #00FF88;
+  --color-primary-dim:   rgba(0, 255, 136, 0.15);
+  --color-primary-glow:  rgba(0, 255, 136, 0.3);
+  --color-secondary:     #00AAFF;
+  --color-secondary-dim: rgba(0, 170, 255, 0.15);
+
+  --color-warning:       #FFCC00;
+  --color-warning-dim:   rgba(255, 204, 0, 0.15);
+  --color-danger:        #FF2222;
+  --color-danger-dim:    rgba(255, 34, 34, 0.15);
+  --color-info:          #00CCFF;
+  --color-info-dim:      rgba(0, 204, 255, 0.15);
+  --color-success:       #00FF88;
+  --color-success-dim:   rgba(0, 255, 136, 0.15);
+
+  --color-text:          #FFFFFF;
+  --color-text-secondary:#CCCCCC;
+  --color-text-muted:    #888888;
+  --color-text-dim:      #555555;
+  --color-text-on-accent:#000000;
+
+  --color-border:        #333333;
+  --color-border-bright: #00FF88;
+  --color-border-dim:    #222222;
+
+  /* --- Typography --- */
+  --font-heading:   'Rajdhani', 'Exo 2', 'Segoe UI', sans-serif;
+  --font-body:      'Share Tech', 'Roboto', 'Segoe UI', sans-serif;
+  --font-mono:      'Share Tech Mono', 'Roboto Mono', 'Courier New', monospace;
+  --font-label:     'Barlow Condensed', 'Arial Narrow', sans-serif;
+
+  /* --- Font Sizes (fluid scale) --- */
+  --text-xs:    clamp(0.625rem, 0.55rem + 0.25vw, 0.75rem);    /* 10-12px */
+  --text-sm:    clamp(0.75rem, 0.7rem + 0.2vw, 0.875rem);      /* 12-14px */
+  --text-base:  clamp(0.875rem, 0.8rem + 0.3vw, 1rem);         /* 14-16px */
+  --text-lg:    clamp(1rem, 0.9rem + 0.4vw, 1.25rem);          /* 16-20px */
+  --text-xl:    clamp(1.25rem, 1rem + 0.8vw, 1.75rem);         /* 20-28px */
+  --text-2xl:   clamp(1.5rem, 1.2rem + 1.2vw, 2.25rem);        /* 24-36px */
+  --text-3xl:   clamp(2rem, 1.5rem + 2vw, 3.5rem);             /* 32-56px */
+  --text-4xl:   clamp(2.5rem, 1.8rem + 3vw, 4.5rem);           /* 40-72px */
+
+  /* --- Spacing --- */
+  --space-1:    0.25rem;  /* 4px */
+  --space-2:    0.5rem;   /* 8px */
+  --space-3:    0.75rem;  /* 12px */
+  --space-4:    1rem;     /* 16px */
+  --space-5:    1.5rem;   /* 24px */
+  --space-6:    2rem;     /* 32px */
+  --space-8:    3rem;     /* 48px */
+  --space-10:   4rem;     /* 64px */
+  --space-12:   5rem;     /* 80px */
+  --space-16:   8rem;     /* 128px */
+
+  /* --- Layout --- */
+  --max-width:        1280px;
+  --max-width-narrow: 960px;
+  --max-width-wide:   1440px;
+  --content-padding:  clamp(1rem, 3vw, 3rem);
+
+  /* --- Borders --- */
+  --border-width:     2px;
+  --border-thin:      1px;
+  --border-thick:     3px;
+  --radius-none:      0;
+  --radius-sm:        2px;
+  --radius-md:        4px;
+  --radius:           var(--radius-sm);
+
+  /* --- Transitions --- */
+  --transition-fast:    100ms ease;
+  --transition-base:    200ms ease;
+  --transition-slow:    400ms ease;
+
+  /* --- Z-index scale --- */
+  --z-base:     1;
+  --z-dropdown: 10;
+  --z-sticky:   20;
+  --z-overlay:  30;
+  --z-modal:    40;
+  --z-toast:    50;
+}
+
+/* Reduced motion: disable all animations */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --transition-fast:  0ms;
+    --transition-base:  0ms;
+    --transition-slow:  0ms;
+  }
+}

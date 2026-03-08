@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="ODB+ - Professional Android automotive diagnostics. AI-powered vehicle scanning with live data, 18,000+ error codes, and guided tests. Free download.">
+  <meta name="theme-color" content="#2563EB">
+  <title>ODB+ - AI-Powered Vehicle Diagnostics</title>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="../css/variables.css">
+  <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+
+  <!-- ============ NAVBAR ============ -->
+  <nav class="navbar" role="navigation" aria-label="Main navigation">
+    <div class="container navbar__inner">
+      <a href="index.html" class="navbar__logo" aria-label="ODB+ Home">
+        <svg viewBox="0 0 200 48" width="140" height="34" aria-hidden="true">
+          <defs>
+            <linearGradient id="nav-logo-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#2563EB"/>
+              <stop offset="100%" stop-color="#10B981"/>
+            </linearGradient>
+          </defs>
+          <g transform="translate(4, 4)">
+            <circle cx="20" cy="20" r="18" fill="none" stroke="url(#nav-logo-grad)" stroke-width="2.5"/>
+            <polyline points="6,20 12,20 15,10 18,28 21,14 24,26 27,20 34,20"
+                      fill="none" stroke="url(#nav-logo-grad)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="6" cy="20" r="2" fill="#2563EB"/>
+            <circle cx="34" cy="20" r="2" fill="#10B981"/>
+          </g>
+          <text x="54" y="34" font-family="Inter, sans-serif" font-size="28" font-weight="800" fill="#0F172A" letter-spacing="-1">ODB</text>
+          <text x="118" y="34" font-family="Inter, sans-serif" font-size="28" font-weight="800" fill="url(#nav-logo-grad)" letter-spacing="-1">+</text>
+        </svg>
+      </a>
+      <div class="navbar__links" role="menubar">
+        <a href="features.html" role="menuitem">Features</a>
+        <a href="#how-it-works" role="menuitem">How It Works</a>
+        <a href="docs.html" role="menuitem">Docs</a>
+        <a href="https://community.odbplus.com" role="menuitem">Community</a>
+        <a href="contact.html" role="menuitem">Contact</a>
+      </div>
+      <div class="navbar__actions">
+        <a href="#download" class="btn btn-primary btn-sm">Download App</a>
+        <button class="navbar__hamburger" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-menu" onclick="toggleMobileMenu()">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+    <div class="mobile-menu" id="mobile-menu" role="menu">
+      <a href="features.html" role="menuitem">Features</a>
+      <a href="#how-it-works" role="menuitem">How It Works</a>
+      <a href="docs.html" role="menuitem">Docs</a>
+      <a href="https://community.odbplus.com" role="menuitem">Community</a>
+      <a href="contact.html" role="menuitem">Contact</a>
+    </div>
+  </nav>
+
+
+  <!-- ============ HERO ============ -->
+  <section class="hero" aria-labelledby="hero-title">
+    <div class="container hero__inner">
+      <div class="hero__content">
+        <span class="badge badge--gradient hero__badge">Now with AI-Powered Diagnostics</span>
+        <h1 id="hero-title" class="hero__title">
+          Diagnose Any Vehicle.<br><span>AI-Powered.</span>
+        </h1>
+        <p class="hero__subtitle">
+          Connect to your car through any Bluetooth OBD-II adapter and get instant access to live sensor data,
+          diagnostic trouble codes, and AI-powered repair guidance. Professional-grade diagnostics in your pocket.
+        </p>
+        <div class="hero__actions">
+          <a href="#download" class="btn btn-primary btn-lg">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+              <polyline points="7,10 12,15 17,10"/>
+              <line x1="12" y1="15" x2="12" y2="3"/>
+            </svg>
+            Download Free
+          </a>
+          <a href="#app-preview" class="btn btn-secondary btn-lg">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+              <polygon points="5,3 19,12 5,21"/>
+            </svg>
+            View Demo
+          </a>
+        </div>
+        <div class="hero__trust" role="list" aria-label="Key stats">
+          <div class="hero__trust-item" role="listitem">
+            <svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z"/></svg>
+            18,000+ Error Codes
+          </div>
+          <div class="hero__trust-item" role="listitem">
+            <svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z"/></svg>
+            ELM327 Compatible
+          </div>
+          <div class="hero__trust-item" role="listitem">
+            <svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z"/></svg>
+            AI-Powered Analysis
+          </div>
+        </div>
+      </div>
+      <div class="hero__illustration" aria-hidden="true">
+        <svg viewBox="0 0 400 500" width="400" height="500">
+          <defs>
+            <linearGradient id="h-screen-bg" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" stop-color="#0D1117"/><stop offset="100%" stop-color="#151B23"/>
+            </linearGradient>
+            <linearGradient id="h-gauge-cyan" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="#00D4FF"/><stop offset="100%" stop-color="#10B981"/>
+            </linearGradient>
+            <filter id="h-glow"><feGaussianBlur stdDeviation="3" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+            <filter id="h-shadow"><feDropShadow dx="0" dy="8" stdDeviation="16" flood-color="#000" flood-opacity="0.15"/></filter>
+            <clipPath id="h-screen-clip"><rect x="108" y="52" width="184" height="396" rx="6"/></clipPath>
+          </defs>
+          <g filter="url(#h-shadow)">
+            <rect x="100" y="30" width="200" height="440" rx="24" fill="#1A1A2E"/>
+            <rect x="102" y="32" width="196" height="436" rx="22" fill="#0F0F1A" stroke="#2A2A3E" stroke-width="1"/>
+            <rect x="108" y="52" width="184" height="396" rx="6" fill="url(#h-screen-bg)"/>
+            <g clip-path="url(#h-screen-clip)">
+              <rect x="108" y="52" width="184" height="24" fill="#0D1117"/>
+              <text x="130" y="67" font-family="Inter, sans-serif" font-size="8" fill="#8B949E">9:41</text>
+              <rect x="142" y="84" width="116" height="26" rx="13" fill="#10B981" opacity="0.15"/>
+              <circle cx="158" cy="97" r="4" fill="#10B981"/>
+              <text x="168" y="101" font-family="Inter, sans-serif" font-size="10" font-weight="600" fill="#10B981">Connected</text>
+              <text x="200" y="128" text-anchor="middle" font-family="Inter, sans-serif" font-size="11" font-weight="600" fill="#E6EDF3">2024 Honda Civic</text>
+              <text x="200" y="142" text-anchor="middle" font-family="Inter, sans-serif" font-size="8" fill="#6E7681">VIN: 2HGFC...8H549</text>
+              <g transform="translate(200, 210)" filter="url(#h-glow)">
+                <circle cx="0" cy="0" r="52" fill="none" stroke="#1A2332" stroke-width="6"/>
+                <circle cx="0" cy="0" r="52" fill="none" stroke="url(#h-gauge-cyan)" stroke-width="6" stroke-dasharray="228 327" stroke-dashoffset="82" stroke-linecap="round" transform="rotate(-90)"/>
+                <text x="0" y="-6" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="22" font-weight="700" fill="#00D4FF">2,847</text>
+                <text x="0" y="10" text-anchor="middle" font-family="Inter, sans-serif" font-size="8" fill="#6E7681">RPM</text>
+              </g>
+              <g transform="translate(140, 300)">
+                <circle cx="0" cy="0" r="28" fill="none" stroke="#1A2332" stroke-width="4"/>
+                <circle cx="0" cy="0" r="28" fill="none" stroke="#00D4FF" stroke-width="4" stroke-dasharray="105 176" stroke-dashoffset="44" stroke-linecap="round" transform="rotate(-90)" opacity="0.8"/>
+                <text x="0" y="-2" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="14" font-weight="700" fill="#E6EDF3">62</text>
+                <text x="0" y="10" text-anchor="middle" font-family="Inter, sans-serif" font-size="7" fill="#6E7681">MPH</text>
+              </g>
+              <g transform="translate(260, 300)">
+                <circle cx="0" cy="0" r="28" fill="none" stroke="#1A2332" stroke-width="4"/>
+                <circle cx="0" cy="0" r="28" fill="none" stroke="#10B981" stroke-width="4" stroke-dasharray="88 176" stroke-dashoffset="44" stroke-linecap="round" transform="rotate(-90)" opacity="0.8"/>
+                <text x="0" y="-2" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="14" font-weight="700" fill="#E6EDF3">192</text>
+                <text x="0" y="10" text-anchor="middle" font-family="Inter, sans-serif" font-size="7" fill="#6E7681">&#176;F</text>
+              </g>
+              <g transform="translate(118, 350)">
+                <rect x="0" y="0" width="164" height="28" rx="6" fill="#1A2332"/>
+                <text x="10" y="18" font-family="Inter, sans-serif" font-size="8" fill="#8B949E">Fuel Trim (ST)</text>
+                <text x="144" y="18" text-anchor="end" font-family="'JetBrains Mono', monospace" font-size="9" font-weight="600" fill="#10B981">+2.3%</text>
+              </g>
+              <g transform="translate(118, 384)">
+                <rect x="0" y="0" width="164" height="28" rx="6" fill="#1A2332"/>
+                <text x="10" y="18" font-family="Inter, sans-serif" font-size="8" fill="#8B949E">MAF Rate</text>
+                <text x="144" y="18" text-anchor="end" font-family="'JetBrains Mono', monospace" font-size="9" font-weight="600" fill="#00D4FF">14.2 g/s</text>
+              </g>
+              <g transform="translate(118, 418)">
+                <rect x="0" y="0" width="164" height="28" rx="6" fill="#1A2332"/>
+                <text x="10" y="18" font-family="Inter, sans-serif" font-size="8" fill="#8B949E">Throttle</text>
+                <text x="144" y="18" text-anchor="end" font-family="'JetBrains Mono', monospace" font-size="9" font-weight="600" fill="#E6EDF3">18.4%</text>
+              </g>
+            </g>
+            <rect x="170" y="36" width="60" height="16" rx="8" fill="#0F0F1A"/>
+            <rect x="170" y="456" width="60" height="4" rx="2" fill="#2A2A3E"/>
+          </g>
+          <circle cx="56" cy="120" r="6" fill="#2563EB" opacity="0.15"/>
+          <circle cx="340" cy="90" r="8" fill="#10B981" opacity="0.12"/>
+          <circle cx="48" cy="380" r="10" fill="#2563EB" opacity="0.08"/>
+          <circle cx="356" cy="350" r="5" fill="#10B981" opacity="0.15"/>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ============ APP PREVIEW ============ -->
+  <section class="dashboard-preview" id="app-preview" aria-labelledby="preview-title">
+    <div class="container">
+      <div class="section-header">
+        <span class="badge badge--accent">Live Preview</span>
+        <h2 id="preview-title">See It In Action</h2>
+        <p>Real-time sensor data streaming at your fingertips. Watch gauges update live, monitor fuel trims, and catch anomalies before they become problems.</p>
+      </div>
+      <div class="dashboard-preview__frame" data-reveal>
+        <div class="dashboard-preview__mockup">
+          <div class="dashboard-preview__toolbar">
+            <span class="dashboard-preview__dot dashboard-preview__dot--red"></span>
+            <span class="dashboard-preview__dot dashboard-preview__dot--yellow"></span>
+            <span class="dashboard-preview__dot dashboard-preview__dot--green"></span>
+          </div>
+          <div class="dashboard-preview__screen">
+            <div class="mock-status">
+              <div class="mock-status__label">
+                <span class="mock-status__dot"></span>
+                ELM327 v2.3 - Bluetooth
+              </div>
+              <span class="mock-status__badge">ISO 14230-4 KWP</span>
+            </div>
+            <div class="mock-grid">
+              <div class="mock-gauge"><div class="mock-gauge__label">RPM</div><div class="mock-gauge__value">2,847</div><div class="mock-gauge__unit">rev/min</div></div>
+              <div class="mock-gauge"><div class="mock-gauge__label">Speed</div><div class="mock-gauge__value">62</div><div class="mock-gauge__unit">mph</div></div>
+              <div class="mock-gauge"><div class="mock-gauge__label">Coolant</div><div class="mock-gauge__value mock-gauge__value--green">192</div><div class="mock-gauge__unit">&#176;F</div></div>
+              <div class="mock-gauge"><div class="mock-gauge__label">Throttle</div><div class="mock-gauge__value">18.4</div><div class="mock-gauge__unit">%</div></div>
+              <div class="mock-gauge"><div class="mock-gauge__label">MAF Rate</div><div class="mock-gauge__value">14.2</div><div class="mock-gauge__unit">g/s</div></div>
+              <div class="mock-gauge"><div class="mock-gauge__label">Fuel Trim</div><div class="mock-gauge__value mock-gauge__value--green">+2.3</div><div class="mock-gauge__unit">% (ST)</div></div>
+              <div class="mock-gauge"><div class="mock-gauge__label">Intake Temp</div><div class="mock-gauge__value">78</div><div class="mock-gauge__unit">&#176;F</div></div>
+              <div class="mock-gauge"><div class="mock-gauge__label">Timing Adv.</div><div class="mock-gauge__value mock-gauge__value--amber">14.5</div><div class="mock-gauge__unit">&#176; BTDC</div></div>
+              <div class="mock-gauge"><div class="mock-gauge__label">O2 Bank 1</div><div class="mock-gauge__value">0.68</div><div class="mock-gauge__unit">V</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="dashboard-preview__callouts" data-reveal>
+        <div class="callout"><div class="callout__number">40+</div><div class="callout__label">Real-time Parameters</div></div>
+        <div class="callout"><div class="callout__number">&lt;100ms</div><div class="callout__label">Refresh Latency</div></div>
+        <div class="callout"><div class="callout__number">5</div><div class="callout__label">OBD-II Protocols</div></div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ============ FEATURES ============ -->
+  <section class="section" id="features" aria-labelledby="features-title">
+    <div class="container">
+      <div class="section-header">
+        <span class="badge">Features</span>
+        <h2 id="features-title">Everything You Need to Diagnose</h2>
+        <p>Professional-grade vehicle diagnostics with an intuitive interface. From live data to AI analysis, ODB+ covers every aspect of modern OBD-II diagnostics.</p>
+      </div>
+      <div class="features-grid" data-reveal>
+        <article class="card card--feature">
+          <div class="card__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M12 2l2.4 7.2L22 12l-7.6 2.8L12 22l-2.4-7.2L2 12l7.6-2.8z"/>
+              <path d="M18 2l.8 2.4L21 5.2l-2.2.8L18 8.4l-.8-2.4L15 5.2l2.2-.8z" opacity="0.5"/>
+            </svg>
+          </div>
+          <h3 class="card__title">AI Diagnostics</h3>
+          <p class="card__desc">Chat with an AI assistant that understands your vehicle's live data. Get instant repair recommendations and root cause analysis.</p>
+        </article>
+        <article class="card card--feature">
+          <div class="card__icon card__icon--accent">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <polyline points="1,12 5,12 7,4 10,20 13,8 16,16 18,12 23,12"/>
+            </svg>
+          </div>
+          <h3 class="card__title">Live Monitoring</h3>
+          <p class="card__desc">Real-time streaming of RPM, temperatures, O2 sensors, MAF, MAP, fuel trims, and dozens more with configurable layouts.</p>
+        </article>
+        <article class="card card--feature">
+          <div class="card__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+              <polyline points="14,2 14,8 20,8"/>
+              <circle cx="14" cy="15" r="3"/><line x1="16.5" y1="17.5" x2="19" y2="20"/>
+            </svg>
+          </div>
+          <h3 class="card__title">Error Code Database</h3>
+          <p class="card__desc">Access 18,000+ DTCs with full descriptions, probable causes, repair guides, and difficulty ratings.</p>
+        </article>
+        <article class="card card--feature">
+          <div class="card__icon card__icon--accent">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <polygon points="6,3 20,12 6,21"/>
+            </svg>
+          </div>
+          <h3 class="card__title">Session Logger</h3>
+          <p class="card__desc">Record diagnostic sessions with full PID data for later replay. Export logs as CSV or share with your mechanic.</p>
+        </article>
+        <article class="card card--feature">
+          <div class="card__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <rect x="2" y="3" width="20" height="18" rx="3"/>
+              <polyline points="6,10 10,13 6,16"/><line x1="13" y1="16" x2="18" y2="16"/>
+            </svg>
+          </div>
+          <h3 class="card__title">Terminal Mode</h3>
+          <p class="card__desc">Direct access to the OBD-II command interface. Send raw AT and PID commands and view hex responses.</p>
+        </article>
+        <article class="card card--feature">
+          <div class="card__icon card__icon--accent">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="12" cy="13" r="9"/>
+              <path d="M12 4v2"/><path d="M12 13l4-5" stroke-width="2"/>
+              <polyline points="8.5,13.5 10.5,15.5 15.5,10.5" stroke-width="1.5"/>
+            </svg>
+          </div>
+          <h3 class="card__title">Guided Tests</h3>
+          <p class="card__desc">Step-by-step diagnostic procedures like RPM tests, HUD overlays, and health check routines with pass/fail scoring.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ============ HOW IT WORKS ============ -->
+  <section class="section section--alt section--pattern" id="how-it-works" aria-labelledby="hiw-title">
+    <div class="container">
+      <div class="section-header">
+        <span class="badge">How It Works</span>
+        <h2 id="hiw-title">Three Steps to Diagnosis</h2>
+        <p>No complicated setup. No subscription walls. Just plug in your adapter, pair with Bluetooth, and start diagnosing.</p>
+      </div>
+      <div class="steps" data-reveal>
+        <div class="step">
+          <div class="step__number">1</div>
+          <h3 class="step__title">Connect</h3>
+          <p class="step__desc">Plug any ELM327-compatible OBD-II adapter into your vehicle's diagnostic port and pair it via Bluetooth or WiFi.</p>
+        </div>
+        <div class="step">
+          <div class="step__number">2</div>
+          <h3 class="step__title">Scan</h3>
+          <p class="step__desc">ODB+ automatically detects your vehicle's protocol, discovers supported sensors, and begins reading live data within seconds.</p>
+        </div>
+        <div class="step">
+          <div class="step__number">3</div>
+          <h3 class="step__title">Diagnose</h3>
+          <p class="step__desc">View real-time data, read trouble codes, chat with AI for repair advice, or run guided tests to pinpoint issues.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ============ BENEFITS (Stats) ============ -->
+  <section class="section" id="benefits" aria-labelledby="benefits-title">
+    <div class="container">
+      <div class="section-header">
+        <span class="badge badge--accent">By the Numbers</span>
+        <h2 id="benefits-title">Trusted by Enthusiasts and Professionals</h2>
+        <p>ODB+ brings professional scan tool capabilities to your Android device at a fraction of the cost.</p>
+      </div>
+      <div class="benefits-grid" data-reveal>
+        <div class="card card--stat">
+          <div class="stat-number">18,000+</div>
+          <h4 class="card__title">Error Codes</h4>
+          <p class="card__desc" style="margin-inline: auto;">Complete DTC database covering all manufacturers, generic and enhanced codes.</p>
+        </div>
+        <div class="card card--stat">
+          <div class="stat-number">50+</div>
+          <h4 class="card__title">Manufacturers</h4>
+          <p class="card__desc" style="margin-inline: auto;">Vehicle-specific forums and data for every major automotive brand worldwide.</p>
+        </div>
+        <div class="card card--stat">
+          <div class="stat-number">40+</div>
+          <h4 class="card__title">Live Parameters</h4>
+          <p class="card__desc" style="margin-inline: auto;">Stream dozens of real-time PIDs including RPM, speed, temps, fuel, and O2 sensors.</p>
+        </div>
+        <div class="card card--stat">
+          <div class="stat-number">5</div>
+          <h4 class="card__title">OBD Protocols</h4>
+          <p class="card__desc" style="margin-inline: auto;">Full support for CAN, KWP2000, ISO 9141, J1850 PWM, and J1850 VPW.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ============ CTA ============ -->
+  <section class="cta-section" id="download" aria-labelledby="cta-title">
+    <div class="container">
+      <div class="cta-block" data-reveal>
+        <h2 id="cta-title">Ready to Diagnose Smarter?</h2>
+        <p>Download ODB+ for free and start scanning your vehicle in minutes. No account required.</p>
+        <div class="flex flex--center flex--gap-4 flex--wrap">
+          <a href="#download" class="btn btn-secondary btn-lg">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+              <polyline points="7,10 12,15 17,10"/>
+              <line x1="12" y1="15" x2="12" y2="3"/>
+            </svg>
+            Download for Android
+          </a>
+          <a href="docs.html" class="btn btn-ghost btn-lg" style="color: rgba(255,255,255,0.9);">
+            Read the Docs
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+              <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12,5 19,12 12,19"/>
+            </svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ============ FOOTER ============ -->
+  <footer class="site-footer" role="contentinfo">
+    <div class="container">
+      <div class="footer__top">
+        <div class="footer__brand">
+          <a href="index.html" aria-label="ODB+ Home">
+            <svg viewBox="0 0 200 48" width="120" height="30" aria-hidden="true">
+              <defs>
+                <linearGradient id="f-logo-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="#2563EB"/><stop offset="100%" stop-color="#10B981"/>
+                </linearGradient>
+              </defs>
+              <g transform="translate(4, 4)">
+                <circle cx="20" cy="20" r="18" fill="none" stroke="url(#f-logo-grad)" stroke-width="2.5"/>
+                <polyline points="6,20 12,20 15,10 18,28 21,14 24,26 27,20 34,20" fill="none" stroke="url(#f-logo-grad)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <circle cx="6" cy="20" r="2" fill="#2563EB"/><circle cx="34" cy="20" r="2" fill="#10B981"/>
+              </g>
+              <text x="54" y="34" font-family="Inter, sans-serif" font-size="28" font-weight="800" fill="#0F172A" letter-spacing="-1">ODB</text>
+              <text x="118" y="34" font-family="Inter, sans-serif" font-size="28" font-weight="800" fill="url(#f-logo-grad)" letter-spacing="-1">+</text>
+            </svg>
+          </a>
+          <p>Professional-grade vehicle diagnostics powered by AI. Connect, scan, and diagnose any OBD-II vehicle.</p>
+        </div>
+        <div class="footer__col">
+          <h5>Product</h5>
+          <ul>
+            <li><a href="features.html">Features</a></li>
+            <li><a href="features.html#ai-diagnostics">AI Diagnostics</a></li>
+            <li><a href="features.html#live-data">Live Data</a></li>
+            <li><a href="#download">Download</a></li>
+          </ul>
+        </div>
+        <div class="footer__col">
+          <h5>Resources</h5>
+          <ul>
+            <li><a href="docs.html">Documentation</a></li>
+            <li><a href="docs.html#getting-started">Getting Started</a></li>
+            <li><a href="docs.html#adapters">Adapter Setup</a></li>
+            <li><a href="docs.html#faq">FAQ</a></li>
+          </ul>
+        </div>
+        <div class="footer__col">
+          <h5>Community</h5>
+          <ul>
+            <li><a href="https://community.odbplus.com">Forums</a></li>
+            <li><a href="https://github.com/odbplus">GitHub</a></li>
+            <li><a href="https://discord.gg/odbplus">Discord</a></li>
+          </ul>
+        </div>
+        <div class="footer__col">
+          <h5>Company</h5>
+          <ul>
+            <li><a href="#">About</a></li>
+            <li><a href="contact.html">Contact</a></li>
+            <li><a href="#">Privacy Policy</a></li>
+            <li><a href="#">Terms</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer__bottom">
+        <p class="footer__copyright">2026 ODB+. All rights reserved.</p>
+        <div class="footer__social" aria-label="Social media">
+          <a href="https://github.com/odbplus" aria-label="GitHub">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+          </a>
+          <a href="https://x.com/odbplus" aria-label="X (Twitter)">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+          </a>
+          <a href="https://discord.gg/odbplus" aria-label="Discord">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.317 4.3698a19.7913 19.7913 0 00-4.8851-1.5152.0741.0741 0 00-.0785.0371c-.211.3753-.4447.8648-.6083 1.2495-1.8447-.2762-3.68-.2762-5.4868 0-.1636-.3933-.4058-.8742-.6177-1.2495a.077.077 0 00-.0785-.037 19.7363 19.7363 0 00-4.8852 1.515.0699.0699 0 00-.0321.0277C.5334 9.0458-.319 13.5799.0992 18.0578a.0824.0824 0 00.0312.0561c2.0528 1.5076 4.0413 2.4228 5.9929 3.0294a.0777.0777 0 00.0842-.0276c.4616-.6304.8731-1.2952 1.226-1.9942a.076.076 0 00-.0416-.1057c-.6528-.2476-1.2743-.5495-1.8722-.8923a.077.077 0 01-.0076-.1277c.1258-.0943.2517-.1923.3718-.2914a.0743.0743 0 01.0776-.0105c3.9278 1.7933 8.18 1.7933 12.0614 0a.0739.0739 0 01.0785.0095c.1202.099.246.1981.3728.2924a.077.077 0 01-.0066.1276 12.2986 12.2986 0 01-1.873.8914.0766.0766 0 00-.0407.1067c.3604.698.7719 1.3628 1.225 1.9932a.076.076 0 00.0842.0286c1.961-.6067 3.9495-1.5219 6.0023-3.0294a.077.077 0 00.0313-.0552c.5004-5.177-.8382-9.6739-3.5485-13.6604a.061.061 0 00-.0312-.0286zM8.02 15.3312c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9555-2.4189 2.157-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.9555 2.4189-2.1569 2.4189zm7.9748 0c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9554-2.4189 2.1569-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.946 2.4189-2.1568 2.4189z"/></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+
+  <!-- ============ SCRIPTS ============ -->
+  <script>
+    /* Mobile menu toggle */
+    function toggleMobileMenu() {
+      const menu = document.getElementById('mobile-menu');
+      const btn = document.querySelector('.navbar__hamburger');
+      const isOpen = menu.classList.toggle('is-open');
+      btn.setAttribute('aria-expanded', isOpen);
+    }
+
+    /* Scroll reveal with IntersectionObserver */
+    (function() {
+      const targets = document.querySelectorAll('[data-reveal]');
+      if (!targets.length) return;
+
+      if (!('IntersectionObserver' in window)) {
+        targets.forEach(function(el) { el.classList.add('is-visible'); });
+        return;
+      }
+
+      const observer = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-visible');
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+      targets.forEach(function(el) { observer.observe(el); });
+    })();
+  </script>
+
+</body>
+</html>

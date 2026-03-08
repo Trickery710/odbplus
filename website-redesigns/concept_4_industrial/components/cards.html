@@ -1,0 +1,80 @@
+<div class="cards-showcase">
+
+  <!-- === Diagnostic Card (DTC Style) === -->
+  <div class="dtc-card">
+    <span class="dtc-card__code">P0300</span>
+    <div class="dtc-card__info">
+      <span class="dtc-card__title">Random / Multiple Cylinder Misfire Detected</span>
+      <span class="dtc-card__desc">Powertrain -- Fuel &amp; Air Metering -- General misfire event detected across multiple cylinders. Check ignition coils, spark plugs, fuel injectors, and vacuum leaks.</span>
+    </div>
+    <span class="status-badge status-badge--danger">Critical</span>
+  </div>
+
+  <!-- === Diagnostic Card (Pending) === -->
+  <div class="dtc-card" style="margin-top: var(--space-lg);">
+    <span class="dtc-card__code" style="color: var(--clr-secondary); border-color: var(--clr-secondary); background: var(--clr-warning-dim);">P0171</span>
+    <div class="dtc-card__info">
+      <span class="dtc-card__title">System Too Lean (Bank 1)</span>
+      <span class="dtc-card__desc">Fuel system is running lean on bank 1. Probable causes: vacuum leak, weak fuel pump, clogged fuel filter, or faulty MAF sensor.</span>
+    </div>
+    <span class="status-badge status-badge--warning">Pending</span>
+  </div>
+
+  <!-- === Stat Cards Row === -->
+  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: var(--space-lg); margin-top: var(--space-2xl);">
+    <div class="stat-card">
+      <div class="stat-card__value">18,247</div>
+      <div class="stat-card__unit">codes</div>
+      <div class="stat-card__label">Error Code Database</div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-card__value">2,847</div>
+      <div class="stat-card__unit">rpm</div>
+      <div class="stat-card__label">Current Engine Speed</div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-card__value">195</div>
+      <div class="stat-card__unit">deg F</div>
+      <div class="stat-card__label">Coolant Temperature</div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-card__value">14.7</div>
+      <div class="stat-card__unit">:1 ratio</div>
+      <div class="stat-card__label">Air-Fuel Ratio</div>
+    </div>
+  </div>
+
+  <!-- === Feature Panel Card === -->
+  <div class="panel panel--bracketed" style="margin-top: var(--space-2xl);">
+    <div style="display: flex; align-items: center; gap: var(--space-md); margin-bottom: var(--space-md);">
+      <div class="icon-recess" aria-hidden="true">
+        <svg viewBox="0 0 48 48" width="28" height="28">
+          <circle cx="24" cy="24" r="18" fill="none" stroke="#FF6B00" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+          <circle cx="24" cy="24" r="15" fill="none" stroke="#FF6B00" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          <line x1="24" y1="24" x2="33" y2="15" stroke="#FF6B00" stroke-width="2.5" stroke-linecap="round"/>
+          <circle cx="24" cy="24" r="3" fill="#FF6B00"/>
+        </svg>
+      </div>
+      <div>
+        <h3 style="font-family: var(--font-subheading); font-size: var(--fs-h3); text-transform: uppercase; letter-spacing: var(--ls-wide);">Guided RPM Test</h3>
+        <span class="label-text">Test Module // Rev. 3.2</span>
+      </div>
+      <span class="status-badge status-badge--active" style="margin-left: auto;">Ready</span>
+    </div>
+    <p style="color: var(--text-secondary); font-size: var(--fs-small); line-height: var(--lh-body);">
+      Automated RPM ramp test to verify engine response, throttle position correlation,
+      and idle stability. Monitors RPM, TPS, MAF, and fuel trim simultaneously.
+      Results exported as a timestamped diagnostic report.
+    </p>
+    <div style="display: flex; gap: var(--space-sm); margin-top: var(--space-lg); flex-wrap: wrap;">
+      <span class="spec-tag">3-min procedure</span>
+      <span class="spec-tag">4 PIDs monitored</span>
+      <span class="spec-tag">Auto-export</span>
+      <span class="spec-tag">Pass / Fail grading</span>
+    </div>
+  </div>
+
+</div>

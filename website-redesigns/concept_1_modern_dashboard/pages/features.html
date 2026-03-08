@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="ODB+ Features - AI diagnostics, live data monitoring, 18,000+ error codes, terminal mode, session logging, guided tests, and more.">
+  <meta name="theme-color" content="#2563EB">
+  <title>Features - ODB+</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/variables.css">
+  <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav class="navbar" role="navigation" aria-label="Main navigation">
+    <div class="container navbar__inner">
+      <a href="index.html" class="navbar__logo" aria-label="ODB+ Home">
+        <svg viewBox="0 0 200 48" width="140" height="34" aria-hidden="true">
+          <defs><linearGradient id="nav-logo-grad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#2563EB"/><stop offset="100%" stop-color="#10B981"/></linearGradient></defs>
+          <g transform="translate(4, 4)">
+            <circle cx="20" cy="20" r="18" fill="none" stroke="url(#nav-logo-grad)" stroke-width="2.5"/>
+            <polyline points="6,20 12,20 15,10 18,28 21,14 24,26 27,20 34,20" fill="none" stroke="url(#nav-logo-grad)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="6" cy="20" r="2" fill="#2563EB"/><circle cx="34" cy="20" r="2" fill="#10B981"/>
+          </g>
+          <text x="54" y="34" font-family="Inter, sans-serif" font-size="28" font-weight="800" fill="#0F172A" letter-spacing="-1">ODB</text>
+          <text x="118" y="34" font-family="Inter, sans-serif" font-size="28" font-weight="800" fill="url(#nav-logo-grad)" letter-spacing="-1">+</text>
+        </svg>
+      </a>
+      <div class="navbar__links" role="menubar">
+        <a href="features.html" role="menuitem" class="active">Features</a>
+        <a href="index.html#how-it-works" role="menuitem">How It Works</a>
+        <a href="docs.html" role="menuitem">Docs</a>
+        <a href="https://community.odbplus.com" role="menuitem">Community</a>
+        <a href="contact.html" role="menuitem">Contact</a>
+      </div>
+      <div class="navbar__actions">
+        <a href="#download" class="btn btn-primary btn-sm">Download App</a>
+        <button class="navbar__hamburger" aria-label="Open menu" aria-expanded="false" onclick="toggleMobileMenu()">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+    <div class="mobile-menu" id="mobile-menu" role="menu">
+      <a href="features.html">Features</a>
+      <a href="index.html#how-it-works">How It Works</a>
+      <a href="docs.html">Docs</a>
+      <a href="contact.html">Contact</a>
+    </div>
+  </nav>
+
+
+  <!-- Page Header -->
+  <section class="page-header">
+    <div class="container">
+      <span class="badge badge--gradient" style="margin-bottom: var(--space-4); display: inline-flex;">10 Core Features</span>
+      <h1>Built for Real Diagnostics</h1>
+      <p>Every feature in ODB+ was designed with real-world diagnostic workflows in mind -- from quick code reads to deep data analysis.</p>
+    </div>
+  </section>
+
+
+  <!-- Feature Details -->
+  <section class="section" aria-label="Feature details">
+    <div class="container">
+
+      <!-- 1. AI Diagnostics -->
+      <div class="feature-detail" id="ai-diagnostics" data-reveal>
+        <div class="feature-detail__content">
+          <span class="badge">AI-Powered</span>
+          <h2 style="margin-top: var(--space-3);">AI Diagnostics</h2>
+          <p>Chat with an AI assistant that has full context of your vehicle's live sensor data, stored trouble codes, and freeze frame information. Ask questions in natural language and get actionable repair advice.</p>
+          <ul style="margin-top: var(--space-4); list-style: none; display: flex; flex-direction: column; gap: var(--space-3);">
+            <li style="display: flex; align-items: flex-start; gap: var(--space-2); font-size: var(--text-sm); color: var(--color-text-secondary);">
+              <svg width="18" height="18" viewBox="0 0 20 20" fill="#10B981" style="flex-shrink:0; margin-top: 2px;" aria-hidden="true"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z"/></svg>
+              Natural language questions about your vehicle's health
+            </li>
+            <li style="display: flex; align-items: flex-start; gap: var(--space-2); font-size: var(--text-sm); color: var(--color-text-secondary);">
+              <svg width="18" height="18" viewBox="0 0 20 20" fill="#10B981" style="flex-shrink:0; margin-top: 2px;" aria-hidden="true"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z"/></svg>
+              Root cause analysis with probability scoring
+            </li>
+            <li style="display: flex; align-items: flex-start; gap: var(--space-2); font-size: var(--text-sm); color: var(--color-text-secondary);">
+              <svg width="18" height="18" viewBox="0 0 20 20" fill="#10B981" style="flex-shrink:0; margin-top: 2px;" aria-hidden="true"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z"/></svg>
+              Step-by-step repair instructions with difficulty ratings
+            </li>
+            <li style="display: flex; align-items: flex-start; gap: var(--space-2); font-size: var(--text-sm); color: var(--color-text-secondary);">
+              <svg width="18" height="18" viewBox="0 0 20 20" fill="#10B981" style="flex-shrink:0; margin-top: 2px;" aria-hidden="true"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z"/></svg>
+              Estimated repair costs and part numbers
+            </li>
+          </ul>
+        </div>
+        <div class="feature-detail__visual">
+          <svg viewBox="0 0 280 200" width="280" aria-hidden="true">
+            <rect x="0" y="0" width="280" height="200" rx="12" fill="#0D1117"/>
+            <rect x="16" y="16" width="180" height="32" rx="8" fill="#1A2332"/>
+            <text x="28" y="37" font-family="Inter, sans-serif" font-size="10" fill="#8B949E">What does P0420 mean for my car?</text>
+            <rect x="40" y="64" width="224" height="120" rx="8" fill="#151B23" stroke="#2A3A4E" stroke-width="1"/>
+            <circle cx="60" cy="84" r="10" fill="#2563EB" opacity="0.2"/>
+            <text x="57" y="88" font-family="Inter, sans-serif" font-size="11" font-weight="600" fill="#2563EB">AI</text>
+            <text x="80" y="84" font-family="Inter, sans-serif" font-size="9" fill="#E6EDF3">P0420: Catalyst System Efficiency Below</text>
+            <text x="80" y="96" font-family="Inter, sans-serif" font-size="9" fill="#E6EDF3">Threshold (Bank 1)</text>
+            <text x="56" y="120" font-family="Inter, sans-serif" font-size="8" fill="#8B949E">Based on your O2 sensor data (0.68V B1S1),</text>
+            <text x="56" y="132" font-family="Inter, sans-serif" font-size="8" fill="#8B949E">the catalytic converter may be degraded.</text>
+            <rect x="56" y="148" width="80" height="24" rx="6" fill="#2563EB" opacity="0.15"/>
+            <text x="68" y="164" font-family="Inter, sans-serif" font-size="8" font-weight="600" fill="#2563EB">View Repair Guide</text>
+          </svg>
+        </div>
+      </div>
+
+      <!-- 2. Live Data Monitoring -->
+      <div class="feature-detail" id="live-data" data-reveal>
+        <div class="feature-detail__content">
+          <span class="badge badge--accent">Real-Time</span>
+          <h2 style="margin-top: var(--space-3);">Live Data Monitoring</h2>
+          <p>Stream real-time sensor data from your vehicle's ECU with sub-100ms latency. Monitor RPM, coolant temperature, O2 voltage, mass airflow, manifold pressure, fuel trims, and dozens more parameters simultaneously.</p>
+          <ul style="margin-top: var(--space-4); list-style: none; display: flex; flex-direction: column; gap: var(--space-3);">
+            <li style="display: flex; align-items: flex-start; gap: var(--space-2); font-size: var(--text-sm); color: var(--color-text-secondary);">
+              <svg width="18" height="18" viewBox="0 0 20 20" fill="#10B981" style="flex-shrink:0; margin-top: 2px;" aria-hidden="true"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z"/></svg>
+              40+ standard OBD-II PIDs with automatic discovery
+            </li>
+            <li style="display: flex; align-items: flex-start; gap: var(--space-2); font-size: var(--text-sm); color: var(--color-text-secondary);">
+              <svg width="18" height="18" viewBox="0 0 20 20" fill="#10B981" style="flex-shrink:0; margin-top: 2px;" aria-hidden="true"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z"/></svg>
+              Configurable gauge, list, and graph views
+            </li>
+            <li style="display: flex; align-items: flex-start; gap: var(--space-2); font-size: var(--text-sm); color: var(--color-text-secondary);">
+              <svg width="18" height="18" viewBox="0 0 20 20" fill="#10B981" style="flex-shrink:0; margin-top: 2px;" aria-hidden="true"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z"/></svg>
+              Min/max/average tracking per session
+            </li>
+          </ul>
+        </div>
+        <div class="feature-detail__visual">
+          <svg viewBox="0 0 280 200" width="280" aria-hidden="true">
+            <rect x="0" y="0" width="280" height="200" rx="12" fill="#0D1117"/>
+            <!-- Mini gauges -->
+            <g transform="translate(70, 60)">
+              <circle cx="0" cy="0" r="36" fill="none" stroke="#1A2332" stroke-width="5"/>
+              <circle cx="0" cy="0" r="36" fill="none" stroke="#00D4FF" stroke-width="5" stroke-dasharray="158 226" stroke-dashoffset="57" stroke-linecap="round" transform="rotate(-90)"/>
+              <text x="0" y="2" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="16" font-weight="700" fill="#00D4FF">2847</text>
+              <text x="0" y="16" text-anchor="middle" font-family="Inter, sans-serif" font-size="7" fill="#6E7681">RPM</text>
+            </g>
+            <g transform="translate(210, 60)">
+              <circle cx="0" cy="0" r="36" fill="none" stroke="#1A2332" stroke-width="5"/>
+              <circle cx="0" cy="0" r="36" fill="none" stroke="#10B981" stroke-width="5" stroke-dasharray="120 226" stroke-dashoffset="57" stroke-linecap="round" transform="rotate(-90)"/>
+              <text x="0" y="2" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="16" font-weight="700" fill="#10B981">192</text>
+              <text x="0" y="16" text-anchor="middle" font-family="Inter, sans-serif" font-size="7" fill="#6E7681">TEMP &#176;F</text>
+            </g>
+            <!-- Waveform at bottom -->
+            <polyline points="16,160 40,145 60,165 80,140 100,155 120,135 140,160 160,130 180,150 200,142 220,155 240,138 264,148"
+                      fill="none" stroke="#00D4FF" stroke-width="1.5" opacity="0.6"/>
+            <text x="16" y="185" font-family="Inter, sans-serif" font-size="7" fill="#6E7681">O2 Voltage (Bank 1 Sensor 1)</text>
+          </svg>
+        </div>
+      </div>
+
+      <!-- 3. Error Code Database -->
+      <div class="feature-detail" id="error-codes" data-reveal>
+        <div class="feature-detail__content">
+          <span class="badge">Comprehensive</span>
+          <h2 style="margin-top: var(--space-3);">18,000+ Error Codes</h2>
+          <p>The most complete DTC database available on mobile. Every generic P0xxx code, plus manufacturer-specific codes for all major brands. Each entry includes a plain-language description, probable causes ranked by likelihood, repair difficulty, and estimated cost.</p>
+          <ul style="margin-top: var(--space-4); list-style: none; display: flex; flex-direction: column; gap: var(--space-3);">
+            <li style="display: flex; align-items: flex-start; gap: var(--space-2); font-size: var(--text-sm); color: var(--color-text-secondary);">
+              <svg width="18" height="18" viewBox="0 0 20 20" fill="#10B981" style="flex-shrink:0; margin-top: 2px;" aria-hidden="true"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z"/></svg>
+              Generic (P0xxx), Enhanced (P1xxx), and Body/Chassis codes
+            </li>
+            <li style="display: flex; align-items: flex-start; gap: var(--space-2); font-size: var(--text-sm); color: var(--color-text-secondary);">
+              <svg width="18" height="18" viewBox="0 0 20 20" fill="#10B981" style="flex-shrink:0; margin-top: 2px;" aria-hidden="true"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z"/></svg>
+              Read and clear codes with one tap
+            </li>
+            <li style="display: flex; align-items: flex-start; gap: var(--space-2); font-size: var(--text-sm); color: var(--color-text-secondary);">
+              <svg width="18" height="18" viewBox="0 0 20 20" fill="#10B981" style="flex-shrink:0; margin-top: 2px;" aria-hidden="true"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z"/></svg>
+              Freeze frame data for each stored code
+            </li>
+          </ul>
+        </div>
+        <div class="feature-detail__visual">
+          <svg viewBox="0 0 280 200" width="280" aria-hidden="true">
+            <rect x="0" y="0" width="280" height="200" rx="12" fill="#0D1117"/>
+            <!-- Code list items -->
+            <rect x="16" y="16" width="248" height="44" rx="8" fill="#151B23" stroke="#2A3A4E" stroke-width="1"/>
+            <circle cx="38" cy="38" r="12" fill="#EF4444" opacity="0.15"/>
+            <text x="33" y="42" font-family="'JetBrains Mono', monospace" font-size="9" font-weight="700" fill="#EF4444">!</text>
+            <text x="58" y="33" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="600" fill="#E6EDF3">P0420</text>
+            <text x="58" y="47" font-family="Inter, sans-serif" font-size="8" fill="#8B949E">Catalyst System Efficiency Below Threshold</text>
+            <rect x="212" y="28" width="40" height="18" rx="4" fill="#EF4444" opacity="0.1"/>
+            <text x="220" y="40" font-family="Inter, sans-serif" font-size="7" font-weight="600" fill="#EF4444">Active</text>
+
+            <rect x="16" y="68" width="248" height="44" rx="8" fill="#151B23" stroke="#2A3A4E" stroke-width="1"/>
+            <circle cx="38" cy="90" r="12" fill="#F59E0B" opacity="0.15"/>
+            <text x="33" y="94" font-family="'JetBrains Mono', monospace" font-size="9" font-weight="700" fill="#F59E0B">!</text>
+            <text x="58" y="85" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="600" fill="#E6EDF3">P0171</text>
+            <text x="58" y="99" font-family="Inter, sans-serif" font-size="8" fill="#8B949E">System Too Lean (Bank 1)</text>
+            <rect x="202" y="80" width="50" height="18" rx="4" fill="#F59E0B" opacity="0.1"/>
+            <text x="208" y="92" font-family="Inter, sans-serif" font-size="7" font-weight="600" fill="#F59E0B">Pending</text>
+
+            <rect x="16" y="120" width="248" height="44" rx="8" fill="#151B23" stroke="#2A3A4E" stroke-width="1"/>
+            <circle cx="38" cy="142" r="12" fill="#10B981" opacity="0.15"/>
+            <text x="34" y="146" font-family="Inter, sans-serif" font-size="11" fill="#10B981">&#10003;</text>
+            <text x="58" y="137" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="600" fill="#E6EDF3">P0301</text>
+            <text x="58" y="151" font-family="Inter, sans-serif" font-size="8" fill="#8B949E">Cylinder 1 Misfire Detected</text>
+            <rect x="205" y="132" width="47" height="18" rx="4" fill="#10B981" opacity="0.1"/>
+            <text x="211" y="144" font-family="Inter, sans-serif" font-size="7" font-weight="600" fill="#10B981">Cleared</text>
+
+            <text x="140" y="186" text-anchor="middle" font-family="Inter, sans-serif" font-size="8" fill="#6E7681">3 codes found -- Tap for details</text>
+          </svg>
+        </div>
+      </div>
+
+      <!-- 4. Session Logger -->
+      <div class="feature-detail" id="session-logger" data-reveal>
+        <div class="feature-detail__content">
+          <span class="badge badge--accent">Record & Replay</span>
+          <h2 style="margin-top: var(--space-3);">Session Logger & Replay</h2>
+          <p>Record complete diagnostic sessions with timestamped PID data for later analysis. Perfect for tracking intermittent issues, documenting test drives, or sharing data with a professional mechanic.</p>
+          <ul style="margin-top: var(--space-4); list-style: none; display: flex; flex-direction: column; gap: var(--space-3);">
+            <li style="display: flex; align-items: flex-start; gap: var(--space-2); font-size: var(--text-sm); color: var(--color-text-secondary);">
+              <svg width="18" height="18" viewBox="0 0 20 20" fill="#10B981" style="flex-shrink:0; margin-top: 2px;" aria-hidden="true"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z"/></svg>
+              Export as CSV, JSON, or shareable link
+            </li>
+            <li style="display: flex; align-items: flex-start; gap: var(--space-2); font-size: var(--text-sm); color: var(--color-text-secondary);">
+              <svg width="18" height="18" viewBox="0 0 20 20" fill="#10B981" style="flex-shrink:0; margin-top: 2px;" aria-hidden="true"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z"/></svg>
+              Replay sessions with time scrubbing
+            </li>
+            <li style="display: flex; align-items: flex-start; gap: var(--space-2); font-size: var(--text-sm); color: var(--color-text-secondary);">
+              <svg width="18" height="18" viewBox="0 0 20 20" fill="#10B981" style="flex-shrink:0; margin-top: 2px;" aria-hidden="true"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z"/></svg>
+              Annotate sessions with notes and bookmarks
+            </li>
+          </ul>
+        </div>
+        <div class="feature-detail__visual">
+          <svg viewBox="0 0 280 200" width="280" aria-hidden="true">
+            <rect x="0" y="0" width="280" height="200" rx="12" fill="#0D1117"/>
+            <rect x="16" y="16" width="248" height="28" rx="6" fill="#151B23"/>
+            <circle cx="30" cy="30" r="6" fill="#EF4444"/><polygon points="28,27 34,30 28,33" fill="white"/>
+            <rect x="48" y="26" width="140" height="6" rx="3" fill="#1A2332"/>
+            <rect x="48" y="26" width="80" height="6" rx="3" fill="url(#h-gauge-cyan)" opacity="0.8"/>
+            <text x="196" y="34" font-family="'JetBrains Mono', monospace" font-size="8" fill="#8B949E">02:34 / 05:12</text>
+            <!-- Waveform -->
+            <polyline points="16,80 36,70 56,85 76,60 96,75 116,55 136,80 156,50 176,70 196,65 216,78 236,58 256,72"
+                      fill="none" stroke="#00D4FF" stroke-width="1.5"/>
+            <text x="16" y="100" font-family="Inter, sans-serif" font-size="7" fill="#6E7681">RPM over time</text>
+            <polyline points="16,130 36,128 56,135 76,125 96,132 116,120 136,138 156,115 176,130 196,127 216,133 236,122 256,128"
+                      fill="none" stroke="#10B981" stroke-width="1.5"/>
+            <text x="16" y="150" font-family="Inter, sans-serif" font-size="7" fill="#6E7681">Coolant temp over time</text>
+            <!-- Bookmark marker -->
+            <line x1="156" y1="52" x2="156" y2="150" stroke="#F59E0B" stroke-width="1" stroke-dasharray="3 2" opacity="0.5"/>
+            <rect x="146" y="160" width="44" height="16" rx="4" fill="#F59E0B" opacity="0.15"/>
+            <text x="152" y="171" font-family="Inter, sans-serif" font-size="7" font-weight="600" fill="#F59E0B">Bookmark</text>
+          </svg>
+        </div>
+      </div>
+
+      <!-- 5. Terminal Mode -->
+      <div class="feature-detail" id="terminal" data-reveal>
+        <div class="feature-detail__content">
+          <span class="badge">Advanced</span>
+          <h2 style="margin-top: var(--space-3);">Terminal Mode</h2>
+          <p>Full raw command access to the OBD-II adapter. Send AT configuration commands, custom PID requests, or protocol-specific queries. View raw hex responses with syntax highlighting. Essential for developers and advanced diagnosticians.</p>
+          <ul style="margin-top: var(--space-4); list-style: none; display: flex; flex-direction: column; gap: var(--space-3);">
+            <li style="display: flex; align-items: flex-start; gap: var(--space-2); font-size: var(--text-sm); color: var(--color-text-secondary);">
+              <svg width="18" height="18" viewBox="0 0 20 20" fill="#10B981" style="flex-shrink:0; margin-top: 2px;" aria-hidden="true"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z"/></svg>
+              Command history and favorites
+            </li>
+            <li style="display: flex; align-items: flex-start; gap: var(--space-2); font-size: var(--text-sm); color: var(--color-text-secondary);">
+              <svg width="18" height="18" viewBox="0 0 20 20" fill="#10B981" style="flex-shrink:0; margin-top: 2px;" aria-hidden="true"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z"/></svg>
+              Hex response highlighting and byte parsing
+            </li>
+            <li style="display: flex; align-items: flex-start; gap: var(--space-2); font-size: var(--text-sm); color: var(--color-text-secondary);">
+              <svg width="18" height="18" viewBox="0 0 20 20" fill="#10B981" style="flex-shrink:0; margin-top: 2px;" aria-hidden="true"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z"/></svg>
+              AT command reference built in
+            </li>
+          </ul>
+        </div>
+        <div class="feature-detail__visual">
+          <svg viewBox="0 0 280 200" width="280" aria-hidden="true">
+            <rect x="0" y="0" width="280" height="200" rx="12" fill="#0A0E14"/>
+            <text x="16" y="28" font-family="'JetBrains Mono', monospace" font-size="9" fill="#6E7681">&gt; ATZ</text>
+            <text x="16" y="44" font-family="'JetBrains Mono', monospace" font-size="9" fill="#10B981">ELM327 v2.3</text>
+            <text x="16" y="64" font-family="'JetBrains Mono', monospace" font-size="9" fill="#6E7681">&gt; ATDP</text>
+            <text x="16" y="80" font-family="'JetBrains Mono', monospace" font-size="9" fill="#00D4FF">AUTO, ISO 14230-4 (KWP FAST)</text>
+            <text x="16" y="100" font-family="'JetBrains Mono', monospace" font-size="9" fill="#6E7681">&gt; 0100</text>
+            <text x="16" y="116" font-family="'JetBrains Mono', monospace" font-size="9" fill="#E6EDF3">84 F1 10 <tspan fill="#F59E0B">41 00</tspan> <tspan fill="#00D4FF">BE 3E B8 13</tspan></text>
+            <text x="16" y="136" font-family="'JetBrains Mono', monospace" font-size="9" fill="#6E7681">&gt; 010C</text>
+            <text x="16" y="152" font-family="'JetBrains Mono', monospace" font-size="9" fill="#E6EDF3">84 F1 10 <tspan fill="#F59E0B">41 0C</tspan> <tspan fill="#00D4FF">0B 28</tspan></text>
+            <text x="16" y="168" font-family="'JetBrains Mono', monospace" font-size="8" fill="#8B949E">  = 2,850 RPM</text>
+            <rect x="16" y="180" width="8" height="12" rx="1" fill="#00D4FF" opacity="0.8"/>
+          </svg>
+        </div>
+      </div>
+
+      <!-- 6. Guided Tests -->
+      <div class="feature-detail" id="guided-tests" data-reveal>
+        <div class="feature-detail__content">
+          <span class="badge badge--accent">Interactive</span>
+          <h2 style="margin-top: var(--space-3);">Guided Tests</h2>
+          <p>Follow structured diagnostic procedures with real-time pass/fail feedback. RPM steady-state tests, coolant warm-up curves, O2 sensor response checks, and more. The diagnostic HUD provides an at-a-glance overlay of critical parameters.</p>
+          <ul style="margin-top: var(--space-4); list-style: none; display: flex; flex-direction: column; gap: var(--space-3);">
+            <li style="display: flex; align-items: flex-start; gap: var(--space-2); font-size: var(--text-sm); color: var(--color-text-secondary);">
+              <svg width="18" height="18" viewBox="0 0 20 20" fill="#10B981" style="flex-shrink:0; margin-top: 2px;" aria-hidden="true"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z"/></svg>
+              Step-by-step instructions with live data validation
+            </li>
+            <li style="display: flex; align-items: flex-start; gap: var(--space-2); font-size: var(--text-sm); color: var(--color-text-secondary);">
+              <svg width="18" height="18" viewBox="0 0 20 20" fill="#10B981" style="flex-shrink:0; margin-top: 2px;" aria-hidden="true"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z"/></svg>
+              Diagnostic HUD overlay mode
+            </li>
+            <li style="display: flex; align-items: flex-start; gap: var(--space-2); font-size: var(--text-sm); color: var(--color-text-secondary);">
+              <svg width="18" height="18" viewBox="0 0 20 20" fill="#10B981" style="flex-shrink:0; margin-top: 2px;" aria-hidden="true"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z"/></svg>
+              Exportable test reports
+            </li>
+          </ul>
+        </div>
+        <div class="feature-detail__visual">
+          <svg viewBox="0 0 280 200" width="280" aria-hidden="true">
+            <rect x="0" y="0" width="280" height="200" rx="12" fill="#0D1117"/>
+            <text x="140" y="24" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" font-weight="600" fill="#E6EDF3">RPM Steady-State Test</text>
+            <!-- Progress steps -->
+            <circle cx="80" cy="48" r="10" fill="#10B981"/><text x="77" y="52" font-family="Inter, sans-serif" font-size="9" font-weight="700" fill="white">&#10003;</text>
+            <line x1="90" y1="48" x2="130" y2="48" stroke="#10B981" stroke-width="2"/>
+            <circle cx="140" cy="48" r="10" fill="#2563EB"/><text x="137" y="52" font-family="Inter, sans-serif" font-size="9" font-weight="700" fill="white">2</text>
+            <line x1="150" y1="48" x2="190" y2="48" stroke="#1A2332" stroke-width="2"/>
+            <circle cx="200" cy="48" r="10" fill="#1A2332" stroke="#2A3A4E" stroke-width="1"/><text x="197" y="52" font-family="Inter, sans-serif" font-size="9" fill="#6E7681">3</text>
+            <!-- Target zone -->
+            <rect x="24" y="72" width="232" height="64" rx="8" fill="#151B23" stroke="#2A3A4E" stroke-width="1"/>
+            <text x="40" y="90" font-family="Inter, sans-serif" font-size="8" fill="#8B949E">Hold RPM between 2,500 - 3,000</text>
+            <rect x="40" y="100" width="200" height="8" rx="4" fill="#1A2332"/>
+            <rect x="100" y="100" width="80" height="8" rx="4" fill="#10B981" opacity="0.2"/>
+            <rect x="132" y="97" width="4" height="14" rx="2" fill="#00D4FF"/>
+            <text x="40" y="128" font-family="'JetBrains Mono', monospace" font-size="14" font-weight="700" fill="#00D4FF">2,847 RPM</text>
+            <rect x="150" y="116" width="40" height="18" rx="4" fill="#10B981" opacity="0.15"/>
+            <text x="158" y="128" font-family="Inter, sans-serif" font-size="8" font-weight="600" fill="#10B981">PASS</text>
+            <!-- Timer -->
+            <text x="140" y="165" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="11" fill="#8B949E">Hold for: 12s / 30s</text>
+            <rect x="40" y="175" width="200" height="4" rx="2" fill="#1A2332"/>
+            <rect x="40" y="175" width="80" height="4" rx="2" fill="url(#h-gauge-cyan)"/>
+          </svg>
+        </div>
+      </div>
+
+      <!-- 7-10: Additional features in a grid -->
+      <div style="margin-top: var(--space-16);">
+        <div class="section-header">
+          <h2>And More</h2>
+          <p>ODB+ goes beyond basic diagnostics with community features, reference materials, and hardware tools.</p>
+        </div>
+        <div class="features-grid" data-reveal>
+          <article class="card card--feature">
+            <div class="card__icon card__icon--accent">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                <path d="M8 9h8" opacity="0.5"/><path d="M8 13h5" opacity="0.5"/>
+              </svg>
+            </div>
+            <h3 class="card__title">Vehicle Forums</h3>
+            <p class="card__desc">Browse and post in manufacturer-specific forums covering 50+ brands. Get answers from fellow owners and experienced mechanics.</p>
+          </article>
+          <article class="card card--feature">
+            <div class="card__icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <circle cx="12" cy="12" r="3"/><circle cx="12" cy="12" r="1" fill="currentColor" stroke="none"/>
+                <line x1="12" y1="2" x2="12" y2="9"/><line x1="12" y1="15" x2="12" y2="22"/>
+                <line x1="2" y1="12" x2="9" y2="12"/><line x1="15" y1="12" x2="22" y2="12"/>
+              </svg>
+            </div>
+            <h3 class="card__title">Sensor Reference</h3>
+            <p class="card__desc">Comprehensive sensor library with normal operating ranges, testing procedures, wiring diagrams, and replacement part numbers.</p>
+          </article>
+          <article class="card card--feature">
+            <div class="card__icon card__icon--accent">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>
+              </svg>
+            </div>
+            <h3 class="card__title">Parts Catalog</h3>
+            <p class="card__desc">Search for replacement parts by trouble code or component. Compare prices across retailers and find the right part for your exact vehicle.</p>
+          </article>
+          <article class="card card--feature">
+            <div class="card__icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M6.5 6.5l11 11L12 23V1l5.5 5.5-11 11"/>
+                <path d="M2 8.5a7 7 0 0 1 0 7" opacity="0.5"/>
+                <path d="M22 8.5a7 7 0 0 0 0 7" opacity="0.5"/>
+              </svg>
+            </div>
+            <h3 class="card__title">Adapter Compatibility</h3>
+            <p class="card__desc">Verified compatibility with 100+ ELM327 adapters. Automatic detection of adapter family, firmware version, and supported capabilities.</p>
+          </article>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+
+  <!-- CTA -->
+  <section class="cta-section" id="download">
+    <div class="container">
+      <div class="cta-block" data-reveal>
+        <h2>Start Diagnosing Today</h2>
+        <p>Download ODB+ for free. No account required. Just connect your adapter and go.</p>
+        <a href="#download" class="btn btn-secondary btn-lg">Download for Android</a>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- Footer -->
+  <footer class="site-footer" role="contentinfo">
+    <div class="container">
+      <div class="footer__top">
+        <div class="footer__brand">
+          <a href="index.html" aria-label="ODB+ Home">
+            <svg viewBox="0 0 200 48" width="120" height="30" aria-hidden="true">
+              <defs><linearGradient id="f-logo-grad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#2563EB"/><stop offset="100%" stop-color="#10B981"/></linearGradient></defs>
+              <g transform="translate(4, 4)"><circle cx="20" cy="20" r="18" fill="none" stroke="url(#f-logo-grad)" stroke-width="2.5"/><polyline points="6,20 12,20 15,10 18,28 21,14 24,26 27,20 34,20" fill="none" stroke="url(#f-logo-grad)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="6" cy="20" r="2" fill="#2563EB"/><circle cx="34" cy="20" r="2" fill="#10B981"/></g>
+              <text x="54" y="34" font-family="Inter, sans-serif" font-size="28" font-weight="800" fill="#0F172A" letter-spacing="-1">ODB</text>
+              <text x="118" y="34" font-family="Inter, sans-serif" font-size="28" font-weight="800" fill="url(#f-logo-grad)" letter-spacing="-1">+</text>
+            </svg>
+          </a>
+          <p>Professional-grade vehicle diagnostics powered by AI.</p>
+        </div>
+        <div class="footer__col"><h5>Product</h5><ul><li><a href="features.html">Features</a></li><li><a href="#download">Download</a></li></ul></div>
+        <div class="footer__col"><h5>Resources</h5><ul><li><a href="docs.html">Documentation</a></li><li><a href="docs.html#faq">FAQ</a></li></ul></div>
+        <div class="footer__col"><h5>Community</h5><ul><li><a href="https://community.odbplus.com">Forums</a></li><li><a href="https://github.com/odbplus">GitHub</a></li></ul></div>
+        <div class="footer__col"><h5>Company</h5><ul><li><a href="contact.html">Contact</a></li><li><a href="#">Privacy</a></li></ul></div>
+      </div>
+      <div class="footer__bottom">
+        <p class="footer__copyright">2026 ODB+. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    function toggleMobileMenu() {
+      const menu = document.getElementById('mobile-menu');
+      const btn = document.querySelector('.navbar__hamburger');
+      const isOpen = menu.classList.toggle('is-open');
+      btn.setAttribute('aria-expanded', isOpen);
+    }
+    (function() {
+      const targets = document.querySelectorAll('[data-reveal]');
+      if (!targets.length) return;
+      if (!('IntersectionObserver' in window)) { targets.forEach(function(el) { el.classList.add('is-visible'); }); return; }
+      const observer = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) { if (entry.isIntersecting) { entry.target.classList.add('is-visible'); observer.unobserve(entry.target); } });
+      }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+      targets.forEach(function(el) { observer.observe(el); });
+    })();
+  </script>
+</body>
+</html>

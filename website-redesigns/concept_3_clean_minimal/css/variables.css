@@ -1,0 +1,155 @@
+/* ==========================================================================
+   ODB+ Clean Minimal — Design Tokens
+   Apple-inspired variable system for the entire site.
+   ========================================================================== */
+
+:root {
+  /* -----------------------------------------------------------------------
+     Color Palette
+     ----------------------------------------------------------------------- */
+  --color-bg:              #FFFFFF;
+  --color-surface:         #F5F5F7;
+  --color-surface-elevated:#FAFAFA;
+  --color-border:          #D2D2D7;
+  --color-border-light:    #E8E8ED;
+  --color-divider:         #E5E5EA;
+
+  --color-text-primary:    #1D1D1F;
+  --color-text-secondary:  #6E6E73;
+  --color-text-tertiary:   #AEAEB2;
+  --color-text-inverted:   #FFFFFF;
+
+  --color-accent:          #0066CC;
+  --color-accent-hover:    #0055AA;
+  --color-accent-light:    #E8F0FE;
+  --color-accent-surface:  #F0F5FF;
+
+  --color-success:         #34C759;
+  --color-success-light:   #E8FAF0;
+  --color-warning:         #FF9500;
+  --color-warning-light:   #FFF4E6;
+  --color-danger:          #FF3B30;
+  --color-danger-light:    #FFEFEE;
+
+  /* Dark section (CTA blocks) */
+  --color-dark-bg:         #1D1D1F;
+  --color-dark-surface:    #2C2C2E;
+  --color-dark-text:       #F5F5F7;
+  --color-dark-text-secondary: #AEAEB2;
+
+  /* -----------------------------------------------------------------------
+     Typography
+     ----------------------------------------------------------------------- */
+  --font-display: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', system-ui, sans-serif;
+  --font-body:    'SF Pro Text', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', system-ui, sans-serif;
+  --font-rounded: 'SF Pro Rounded', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  --font-mono:    'SF Mono', ui-monospace, 'Cascadia Code', 'Fira Code', monospace;
+
+  /* Fluid type scale — large and confident */
+  --text-hero:    clamp(3rem, 5vw + 1rem, 5rem);        /* 48–80px */
+  --text-display: clamp(2.5rem, 4vw + 0.5rem, 4rem);    /* 40–64px */
+  --text-h1:      clamp(2rem, 3vw + 0.5rem, 3.5rem);    /* 32–56px */
+  --text-h2:      clamp(1.75rem, 2.5vw + 0.25rem, 2.5rem); /* 28–40px */
+  --text-h3:      clamp(1.25rem, 1.5vw + 0.25rem, 1.5rem); /* 20–24px */
+  --text-body:    1.0625rem;                              /* 17px — Apple default */
+  --text-body-lg: 1.1875rem;                              /* 19px */
+  --text-small:   0.875rem;                               /* 14px */
+  --text-xs:      0.75rem;                                /* 12px */
+  --text-label:   0.8125rem;                              /* 13px */
+
+  /* Line heights */
+  --leading-tight:  1.1;
+  --leading-snug:   1.25;
+  --leading-normal: 1.5;
+  --leading-relaxed:1.65;
+
+  /* Font weights */
+  --weight-light:    300;
+  --weight-regular:  400;
+  --weight-medium:   500;
+  --weight-semibold: 600;
+  --weight-bold:     700;
+
+  /* Letter spacing */
+  --tracking-tight:  -0.025em;
+  --tracking-normal:  0;
+  --tracking-wide:    0.02em;
+  --tracking-wider:   0.06em;
+
+  /* -----------------------------------------------------------------------
+     Spacing
+     ----------------------------------------------------------------------- */
+  --space-xs:   0.5rem;    /* 8px */
+  --space-sm:   0.75rem;   /* 12px */
+  --space-md:   1rem;      /* 16px */
+  --space-lg:   1.5rem;    /* 24px */
+  --space-xl:   2rem;      /* 32px */
+  --space-2xl:  3rem;      /* 48px */
+  --space-3xl:  4rem;      /* 64px */
+  --space-4xl:  6rem;      /* 96px */
+  --space-5xl:  8rem;      /* 128px */
+
+  /* Section padding — generous, Apple-style */
+  --section-py:    clamp(4rem, 8vw, 8rem);
+  --section-px:    clamp(1.5rem, 5vw, 4rem);
+  --container-max: 1200px;
+  --container-narrow: 800px;
+
+  /* -----------------------------------------------------------------------
+     Borders & Radii
+     ----------------------------------------------------------------------- */
+  --radius-sm:     8px;
+  --radius-md:     12px;
+  --radius-lg:     16px;
+  --radius-xl:     24px;
+  --radius-2xl:    32px;
+  --radius-pill:   999px;
+
+  --border-width:  1px;
+  --border:        var(--border-width) solid var(--color-border);
+  --border-light:  var(--border-width) solid var(--color-border-light);
+
+  /* -----------------------------------------------------------------------
+     Shadows (minimal — used sparingly)
+     ----------------------------------------------------------------------- */
+  --shadow-xs:     0 1px 2px rgba(0,0,0,0.04);
+  --shadow-sm:     0 2px 8px rgba(0,0,0,0.04);
+  --shadow-md:     0 4px 16px rgba(0,0,0,0.06);
+  --shadow-lg:     0 8px 32px rgba(0,0,0,0.08);
+  --shadow-xl:     0 16px 48px rgba(0,0,0,0.10);
+  --shadow-phone:  0 20px 60px rgba(0,0,0,0.12);
+
+  /* -----------------------------------------------------------------------
+     Transitions
+     ----------------------------------------------------------------------- */
+  --ease-out:      cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --ease-spring:   cubic-bezier(0.34, 1.56, 0.64, 1);
+  --duration-fast:  150ms;
+  --duration-base:  250ms;
+  --duration-slow:  400ms;
+
+  /* -----------------------------------------------------------------------
+     Z-index layers
+     ----------------------------------------------------------------------- */
+  --z-base:     1;
+  --z-dropdown: 10;
+  --z-sticky:   100;
+  --z-overlay:  200;
+  --z-modal:    300;
+  --z-toast:    400;
+
+  /* -----------------------------------------------------------------------
+     Navbar
+     ----------------------------------------------------------------------- */
+  --nav-height:   64px;
+  --nav-blur:     20px;
+}
+
+/* Reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --duration-fast:  0ms;
+    --duration-base:  0ms;
+    --duration-slow:  0ms;
+  }
+}

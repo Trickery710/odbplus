@@ -1,0 +1,173 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 48" width="480" height="48">
+  <defs>
+    <style>
+      .icon-line { fill: none; stroke: #F0F0F0; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+      .icon-fill { fill: #F0F0F0; }
+      .icon-accent { fill: none; stroke: #FF6B00; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+      .icon-accent-fill { fill: #FF6B00; }
+    </style>
+  </defs>
+
+  <!-- icon-connect: antenna/signal tower (0,0 48x48) -->
+  <g id="icon-connect" transform="translate(0,0)">
+    <!-- Tower base -->
+    <line x1="24" y1="42" x2="24" y2="16" class="icon-line"/>
+    <line x1="18" y1="42" x2="30" y2="42" class="icon-line"/>
+    <line x1="20" y1="36" x2="24" y2="16" class="icon-line"/>
+    <line x1="28" y1="36" x2="24" y2="16" class="icon-line"/>
+    <!-- Signal waves -->
+    <path d="M14,18 A14,14 0 0,1 14,8" class="icon-accent"/>
+    <path d="M10,22 A20,20 0 0,1 10,4" class="icon-accent"/>
+    <path d="M34,18 A14,14 0 0,0 34,8" class="icon-accent"/>
+    <path d="M38,22 A20,20 0 0,0 38,4" class="icon-accent"/>
+    <!-- Top dot -->
+    <circle cx="24" cy="14" r="3" class="icon-accent-fill"/>
+  </g>
+
+  <!-- icon-live: oscilloscope/waveform (48,0) -->
+  <g id="icon-live" transform="translate(48,0)">
+    <!-- Screen frame -->
+    <rect x="6" y="6" width="36" height="30" rx="3" class="icon-line"/>
+    <!-- Waveform -->
+    <polyline points="10,24 14,24 16,12 20,32 24,18 28,28 30,20 34,20 38,20" class="icon-accent" stroke-width="2.4"/>
+    <!-- Base stand -->
+    <line x1="20" y1="36" x2="28" y2="36" class="icon-line"/>
+    <line x1="24" y1="36" x2="24" y2="42" class="icon-line"/>
+    <line x1="18" y1="42" x2="30" y2="42" class="icon-line"/>
+  </g>
+
+  <!-- icon-codes: inspection form with magnifier (96,0) -->
+  <g id="icon-codes" transform="translate(96,0)">
+    <!-- Document -->
+    <rect x="8" y="4" width="24" height="32" rx="2" class="icon-line"/>
+    <line x1="14" y1="12" x2="26" y2="12" class="icon-line" stroke-width="1.8"/>
+    <line x1="14" y1="18" x2="26" y2="18" class="icon-line" stroke-width="1.8"/>
+    <line x1="14" y1="24" x2="22" y2="24" class="icon-line" stroke-width="1.8"/>
+    <!-- Checkmark on line -->
+    <polyline points="12,11 13,13 16,9" class="icon-accent" stroke-width="1.8"/>
+    <!-- Magnifier -->
+    <circle cx="34" cy="32" r="8" class="icon-accent"/>
+    <line x1="40" y1="38" x2="44" y2="42" class="icon-accent" stroke-width="2.8"/>
+    <!-- Exclamation in magnifier -->
+    <line x1="34" y1="28" x2="34" y2="33" class="icon-accent-fill" stroke="#FF6B00" stroke-width="2"/>
+    <circle cx="34" cy="36" r="1" class="icon-accent-fill"/>
+  </g>
+
+  <!-- icon-ai: gear with circuit brain (144,0) -->
+  <g id="icon-ai" transform="translate(144,0)">
+    <!-- Gear outer -->
+    <path d="M24,8 L26,4 L28,4 L28,8 L32,10 L36,8 L38,10 L34,14 L36,18 L40,18 L40,20 L36,22 L36,26 L40,28 L38,30 L34,28 L30,32 L30,36 L28,36 L26,32 L22,32 L20,36 L18,36 L18,32 L14,28 L10,30 L8,28 L12,26 L12,22 L8,20 L8,18 L12,18 L14,14 L10,10 L12,8 L16,10 L20,8 L22,4 L24,4 Z" class="icon-line" stroke-width="1.8"/>
+    <!-- Inner circle -->
+    <circle cx="24" cy="20" r="6" class="icon-line"/>
+    <!-- Circuit lines inside -->
+    <circle cx="24" cy="20" r="2" class="icon-accent-fill"/>
+    <line x1="22" y1="18" x2="20" y2="16" class="icon-accent" stroke-width="1.5"/>
+    <line x1="26" y1="18" x2="28" y2="16" class="icon-accent" stroke-width="1.5"/>
+    <line x1="24" y1="22" x2="24" y2="25" class="icon-accent" stroke-width="1.5"/>
+    <circle cx="20" cy="16" r="1" class="icon-accent-fill"/>
+    <circle cx="28" cy="16" r="1" class="icon-accent-fill"/>
+    <circle cx="24" cy="25" r="1" class="icon-accent-fill"/>
+  </g>
+
+  <!-- icon-logs: data recorder / tape reel (192,0) -->
+  <g id="icon-logs" transform="translate(192,0)">
+    <!-- Recorder body -->
+    <rect x="6" y="8" width="36" height="28" rx="3" class="icon-line"/>
+    <!-- Tape reels -->
+    <circle cx="18" cy="22" r="6" class="icon-line"/>
+    <circle cx="30" cy="22" r="6" class="icon-line"/>
+    <circle cx="18" cy="22" r="2" class="icon-accent-fill"/>
+    <circle cx="30" cy="22" r="2" class="icon-accent-fill"/>
+    <!-- Tape path -->
+    <path d="M24,22 L24,32" class="icon-line" stroke-width="1.5"/>
+    <!-- REC indicator -->
+    <circle cx="38" cy="12" r="2" fill="#CC2200"/>
+    <!-- Window -->
+    <rect x="22" y="10" width="4" height="4" rx="1" class="icon-line" stroke-width="1.5"/>
+  </g>
+
+  <!-- icon-terminal: command line (240,0) -->
+  <g id="icon-terminal" transform="translate(240,0)">
+    <!-- Terminal window -->
+    <rect x="6" y="6" width="36" height="32" rx="3" class="icon-line"/>
+    <!-- Title bar -->
+    <line x1="6" y1="14" x2="42" y2="14" class="icon-line" stroke-width="1.5"/>
+    <circle cx="12" cy="10" r="1.5" class="icon-accent-fill"/>
+    <circle cx="18" cy="10" r="1.5" fill="#F5C518"/>
+    <circle cx="24" cy="10" r="1.5" fill="#4A7FA5"/>
+    <!-- Prompt -->
+    <polyline points="12,22 18,26 12,30" class="icon-accent" stroke-width="2.2"/>
+    <!-- Cursor line -->
+    <line x1="22" y1="26" x2="34" y2="26" class="icon-accent" stroke-width="2"/>
+  </g>
+
+  <!-- icon-tests: dial gauge (288,0) -->
+  <g id="icon-tests" transform="translate(288,0)">
+    <!-- Gauge body -->
+    <circle cx="24" cy="24" r="18" class="icon-line"/>
+    <circle cx="24" cy="24" r="15" class="icon-line" stroke-width="1.5"/>
+    <!-- Tick marks -->
+    <line x1="12" y1="32" x2="14" y2="30" class="icon-line" stroke-width="1.5"/>
+    <line x1="12" y1="16" x2="14" y2="18" class="icon-line" stroke-width="1.5"/>
+    <line x1="24" y1="10" x2="24" y2="13" class="icon-line" stroke-width="1.5"/>
+    <line x1="36" y1="16" x2="34" y2="18" class="icon-line" stroke-width="1.5"/>
+    <line x1="36" y1="32" x2="34" y2="30" class="icon-line" stroke-width="1.5"/>
+    <!-- Needle pointing upper-right (good reading) -->
+    <line x1="24" y1="24" x2="33" y2="15" class="icon-accent" stroke-width="2.5"/>
+    <circle cx="24" cy="24" r="3" class="icon-accent-fill"/>
+    <!-- MIN / MAX labels -->
+    <text x="10" y="38" font-family="monospace" font-size="4" fill="#AAAAAA">MIN</text>
+    <text x="32" y="38" font-family="monospace" font-size="4" fill="#AAAAAA">MAX</text>
+  </g>
+
+  <!-- icon-parts: socket wrench (336,0) -->
+  <g id="icon-parts" transform="translate(336,0)">
+    <!-- Socket head (hex) -->
+    <polygon points="24,6 32,10 32,20 24,24 16,20 16,10" class="icon-line"/>
+    <!-- Inner hex hole -->
+    <polygon points="24,11 27,13 27,17 24,19 21,17 21,13" class="icon-accent" stroke-width="1.8"/>
+    <!-- Handle -->
+    <rect x="22" y="24" width="4" height="18" rx="1" class="icon-line"/>
+    <!-- Grip lines -->
+    <line x1="22" y1="32" x2="26" y2="32" class="icon-line" stroke-width="1"/>
+    <line x1="22" y1="35" x2="26" y2="35" class="icon-line" stroke-width="1"/>
+    <line x1="22" y1="38" x2="26" y2="38" class="icon-line" stroke-width="1"/>
+  </g>
+
+  <!-- icon-forums: walkie-talkie (384,0) -->
+  <g id="icon-forums" transform="translate(384,0)">
+    <!-- Body -->
+    <rect x="14" y="14" width="20" height="28" rx="3" class="icon-line"/>
+    <!-- Antenna -->
+    <line x1="20" y1="14" x2="20" y2="4" class="icon-line" stroke-width="2"/>
+    <circle cx="20" cy="4" r="2" class="icon-accent-fill"/>
+    <!-- Speaker grille -->
+    <line x1="20" y1="20" x2="28" y2="20" class="icon-line" stroke-width="1.2"/>
+    <line x1="20" y1="23" x2="28" y2="23" class="icon-line" stroke-width="1.2"/>
+    <line x1="20" y1="26" x2="28" y2="26" class="icon-line" stroke-width="1.2"/>
+    <!-- PTT button -->
+    <rect x="18" y="30" width="12" height="6" rx="1" class="icon-accent"/>
+    <!-- Signal waves -->
+    <path d="M36,8 A6,6 0 0,1 36,16" class="icon-accent" stroke-width="1.5"/>
+    <path d="M39,5 A10,10 0 0,1 39,19" class="icon-accent" stroke-width="1.5"/>
+  </g>
+
+  <!-- icon-sensors: sensor probe (432,0) -->
+  <g id="icon-sensors" transform="translate(432,0)">
+    <!-- Probe tip -->
+    <path d="M24,42 L20,34 L28,34 Z" class="icon-accent-fill"/>
+    <!-- Probe body -->
+    <rect x="20" y="18" width="8" height="16" rx="1" class="icon-line"/>
+    <!-- Wire -->
+    <path d="M24,18 L24,10 Q24,6 28,6 L34,6" class="icon-line" stroke-width="1.8"/>
+    <!-- Connector end -->
+    <rect x="34" y="3" width="6" height="6" rx="1" class="icon-accent"/>
+    <!-- Measurement waves from tip -->
+    <path d="M16,38 Q14,36 16,34" class="icon-accent" stroke-width="1.2"/>
+    <path d="M13,40 Q10,36 13,32" class="icon-accent" stroke-width="1.2"/>
+    <path d="M32,38 Q34,36 32,34" class="icon-accent" stroke-width="1.2"/>
+    <path d="M35,40 Q38,36 35,32" class="icon-accent" stroke-width="1.2"/>
+    <!-- Sensing element -->
+    <circle cx="24" cy="26" r="2" class="icon-accent-fill"/>
+  </g>
+</svg>

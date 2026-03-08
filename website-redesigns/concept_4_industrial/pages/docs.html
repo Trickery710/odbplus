@@ -1,0 +1,1222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="ODB+ Documentation - Setup guides, protocol specifications, AT command reference, troubleshooting, and technical manuals for OBD-II diagnostics.">
+  <meta name="theme-color" content="#1C1C1C">
+  <title>Documentation | ODB+ Diagnostic Systems</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Roboto:wght@300;400;500;700&family=Roboto+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/variables.css">
+  <link rel="stylesheet" href="../css/styles.css">
+  <style>
+    /* ================================================================
+       DOCS PAGE — Two-Column Layout
+       ================================================================ */
+
+    .docs-layout {
+      display: grid;
+      grid-template-columns: 260px 1fr;
+      gap: var(--space-3xl);
+      align-items: start;
+    }
+
+    @media (max-width: 960px) {
+      .docs-layout {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* --- Sidebar --- */
+
+    .docs-sidebar {
+      position: sticky;
+      top: calc(var(--nav-height) + var(--space-xl));
+      background: var(--bg-panel);
+      border: 2px solid var(--border-default);
+      box-shadow: var(--shadow-inset);
+      padding: var(--space-lg) 0;
+    }
+
+    .docs-sidebar__title {
+      font-family: var(--font-mono);
+      font-size: var(--fs-label);
+      font-weight: var(--fw-medium);
+      letter-spacing: var(--ls-widest);
+      text-transform: uppercase;
+      color: var(--text-tertiary);
+      padding: 0 var(--space-lg) var(--space-md);
+      border-bottom: 1px solid var(--border-subtle);
+      margin-bottom: var(--space-sm);
+    }
+
+    .docs-sidebar__nav {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .docs-sidebar__link {
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+      padding: var(--space-sm) var(--space-lg);
+      font-family: var(--font-subheading);
+      font-size: var(--fs-small);
+      font-weight: var(--fw-medium);
+      letter-spacing: var(--ls-wide);
+      text-transform: uppercase;
+      color: var(--text-secondary);
+      text-decoration: none;
+      border-left: 3px solid transparent;
+      transition: all var(--transition-fast);
+    }
+
+    .docs-sidebar__link:hover {
+      color: var(--clr-primary);
+      background: rgba(255, 107, 0, 0.05);
+      border-left-color: rgba(255, 107, 0, 0.3);
+    }
+
+    .docs-sidebar__link--active {
+      color: var(--clr-primary);
+      border-left-color: var(--clr-primary);
+      background: rgba(255, 107, 0, 0.08);
+      font-weight: var(--fw-bold);
+    }
+
+    .docs-sidebar__link::before {
+      content: '';
+      display: inline-block;
+      width: 4px;
+      height: 4px;
+      background: currentColor;
+      flex-shrink: 0;
+      opacity: 0.5;
+    }
+
+    .docs-sidebar__link--active::before {
+      opacity: 1;
+      background: var(--clr-primary);
+    }
+
+    @media (max-width: 960px) {
+      .docs-sidebar {
+        position: static;
+        display: flex;
+        flex-wrap: wrap;
+        padding: var(--space-md);
+        gap: 0;
+      }
+
+      .docs-sidebar__title {
+        width: 100%;
+        border-bottom: 1px solid var(--border-subtle);
+        padding: 0 0 var(--space-sm);
+        margin-bottom: var(--space-sm);
+      }
+
+      .docs-sidebar__nav {
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: var(--space-xs);
+      }
+
+      .docs-sidebar__link {
+        padding: var(--space-xs) var(--space-md);
+        border-left: none;
+        border-bottom: 2px solid transparent;
+        font-size: var(--fs-label);
+      }
+
+      .docs-sidebar__link--active {
+        border-bottom-color: var(--clr-primary);
+        border-left: none;
+      }
+
+      .docs-sidebar__link:hover {
+        border-left-color: transparent;
+      }
+    }
+
+    /* --- Docs Content Area --- */
+
+    .docs-content {
+      min-width: 0; /* Prevent grid blowout */
+    }
+
+    .docs-section {
+      margin-bottom: var(--space-3xl);
+      scroll-margin-top: calc(var(--nav-height) + var(--space-xl));
+    }
+
+    .docs-section__title {
+      font-family: 'Oswald', var(--font-heading);
+      font-size: var(--fs-h2);
+      text-transform: uppercase;
+      letter-spacing: var(--ls-wide);
+      margin-bottom: var(--space-lg);
+      padding-bottom: var(--space-sm);
+      border-bottom: 2px solid var(--border-default);
+      position: relative;
+    }
+
+    .docs-section__title::after {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      width: 60px;
+      height: 2px;
+      background: var(--clr-primary);
+    }
+
+    .docs-body p {
+      color: var(--text-secondary);
+      font-size: var(--fs-body);
+      line-height: var(--lh-body);
+      margin-bottom: var(--space-md);
+    }
+
+    .docs-body p strong {
+      color: var(--text-primary);
+      font-weight: var(--fw-bold);
+    }
+
+    /* --- Intro paragraph: workshop manual style --- */
+
+    .docs-intro {
+      font-family: var(--font-body);
+      font-size: var(--fs-body);
+      color: var(--text-primary);
+      line-height: var(--lh-body);
+      padding: var(--space-xl);
+      background: var(--bg-surface);
+      border: 2px solid var(--border-default);
+      border-left: 4px solid var(--clr-primary);
+      margin-bottom: var(--space-2xl);
+    }
+
+    .docs-intro strong {
+      font-family: 'Oswald', var(--font-heading);
+      font-weight: var(--fw-bold);
+      text-transform: uppercase;
+      letter-spacing: var(--ls-wide);
+      color: var(--clr-primary);
+    }
+
+    /* --- Spec-sheet list with orange bullets --- */
+
+    .spec-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-sm);
+      margin-bottom: var(--space-xl);
+    }
+
+    .spec-list li {
+      display: flex;
+      align-items: baseline;
+      gap: var(--space-md);
+      font-size: var(--fs-body);
+      color: var(--text-secondary);
+      line-height: var(--lh-body);
+      padding: var(--space-sm) 0;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .spec-list li::before {
+      content: '';
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      background: var(--clr-primary);
+      flex-shrink: 0;
+      margin-top: 6px;
+    }
+
+    .spec-list li strong {
+      color: var(--text-primary);
+      font-weight: var(--fw-medium);
+    }
+
+    /* --- Industrial numbered steps --- */
+
+    .industrial-steps {
+      list-style: none;
+      counter-reset: step-counter;
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-lg);
+      margin-bottom: var(--space-xl);
+    }
+
+    .industrial-steps li {
+      display: flex;
+      gap: var(--space-lg);
+      align-items: flex-start;
+      counter-increment: step-counter;
+    }
+
+    .industrial-steps li .step-num {
+      font-family: var(--font-mono);
+      font-size: var(--fs-h3);
+      font-weight: var(--fw-bold);
+      color: var(--clr-primary);
+      min-width: 52px;
+      flex-shrink: 0;
+    }
+
+    .industrial-steps li .step-content {
+      flex: 1;
+    }
+
+    .industrial-steps li .step-content strong {
+      display: block;
+      font-family: 'Oswald', var(--font-heading);
+      font-size: var(--fs-h4);
+      text-transform: uppercase;
+      letter-spacing: var(--ls-wide);
+      color: var(--text-primary);
+      margin-bottom: var(--space-xs);
+    }
+
+    .industrial-steps li .step-content p {
+      color: var(--text-secondary);
+      font-size: var(--fs-small);
+      line-height: var(--lh-body);
+    }
+
+    /* --- Code blocks: OBD command style --- */
+
+    .obd-code-block {
+      background: #111111;
+      border: 2px solid var(--border-default);
+      padding: var(--space-lg);
+      margin-bottom: var(--space-lg);
+      font-family: var(--font-mono);
+      font-size: var(--fs-small);
+      line-height: 1.8;
+      overflow-x: auto;
+      position: relative;
+    }
+
+    .obd-code-block::before {
+      content: attr(data-title);
+      position: absolute;
+      top: 0;
+      right: 0;
+      padding: 2px 10px;
+      font-family: var(--font-mono);
+      font-size: var(--fs-micro);
+      letter-spacing: var(--ls-label);
+      text-transform: uppercase;
+      color: var(--text-tertiary);
+      background: var(--bg-panel);
+      border-left: 1px solid var(--border-subtle);
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .obd-code-block .cmd {
+      color: var(--clr-primary);
+    }
+
+    .obd-code-block .response {
+      color: #4CAF50;
+    }
+
+    .obd-code-block .comment {
+      color: var(--text-tertiary);
+    }
+
+    .obd-code-block .error {
+      color: var(--clr-danger-light);
+    }
+
+    .obd-code-block .prompt {
+      color: var(--clr-steel-blue);
+    }
+
+    /* --- Accordion (FAQ) --- */
+
+    .accordion {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-sm);
+      margin-bottom: var(--space-xl);
+    }
+
+    .accordion-item {
+      border: 2px solid var(--border-default);
+      background: var(--bg-panel);
+      transition: border-color var(--transition-base);
+    }
+
+    .accordion-item[open] {
+      border-color: var(--clr-primary);
+    }
+
+    .accordion-item summary {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: var(--space-md) var(--space-lg);
+      font-family: 'Oswald', var(--font-heading);
+      font-size: var(--fs-h4);
+      font-weight: var(--fw-bold);
+      text-transform: uppercase;
+      letter-spacing: var(--ls-wide);
+      color: var(--text-primary);
+      cursor: pointer;
+      list-style: none;
+      user-select: none;
+      transition: color var(--transition-fast);
+    }
+
+    .accordion-item summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .accordion-item summary::after {
+      content: '+';
+      font-family: var(--font-mono);
+      font-size: var(--fs-h3);
+      color: var(--clr-primary);
+      flex-shrink: 0;
+      margin-left: var(--space-md);
+      transition: transform var(--transition-base);
+    }
+
+    .accordion-item[open] summary::after {
+      content: '-';
+    }
+
+    .accordion-item[open] summary {
+      color: var(--clr-primary);
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .accordion-item summary:hover {
+      color: var(--clr-primary);
+    }
+
+    .accordion-item .accordion-body {
+      padding: var(--space-lg);
+      font-size: var(--fs-small);
+      color: var(--text-secondary);
+      line-height: var(--lh-body);
+    }
+
+    .accordion-item .accordion-body code {
+      font-family: var(--font-mono);
+      color: var(--clr-primary);
+      background: var(--bg-inset);
+      padding: 1px 6px;
+      font-size: var(--fs-label);
+    }
+
+    /* --- Troubleshooting table --- */
+
+    .troubleshoot-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: var(--fs-small);
+      margin-bottom: var(--space-xl);
+    }
+
+    .troubleshoot-table thead {
+      background: var(--bg-surface);
+    }
+
+    .troubleshoot-table th {
+      text-align: left;
+      padding: var(--space-md);
+      font-family: var(--font-mono);
+      font-size: var(--fs-label);
+      font-weight: var(--fw-bold);
+      letter-spacing: var(--ls-widest);
+      text-transform: uppercase;
+      color: var(--clr-primary);
+      border-bottom: 2px solid var(--clr-primary);
+    }
+
+    .troubleshoot-table td {
+      padding: var(--space-md);
+      border-bottom: 1px solid var(--border-subtle);
+      color: var(--text-secondary);
+      vertical-align: top;
+    }
+
+    .troubleshoot-table tr:hover td {
+      background: rgba(255, 107, 0, 0.04);
+    }
+
+    .troubleshoot-table .status-indicator {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-family: var(--font-mono);
+      font-size: var(--fs-micro);
+      font-weight: var(--fw-bold);
+      letter-spacing: var(--ls-label);
+      text-transform: uppercase;
+      padding: 3px 8px;
+      border: 1px solid;
+    }
+
+    .status-indicator--critical {
+      color: var(--clr-danger-light);
+      border-color: var(--clr-danger);
+      background: var(--clr-danger-dim);
+    }
+
+    .status-indicator--warning {
+      color: var(--clr-secondary);
+      border-color: var(--clr-secondary);
+      background: var(--clr-warning-dim);
+    }
+
+    .status-indicator--info {
+      color: var(--clr-steel-blue);
+      border-color: var(--clr-steel-blue);
+      background: rgba(74, 127, 165, 0.1);
+    }
+
+    /* --- Inline code --- */
+
+    .docs-content code {
+      font-family: var(--font-mono);
+      color: var(--clr-steel-blue);
+      background: var(--bg-inset);
+      padding: 1px 6px;
+      font-size: 0.9em;
+    }
+
+    /* --- Sub-section divider --- */
+
+    .docs-divider {
+      height: 4px;
+      background: var(--stripe-warning-thin);
+      background-size: 16px 16px;
+      border: none;
+      margin-block: var(--space-2xl);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ===== NAVIGATION ===== -->
+  <nav class="nav" role="navigation" aria-label="Main navigation">
+    <div class="nav__inner">
+      <a href="index.html" class="nav__logo" aria-label="ODB+ Home">
+        <svg viewBox="0 0 180 36" width="180" height="36" aria-hidden="true">
+          <defs>
+            <linearGradient id="nB" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#FF8C1A"/><stop offset="100%" stop-color="#CC5500"/></linearGradient>
+            <linearGradient id="nT" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#FFF"/><stop offset="50%" stop-color="#E0E0E0"/><stop offset="100%" stop-color="#B0B0B0"/></linearGradient>
+          </defs>
+          <polygon points="12,2 18,5 18,13 12,16 6,13 6,5" fill="url(#nB)" stroke="#CC5500" stroke-width="1"/><circle cx="12" cy="9" r="3" fill="#1C1C1C" stroke="#FF6B00" stroke-width="0.8"/>
+          <text x="28" y="15" font-family="'Bebas Neue','Oswald',Impact,sans-serif" font-size="20" font-weight="700" letter-spacing="2" fill="url(#nT)">ODB</text><text x="82" y="15" font-family="'Bebas Neue','Oswald',Impact,sans-serif" font-size="20" font-weight="700" fill="#FF6B00">+</text>
+          <line x1="28" y1="20" x2="94" y2="20" stroke="#FF6B00" stroke-width="0.5" opacity="0.4"/><text x="29" y="28" font-family="'Rajdhani','Barlow Condensed',sans-serif" font-size="5.5" font-weight="600" letter-spacing="2.2" fill="#888">DIAGNOSTIC SYSTEMS</text>
+        </svg>
+      </a>
+      <div class="nav__links">
+        <a href="index.html" class="nav__link">Home</a>
+        <a href="features.html" class="nav__link">Features</a>
+        <a href="docs.html" class="nav__link nav__link--active">Docs</a>
+        <a href="contact.html" class="nav__link">Contact</a>
+        <a href="#download" class="btn btn--stripe btn--sm">Download</a>
+      </div>
+      <button class="nav__toggle" id="navToggle" aria-expanded="false" aria-controls="navDrawer" aria-label="Toggle navigation">
+        <span class="nav__toggle-bar"></span><span class="nav__toggle-bar"></span><span class="nav__toggle-bar"></span>
+      </button>
+    </div>
+    <div class="nav__drawer" id="navDrawer" aria-hidden="true">
+      <a href="index.html" class="nav__link">Home</a>
+      <a href="features.html" class="nav__link">Features</a>
+      <a href="docs.html" class="nav__link nav__link--active">Docs</a>
+      <a href="contact.html" class="nav__link">Contact</a>
+      <a href="#download" class="btn btn--stripe">Download</a>
+    </div>
+  </nav>
+
+  <!-- ===== PAGE HEADER ===== -->
+  <div class="page-header blueprint-bg">
+    <div class="container" style="position: relative; z-index: 1;">
+      <span class="section-label">Technical Reference</span>
+      <h1>Documentation</h1>
+      <p class="subheading" style="margin-top: var(--space-sm);">Workshop Manual // Setup, Operation, Protocol Specifications</p>
+    </div>
+  </div>
+
+  <!-- ===== DOCS CONTENT ===== -->
+  <section class="page-content">
+    <div class="container container--wide">
+      <div class="docs-layout">
+
+        <!-- ---- Sidebar Navigation ---- -->
+        <aside class="docs-sidebar" aria-label="Documentation navigation">
+          <div class="docs-sidebar__title">Sections</div>
+          <nav class="docs-sidebar__nav">
+            <a href="#getting-started" class="docs-sidebar__link docs-sidebar__link--active">Getting Started</a>
+            <a href="#adapter-setup" class="docs-sidebar__link">Adapter Setup</a>
+            <a href="#first-connection" class="docs-sidebar__link">First Connection</a>
+            <a href="#live-data" class="docs-sidebar__link">Live Data</a>
+            <a href="#trouble-codes" class="docs-sidebar__link">Trouble Codes</a>
+            <a href="#terminal-mode" class="docs-sidebar__link">Terminal Mode</a>
+            <a href="#ai-diagnostics" class="docs-sidebar__link">AI Diagnostics</a>
+            <a href="#session-logger" class="docs-sidebar__link">Session Logger</a>
+            <a href="#protocol-specs" class="docs-sidebar__link">Protocol Specs</a>
+            <a href="#troubleshooting" class="docs-sidebar__link">Troubleshooting</a>
+          </nav>
+        </aside>
+
+        <!-- ---- Main Content ---- -->
+        <div class="docs-content">
+
+          <!-- INTRO -->
+          <div class="docs-intro">
+            <strong>ODB+ Diagnostic System -- Technical Manual Rev. 2.4</strong><br>
+            This guide covers setup and operation of the ODB+ diagnostic system. It is intended for
+            automotive technicians, fleet maintenance personnel, and vehicle enthusiasts operating
+            ELM327-compatible OBD-II adapters. Read all sections before first use. Refer to
+            the Troubleshooting section for common issues.
+          </div>
+
+          <!-- SECTION: Getting Started -->
+          <div class="docs-section" id="getting-started">
+            <span class="section-label">Section 01</span>
+            <h2 class="docs-section__title">Getting Started</h2>
+
+            <div class="docs-body">
+              <p>
+                Before connecting to a vehicle, verify that your equipment meets the following
+                minimum requirements. Operating below these specifications may result in
+                degraded performance or connection failures.
+              </p>
+            </div>
+
+            <h3 style="font-family: 'Oswald', var(--font-heading); font-size: var(--fs-h4); text-transform: uppercase; letter-spacing: var(--ls-wide); margin-bottom: var(--space-md); color: var(--text-primary);">System Requirements</h3>
+            <ul class="spec-list">
+              <li><strong>Android 8.0 (Oreo)</strong> or higher -- required for Bluetooth SPP and BLE support</li>
+              <li><strong>2 GB RAM minimum</strong> -- 4 GB recommended for AI diagnostics and session recording</li>
+              <li><strong>45 MB storage</strong> -- additional space required for session logs and exports</li>
+              <li><strong>Bluetooth Classic (SPP)</strong> or <strong>Bluetooth Low Energy (BLE)</strong> -- adapter dependent</li>
+              <li><strong>WiFi</strong> (optional) -- for TCP socket adapters on port 35000</li>
+              <li><strong>ELM327 v1.3+</strong> compatible adapter -- supports all major clones and STN chipsets</li>
+              <li><strong>OBD-II compliant vehicle</strong> -- all US vehicles 1996+ and EU vehicles 2001+</li>
+            </ul>
+
+            <h3 style="font-family: 'Oswald', var(--font-heading); font-size: var(--fs-h4); text-transform: uppercase; letter-spacing: var(--ls-wide); margin-bottom: var(--space-md); color: var(--text-primary);">Supported Adapters</h3>
+            <ul class="spec-list">
+              <li><strong>ELM327</strong> -- all versions v1.3 and above, including Chinese clones</li>
+              <li><strong>STN1110 / STN2120</strong> -- full extended command support</li>
+              <li><strong>OBDLink</strong> -- MX+, LX, EX, SX series</li>
+              <li><strong>ESP32-based</strong> -- WiFi adapters with TCP socket interface</li>
+              <li><strong>Vgate / Veepeak / BAFX</strong> -- Bluetooth ELM327-compatible units</li>
+            </ul>
+          </div>
+
+          <hr class="docs-divider" aria-hidden="true">
+
+          <!-- SECTION: Adapter Setup -->
+          <div class="docs-section" id="adapter-setup">
+            <span class="section-label">Section 02</span>
+            <h2 class="docs-section__title">Adapter Setup</h2>
+
+            <div class="docs-body">
+              <p>
+                The OBD-II diagnostic link connector (DLC) is a standardized 16-pin port located
+                under the dashboard on the driver's side, typically within arm's reach of the steering
+                column. Some vehicles mount it behind a removable panel or above the pedals.
+              </p>
+            </div>
+
+            <h3 style="font-family: 'Oswald', var(--font-heading); font-size: var(--fs-h4); text-transform: uppercase; letter-spacing: var(--ls-wide); margin-bottom: var(--space-md); color: var(--text-primary);">Bluetooth Pairing Procedure</h3>
+            <ol class="industrial-steps">
+              <li>
+                <span class="step-num">[01]</span>
+                <div class="step-content">
+                  <strong>Insert the Adapter</strong>
+                  <p>Plug your ELM327 adapter into the vehicle's 16-pin OBD-II DLC port. The adapter should power on automatically when the vehicle ignition is in the ON or ACC position. Confirm the adapter's LED indicator is lit.</p>
+                </div>
+              </li>
+              <li>
+                <span class="step-num">[02]</span>
+                <div class="step-content">
+                  <strong>Open Bluetooth Settings</strong>
+                  <p>On your Android device, navigate to Settings > Bluetooth. Enable Bluetooth if it is not already active. Tap "Pair new device" or "Scan for devices."</p>
+                </div>
+              </li>
+              <li>
+                <span class="step-num">[03]</span>
+                <div class="step-content">
+                  <strong>Select Your Adapter</strong>
+                  <p>Your adapter will appear in the scan results with a name such as "OBDII", "OBDLink", "Vlink", "Android-Vlink", or similar. Tap the device name to initiate pairing.</p>
+                </div>
+              </li>
+              <li>
+                <span class="step-num">[04]</span>
+                <div class="step-content">
+                  <strong>Enter the Pairing PIN</strong>
+                  <p>When prompted, enter the pairing PIN. The default PIN for most ELM327 adapters is <code>1234</code> or <code>0000</code>. Check your adapter's documentation if these do not work.</p>
+                </div>
+              </li>
+              <li>
+                <span class="step-num">[05]</span>
+                <div class="step-content">
+                  <strong>Launch ODB+ and Connect</strong>
+                  <p>Open the ODB+ app. Navigate to the connection screen and select your paired adapter from the device list. Tap "Connect." The app will fingerprint your adapter, detect its capabilities, and negotiate the vehicle's OBD-II protocol automatically.</p>
+                </div>
+              </li>
+            </ol>
+          </div>
+
+          <hr class="docs-divider" aria-hidden="true">
+
+          <!-- SECTION: First Connection -->
+          <div class="docs-section" id="first-connection">
+            <span class="section-label">Section 03</span>
+            <h2 class="docs-section__title">First Connection</h2>
+
+            <div class="docs-body">
+              <p>
+                On first connection, ODB+ performs an automated initialization sequence. The adapter
+                is reset, echo and linefeeds are disabled, and the vehicle's OBD-II protocol is
+                auto-detected. This process takes 2-5 seconds for CAN vehicles and up to 15 seconds
+                for older KWP2000/ISO 9141 protocols.
+              </p>
+              <p>
+                <strong>What happens during initialization:</strong> The app sends a series of AT commands
+                to configure the adapter, then issues a supported-PID query (0100) to discover which
+                sensor parameters your vehicle's ECU reports. This PID bitmap determines which dashboard
+                gauges and live data parameters are available.
+              </p>
+            </div>
+
+            <div class="obd-code-block" data-title="Initialization Sequence">
+<span class="comment">// Step 1: Reset adapter to factory defaults</span>
+<span class="prompt">ODB+> </span><span class="cmd">ATZ</span>
+<span class="response">ELM327 v2.3</span>
+
+<span class="comment">// Step 2: Disable echo, linefeeds; enable spaces and headers</span>
+<span class="prompt">ODB+> </span><span class="cmd">ATE0</span>
+<span class="response">OK</span>
+<span class="prompt">ODB+> </span><span class="cmd">ATL0</span>
+<span class="response">OK</span>
+<span class="prompt">ODB+> </span><span class="cmd">ATS1</span>
+<span class="response">OK</span>
+<span class="prompt">ODB+> </span><span class="cmd">ATH1</span>
+<span class="response">OK</span>
+
+<span class="comment">// Step 3: Query supported PIDs (triggers protocol negotiation)</span>
+<span class="prompt">ODB+> </span><span class="cmd">0100</span>
+<span class="response">84 F1 10 41 00 BE 3E B8 13</span>
+<span class="comment">// Decoded: PIDs 01-20 bitmap = BE 3E B8 13</span>
+
+<span class="comment">// Step 4: Confirm negotiated protocol</span>
+<span class="prompt">ODB+> </span><span class="cmd">ATDP</span>
+<span class="response">AUTO, ISO 14230-4 (KWP FAST)</span>
+            </div>
+          </div>
+
+          <hr class="docs-divider" aria-hidden="true">
+
+          <!-- SECTION: Live Data -->
+          <div class="docs-section" id="live-data">
+            <span class="section-label">Section 04</span>
+            <h2 class="docs-section__title">Live Data</h2>
+
+            <div class="docs-body">
+              <p>
+                The Live Data screen streams real-time sensor readings from your vehicle's ECU.
+                Data is refreshed at the maximum rate supported by your vehicle's protocol --
+                approximately 200ms for CAN, 400ms for KWP2000, and 600ms for ISO 9141.
+              </p>
+              <p>
+                <strong>View modes:</strong> Analog gauges for at-a-glance monitoring, digital readouts
+                for precision values, time-series graphs for trend analysis, and raw hex mode for
+                protocol-level inspection. You can configure custom dashboards with 1-8 parameters.
+              </p>
+              <p>
+                <strong>Performance tip:</strong> Monitoring fewer PIDs simultaneously increases refresh
+                rate per parameter. For diagnostic accuracy, limit active parameters to 4-6 when using
+                non-CAN protocols.
+              </p>
+            </div>
+
+            <div class="obd-code-block" data-title="Live PID Queries">
+<span class="comment">// Read engine RPM</span>
+<span class="prompt">ODB+> </span><span class="cmd">010C</span>
+<span class="response">84 F1 10 41 0C 0B 28</span>
+<span class="comment">// Formula: (0x0B * 256 + 0x28) / 4 = 2,842 RPM</span>
+
+<span class="comment">// Read coolant temperature</span>
+<span class="prompt">ODB+> </span><span class="cmd">0105</span>
+<span class="response">84 F1 10 41 05 67</span>
+<span class="comment">// Formula: 0x67 - 40 = 63C (145F)</span>
+
+<span class="comment">// Read vehicle speed</span>
+<span class="prompt">ODB+> </span><span class="cmd">010D</span>
+<span class="response">84 F1 10 41 0D 3E</span>
+<span class="comment">// Formula: 0x3E = 62 km/h (38 mph)</span>
+
+<span class="comment">// Read throttle position</span>
+<span class="prompt">ODB+> </span><span class="cmd">0111</span>
+<span class="response">84 F1 10 41 11 3A</span>
+<span class="comment">// Formula: (0x3A * 100) / 255 = 22.7%</span>
+            </div>
+          </div>
+
+          <hr class="docs-divider" aria-hidden="true">
+
+          <!-- SECTION: Trouble Codes -->
+          <div class="docs-section" id="trouble-codes">
+            <span class="section-label">Section 05</span>
+            <h2 class="docs-section__title">Trouble Codes</h2>
+
+            <div class="docs-body">
+              <p>
+                ODB+ reads and clears Diagnostic Trouble Codes (DTCs) stored in the vehicle's ECU.
+                The database includes over 18,000 codes: generic OBD-II codes (P0xxx, B0xxx, C0xxx,
+                U0xxx) and manufacturer-specific codes for 50+ automakers. Each code entry includes
+                a description, probable causes, repair procedures, and severity rating.
+              </p>
+              <p>
+                <strong>Code types:</strong> Stored codes (confirmed faults), pending codes (intermittent
+                faults that have not yet set a check engine light), and permanent codes (codes that
+                cannot be cleared until the underlying condition is repaired and drive cycles are completed).
+              </p>
+            </div>
+
+            <div class="obd-code-block" data-title="DTC Read/Clear">
+<span class="comment">// Read stored DTCs (Mode 03)</span>
+<span class="prompt">ODB+> </span><span class="cmd">03</span>
+<span class="error">84 F1 10 43 03 00 01 71 00 00</span>
+<span class="comment">// Decoded: P0300 - Random/Multiple Cylinder Misfire</span>
+<span class="comment">//          P0171 - System Too Lean (Bank 1)</span>
+
+<span class="comment">// Read pending DTCs (Mode 07)</span>
+<span class="prompt">ODB+> </span><span class="cmd">07</span>
+<span class="response">84 F1 10 47 01 28 00 00 00 00</span>
+<span class="comment">// Decoded: P0128 - Coolant Thermostat Below Threshold</span>
+
+<span class="comment">// Clear all DTCs and freeze frame data (Mode 04)</span>
+<span class="prompt">ODB+> </span><span class="cmd">04</span>
+<span class="response">44</span>
+<span class="comment">// DTCs cleared. Check engine light extinguished.</span>
+            </div>
+          </div>
+
+          <hr class="docs-divider" aria-hidden="true">
+
+          <!-- SECTION: Terminal Mode -->
+          <div class="docs-section" id="terminal-mode">
+            <span class="section-label">Section 06</span>
+            <h2 class="docs-section__title">Terminal Mode</h2>
+
+            <div class="docs-body">
+              <p>
+                Terminal Mode provides direct command-line access to the ELM327 adapter. You can send
+                any AT configuration command, raw OBD-II PID request, or hex-level protocol data.
+                Responses are displayed unfiltered with header bytes, timestamps, and protocol metadata.
+              </p>
+              <p>
+                <strong>Warning:</strong> Sending incorrect AT commands can misconfigure the adapter
+                and break communication with the vehicle ECU. Use <code>ATZ</code> to reset to
+                defaults if you encounter issues.
+              </p>
+            </div>
+
+            <div class="obd-code-block" data-title="AT Command Examples">
+<span class="comment">// Check adapter firmware version</span>
+<span class="prompt">ODB+> </span><span class="cmd">ATI</span>
+<span class="response">ELM327 v2.3</span>
+
+<span class="comment">// Read battery voltage</span>
+<span class="prompt">ODB+> </span><span class="cmd">ATRV</span>
+<span class="response">12.6V</span>
+
+<span class="comment">// Display current protocol</span>
+<span class="prompt">ODB+> </span><span class="cmd">ATDP</span>
+<span class="response">AUTO, ISO 14230-4 (KWP FAST)</span>
+
+<span class="comment">// Manually select CAN 11-bit 500kbps</span>
+<span class="prompt">ODB+> </span><span class="cmd">ATSP6</span>
+<span class="response">OK</span>
+
+<span class="comment">// Enable CAN auto-formatting</span>
+<span class="prompt">ODB+> </span><span class="cmd">ATCAF1</span>
+<span class="response">OK</span>
+            </div>
+          </div>
+
+          <hr class="docs-divider" aria-hidden="true">
+
+          <!-- SECTION: AI Diagnostics -->
+          <div class="docs-section" id="ai-diagnostics">
+            <span class="section-label">Section 07</span>
+            <h2 class="docs-section__title">AI Diagnostics</h2>
+
+            <div class="docs-body">
+              <p>
+                The AI diagnostic assistant has real-time access to your vehicle's ECU data.
+                Describe your symptoms in natural language -- "rough idle at cold start",
+                "hesitation under load", "P0171 after highway driving" -- and the AI correlates
+                your description with live sensor readings to identify probable causes.
+              </p>
+              <p>
+                <strong>Capabilities:</strong> Fault code interpretation with vehicle-specific context,
+                sensor cross-correlation (e.g., linking lean codes with MAF and fuel trim data),
+                severity assessment (drive/do not drive recommendations), repair procedure suggestions
+                ranked by probability, and parts cost estimates.
+              </p>
+              <p>
+                <strong>Requirement:</strong> AI diagnostics requires an active internet connection.
+                All other features function offline.
+              </p>
+            </div>
+          </div>
+
+          <hr class="docs-divider" aria-hidden="true">
+
+          <!-- SECTION: Session Logger -->
+          <div class="docs-section" id="session-logger">
+            <span class="section-label">Section 08</span>
+            <h2 class="docs-section__title">Session Logger</h2>
+
+            <div class="docs-body">
+              <p>
+                The Session Logger records complete diagnostic sessions with timestamped sensor data,
+                DTCs, and command logs. Sessions can be replayed to review data trends, compared
+                before/after repair to verify fixes, and exported as CSV or JSON for external analysis.
+              </p>
+              <p>
+                <strong>Recording:</strong> Tap the record button on any Live Data screen. All active
+                PID readings are captured at the current refresh rate. Session files are stored locally
+                and can be shared via the community forums or exported to cloud storage.
+              </p>
+              <p>
+                <strong>Replay:</strong> Load any saved session from the Session History screen.
+                Data plays back at original timing with full gauge and graph visualization.
+              </p>
+            </div>
+          </div>
+
+          <hr class="docs-divider" aria-hidden="true">
+
+          <!-- SECTION: Protocol Specs -->
+          <div class="docs-section" id="protocol-specs">
+            <span class="section-label">Section 09</span>
+            <h2 class="docs-section__title">Protocol Specifications</h2>
+
+            <div class="docs-body">
+              <p>
+                ODB+ automatically detects and negotiates the correct OBD-II protocol for your vehicle.
+                Manual protocol selection is available in Terminal Mode via <code>ATSP</code> commands.
+                The following table lists all supported protocols, their standards, initialization methods,
+                and typical vehicle applications.
+              </p>
+            </div>
+
+            <div style="overflow-x: auto;">
+              <table class="docs-table" aria-label="OBD-II Protocol Reference">
+                <thead>
+                  <tr>
+                    <th scope="col">Protocol</th>
+                    <th scope="col">Standard</th>
+                    <th scope="col">Init Method</th>
+                    <th scope="col">Typical Vehicles</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>SAE J1850 PWM</td>
+                    <td>J1850</td>
+                    <td>41.6 kbps pulse-width</td>
+                    <td>Ford vehicles (pre-2008)</td>
+                  </tr>
+                  <tr>
+                    <td>SAE J1850 VPW</td>
+                    <td>J1850</td>
+                    <td>10.4 kbps variable pulse</td>
+                    <td>GM vehicles (pre-2008)</td>
+                  </tr>
+                  <tr>
+                    <td>ISO 9141-2</td>
+                    <td>ISO 9141</td>
+                    <td>5-baud slow init (~2.7s)</td>
+                    <td>Chrysler, Asian imports (pre-2004)</td>
+                  </tr>
+                  <tr>
+                    <td>ISO 14230-4 KWP (Slow)</td>
+                    <td>KWP2000</td>
+                    <td>5-baud slow init</td>
+                    <td>European vehicles (pre-2005)</td>
+                  </tr>
+                  <tr>
+                    <td>ISO 14230-4 KWP (Fast)</td>
+                    <td>KWP2000</td>
+                    <td>Fast init (~200ms)</td>
+                    <td>European, Korean vehicles</td>
+                  </tr>
+                  <tr>
+                    <td>ISO 15765-4 CAN (11-bit, 500k)</td>
+                    <td>CAN</td>
+                    <td>CAN bus arbitration</td>
+                    <td>Most 2008+ US vehicles</td>
+                  </tr>
+                  <tr>
+                    <td>ISO 15765-4 CAN (29-bit, 500k)</td>
+                    <td>CAN</td>
+                    <td>CAN bus arbitration</td>
+                    <td>Heavy duty, some European</td>
+                  </tr>
+                  <tr>
+                    <td>ISO 15765-4 CAN (11-bit, 250k)</td>
+                    <td>CAN</td>
+                    <td>CAN bus arbitration</td>
+                    <td>Some older CAN vehicles</td>
+                  </tr>
+                  <tr>
+                    <td>ISO 15765-4 CAN (29-bit, 250k)</td>
+                    <td>CAN</td>
+                    <td>CAN bus arbitration</td>
+                    <td>Some older CAN vehicles</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="docs-body" style="margin-top: var(--space-xl);">
+              <p>
+                <strong>Auto-detection order:</strong> ODB+ queries the adapter's stored protocol
+                hint first (via the last-used protocol memory). If no hint is available, it falls
+                back to a priority scan: CAN 11-bit 500k first (most common), then KWP Fast,
+                then remaining protocols in descending frequency order. This minimizes connection
+                time for the vast majority of vehicles.
+              </p>
+            </div>
+          </div>
+
+          <hr class="docs-divider" aria-hidden="true">
+
+          <!-- SECTION: Troubleshooting -->
+          <div class="docs-section" id="troubleshooting">
+            <span class="section-label">Section 10</span>
+            <h2 class="docs-section__title">Troubleshooting</h2>
+
+            <!-- FAQ Accordion -->
+            <h3 style="font-family: 'Oswald', var(--font-heading); font-size: var(--fs-h4); text-transform: uppercase; letter-spacing: var(--ls-wide); margin-bottom: var(--space-md); color: var(--text-primary);">Frequently Asked Questions</h3>
+
+            <div class="accordion">
+              <details class="accordion-item">
+                <summary>Why does my adapter show "UNABLE TO CONNECT"?</summary>
+                <div class="accordion-body">
+                  This occurs when the ELM327 cannot negotiate a protocol with the vehicle's ECU.
+                  Common causes: the ignition is not in the ON position, the adapter is not fully
+                  seated in the DLC port, or the adapter's protocol hint is stale. Try: turn
+                  the ignition fully ON (engine running is best), reseat the adapter, then open
+                  Terminal Mode and send <code>ATZ</code> followed by <code>0100</code>. If the
+                  adapter retains the correct protocol hint, it will connect. If not, send
+                  <code>ATSP0</code> to force a full protocol scan.
+                </div>
+              </details>
+
+              <details class="accordion-item">
+                <summary>How do I know which OBD-II protocol my vehicle uses?</summary>
+                <div class="accordion-body">
+                  After a successful connection, open Terminal Mode and send <code>ATDP</code>.
+                  The adapter will respond with the active protocol name (e.g., "ISO 14230-4
+                  (KWP FAST)" or "ISO 15765-4 (CAN 11/500)"). As a general rule: most US vehicles
+                  2008+ use CAN, European vehicles 2001-2007 commonly use KWP2000, and older
+                  vehicles may use ISO 9141 or J1850.
+                </div>
+              </details>
+
+              <details class="accordion-item">
+                <summary>Can I use ODB+ with a WiFi adapter?</summary>
+                <div class="accordion-body">
+                  Yes. ODB+ supports WiFi ELM327 adapters that provide a TCP socket interface
+                  (typically on port 35000). In the connection settings, select "WiFi" as the
+                  connection type and enter the adapter's IP address (usually 192.168.0.10).
+                  Note that WiFi adapters require your phone to disconnect from your regular
+                  WiFi network and connect to the adapter's network.
+                </div>
+              </details>
+
+              <details class="accordion-item">
+                <summary>Why are some PIDs showing "No Data"?</summary>
+                <div class="accordion-body">
+                  Not all vehicles support all OBD-II PIDs. The ECU reports which PIDs it supports
+                  via the 0100/0120/0140 bitmap queries. If a PID returns "No Data," your vehicle's
+                  ECU does not implement that parameter. This is normal -- vehicles typically
+                  support 15-30 of the 80+ standardized PIDs. You can verify supported PIDs by
+                  sending <code>0100</code> in Terminal Mode and decoding the bitmap response.
+                </div>
+              </details>
+
+              <details class="accordion-item">
+                <summary>Is ODB+ safe to use while driving?</summary>
+                <div class="accordion-body">
+                  ODB+ reads sensor data passively. It does not write to the ECU or modify any
+                  vehicle parameters (except when you explicitly clear DTCs via Mode 04). Reading
+                  live data while driving is safe from a vehicle standpoint. However, do not
+                  interact with the app while driving. Use the HUD overlay for hands-free
+                  monitoring or have a passenger operate the app.
+                </div>
+              </details>
+            </div>
+
+            <!-- Troubleshooting Problem/Solution Table -->
+            <h3 style="font-family: 'Oswald', var(--font-heading); font-size: var(--fs-h4); text-transform: uppercase; letter-spacing: var(--ls-wide); margin-bottom: var(--space-md); margin-top: var(--space-2xl); color: var(--text-primary);">Problem / Solution Reference</h3>
+
+            <div style="overflow-x: auto;">
+              <table class="troubleshoot-table" aria-label="Troubleshooting reference">
+                <thead>
+                  <tr>
+                    <th scope="col">Status</th>
+                    <th scope="col">Problem</th>
+                    <th scope="col">Solution</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><span class="status-indicator status-indicator--critical">Critical</span></td>
+                    <td>Adapter paired but "Unable to Connect" to vehicle</td>
+                    <td>Close other OBD apps, unpair/re-pair adapter in Bluetooth settings, ensure ignition is ON. Retry connection. If issue persists, try <code>ATZ</code> then <code>0100</code> in Terminal Mode.</td>
+                  </tr>
+                  <tr>
+                    <td><span class="status-indicator status-indicator--critical">Critical</span></td>
+                    <td>"BUS INIT: ERROR" in terminal output</td>
+                    <td>The adapter failed to initialize the vehicle's communication bus. Turn ignition OFF for 10 seconds, then ON. Send <code>ATZ</code>, wait 2 seconds, then send <code>0100</code>. For KWP vehicles, try <code>ATSP5</code> then <code>0100</code>.</td>
+                  </tr>
+                  <tr>
+                    <td><span class="status-indicator status-indicator--warning">Warning</span></td>
+                    <td>All PIDs return "No Data" after connection</td>
+                    <td>Protocol mismatch. Send <code>ATZ</code> to reset, then <code>ATSP0</code> to force full protocol scan, then <code>0100</code>. If auto-detect fails, try manual protocol: <code>ATSP6</code> (CAN) or <code>ATSP5</code> (KWP).</td>
+                  </tr>
+                  <tr>
+                    <td><span class="status-indicator status-indicator--warning">Warning</span></td>
+                    <td>Very slow refresh rates (>1s per reading)</td>
+                    <td>Non-CAN protocols are inherently slower. Reduce active PIDs to 4-6. KWP2000 averages ~400ms/PID, ISO 9141 ~600ms/PID. CAN vehicles achieve ~200ms with multi-PID requests.</td>
+                  </tr>
+                  <tr>
+                    <td><span class="status-indicator status-indicator--info">Info</span></td>
+                    <td>Bluetooth connection drops intermittently</td>
+                    <td>Ensure the adapter is firmly seated in the DLC port. Move your phone closer to the adapter (Bluetooth range is typically 5-10m). Disable battery optimization for ODB+ in Android settings.</td>
+                  </tr>
+                  <tr>
+                    <td><span class="status-indicator status-indicator--info">Info</span></td>
+                    <td>AI diagnostics unavailable</td>
+                    <td>AI features require an active internet connection. All other ODB+ features (live data, DTCs, terminal, session logger) function fully offline.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="footer" role="contentinfo">
+    <div class="container">
+      <div class="footer__grid">
+        <div class="footer__brand">
+          <svg viewBox="0 0 160 36" width="160" height="36" aria-label="ODB+ Diagnostic Systems">
+            <defs><linearGradient id="fB3" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#FF8C1A"/><stop offset="100%" stop-color="#CC5500"/></linearGradient></defs>
+            <polygon points="12,2 18,5 18,13 12,16 6,13 6,5" fill="url(#fB3)" stroke="#CC5500" stroke-width="1"/><circle cx="12" cy="9" r="3" fill="#1C1C1C" stroke="#FF6B00" stroke-width="0.8"/>
+            <text x="26" y="15" font-family="'Bebas Neue','Oswald',Impact,sans-serif" font-size="20" font-weight="700" letter-spacing="2" fill="#E0E0E0">ODB</text><text x="80" y="15" font-family="'Bebas Neue','Oswald',Impact,sans-serif" font-size="20" font-weight="700" fill="#FF6B00">+</text>
+            <line x1="26" y1="20" x2="90" y2="20" stroke="#FF6B00" stroke-width="0.5" opacity="0.5"/><text x="27" y="28" font-family="'Rajdhani','Barlow Condensed',sans-serif" font-size="6" font-weight="600" letter-spacing="2" fill="#777">DIAGNOSTIC SYSTEMS</text>
+          </svg>
+          <p class="footer__brand-desc">Professional-grade OBD-II diagnostics for Android.</p>
+        </div>
+        <div>
+          <h3 class="footer__col-title">Product</h3>
+          <ul class="footer__links"><li><a href="features.html" class="footer__link">Features</a></li><li><a href="#download" class="footer__link">Download</a></li><li><a href="#pricing" class="footer__link">Pricing</a></li></ul>
+        </div>
+        <div>
+          <h3 class="footer__col-title">Resources</h3>
+          <ul class="footer__links"><li><a href="docs.html" class="footer__link">Documentation</a></li><li><a href="#forums" class="footer__link">Forums</a></li><li><a href="#support" class="footer__link">Support</a></li></ul>
+        </div>
+        <div>
+          <h3 class="footer__col-title">Company</h3>
+          <ul class="footer__links"><li><a href="#about" class="footer__link">About</a></li><li><a href="contact.html" class="footer__link">Contact</a></li><li><a href="#privacy" class="footer__link">Privacy</a></li></ul>
+        </div>
+      </div>
+      <div class="footer__bottom">
+        <span class="footer__version">System Version: 2.4.1-release // Build 20260306</span>
+        <span class="footer__copy">2024-2026 ODB+ Diagnostic Systems. All rights reserved.</span>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    /* Mobile nav toggle */
+    (function(){
+      var t = document.getElementById('navToggle');
+      var d = document.getElementById('navDrawer');
+      if (!t || !d) return;
+      t.addEventListener('click', function() {
+        var o = d.classList.toggle('nav__drawer--open');
+        t.setAttribute('aria-expanded', o);
+        d.setAttribute('aria-hidden', !o);
+        var b = t.querySelectorAll('.nav__toggle-bar');
+        if (o) {
+          b[0].style.transform = 'rotate(45deg) translate(5px, 5px)';
+          b[1].style.opacity = '0';
+          b[2].style.transform = 'rotate(-45deg) translate(5px, -5px)';
+        } else {
+          b[0].style.transform = '';
+          b[1].style.opacity = '';
+          b[2].style.transform = '';
+        }
+      });
+    })();
+
+    /* Nav background on scroll */
+    (function(){
+      var n = document.querySelector('.nav');
+      if (!n) return;
+      window.addEventListener('scroll', function() {
+        n.style.background = window.scrollY > 20 ? 'rgba(28,28,28,0.95)' : '';
+        n.style.backdropFilter = window.scrollY > 20 ? 'blur(8px)' : '';
+      }, { passive: true });
+    })();
+
+    /* Sidebar active link tracking on scroll */
+    (function(){
+      var sections = document.querySelectorAll('.docs-section');
+      var links = document.querySelectorAll('.docs-sidebar__link');
+      if (!sections.length || !links.length) return;
+      if (!('IntersectionObserver' in window)) return;
+
+      var observer = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+          if (entry.isIntersecting) {
+            var id = entry.target.getAttribute('id');
+            links.forEach(function(link) {
+              link.classList.remove('docs-sidebar__link--active');
+              if (link.getAttribute('href') === '#' + id) {
+                link.classList.add('docs-sidebar__link--active');
+              }
+            });
+          }
+        });
+      }, {
+        rootMargin: '-20% 0px -60% 0px',
+        threshold: 0
+      });
+
+      sections.forEach(function(section) {
+        observer.observe(section);
+      });
+    })();
+  </script>
+</body>
+</html>

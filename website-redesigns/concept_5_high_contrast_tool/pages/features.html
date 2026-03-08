@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="ODB+ feature specifications. AI diagnostics, live data monitoring, 18,247 DTC database, terminal mode, session logging, guided tests.">
+  <meta name="theme-color" content="#000000">
+  <title>ODB+ | System Features &amp; Specifications</title>
+  <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+
+  <!-- Status Bar -->
+  <div class="system-status-bar" role="status" aria-label="System status">
+    <span class="status-dot" aria-hidden="true"></span>
+    <span>SYSTEM ONLINE</span>
+    <span class="divider" aria-hidden="true">|</span>
+    <span>VER 2.3.1</span>
+    <span class="divider" aria-hidden="true">|</span>
+    <span>MODULE: FEATURE REGISTRY</span>
+  </div>
+
+  <!-- Navigation -->
+  <nav class="navbar" aria-label="Main navigation">
+    <div class="navbar__inner">
+      <a href="/pages/index.html" aria-label="ODB+ Home">
+        <img src="../assets/logo.svg" alt="ODB+ Diagnostic System" class="navbar__logo" width="280" height="70">
+      </a>
+      <button class="navbar__toggle" aria-expanded="false" aria-controls="main-nav" aria-label="Toggle navigation menu">[=]</button>
+      <ul class="navbar__links" id="main-nav" role="list">
+        <li><a href="/pages/index.html" class="navbar__link">HOME</a></li>
+        <li><a href="/pages/features.html" class="navbar__link" aria-current="page">FEATURES</a></li>
+        <li><a href="/pages/docs.html" class="navbar__link">DOCS</a></li>
+        <li><a href="/pages/contact.html" class="navbar__link">SUPPORT</a></li>
+        <li><a href="#download" class="navbar__cta">DOWNLOAD v2.3</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <main id="main-content">
+
+    <!-- Page Header -->
+    <section class="section" aria-labelledby="page-title">
+      <div class="container">
+        <div class="section__header">
+          <p class="section__label">SYSTEM REGISTRY</p>
+          <h1 id="page-title" class="section__title">FEATURE <span>SPECIFICATIONS</span></h1>
+          <p class="section__subtitle">&gt; Complete module manifest. Each subsystem documented with technical parameters.</p>
+        </div>
+
+        <!-- Feature 01: AI Diagnostics -->
+        <div class="spec-entry" id="ai-diagnostics">
+          <div class="spec-entry__header">
+            <span class="spec-entry__id">MODULE 01</span>
+            <h2 class="spec-entry__name">AI-Powered Diagnostics</h2>
+            <span class="badge badge--active" style="margin-left: auto;"><span class="status-dot blink" aria-hidden="true"></span>ACTIVE</span>
+          </div>
+          <div class="spec-entry__body">
+            <table aria-label="AI Diagnostics specifications">
+              <tr>
+                <td>DESCRIPTION</td>
+                <td>Conversational AI assistant with real-time access to vehicle sensor data. Analyzes live PID streams, interprets DTCs, and provides manufacturer-specific repair guidance.</td>
+              </tr>
+              <tr>
+                <td>AI MODEL</td>
+                <td>GPT-4 class large language model with automotive fine-tuning</td>
+              </tr>
+              <tr>
+                <td>DATA CONTEXT</td>
+                <td>Live PID values, active DTCs, freeze frame data, vehicle VIN/make/model/year</td>
+              </tr>
+              <tr>
+                <td>CAPABILITIES</td>
+                <td>Root cause analysis, repair cost estimation, parts identification, severity assessment, TSB cross-reference</td>
+              </tr>
+              <tr>
+                <td>RESPONSE TIME</td>
+                <td>1-3 seconds average</td>
+              </tr>
+              <tr>
+                <td>OFFLINE MODE</td>
+                <td>Basic DTC lookup available offline. AI chat requires network connection.</td>
+              </tr>
+              <tr>
+                <td>LANGUAGES</td>
+                <td>English, Spanish, German, French, Portuguese, Japanese</td>
+              </tr>
+            </table>
+          </div>
+        </div>
+
+        <!-- Feature 02: Live Data -->
+        <div class="spec-entry" id="live-data">
+          <div class="spec-entry__header">
+            <span class="spec-entry__id">MODULE 02</span>
+            <h2 class="spec-entry__name">Live Data Monitoring</h2>
+            <span class="badge badge--active" style="margin-left: auto;"><span class="status-dot blink" aria-hidden="true"></span>ACTIVE</span>
+          </div>
+          <div class="spec-entry__body">
+            <table aria-label="Live Data specifications">
+              <tr>
+                <td>DESCRIPTION</td>
+                <td>Real-time streaming of all supported OBD-II PIDs from the vehicle ECU. Multiple display modes: table, graph, gauge cluster, and raw hex.</td>
+              </tr>
+              <tr>
+                <td>REFRESH RATE</td>
+                <td>Up to 60Hz on CAN bus adapters. 10-20Hz on ISO/KWP protocols.</td>
+              </tr>
+              <tr>
+                <td>SUPPORTED PIDS</td>
+                <td>200+ across Mode 01 (live), Mode 02 (freeze frame), Mode 09 (vehicle info)</td>
+              </tr>
+              <tr>
+                <td>DISPLAY MODES</td>
+                <td>Tabular readout, real-time line graphs, radial gauge cluster, HUD overlay, raw hex terminal</td>
+              </tr>
+              <tr>
+                <td>DATA LOGGING</td>
+                <td>Continuous background recording. Export CSV/JSON. Timestamped to millisecond precision.</td>
+              </tr>
+              <tr>
+                <td>ALERTING</td>
+                <td>Configurable high/low threshold alerts per PID. Audio and visual notification.</td>
+              </tr>
+              <tr>
+                <td>KEY SENSORS</td>
+                <td>RPM, vehicle speed, coolant temp, intake temp, MAF, MAP, O2 sensors (all banks), fuel trims (short/long), timing advance, engine load, throttle position, battery voltage</td>
+              </tr>
+            </table>
+          </div>
+        </div>
+
+        <!-- Feature 03: DTC Database -->
+        <div class="spec-entry" id="dtc-database">
+          <div class="spec-entry__header">
+            <span class="spec-entry__id">MODULE 03</span>
+            <h2 class="spec-entry__name">Error Code Database</h2>
+            <span class="badge badge--active" style="margin-left: auto;"><span class="status-dot blink" aria-hidden="true"></span>ACTIVE</span>
+          </div>
+          <div class="spec-entry__body">
+            <table aria-label="DTC Database specifications">
+              <tr>
+                <td>TOTAL CODES</td>
+                <td>18,247 diagnostic trouble codes</td>
+              </tr>
+              <tr>
+                <td>CATEGORIES</td>
+                <td>P0xxx (generic powertrain), P1xxx (mfr-specific), P2xxx (generic ISO/SAE), Bxxxx (body), Cxxxx (chassis), Uxxxx (network)</td>
+              </tr>
+              <tr>
+                <td>MANUFACTURERS</td>
+                <td>50+ brands: Toyota, Honda, Ford, GM, Chrysler/Stellantis, BMW, Mercedes, Audi/VW, Nissan, Hyundai/Kia, Subaru, Mazda, Mitsubishi, Volvo, Jaguar/Land Rover, Porsche, and more</td>
+              </tr>
+              <tr>
+                <td>CODE DETAIL</td>
+                <td>Full description, affected system, severity rating, common causes, symptoms, repair procedures, estimated labor time, related TSBs</td>
+              </tr>
+              <tr>
+                <td>SCAN MODES</td>
+                <td>Mode 03 (stored DTCs), Mode 07 (pending DTCs), Mode 0A (permanent DTCs)</td>
+              </tr>
+              <tr>
+                <td>CLEAR CODES</td>
+                <td>Mode 04 clear/reset. Confirmation required. Warning displayed for emissions-related codes.</td>
+              </tr>
+              <tr>
+                <td>FREEZE FRAME</td>
+                <td>Mode 02 freeze frame data retrieval for each stored DTC</td>
+              </tr>
+            </table>
+          </div>
+        </div>
+
+        <!-- Feature 04: Terminal Mode -->
+        <div class="spec-entry" id="terminal">
+          <div class="spec-entry__header">
+            <span class="spec-entry__id">MODULE 04</span>
+            <h2 class="spec-entry__name">Terminal Mode</h2>
+            <span class="badge badge--active" style="margin-left: auto;"><span class="status-dot blink" aria-hidden="true"></span>ACTIVE</span>
+          </div>
+          <div class="spec-entry__body">
+            <table aria-label="Terminal Mode specifications">
+              <tr>
+                <td>DESCRIPTION</td>
+                <td>Raw command-line interface to the OBD-II adapter. Full AT command support. Custom PID queries. Protocol-level debugging.</td>
+              </tr>
+              <tr>
+                <td>COMMAND SET</td>
+                <td>Full ELM327 AT command set, STN extended commands, raw OBD-II service requests (Mode 01-0A)</td>
+              </tr>
+              <tr>
+                <td>DISPLAY</td>
+                <td>Monospace terminal with syntax highlighting. Hex and ASCII view modes. Auto-parsed responses.</td>
+              </tr>
+              <tr>
+                <td>HISTORY</td>
+                <td>Persistent command history. Favorites/bookmarks. Macro support for command sequences.</td>
+              </tr>
+              <tr>
+                <td>TIMEOUT</td>
+                <td>Configurable response timeout (100ms - 30s). Auto-retry on NO DATA.</td>
+              </tr>
+              <tr>
+                <td>PROTOCOLS</td>
+                <td>Manual protocol selection (ATSP0-ATSP9) or automatic negotiation</td>
+              </tr>
+            </table>
+          </div>
+        </div>
+
+        <!-- Feature 05: Session Logger -->
+        <div class="spec-entry" id="session-logger">
+          <div class="spec-entry__header">
+            <span class="spec-entry__id">MODULE 05</span>
+            <h2 class="spec-entry__name">Session Logger &amp; Replay</h2>
+            <span class="badge badge--active" style="margin-left: auto;"><span class="status-dot blink" aria-hidden="true"></span>ACTIVE</span>
+          </div>
+          <div class="spec-entry__body">
+            <table aria-label="Session Logger specifications">
+              <tr>
+                <td>DESCRIPTION</td>
+                <td>Records every PID reading, DTC scan, and terminal command during a diagnostic session. Full replay capability.</td>
+              </tr>
+              <tr>
+                <td>RECORDING</td>
+                <td>Automatic start on connection. Manual start/stop. Background recording.</td>
+              </tr>
+              <tr>
+                <td>REPLAY</td>
+                <td>Time-scrubbing playback. Variable speed (0.5x - 10x). Pause/resume. PID value overlay.</td>
+              </tr>
+              <tr>
+                <td>EXPORT FORMATS</td>
+                <td>CSV (spreadsheet), JSON (programmatic), PDF (report), raw log</td>
+              </tr>
+              <tr>
+                <td>STORAGE</td>
+                <td>Local device storage. Cloud sync optional. Typical session: 2-5 MB.</td>
+              </tr>
+              <tr>
+                <td>SHARING</td>
+                <td>Share session files via email, messaging, or direct mechanic link</td>
+              </tr>
+            </table>
+          </div>
+        </div>
+
+        <!-- Feature 06: Guided Tests -->
+        <div class="spec-entry" id="guided-tests">
+          <div class="spec-entry__header">
+            <span class="spec-entry__id">MODULE 06</span>
+            <h2 class="spec-entry__name">Guided Diagnostic Tests</h2>
+            <span class="badge badge--active" style="margin-left: auto;"><span class="status-dot blink" aria-hidden="true"></span>ACTIVE</span>
+          </div>
+          <div class="spec-entry__body">
+            <table aria-label="Guided Tests specifications">
+              <tr>
+                <td>DESCRIPTION</td>
+                <td>Step-by-step automated test procedures with real-time pass/fail evaluation. Instructor-guided or fully automatic.</td>
+              </tr>
+              <tr>
+                <td>AVAILABLE TESTS</td>
+                <td>RPM stability, O2 sensor response time, catalytic converter efficiency, fuel system feedback, EVAP system integrity, misfire detection, idle quality</td>
+              </tr>
+              <tr>
+                <td>HUD MODE</td>
+                <td>Full-screen heads-up display overlay. Large readable values for under-hood use. Auto-brightness.</td>
+              </tr>
+              <tr>
+                <td>RESULTS</td>
+                <td>PASS / FAIL / WARNING with detailed explanation. Historical comparison against previous tests.</td>
+              </tr>
+              <tr>
+                <td>CUSTOM TESTS</td>
+                <td>Create custom test sequences with user-defined PID thresholds and timing</td>
+              </tr>
+            </table>
+          </div>
+        </div>
+
+        <!-- Feature 07: Forums -->
+        <div class="spec-entry" id="forums">
+          <div class="spec-entry__header">
+            <span class="spec-entry__id">MODULE 07</span>
+            <h2 class="spec-entry__name">Vehicle Forums</h2>
+            <span class="badge badge--active" style="margin-left: auto;"><span class="status-dot blink" aria-hidden="true"></span>ACTIVE</span>
+          </div>
+          <div class="spec-entry__body">
+            <table aria-label="Forums specifications">
+              <tr>
+                <td>DESCRIPTION</td>
+                <td>Manufacturer-organized community forums. Share diagnostic data, discuss repairs, get advice from experienced mechanics.</td>
+              </tr>
+              <tr>
+                <td>MANUFACTURERS</td>
+                <td>50+ dedicated sub-forums organized by brand, model, and year range</td>
+              </tr>
+              <tr>
+                <td>FEATURES</td>
+                <td>DTC auto-linking, session attachment, image uploads, reputation system, verified mechanic badges</td>
+              </tr>
+              <tr>
+                <td>SEARCH</td>
+                <td>Full-text search across all posts. Filter by DTC code, vehicle, date, solved status.</td>
+              </tr>
+            </table>
+          </div>
+        </div>
+
+        <!-- Feature 08: Sensor Reference -->
+        <div class="spec-entry" id="sensors">
+          <div class="spec-entry__header">
+            <span class="spec-entry__id">MODULE 08</span>
+            <h2 class="spec-entry__name">Sensor Reference Library</h2>
+            <span class="badge badge--active" style="margin-left: auto;"><span class="status-dot blink" aria-hidden="true"></span>ACTIVE</span>
+          </div>
+          <div class="spec-entry__body">
+            <table aria-label="Sensor Reference specifications">
+              <tr>
+                <td>DESCRIPTION</td>
+                <td>Comprehensive reference for every OBD-II sensor type. Pinouts, expected values, testing procedures, failure modes.</td>
+              </tr>
+              <tr>
+                <td>SENSOR TYPES</td>
+                <td>O2 (narrowband/wideband), MAP, MAF, TPS, CKP, CMP, ECT, IAT, knock, EGR position, fuel pressure, boost pressure</td>
+              </tr>
+              <tr>
+                <td>DATA INCLUDED</td>
+                <td>Normal operating ranges, waveform patterns, connector pinouts, resistance values, voltage specifications</td>
+              </tr>
+              <tr>
+                <td>TEST GUIDES</td>
+                <td>Step-by-step testing procedures using multimeter, oscilloscope, and OBD-II scan data</td>
+              </tr>
+            </table>
+          </div>
+        </div>
+
+        <!-- Feature 09: Parts Catalog -->
+        <div class="spec-entry" id="parts">
+          <div class="spec-entry__header">
+            <span class="spec-entry__id">MODULE 09</span>
+            <h2 class="spec-entry__name">Parts Catalog</h2>
+            <span class="badge badge--active" style="margin-left: auto;"><span class="status-dot blink" aria-hidden="true"></span>ACTIVE</span>
+          </div>
+          <div class="spec-entry__body">
+            <table aria-label="Parts Catalog specifications">
+              <tr>
+                <td>DESCRIPTION</td>
+                <td>Integrated parts lookup linked to diagnostic results. When a DTC points to a failed component, find replacement parts immediately.</td>
+              </tr>
+              <tr>
+                <td>SOURCES</td>
+                <td>OEM part numbers, aftermarket cross-references, pricing from multiple vendors</td>
+              </tr>
+              <tr>
+                <td>INTEGRATION</td>
+                <td>Auto-linked from DTC repair guides. Filter by vehicle year/make/model.</td>
+              </tr>
+              <tr>
+                <td>PRICING</td>
+                <td>Real-time pricing comparison across vendors. Price history tracking.</td>
+              </tr>
+            </table>
+          </div>
+        </div>
+
+        <!-- Feature 10: Bluetooth Adapter Support -->
+        <div class="spec-entry" id="adapters">
+          <div class="spec-entry__header">
+            <span class="spec-entry__id">MODULE 10</span>
+            <h2 class="spec-entry__name">Adapter Compatibility</h2>
+            <span class="badge badge--active" style="margin-left: auto;"><span class="status-dot blink" aria-hidden="true"></span>ACTIVE</span>
+          </div>
+          <div class="spec-entry__body">
+            <table aria-label="Adapter specifications">
+              <tr>
+                <td>DESCRIPTION</td>
+                <td>Universal OBD-II adapter support via UOAPL (Universal OBD-II Adapter Protocol Layer). Automatic adapter fingerprinting and driver selection.</td>
+              </tr>
+              <tr>
+                <td>ADAPTER FAMILIES</td>
+                <td>ELM327 (v1.0-2.3+), STN1110/STN1170, STN2100/STN2120, ESP32-based, OBDLink (MX/MX+/EX/SX)</td>
+              </tr>
+              <tr>
+                <td>CONNECTION</td>
+                <td>Bluetooth Classic (SPP), Bluetooth LE, WiFi (TCP socket)</td>
+              </tr>
+              <tr>
+                <td>FINGERPRINTING</td>
+                <td>Automatic adapter identification: firmware version, supported AT commands, CAN filter capability, header support</td>
+              </tr>
+              <tr>
+                <td>PROTOCOLS</td>
+                <td>SAE J1850 PWM, SAE J1850 VPW, ISO 9141-2, ISO 14230-4 (KWP2000), ISO 15765-4 (CAN 11/29-bit)</td>
+              </tr>
+              <tr>
+                <td>NEGOTIATION</td>
+                <td>Automatic protocol detection with optimized fallback order. Fast-path detection reuses last successful protocol.</td>
+              </tr>
+            </table>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer" role="contentinfo">
+    <div class="container">
+      <div class="footer__inner">
+        <a href="/pages/index.html" aria-label="ODB+ Home">
+          <img src="../assets/logo.svg" alt="ODB+" class="footer__logo" width="280" height="70">
+        </a>
+        <ul class="footer__links" role="list">
+          <li><a href="/pages/index.html" class="footer__link">HOME</a></li>
+          <li><a href="/pages/features.html" class="footer__link">FEATURES</a></li>
+          <li><a href="/pages/docs.html" class="footer__link">DOCS</a></li>
+          <li><a href="/pages/contact.html" class="footer__link">SUPPORT</a></li>
+        </ul>
+        <div class="footer__status" role="status">
+          SYSTEM STATUS: <span class="text-primary">ONLINE</span>
+          <span aria-hidden="true">|</span>
+          BUILD: 2026.03
+          <span aria-hidden="true">|</span>
+          &copy; 2026 ODB+ DIAGNOSTIC SYSTEMS
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      var toggle = document.querySelector('.navbar__toggle');
+      var nav = document.getElementById('main-nav');
+      if (toggle && nav) {
+        toggle.addEventListener('click', function() {
+          var expanded = toggle.getAttribute('aria-expanded') === 'true';
+          toggle.setAttribute('aria-expanded', String(!expanded));
+          nav.classList.toggle('active');
+          toggle.textContent = expanded ? '[=]' : '[X]';
+        });
+      }
+    });
+  </script>
+
+</body>
+</html>

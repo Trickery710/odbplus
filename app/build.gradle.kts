@@ -71,6 +71,11 @@ dependencies {
     // Desugaring
     coreLibraryDesugaring(libs.desugar.jdk.libs)
 
+    // Room
+    implementation(libs.room.runtime)
+    implementation(libs.room.ktx)
+    ksp(libs.room.compiler)
+
     // Modules
     implementation(project(":core-transport"))
     implementation(project(":core-protocol"))

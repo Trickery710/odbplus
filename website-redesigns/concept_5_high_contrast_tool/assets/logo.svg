@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 70" width="280" height="70">
+  <defs>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@700&amp;display=swap');
+      .logo-text { font-family: 'Rajdhani', sans-serif; font-weight: 700; }
+      @keyframes blink {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0; }
+      }
+      @keyframes scanline {
+        0% { transform: translateY(-2px); }
+        50% { transform: translateY(2px); }
+        100% { transform: translateY(-2px); }
+      }
+    </style>
+  </defs>
+
+  <!-- Diagnostic port icon -->
+  <g transform="translate(8, 10)">
+    <!-- OBD-II port trapezoid shape -->
+    <path d="M4,40 L12,8 L52,8 L60,40 Z" fill="none" stroke="#00FF88" stroke-width="2.5"/>
+    <!-- Pin row top (8 pins) -->
+    <circle cx="18" cy="18" r="2" fill="#00FF88"/>
+    <circle cx="26" cy="18" r="2" fill="#00FF88"/>
+    <circle cx="34" cy="18" r="2" fill="#00FF88"/>
+    <circle cx="42" cy="18" r="2" fill="#00FF88"/>
+    <circle cx="46" cy="18" r="2" fill="#00FF88"/>
+    <!-- Pin row bottom (8 pins) -->
+    <circle cx="16" cy="28" r="2" fill="#00FF88"/>
+    <circle cx="24" cy="28" r="2" fill="#00FF88"/>
+    <circle cx="32" cy="28" r="2" fill="#00FF88"/>
+    <circle cx="40" cy="28" r="2" fill="#00FF88"/>
+    <circle cx="48" cy="28" r="2" fill="#00FF88"/>
+    <!-- Scan beam -->
+    <line x1="14" y1="36" x2="50" y2="36" stroke="#00FF88" stroke-width="1.5" opacity="0.6">
+      <animate attributeName="opacity" values="0.3;0.8;0.3" dur="1.5s" repeatCount="indefinite"/>
+    </line>
+    <!-- Connection indicator -->
+    <circle cx="32" cy="44" r="3" fill="#00FF88">
+      <animate attributeName="opacity" values="1;0.3;1" dur="2s" repeatCount="indefinite"/>
+    </circle>
+  </g>
+
+  <!-- ODB+ text -->
+  <text x="80" y="48" class="logo-text" fill="#00FF88" font-size="42" letter-spacing="2">ODB</text>
+  <text x="185" y="48" class="logo-text" fill="#00FF88" font-size="48" letter-spacing="0">+</text>
+
+  <!-- Blinking cursor -->
+  <rect x="212" y="20" width="3" height="30" fill="#00FF88">
+    <animate attributeName="opacity" values="1;0;1" dur="1s" repeatCount="indefinite"/>
+  </rect>
+
+  <!-- Subtitle -->
+  <text x="224" y="32" fill="#00FF88" font-family="monospace" font-size="8" letter-spacing="1" opacity="0.7">DIAGNOSTIC</text>
+  <text x="224" y="44" fill="#00FF88" font-family="monospace" font-size="8" letter-spacing="1" opacity="0.7">SYSTEM</text>
+
+  <!-- Version tag -->
+  <rect x="224" y="50" width="42" height="12" fill="none" stroke="#00FF88" stroke-width="0.5" opacity="0.5"/>
+  <text x="228" y="59" fill="#00FF88" font-family="monospace" font-size="7" opacity="0.5">v2.3.1</text>
+</svg>

@@ -1,0 +1,46 @@
+<nav class="navbar" role="navigation" aria-label="Main navigation">
+  <div class="navbar__inner">
+    <a href="/" class="navbar__logo" aria-label="ODB+ Home">
+      <svg viewBox="0 0 250 60" width="120" height="28" aria-hidden="true">
+        <style>.nl-text{font-family:-apple-system,'SF Pro Display','Helvetica Neue',system-ui,sans-serif;font-weight:600;font-size:36px;fill:#1D1D1F;letter-spacing:-0.5px}.nl-plus{font-family:-apple-system,'SF Pro Display','Helvetica Neue',system-ui,sans-serif;font-weight:300;font-size:36px;fill:#0066CC}.nl-pulse{fill:none;stroke:#0066CC;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}</style>
+        <text x="16" y="42" class="nl-text">ODB</text>
+        <text x="107" y="42" class="nl-plus">+</text>
+        <path class="nl-pulse" d="M140 30 L148 30 L152 18 L156 42 L160 24 L164 36 L168 30 L176 30"/>
+      </svg>
+    </a>
+
+    <ul class="navbar__links" role="list">
+      <li><a href="/pages/features.html" class="navbar__link">Features</a></li>
+      <li><a href="/pages/docs.html" class="navbar__link">Docs</a></li>
+      <li><a href="#how-it-works" class="navbar__link">How It Works</a></li>
+      <li><a href="/pages/contact.html" class="navbar__link">Contact</a></li>
+    </ul>
+
+    <div class="navbar__actions">
+      <a href="#download" class="btn btn--primary btn--small">
+        <svg width="16" height="16" aria-hidden="true"><use href="../assets/icon-set.svg#icon-download"/></svg>
+        Download
+      </a>
+      <button
+        class="navbar__mobile-toggle"
+        aria-label="Toggle navigation menu"
+        aria-expanded="false"
+        aria-controls="mobile-menu"
+      >
+        <svg width="24" height="24" aria-hidden="true"><use href="../assets/icon-set.svg#icon-menu"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <div class="navbar__mobile-menu" id="mobile-menu" aria-hidden="true">
+    <ul class="navbar__links" role="list">
+      <li><a href="/pages/features.html" class="navbar__link">Features</a></li>
+      <li><a href="/pages/docs.html" class="navbar__link">Docs</a></li>
+      <li><a href="#how-it-works" class="navbar__link">How It Works</a></li>
+      <li><a href="/pages/contact.html" class="navbar__link">Contact</a></li>
+    </ul>
+    <div class="mt-xl">
+      <a href="#download" class="btn btn--primary">Download for Android</a>
+    </div>
+  </div>
+</nav>

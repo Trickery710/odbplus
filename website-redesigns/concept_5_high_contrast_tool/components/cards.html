@@ -1,0 +1,135 @@
+<!-- ODB+ High Contrast Diagnostic Tool — Card Varieties -->
+<!-- DTC card, live data card, feature card with status badges -->
+
+<div class="cards-showcase">
+
+  <!-- === DTC CARD === -->
+  <article class="card card--dtc">
+    <div class="card__header">
+      <div>
+        <span class="section-label">DIAGNOSTIC TROUBLE CODE</span>
+        <p class="dtc-code">P0300</p>
+      </div>
+      <span class="badge badge--critical">CRITICAL</span>
+    </div>
+    <div class="card__body">
+      <p class="dtc-description">CYLINDER MISFIRE DETECTED &mdash; RANDOM / MULTIPLE CYLINDERS</p>
+      <table style="width:100%; margin-top: 16px; font-family: var(--font-mono); font-size: var(--text-xs);">
+        <tr>
+          <td style="padding: 4px 8px; color: var(--color-text-muted);">SYSTEM</td>
+          <td style="padding: 4px 8px; color: var(--color-text-secondary);">FUEL &amp; AIR METERING</td>
+        </tr>
+        <tr>
+          <td style="padding: 4px 8px; color: var(--color-text-muted);">TYPE</td>
+          <td style="padding: 4px 8px; color: var(--color-text-secondary);">GENERIC (SAE)</td>
+        </tr>
+        <tr>
+          <td style="padding: 4px 8px; color: var(--color-text-muted);">SEVERITY</td>
+          <td style="padding: 4px 8px; color: var(--color-danger);">HIGH &mdash; ENGINE DAMAGE POSSIBLE</td>
+        </tr>
+        <tr>
+          <td style="padding: 4px 8px; color: var(--color-text-muted);">COMMON CAUSES</td>
+          <td style="padding: 4px 8px; color: var(--color-text-secondary);">SPARK PLUGS, IGNITION COILS, FUEL INJECTORS, VACUUM LEAK</td>
+        </tr>
+      </table>
+    </div>
+  </article>
+
+  <!-- === DTC CARD (Warning level) === -->
+  <article class="card card--dtc" style="border-left-color: var(--color-warning);">
+    <div class="card__header">
+      <div>
+        <span class="section-label">DIAGNOSTIC TROUBLE CODE</span>
+        <p class="dtc-code" style="color: var(--color-warning);">P0420</p>
+      </div>
+      <span class="badge badge--warning">WARNING</span>
+    </div>
+    <div class="card__body">
+      <p class="dtc-description">CATALYST SYSTEM EFFICIENCY BELOW THRESHOLD &mdash; BANK 1</p>
+      <table style="width:100%; margin-top: 16px; font-family: var(--font-mono); font-size: var(--text-xs);">
+        <tr>
+          <td style="padding: 4px 8px; color: var(--color-text-muted);">SYSTEM</td>
+          <td style="padding: 4px 8px; color: var(--color-text-secondary);">EMISSIONS CONTROL</td>
+        </tr>
+        <tr>
+          <td style="padding: 4px 8px; color: var(--color-text-muted);">TYPE</td>
+          <td style="padding: 4px 8px; color: var(--color-text-secondary);">GENERIC (SAE)</td>
+        </tr>
+        <tr>
+          <td style="padding: 4px 8px; color: var(--color-text-muted);">SEVERITY</td>
+          <td style="padding: 4px 8px; color: var(--color-warning);">MODERATE &mdash; EMISSIONS FAILURE</td>
+        </tr>
+        <tr>
+          <td style="padding: 4px 8px; color: var(--color-text-muted);">COMMON CAUSES</td>
+          <td style="padding: 4px 8px; color: var(--color-text-secondary);">CATALYTIC CONVERTER, O2 SENSORS, EXHAUST LEAK</td>
+        </tr>
+      </table>
+    </div>
+  </article>
+
+  <!-- === LIVE DATA CARDS ROW === -->
+  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin-top: 16px;">
+
+    <!-- RPM -->
+    <article class="card card--live-data">
+      <span class="live-label">ENGINE RPM</span>
+      <p class="live-value">2,847</p>
+      <span class="live-label" style="color: var(--color-primary);">RPM</span>
+      <div class="live-bar">
+        <div class="live-bar__fill" style="width: 42%;"></div>
+      </div>
+    </article>
+
+    <!-- Coolant -->
+    <article class="card card--live-data">
+      <span class="live-label">COOLANT TEMP</span>
+      <p class="live-value">89</p>
+      <span class="live-label" style="color: var(--color-primary);">&deg;C</span>
+      <div class="live-bar">
+        <div class="live-bar__fill" style="width: 68%; background: var(--color-primary);"></div>
+      </div>
+    </article>
+
+    <!-- O2 Sensor -->
+    <article class="card card--live-data">
+      <span class="live-label">O2 B1S1</span>
+      <p class="live-value">0.45</p>
+      <span class="live-label" style="color: var(--color-primary);">VOLTS</span>
+      <div class="live-bar">
+        <div class="live-bar__fill" style="width: 45%; background: var(--color-primary);"></div>
+      </div>
+    </article>
+
+    <!-- Fuel Trim -->
+    <article class="card card--live-data" style="border-color: var(--color-warning);">
+      <span class="live-label">FUEL TRIM LT</span>
+      <p class="live-value" style="color: var(--color-warning);">-2.3</p>
+      <span class="live-label" style="color: var(--color-warning);">%</span>
+      <div class="live-bar">
+        <div class="live-bar__fill" style="width: 48%; background: var(--color-warning);"></div>
+      </div>
+    </article>
+
+  </div>
+
+  <!-- === FEATURE CARD WITH STATUS === -->
+  <article class="card card--feature" style="margin-top: 16px;">
+    <div class="feature-icon" aria-hidden="true">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+        <rect x="1" y="3" width="22" height="18" rx="1" fill="#00FF88"/>
+        <polyline points="4,12 7,6 10,16 13,8 16,14 19,10 22,12" stroke="#000" stroke-width="2" fill="none" stroke-linejoin="round"/>
+      </svg>
+    </div>
+    <div class="feature-content">
+      <h3 class="feature-name">Live Data Monitoring</h3>
+      <p class="feature-desc">
+        Stream 200+ PIDs in real time. Graphing, gauges, and raw hex view modes. Up to 60Hz refresh rate on supported adapters.
+      </p>
+    </div>
+    <span class="badge badge--active">
+      <span class="status-dot blink" aria-hidden="true"></span>
+      ACTIVE
+    </span>
+  </article>
+
+</div>

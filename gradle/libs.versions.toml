@@ -4,6 +4,7 @@ kotlin = "2.3.10"
 jvmTarget = "17"  # bump to 21 after: sudo apt-get install openjdk-21-jdk
 
 kotlinxSerialization = "1.10.0"
+room = "2.7.1"
 datastore = "1.2.0"
 ktor = "3.4.0"
 
@@ -82,6 +83,11 @@ kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serializa
 
 # DataStore
 datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastore" }
+
+# Room
+room-runtime = { module = "androidx.room:room-runtime", version.ref = "room" }
+room-ktx = { module = "androidx.room:room-ktx", version.ref = "room" }
+room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
 
 # Navigation
 navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigationCompose" }

@@ -1,0 +1,80 @@
+<div class="cards-showcase">
+
+  <!-- Stat Cards -->
+  <div class="grid grid--4 mb-2xl">
+    <div class="stat-card">
+      <div class="stat-card__value">18,000+</div>
+      <div class="stat-card__label">Diagnostic Codes</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-card__value">50+</div>
+      <div class="stat-card__label">Manufacturers</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-card__value">120+</div>
+      <div class="stat-card__label">Live Parameters</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-card__value">1996+</div>
+      <div class="stat-card__label">Vehicle Years</div>
+    </div>
+  </div>
+
+  <!-- Feature Cards -->
+  <div class="grid grid--3 mb-2xl">
+    <article class="feature-card">
+      <div class="feature-card__icon" aria-hidden="true">
+        <svg><use href="../assets/icon-set.svg#icon-ai"/></svg>
+      </div>
+      <h3 class="feature-card__title">AI Diagnostics</h3>
+      <p class="feature-card__desc">
+        Chat with an AI that knows your car's live data and provides plain-language repair guidance.
+      </p>
+    </article>
+
+    <article class="feature-card">
+      <div class="feature-card__icon" aria-hidden="true">
+        <svg><use href="../assets/icon-set.svg#icon-live"/></svg>
+      </div>
+      <h3 class="feature-card__title">Live Data</h3>
+      <p class="feature-card__desc">
+        Real-time monitoring of RPM, temperatures, O2, fuel trims, and dozens of parameters.
+      </p>
+    </article>
+
+    <article class="feature-card">
+      <div class="feature-card__icon" aria-hidden="true">
+        <svg><use href="../assets/icon-set.svg#icon-codes"/></svg>
+      </div>
+      <h3 class="feature-card__title">Code Database</h3>
+      <p class="feature-card__desc">
+        Full descriptions and repair guides for over 18,000 OBD-II diagnostic trouble codes.
+      </p>
+    </article>
+  </div>
+
+  <!-- List Cards (DTC style) -->
+  <div style="display: flex; flex-direction: column; gap: 8px; max-width: 560px;">
+    <div class="list-card">
+      <span class="list-card__code">P0300</span>
+      <span class="list-card__desc">Random/Multiple Cylinder Misfire Detected</span>
+      <span class="list-card__status list-card__status--danger" aria-label="Critical"></span>
+    </div>
+    <div class="list-card">
+      <span class="list-card__code">P0171</span>
+      <span class="list-card__desc">System Too Lean (Bank 1)</span>
+      <span class="list-card__status list-card__status--warning" aria-label="Warning"></span>
+    </div>
+    <div class="list-card">
+      <span class="list-card__code">P0420</span>
+      <span class="list-card__desc">Catalyst System Efficiency Below Threshold</span>
+      <span class="list-card__status list-card__status--warning" aria-label="Warning"></span>
+    </div>
+    <div class="list-card">
+      <span class="list-card__code">P0128</span>
+      <span class="list-card__desc">Coolant Thermostat Below Regulating Temperature</span>
+      <span class="list-card__status list-card__status--success" aria-label="Resolved"></span>
+    </div>
+  </div>
+
+</div>

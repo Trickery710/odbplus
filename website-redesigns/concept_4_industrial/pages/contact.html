@@ -1,0 +1,926 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Contact ODB+ Diagnostic Systems - Technical support, feature requests, bug reports, and general inquiries.">
+  <meta name="theme-color" content="#1C1C1C">
+  <title>Contact | ODB+ Diagnostic Systems</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Roboto:wght@300;400;500;700&family=Roboto+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/variables.css">
+  <link rel="stylesheet" href="../css/styles.css">
+  <style>
+    /* ================================================================
+       CONTACT PAGE — Industrial Communication Terminal
+       ================================================================ */
+
+    /* --- Hero --- */
+
+    .contact-hero {
+      padding-top: calc(var(--nav-height) + var(--space-3xl));
+      padding-bottom: var(--space-xl);
+      text-align: center;
+      position: relative;
+    }
+
+    .contact-hero__title {
+      font-family: 'Oswald', var(--font-heading);
+      font-size: var(--fs-display);
+      font-weight: var(--fw-black);
+      text-transform: uppercase;
+      letter-spacing: var(--ls-wide);
+      color: var(--text-primary);
+      line-height: 1;
+      margin-bottom: var(--space-md);
+    }
+
+    .contact-hero__title .bracket {
+      color: var(--border-default);
+    }
+
+    .contact-hero__bar {
+      width: 120px;
+      height: 4px;
+      background: var(--clr-primary);
+      margin-inline: auto;
+      box-shadow: var(--shadow-glow-orange);
+    }
+
+    .contact-hero__sub {
+      font-family: var(--font-mono);
+      font-size: var(--fs-small);
+      color: var(--text-secondary);
+      letter-spacing: var(--ls-wider);
+      text-transform: uppercase;
+      margin-top: var(--space-md);
+    }
+
+    /* --- Warning stripe decorative --- */
+
+    .warning-stripe {
+      height: 6px;
+      background: var(--stripe-warning-thin);
+      background-size: 16px 16px;
+      animation: stripeScroll 1s linear infinite;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .warning-stripe {
+        animation: none;
+      }
+    }
+
+    /* --- Contact grid --- */
+
+    .contact-main {
+      display: grid;
+      grid-template-columns: 1.4fr 1fr;
+      gap: var(--space-3xl);
+    }
+
+    @media (max-width: 860px) {
+      .contact-main {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* --- Form panel --- */
+
+    .form-panel {
+      background: var(--bg-panel);
+      border: 2px solid var(--border-default);
+      padding: var(--space-2xl);
+      position: relative;
+      box-shadow: var(--shadow-inset);
+    }
+
+    .form-panel::before {
+      content: '';
+      position: absolute;
+      top: -1px;
+      left: -1px;
+      width: 24px;
+      height: 24px;
+      border-top: 3px solid var(--clr-primary);
+      border-left: 3px solid var(--clr-primary);
+    }
+
+    .form-panel::after {
+      content: '';
+      position: absolute;
+      bottom: -1px;
+      right: -1px;
+      width: 24px;
+      height: 24px;
+      border-bottom: 3px solid var(--clr-primary);
+      border-right: 3px solid var(--clr-primary);
+    }
+
+    .form-panel__header {
+      margin-bottom: var(--space-xl);
+    }
+
+    .form-panel__title {
+      font-family: 'Oswald', var(--font-heading);
+      font-size: var(--fs-h3);
+      text-transform: uppercase;
+      letter-spacing: var(--ls-wide);
+      margin-bottom: var(--space-xs);
+    }
+
+    .form-panel__desc {
+      font-size: var(--fs-small);
+      color: var(--text-secondary);
+    }
+
+    /* --- Form inputs: industrial style --- */
+
+    .contact-form .form-group {
+      margin-bottom: var(--space-lg);
+    }
+
+    .contact-form .form-label {
+      font-family: var(--font-mono);
+      font-size: var(--fs-label);
+      font-weight: var(--fw-medium);
+      letter-spacing: var(--ls-label);
+      text-transform: uppercase;
+      color: var(--text-label);
+      margin-bottom: var(--space-xs);
+      display: block;
+    }
+
+    .contact-form .form-input,
+    .contact-form .form-textarea,
+    .contact-form .form-select {
+      width: 100%;
+      padding: 0.875rem 1rem;
+      font-family: var(--font-body);
+      font-size: var(--fs-body);
+      color: var(--text-primary);
+      background: var(--bg-inset);
+      border: 2px solid var(--border-default);
+      transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+      appearance: none;
+    }
+
+    .contact-form .form-input::placeholder,
+    .contact-form .form-textarea::placeholder {
+      font-family: var(--font-mono);
+      font-size: var(--fs-small);
+      color: var(--text-tertiary);
+    }
+
+    .contact-form .form-input:focus,
+    .contact-form .form-textarea:focus,
+    .contact-form .form-select:focus {
+      border-color: var(--clr-primary);
+      box-shadow: 0 0 0 3px var(--clr-primary-glow);
+      outline: none;
+    }
+
+    .contact-form .form-textarea {
+      resize: vertical;
+      min-height: 160px;
+    }
+
+    /* Select wrapper for custom arrow */
+    .select-wrap {
+      position: relative;
+    }
+
+    .select-wrap::after {
+      content: '';
+      position: absolute;
+      right: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 0;
+      height: 0;
+      border-left: 5px solid transparent;
+      border-right: 5px solid transparent;
+      border-top: 6px solid var(--clr-primary);
+      pointer-events: none;
+    }
+
+    .contact-form .form-select {
+      cursor: pointer;
+      padding-right: 2.5rem;
+    }
+
+    .contact-form .form-select option {
+      background: var(--bg-panel);
+      color: var(--text-primary);
+    }
+
+    /* --- Submit button with stripe hover --- */
+
+    .btn--transmit {
+      width: 100%;
+      padding: 1.125rem 2rem;
+      font-family: 'Oswald', var(--font-heading);
+      font-size: var(--fs-h4);
+      font-weight: var(--fw-bold);
+      letter-spacing: var(--ls-wider);
+      text-transform: uppercase;
+      color: var(--text-on-accent);
+      background: var(--clr-primary);
+      border: 2px solid var(--clr-primary);
+      cursor: pointer;
+      transition: all var(--transition-base);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn--transmit:hover {
+      background: var(--stripe-warning-thin);
+      background-size: 16px 16px;
+      animation: stripeScroll 0.6s linear infinite;
+      border-color: var(--clr-primary-hover);
+      box-shadow: var(--shadow-glow-orange-strong);
+      color: var(--text-on-accent);
+    }
+
+    .btn--transmit:active {
+      background: var(--clr-primary-dark);
+      animation: none;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .btn--transmit:hover {
+        animation: none;
+        background: var(--clr-primary-hover);
+      }
+    }
+
+    /* --- Support panels (instrument cluster) --- */
+
+    .support-channels {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--space-xl);
+      margin-top: var(--space-3xl);
+    }
+
+    @media (max-width: 700px) {
+      .support-channels {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .channel-panel {
+      background: var(--bg-surface);
+      border: 2px solid var(--border-default);
+      padding: var(--space-xl);
+      text-align: center;
+      position: relative;
+      transition: border-color var(--transition-base), box-shadow var(--transition-base);
+    }
+
+    .channel-panel:hover {
+      border-color: var(--clr-primary);
+      box-shadow: var(--shadow-glow-orange), var(--shadow-inset);
+    }
+
+    .channel-panel::before {
+      content: '';
+      position: absolute;
+      top: -1px;
+      left: -1px;
+      width: 16px;
+      height: 16px;
+      border-top: 3px solid var(--clr-primary);
+      border-left: 3px solid var(--clr-primary);
+    }
+
+    .channel-panel__icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      background: var(--bg-inset);
+      border: 2px solid var(--border-subtle);
+      box-shadow: var(--shadow-inset);
+      margin: 0 auto var(--space-md);
+    }
+
+    .channel-panel__icon svg {
+      width: 28px;
+      height: 28px;
+    }
+
+    .channel-panel__label {
+      font-family: var(--font-mono);
+      font-size: var(--fs-label);
+      font-weight: var(--fw-bold);
+      letter-spacing: var(--ls-widest);
+      text-transform: uppercase;
+      color: var(--text-tertiary);
+      margin-bottom: var(--space-xs);
+    }
+
+    .channel-panel__name {
+      font-family: 'Oswald', var(--font-heading);
+      font-size: var(--fs-h4);
+      text-transform: uppercase;
+      letter-spacing: var(--ls-wide);
+      color: var(--text-primary);
+      margin-bottom: var(--space-sm);
+    }
+
+    .channel-panel__link {
+      font-family: var(--font-mono);
+      font-size: var(--fs-small);
+      color: var(--clr-primary);
+      text-decoration: none;
+      word-break: break-all;
+    }
+
+    .channel-panel__link:hover {
+      color: var(--clr-primary-hover);
+      text-decoration: underline;
+    }
+
+    /* --- Service hours table --- */
+
+    .hours-panel {
+      background: var(--bg-surface);
+      border: 2px solid var(--border-default);
+      padding: var(--space-xl);
+      margin-top: var(--space-2xl);
+    }
+
+    .hours-panel::before {
+      content: '';
+      display: block;
+      width: 100%;
+      height: 3px;
+      background: var(--clr-primary);
+      margin-bottom: var(--space-lg);
+    }
+
+    .hours-panel__title {
+      font-family: var(--font-mono);
+      font-size: var(--fs-label);
+      font-weight: var(--fw-bold);
+      letter-spacing: var(--ls-widest);
+      text-transform: uppercase;
+      color: var(--clr-primary);
+      margin-bottom: var(--space-md);
+    }
+
+    .hours-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-family: var(--font-mono);
+      font-size: var(--fs-small);
+    }
+
+    .hours-table td {
+      padding: var(--space-sm) var(--space-md);
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .hours-table td:first-child {
+      color: var(--text-secondary);
+      font-weight: var(--fw-medium);
+      letter-spacing: var(--ls-label);
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    .hours-table td:last-child {
+      color: var(--text-primary);
+      text-align: right;
+    }
+
+    .hours-table .closed {
+      color: var(--clr-danger-light);
+    }
+
+    /* --- Contact FAQ accordion --- */
+
+    .contact-faq {
+      margin-top: var(--space-3xl);
+    }
+
+    .contact-faq__title {
+      font-family: 'Oswald', var(--font-heading);
+      font-size: var(--fs-h3);
+      text-transform: uppercase;
+      letter-spacing: var(--ls-wide);
+      margin-bottom: var(--space-lg);
+      padding-bottom: var(--space-sm);
+      border-bottom: 2px solid var(--border-default);
+      position: relative;
+    }
+
+    .contact-faq__title::after {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      width: 60px;
+      height: 2px;
+      background: var(--clr-primary);
+    }
+
+    .faq-accordion {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-sm);
+    }
+
+    .faq-item {
+      border: 2px solid var(--border-default);
+      background: var(--bg-panel);
+      transition: border-color var(--transition-base);
+    }
+
+    .faq-item[open] {
+      border-color: var(--clr-primary);
+    }
+
+    .faq-item summary {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: var(--space-md) var(--space-lg);
+      font-family: 'Oswald', var(--font-heading);
+      font-size: var(--fs-h4);
+      font-weight: var(--fw-bold);
+      text-transform: uppercase;
+      letter-spacing: var(--ls-wide);
+      color: var(--text-primary);
+      cursor: pointer;
+      list-style: none;
+      user-select: none;
+      transition: color var(--transition-fast);
+    }
+
+    .faq-item summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .faq-item summary::after {
+      content: '+';
+      font-family: var(--font-mono);
+      font-size: var(--fs-h3);
+      color: var(--clr-primary);
+      flex-shrink: 0;
+      margin-left: var(--space-md);
+    }
+
+    .faq-item[open] summary::after {
+      content: '-';
+    }
+
+    .faq-item[open] summary {
+      color: var(--clr-primary);
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .faq-item summary:hover {
+      color: var(--clr-primary);
+    }
+
+    .faq-body {
+      padding: var(--space-lg);
+      font-size: var(--fs-small);
+      color: var(--text-secondary);
+      line-height: var(--lh-body);
+    }
+
+    .faq-body code {
+      font-family: var(--font-mono);
+      color: var(--clr-primary);
+      background: var(--bg-inset);
+      padding: 1px 6px;
+      font-size: var(--fs-label);
+    }
+
+    /* --- Sidebar info panels --- */
+
+    .contact-sidebar__panel {
+      background: var(--bg-panel);
+      border: 2px solid var(--border-default);
+      padding: var(--space-xl);
+      margin-bottom: var(--space-xl);
+      box-shadow: var(--shadow-inset);
+      position: relative;
+    }
+
+    .contact-sidebar__panel::before {
+      content: '';
+      position: absolute;
+      top: -1px;
+      left: -1px;
+      width: 16px;
+      height: 16px;
+      border-top: 2px solid var(--clr-primary);
+      border-left: 2px solid var(--clr-primary);
+    }
+
+    .contact-sidebar__panel::after {
+      content: '';
+      position: absolute;
+      bottom: -1px;
+      right: -1px;
+      width: 16px;
+      height: 16px;
+      border-bottom: 2px solid var(--clr-primary);
+      border-right: 2px solid var(--clr-primary);
+    }
+
+    .contact-sidebar__heading {
+      font-family: var(--font-mono);
+      font-size: var(--fs-label);
+      font-weight: var(--fw-bold);
+      letter-spacing: var(--ls-widest);
+      text-transform: uppercase;
+      color: var(--clr-primary);
+      margin-bottom: var(--space-md);
+      padding-bottom: var(--space-sm);
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .checklist {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-sm);
+    }
+
+    .checklist li {
+      display: flex;
+      gap: var(--space-sm);
+      align-items: baseline;
+      font-size: var(--fs-small);
+      color: var(--text-secondary);
+      line-height: var(--lh-body);
+    }
+
+    .checklist li .num {
+      font-family: var(--font-mono);
+      font-weight: var(--fw-bold);
+      color: var(--clr-primary);
+      flex-shrink: 0;
+      min-width: 24px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ===== NAVIGATION ===== -->
+  <nav class="nav" role="navigation" aria-label="Main navigation">
+    <div class="nav__inner">
+      <a href="index.html" class="nav__logo" aria-label="ODB+ Home">
+        <svg viewBox="0 0 180 36" width="180" height="36" aria-hidden="true">
+          <defs>
+            <linearGradient id="nB" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#FF8C1A"/><stop offset="100%" stop-color="#CC5500"/></linearGradient>
+            <linearGradient id="nT" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#FFF"/><stop offset="50%" stop-color="#E0E0E0"/><stop offset="100%" stop-color="#B0B0B0"/></linearGradient>
+          </defs>
+          <polygon points="12,2 18,5 18,13 12,16 6,13 6,5" fill="url(#nB)" stroke="#CC5500" stroke-width="1"/><circle cx="12" cy="9" r="3" fill="#1C1C1C" stroke="#FF6B00" stroke-width="0.8"/>
+          <text x="28" y="15" font-family="'Bebas Neue','Oswald',Impact,sans-serif" font-size="20" font-weight="700" letter-spacing="2" fill="url(#nT)">ODB</text><text x="82" y="15" font-family="'Bebas Neue','Oswald',Impact,sans-serif" font-size="20" font-weight="700" fill="#FF6B00">+</text>
+          <line x1="28" y1="20" x2="94" y2="20" stroke="#FF6B00" stroke-width="0.5" opacity="0.4"/><text x="29" y="28" font-family="'Rajdhani','Barlow Condensed',sans-serif" font-size="5.5" font-weight="600" letter-spacing="2.2" fill="#888">DIAGNOSTIC SYSTEMS</text>
+        </svg>
+      </a>
+      <div class="nav__links">
+        <a href="index.html" class="nav__link">Home</a>
+        <a href="features.html" class="nav__link">Features</a>
+        <a href="docs.html" class="nav__link">Docs</a>
+        <a href="contact.html" class="nav__link nav__link--active">Contact</a>
+        <a href="#download" class="btn btn--stripe btn--sm">Download</a>
+      </div>
+      <button class="nav__toggle" id="navToggle" aria-expanded="false" aria-controls="navDrawer" aria-label="Toggle navigation">
+        <span class="nav__toggle-bar"></span><span class="nav__toggle-bar"></span><span class="nav__toggle-bar"></span>
+      </button>
+    </div>
+    <div class="nav__drawer" id="navDrawer" aria-hidden="true">
+      <a href="index.html" class="nav__link">Home</a>
+      <a href="features.html" class="nav__link">Features</a>
+      <a href="docs.html" class="nav__link">Docs</a>
+      <a href="contact.html" class="nav__link nav__link--active">Contact</a>
+      <a href="#download" class="btn btn--stripe">Download</a>
+    </div>
+  </nav>
+
+  <!-- ===== HERO ===== -->
+  <div class="contact-hero blueprint-bg">
+    <div class="container" style="position: relative; z-index: 1;">
+      <span class="section-label">Communications</span>
+      <h1 class="contact-hero__title">
+        <span class="bracket">[</span> Contact System <span class="bracket">]</span>
+      </h1>
+      <div class="contact-hero__bar" aria-hidden="true"></div>
+      <p class="contact-hero__sub">Technical support // Feature requests // General inquiries</p>
+    </div>
+  </div>
+
+  <!-- ===== WARNING STRIPE ===== -->
+  <div class="warning-stripe" aria-hidden="true"></div>
+
+  <!-- ===== CONTACT CONTENT ===== -->
+  <section class="page-content">
+    <div class="container">
+      <div class="contact-main">
+
+        <!-- ---- Contact Form ---- -->
+        <div>
+          <div class="form-panel">
+            <div class="form-panel__header">
+              <span class="section-label">Transmission Input</span>
+              <h2 class="form-panel__title">Send a Message</h2>
+              <p class="form-panel__desc">All fields marked with an asterisk are required. Include as much detail as possible for technical issues.</p>
+            </div>
+
+            <form class="contact-form" action="#" method="POST" aria-label="Contact form" novalidate>
+
+              <div class="form-group">
+                <label for="contactName" class="form-label">Name *</label>
+                <input type="text" id="contactName" name="name" class="form-input" placeholder="ENTER FULL NAME" required autocomplete="name">
+              </div>
+
+              <div class="form-group">
+                <label for="contactEmail" class="form-label">Email Address *</label>
+                <input type="email" id="contactEmail" name="email" class="form-input" placeholder="YOU@EXAMPLE.COM" required autocomplete="email">
+              </div>
+
+              <div class="form-group">
+                <label for="contactSubject" class="form-label">Subject *</label>
+                <div class="select-wrap">
+                  <select id="contactSubject" name="subject" class="form-input form-select" required>
+                    <option value="" disabled selected>-- SELECT TOPIC --</option>
+                    <option value="technical">Technical Support</option>
+                    <option value="feature">Feature Request</option>
+                    <option value="bug">Bug Report</option>
+                    <option value="adapter">Adapter Compatibility</option>
+                    <option value="business">Business Inquiry</option>
+                    <option value="other">Other</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="contactMessage" class="form-label">Message *</label>
+                <textarea id="contactMessage" name="message" class="form-textarea" placeholder="DESCRIBE YOUR ISSUE, REQUEST, OR QUESTION. INCLUDE ADAPTER MODEL, VEHICLE YEAR/MAKE/MODEL, AND ANY ERROR MESSAGES OR DTC CODES IF APPLICABLE." required></textarea>
+              </div>
+
+              <button type="submit" class="btn--transmit">Send Transmission</button>
+            </form>
+          </div>
+        </div>
+
+        <!-- ---- Sidebar ---- -->
+        <div>
+
+          <!-- Response Times -->
+          <div class="contact-sidebar__panel">
+            <h3 class="contact-sidebar__heading">Response Times</h3>
+            <table class="support-table">
+              <tbody>
+                <tr><td>Technical Issues</td><td>24-48 hours</td></tr>
+                <tr><td>Bug Reports</td><td>Same-day triage</td></tr>
+                <tr><td>Feature Requests</td><td>Reviewed weekly</td></tr>
+                <tr><td>Business Inquiries</td><td>48-72 hours</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Before Contacting Support -->
+          <div class="contact-sidebar__panel">
+            <h3 class="contact-sidebar__heading">Before Contacting Support</h3>
+            <ul class="checklist">
+              <li>
+                <span class="num">01.</span>
+                Check the <a href="docs.html#troubleshooting" style="color: var(--clr-primary);">troubleshooting guide</a> first
+              </li>
+              <li>
+                <span class="num">02.</span>
+                Note your adapter model and firmware (<code style="font-family: var(--font-mono); font-size: var(--fs-micro); color: var(--clr-steel-blue); background: var(--bg-inset); padding: 1px 4px;">ATI</code> command)
+              </li>
+              <li>
+                <span class="num">03.</span>
+                Include vehicle year, make, and model
+              </li>
+              <li>
+                <span class="num">04.</span>
+                Include detected protocol (<code style="font-family: var(--font-mono); font-size: var(--fs-micro); color: var(--clr-steel-blue); background: var(--bg-inset); padding: 1px 4px;">ATDP</code> command)
+              </li>
+              <li>
+                <span class="num">05.</span>
+                Export and attach your session log if possible
+              </li>
+            </ul>
+          </div>
+
+          <!-- Direct Channels -->
+          <div class="contact-sidebar__panel">
+            <h3 class="contact-sidebar__heading">Direct Channels</h3>
+            <table class="support-table">
+              <tbody>
+                <tr>
+                  <td>Email</td>
+                  <td><a href="mailto:support@odbplus.com" style="color: var(--clr-primary);">support@odbplus.com</a></td>
+                </tr>
+                <tr>
+                  <td>Forums</td>
+                  <td><a href="#forums" style="color: var(--clr-primary);">community.odbplus.com</a></td>
+                </tr>
+                <tr>
+                  <td>GitHub</td>
+                  <td><a href="#github" style="color: var(--clr-primary);">github.com/odbplus</a></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- ---- Support Channels (3-column instrument cluster) ---- -->
+      <div class="support-channels">
+
+        <!-- GitHub -->
+        <div class="channel-panel">
+          <div class="channel-panel__icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#FF6B00" stroke-width="1.5">
+              <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 00-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0020 4.77 5.07 5.07 0 0019.91 1S18.73.65 16 2.48a13.38 13.38 0 00-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 005 4.77a5.44 5.44 0 00-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 009 18.13V22"/>
+            </svg>
+          </div>
+          <div class="channel-panel__label">Source Code</div>
+          <h3 class="channel-panel__name">GitHub</h3>
+          <a href="#github" class="channel-panel__link">github.com/odbplus</a>
+        </div>
+
+        <!-- Forums -->
+        <div class="channel-panel">
+          <div class="channel-panel__icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#FF6B00" stroke-width="1.5">
+              <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/>
+            </svg>
+          </div>
+          <div class="channel-panel__label">Community</div>
+          <h3 class="channel-panel__name">Forums</h3>
+          <a href="#forums" class="channel-panel__link">community.odbplus.com</a>
+        </div>
+
+        <!-- Email -->
+        <div class="channel-panel">
+          <div class="channel-panel__icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#FF6B00" stroke-width="1.5">
+              <rect x="2" y="4" width="20" height="16" rx="2"/>
+              <polyline points="22,4 12,13 2,4"/>
+            </svg>
+          </div>
+          <div class="channel-panel__label">Direct</div>
+          <h3 class="channel-panel__name">Email</h3>
+          <a href="mailto:support@odbplus.com" class="channel-panel__link">support@odbplus.com</a>
+        </div>
+
+      </div>
+
+      <!-- ---- Service Hours ---- -->
+      <div class="hours-panel">
+        <h3 class="hours-panel__title">Workshop Schedule // Service Hours</h3>
+        <table class="hours-table" aria-label="Service hours">
+          <tbody>
+            <tr><td>Monday</td><td>09:00 - 17:00 UTC</td></tr>
+            <tr><td>Tuesday</td><td>09:00 - 17:00 UTC</td></tr>
+            <tr><td>Wednesday</td><td>09:00 - 17:00 UTC</td></tr>
+            <tr><td>Thursday</td><td>09:00 - 17:00 UTC</td></tr>
+            <tr><td>Friday</td><td>09:00 - 17:00 UTC</td></tr>
+            <tr><td>Saturday</td><td class="closed">Closed</td></tr>
+            <tr><td>Sunday</td><td class="closed">Closed</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- ---- FAQ ---- -->
+      <div class="contact-faq">
+        <span class="section-label">Common Questions</span>
+        <h2 class="contact-faq__title">Support FAQ</h2>
+
+        <div class="faq-accordion">
+          <details class="faq-item">
+            <summary>What information should I include in a bug report?</summary>
+            <div class="faq-body">
+              Include your Android version, ODB+ app version (visible in Settings), adapter model and
+              firmware version (send <code>ATI</code> in Terminal Mode), vehicle year/make/model,
+              detected protocol (<code>ATDP</code>), and a description of the steps to reproduce the
+              issue. Attach your session log export if possible -- this dramatically speeds up diagnosis.
+            </div>
+          </details>
+
+          <details class="faq-item">
+            <summary>How do I request a new feature?</summary>
+            <div class="faq-body">
+              Use the contact form above with "Feature Request" as the subject, or post in the
+              Feature Requests board on the community forums. Describe the use case, not just the
+              feature -- telling us why you need it helps us prioritize and design the right solution.
+              Feature requests are reviewed weekly and the most impactful ones are added to the
+              development roadmap.
+            </div>
+          </details>
+
+          <details class="faq-item">
+            <summary>Is my adapter compatible with ODB+?</summary>
+            <div class="faq-body">
+              ODB+ supports all ELM327 v1.3+ compatible adapters (including clones), STN1110/STN2120
+              chipsets, OBDLink series (MX+, LX, EX, SX), and ESP32-based WiFi adapters. If your
+              adapter responds to the <code>ATI</code> command with an ELM327 or STN identifier,
+              it is compatible. Check the <a href="docs.html#adapter-setup" style="color: var(--clr-primary);">adapter setup documentation</a>
+              for the full compatibility list.
+            </div>
+          </details>
+
+          <details class="faq-item">
+            <summary>Do you offer enterprise or fleet licensing?</summary>
+            <div class="faq-body">
+              Yes. For fleet operations requiring multiple device deployments, volume licensing,
+              or custom feature development, contact us using the "Business Inquiry" subject
+              in the form above. Include the number of devices, fleet size, and any specific
+              requirements. We offer per-seat pricing with priority support for commercial operations.
+            </div>
+          </details>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ===== WARNING STRIPE ===== -->
+  <div class="warning-stripe" aria-hidden="true"></div>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="footer" role="contentinfo">
+    <div class="container">
+      <div class="footer__grid">
+        <div class="footer__brand">
+          <svg viewBox="0 0 160 36" width="160" height="36" aria-label="ODB+ Diagnostic Systems">
+            <defs><linearGradient id="fB4" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#FF8C1A"/><stop offset="100%" stop-color="#CC5500"/></linearGradient></defs>
+            <polygon points="12,2 18,5 18,13 12,16 6,13 6,5" fill="url(#fB4)" stroke="#CC5500" stroke-width="1"/><circle cx="12" cy="9" r="3" fill="#1C1C1C" stroke="#FF6B00" stroke-width="0.8"/>
+            <text x="26" y="15" font-family="'Bebas Neue','Oswald',Impact,sans-serif" font-size="20" font-weight="700" letter-spacing="2" fill="#E0E0E0">ODB</text><text x="80" y="15" font-family="'Bebas Neue','Oswald',Impact,sans-serif" font-size="20" font-weight="700" fill="#FF6B00">+</text>
+            <line x1="26" y1="20" x2="90" y2="20" stroke="#FF6B00" stroke-width="0.5" opacity="0.5"/><text x="27" y="28" font-family="'Rajdhani','Barlow Condensed',sans-serif" font-size="6" font-weight="600" letter-spacing="2" fill="#777">DIAGNOSTIC SYSTEMS</text>
+          </svg>
+          <p class="footer__brand-desc">Professional-grade OBD-II diagnostics for Android.</p>
+        </div>
+        <div>
+          <h3 class="footer__col-title">Product</h3>
+          <ul class="footer__links"><li><a href="features.html" class="footer__link">Features</a></li><li><a href="#download" class="footer__link">Download</a></li><li><a href="#pricing" class="footer__link">Pricing</a></li></ul>
+        </div>
+        <div>
+          <h3 class="footer__col-title">Resources</h3>
+          <ul class="footer__links"><li><a href="docs.html" class="footer__link">Documentation</a></li><li><a href="#forums" class="footer__link">Forums</a></li><li><a href="#support" class="footer__link">Support</a></li></ul>
+        </div>
+        <div>
+          <h3 class="footer__col-title">Company</h3>
+          <ul class="footer__links"><li><a href="#about" class="footer__link">About</a></li><li><a href="contact.html" class="footer__link">Contact</a></li><li><a href="#privacy" class="footer__link">Privacy</a></li></ul>
+        </div>
+      </div>
+      <div class="footer__bottom">
+        <span class="footer__version">System Version: 2.4.1-release // Build 20260306</span>
+        <span class="footer__copy">2024-2026 ODB+ Diagnostic Systems. All rights reserved.</span>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    /* Mobile nav toggle */
+    (function(){
+      var t = document.getElementById('navToggle');
+      var d = document.getElementById('navDrawer');
+      if (!t || !d) return;
+      t.addEventListener('click', function() {
+        var o = d.classList.toggle('nav__drawer--open');
+        t.setAttribute('aria-expanded', o);
+        d.setAttribute('aria-hidden', !o);
+        var b = t.querySelectorAll('.nav__toggle-bar');
+        if (o) {
+          b[0].style.transform = 'rotate(45deg) translate(5px, 5px)';
+          b[1].style.opacity = '0';
+          b[2].style.transform = 'rotate(-45deg) translate(5px, -5px)';
+        } else {
+          b[0].style.transform = '';
+          b[1].style.opacity = '';
+          b[2].style.transform = '';
+        }
+      });
+    })();
+
+    /* Nav background on scroll */
+    (function(){
+      var n = document.querySelector('.nav');
+      if (!n) return;
+      window.addEventListener('scroll', function() {
+        n.style.background = window.scrollY > 20 ? 'rgba(28,28,28,0.95)' : '';
+        n.style.backdropFilter = window.scrollY > 20 ? 'blur(8px)' : '';
+      }, { passive: true });
+    })();
+  </script>
+</body>
+</html>
