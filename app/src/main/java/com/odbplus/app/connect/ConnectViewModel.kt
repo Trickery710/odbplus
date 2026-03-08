@@ -11,8 +11,6 @@ import androidx.lifecycle.viewModelScope
 import com.odbplus.app.ai.VehicleInfoRepository
 import com.odbplus.app.ai.data.VehicleInfo
 import com.odbplus.app.data.ConnectionProfileRepository
-import com.odbplus.app.session.DtcMonitorService
-import com.odbplus.app.session.VehicleSessionManager
 import com.odbplus.core.protocol.ObdService
 import com.odbplus.core.protocol.PidDiscoveryState
 import com.odbplus.core.protocol.adapter.ProtocolSessionState
@@ -35,8 +33,6 @@ class ConnectViewModel @Inject constructor(
     private val repo: TransportRepository,
     private val obdService: ObdService,
     private val vehicleInfoRepository: VehicleInfoRepository,
-    private val sessionManager: VehicleSessionManager,
-    private val dtcMonitorService: DtcMonitorService,
     private val connectionProfileRepository: ConnectionProfileRepository
 ) : AndroidViewModel(application) {
 
@@ -116,11 +112,6 @@ class ConnectViewModel @Inject constructor(
                             ?: VehicleInfo(vin = vin)
                     }
                     vehicleInfoRepository.saveVehicle(info)
-
-                    // Start session and DTC monitoring
-                    val sessionId = sessionManager.startSession(vin)
-                    dtcMonitorService.startMonitoring(vin, sessionId)
-
                     _acquireStatus.value = "VIN acquired: $vin"
                 } else {
                     _acquireStatus.value = "VIN not available from vehicle"
@@ -154,8 +145,6 @@ class ConnectViewModel @Inject constructor(
 
     fun disconnect() {
         viewModelScope.launch {
-            dtcMonitorService.stopMonitoring()
-            sessionManager.endSession()
             obdService.onTransportDisconnected()
             repo.disconnect()
         }

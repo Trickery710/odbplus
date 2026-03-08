@@ -159,7 +159,7 @@ class DiagnosticViewModel @Inject constructor(
     }
 
     private fun persistTestResult(testName: String, result: DiagnosticResult) {
-        val vin = vehicleInfoRepository.currentVehicle.value?.vin ?: return
+        val vin = vehicleInfoRepository.currentVehicle.value?.vin ?: "UNKNOWN"
         viewModelScope.launch {
             val resultStr = when (result.status) {
                 DiagnosticStatus.PASS -> "PASS"

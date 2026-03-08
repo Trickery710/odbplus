@@ -22,4 +22,13 @@ interface VehicleSessionDao {
 
     @Query("SELECT * FROM vehicle_sessions WHERE sessionId = :sessionId LIMIT 1")
     suspend fun getBySessionId(sessionId: String): VehicleSessionEntity?
+
+    @Query("SELECT * FROM vehicle_sessions ORDER BY timestampStart DESC")
+    fun getAllSessionsFlow(): Flow<List<VehicleSessionEntity>>
+
+    @Query("DELETE FROM vehicle_sessions WHERE sessionId = :sessionId")
+    suspend fun deleteBySessionId(sessionId: String)
+
+    @Query("DELETE FROM vehicle_sessions")
+    suspend fun deleteAll()
 }

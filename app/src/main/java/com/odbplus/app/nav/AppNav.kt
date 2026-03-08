@@ -103,9 +103,9 @@ fun AppScreen() {
                 }
                 composable("odb_hub/logs") {
                     LogsScreen(
-                        onReplaySession = { session ->
-                            navController.navigate("odb_hub/live") {
-                                popUpTo("odb_hub/live") { inclusive = true }
+                        onSessionClick = { sessionId ->
+                            navController.navigate("vehicle/session/$sessionId") {
+                                launchSingleTop = true
                             }
                         }
                     )

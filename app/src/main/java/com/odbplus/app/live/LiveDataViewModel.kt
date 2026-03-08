@@ -7,6 +7,7 @@ import com.odbplus.app.ai.VehicleContextProvider
 import com.odbplus.app.ai.data.VehicleInfo
 import com.odbplus.app.session.SensorLoggingService
 import com.odbplus.app.session.VehicleSessionManager
+import com.odbplus.app.settings.SettingsRepository
 import com.odbplus.core.protocol.ObdPid
 import com.odbplus.core.protocol.ObdService
 import com.odbplus.core.protocol.PidDiscoveryState
@@ -101,7 +102,8 @@ class LiveDataViewModel @Inject constructor(
     private val vehicleContextProvider: VehicleContextProvider,
     private val savedStateHandle: SavedStateHandle,
     private val sensorLoggingService: SensorLoggingService,
-    private val sessionManager: VehicleSessionManager
+    private val sessionManager: VehicleSessionManager,
+    private val settingsRepository: SettingsRepository
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(LiveDataUiState())
@@ -142,6 +144,14 @@ class LiveDataViewModel @Inject constructor(
     }
 
     init {
+        // Apply the persisted poll interval from settings reactively so changes
+        // made in the Settings screen propagate immediately to the poller.
+        viewModelScope.launch {
+            settingsRepository.defaultPollIntervalMs.collect { ms ->
+                polling.setInterval(ms)
+            }
+        }
+
         // Load persisted state first, then observe discovery results. Sequenced in
         // a single coroutine so the saved PIDs are available when the first
         // supportedPids emission is processed.
@@ -260,7 +270,10 @@ class LiveDataViewModel @Inject constructor(
 
     // ==================== Polling ====================
 
-    fun setPollInterval(intervalMs: Long) = polling.setInterval(intervalMs)
+    fun setPollInterval(intervalMs: Long) {
+        polling.setInterval(intervalMs)
+        viewModelScope.launch { settingsRepository.setDefaultPollInterval(intervalMs) }
+    }
 
     fun startPolling() {
         if (_uiState.value.isReplaying) return

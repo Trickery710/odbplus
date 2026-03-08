@@ -5,12 +5,16 @@ import androidx.lifecycle.viewModelScope
 import com.odbplus.app.ai.data.VehicleContext
 import com.odbplus.app.ai.data.VehicleInfo
 import com.odbplus.app.live.LogSessionRepository
+import com.odbplus.app.session.DtcMonitorService
+import com.odbplus.app.session.VehicleSessionManager
+import com.odbplus.app.settings.SettingsRepository
 import com.odbplus.core.protocol.DiagnosticTroubleCode
 import com.odbplus.core.protocol.ObdService
 import com.odbplus.core.protocol.adapter.ProtocolSessionState
 import com.odbplus.core.transport.ConnectionState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
@@ -26,6 +30,9 @@ class VehicleContextViewModel @Inject constructor(
     private val obdService: ObdService,
     private val vehicleInfoRepository: VehicleInfoRepository,
     private val logSessionRepository: LogSessionRepository,
+    private val settingsRepository: SettingsRepository,
+    private val sessionManager: VehicleSessionManager,
+    private val dtcMonitorService: DtcMonitorService,
     private val provider: VehicleContextProvider
 ) : ViewModel() {
 
@@ -50,6 +57,8 @@ class VehicleContextViewModel @Inject constructor(
                 ctx = ctx.copy(isConnected = connected)
                 if (!connected && wasActive) {
                     wasActive = false
+                    dtcMonitorService.stopMonitoring()
+                    sessionManager.endSession()
                     vehicleInfoRepository.clearCurrentVehicle()
                     ctx = ctx.copy(vehicleInfo = null)
                 }
@@ -57,12 +66,14 @@ class VehicleContextViewModel @Inject constructor(
         }
 
         // Only fetch vehicle info once the protocol is fully initialised (SESSION_ACTIVE).
-        // This prevents Mode-09 commands from racing with UOAPL fingerprinting / AT-init.
+        // Respects the autoAcquireVin user preference.
         viewModelScope.launch {
             obdService.sessionState.collect { state ->
                 if (state.canSendCommands && !wasActive) {
                     wasActive = true
-                    fetchVehicleInfo()
+                    if (settingsRepository.autoAcquireVin.first()) {
+                        fetchVehicleInfo()
+                    }
                 }
             }
         }
@@ -129,6 +140,8 @@ class VehicleContextViewModel @Inject constructor(
                 ?: VehicleInfo(vin = vin)
         }
         vehicleInfoRepository.saveVehicle(vehicleInfo)
+        val sessionId = sessionManager.startSession(vin)
+        dtcMonitorService.startMonitoring(vin, sessionId)
     }
 
     /**
@@ -157,5 +170,7 @@ class VehicleContextViewModel @Inject constructor(
                 ecuName = ecuName
             )
         vehicleInfoRepository.saveVehicle(vehicleInfo)
+        val sessionId = sessionManager.startSession(syntheticKey)
+        dtcMonitorService.startMonitoring(syntheticKey, sessionId)
     }
 }
