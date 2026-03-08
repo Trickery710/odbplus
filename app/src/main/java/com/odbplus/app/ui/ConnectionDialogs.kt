@@ -18,7 +18,10 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.material.icons.filled.Bluetooth
+import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -42,10 +45,12 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import com.odbplus.app.ui.theme.AmberSecondary
 import com.odbplus.app.ui.theme.CyanPrimary
 import com.odbplus.app.ui.theme.DarkBorder
 import com.odbplus.app.ui.theme.DarkSurface
 import com.odbplus.app.ui.theme.DarkSurfaceVariant
+import com.odbplus.app.ui.theme.GreenContainer
 import com.odbplus.app.ui.theme.TextOnAccent
 import com.odbplus.app.ui.theme.TextPrimary
 import com.odbplus.app.ui.theme.TextSecondary
@@ -64,6 +69,8 @@ private data class BtDevice(val name: String, val address: String)
 fun BluetoothDevicePickerDialog(
     onDeviceSelected: (address: String) -> Unit,
     onDismiss: () -> Unit,
+    lastMac: String? = null,
+    lastName: String? = null,
 ) {
     val context = LocalContext.current
 
@@ -89,44 +96,31 @@ fun BluetoothDevicePickerDialog(
                 )
             } else {
                 LazyColumn(verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                    items(pairedDevices) { device ->
-                        Surface(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .clickable {
-                                    onDeviceSelected(device.address)
-                                    onDismiss()
-                                },
-                            color = DarkSurfaceVariant,
-                            shape = RoundedCornerShape(10.dp),
-                        ) {
-                            Row(
-                                modifier = Modifier.padding(horizontal = 14.dp, vertical = 12.dp),
-                                verticalAlignment = Alignment.CenterVertically,
-                            ) {
-                                Icon(
-                                    Icons.Default.Bluetooth,
-                                    contentDescription = null,
-                                    tint = CyanPrimary,
-                                    modifier = Modifier.size(20.dp),
-                                )
-                                Spacer(Modifier.width(12.dp))
-                                Column {
-                                    Text(
-                                        text = device.name,
-                                        style = MaterialTheme.typography.bodyMedium,
-                                        fontWeight = FontWeight.Medium,
-                                        color = TextPrimary,
-                                    )
-                                    Text(
-                                        text = device.address,
-                                        style = MaterialTheme.typography.bodySmall,
-                                        color = TextTertiary,
-                                        fontFamily = FontFamily.Monospace,
-                                    )
-                                }
-                            }
+                    // Pin "last connected" device at top if it's in the paired list
+                    if (!lastMac.isNullOrBlank() && pairedDevices.any { it.address == lastMac }) {
+                        item {
+                            BtDeviceRow(
+                                device = pairedDevices.first { it.address == lastMac },
+                                isLast = true,
+                                onSelected = { onDeviceSelected(it); onDismiss() }
+                            )
                         }
+                        item {
+                            Spacer(Modifier.height(4.dp))
+                            Text(
+                                "All paired devices",
+                                style = MaterialTheme.typography.labelSmall,
+                                color = TextTertiary,
+                                modifier = Modifier.padding(start = 4.dp, bottom = 4.dp)
+                            )
+                        }
+                    }
+                    items(pairedDevices) { device ->
+                        BtDeviceRow(
+                            device = device,
+                            isLast = false,
+                            onSelected = { onDeviceSelected(it); onDismiss() }
+                        )
                     }
                 }
             }
@@ -140,6 +134,56 @@ fun BluetoothDevicePickerDialog(
     )
 }
 
+@Composable
+private fun BtDeviceRow(device: BtDevice, isLast: Boolean, onSelected: (String) -> Unit) {
+    Surface(
+        modifier = Modifier
+            .fillMaxWidth()
+            .then(
+                if (isLast) Modifier.border(1.dp, CyanPrimary.copy(alpha = 0.4f), RoundedCornerShape(10.dp))
+                else Modifier
+            )
+            .clickable { onSelected(device.address) },
+        color = if (isLast) GreenContainer else DarkSurfaceVariant,
+        shape = RoundedCornerShape(10.dp),
+    ) {
+        Row(
+            modifier = Modifier.padding(horizontal = 14.dp, vertical = 12.dp),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Icon(
+                Icons.Default.Bluetooth,
+                contentDescription = null,
+                tint = CyanPrimary,
+                modifier = Modifier.size(20.dp),
+            )
+            Spacer(Modifier.width(12.dp))
+            Column(modifier = Modifier.weight(1f)) {
+                Text(
+                    text = device.name,
+                    style = MaterialTheme.typography.bodyMedium,
+                    fontWeight = FontWeight.Medium,
+                    color = TextPrimary,
+                )
+                Text(
+                    text = device.address,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = TextTertiary,
+                    fontFamily = FontFamily.Monospace,
+                )
+            }
+            if (isLast) {
+                Icon(
+                    Icons.Default.Star,
+                    contentDescription = "Last connected",
+                    tint = AmberSecondary,
+                    modifier = Modifier.size(16.dp)
+                )
+            }
+        }
+    }
+}
+
 // ── Wi-Fi / TCP connect dialog ────────────────────────────────────────────────
 
 /**
@@ -149,9 +193,11 @@ fun BluetoothDevicePickerDialog(
 fun WifiConnectDialog(
     onConnect: (host: String, port: Int) -> Unit,
     onDismiss: () -> Unit,
+    initialHost: String = "",
+    initialPort: Int = 35000,
 ) {
-    var host by remember { mutableStateOf("") }
-    var port by remember { mutableStateOf("35000") }
+    var host by remember { mutableStateOf(initialHost) }
+    var port by remember { mutableStateOf(if (initialPort != 35000 || initialHost.isNotBlank()) initialPort.toString() else "35000") }
 
     val portInt = port.toIntOrNull()
     val portValid = portInt != null && portInt in 1..65535

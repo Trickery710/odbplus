@@ -19,6 +19,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.material.icons.filled.ExpandLess
 import androidx.compose.material.icons.filled.ExpandMore
 import androidx.compose.material3.Card
@@ -72,6 +73,7 @@ import kotlin.math.PI
 fun VehicleDetailScreen(
     vin: String,
     onBack: () -> Unit,
+    onSessionClick: ((String) -> Unit)? = null,
     viewModel: VehicleDetailViewModel = hiltViewModel()
 ) {
     val vehicle by viewModel.vehicle.collectAsState()
@@ -167,7 +169,12 @@ fun VehicleDetailScreen(
                 if (sessions.isEmpty()) {
                     Text("No sessions recorded", color = TextSecondary, style = MaterialTheme.typography.bodyMedium)
                 } else {
-                    sessions.forEach { session -> SessionRow(session) }
+                    sessions.forEach { session ->
+                        SessionRow(
+                            session = session,
+                            onClick = onSessionClick?.let { cb -> { cb(session.sessionId) } }
+                        )
+                    }
                 }
             }
         }
@@ -405,7 +412,7 @@ private fun TestResultRow(result: TestResultEntity) {
 }
 
 @Composable
-private fun SessionRow(session: VehicleSessionEntity) {
+private fun SessionRow(session: VehicleSessionEntity, onClick: (() -> Unit)? = null) {
     val duration = session.timestampEnd?.let { it - session.timestampStart } ?: 0L
     val durationStr = if (duration > 0) {
         val min = TimeUnit.MILLISECONDS.toMinutes(duration)
@@ -416,12 +423,17 @@ private fun SessionRow(session: VehicleSessionEntity) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 4.dp),
-        horizontalArrangement = Arrangement.SpaceBetween
+            .padding(vertical = 4.dp)
+            .then(if (onClick != null) Modifier.clickable(onClick = onClick) else Modifier),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
     ) {
-        Column {
+        Column(modifier = Modifier.weight(1f)) {
             Text(formatTimestamp(session.timestampStart), style = MaterialTheme.typography.bodySmall, color = TextPrimary)
             Text("Duration: $durationStr", style = MaterialTheme.typography.bodySmall, color = TextSecondary)
+        }
+        if (onClick != null) {
+            Icon(Icons.Filled.ChevronRight, contentDescription = null, tint = TextSecondary, modifier = Modifier.size(18.dp))
         }
     }
 }

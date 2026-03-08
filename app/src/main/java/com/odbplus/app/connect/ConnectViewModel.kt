@@ -1,12 +1,16 @@
 package com.odbplus.app.connect
 
+import android.annotation.SuppressLint
 import android.app.Application
+import android.bluetooth.BluetoothManager
+import android.content.Context
 import android.net.Uri
 import androidx.core.content.FileProvider
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.odbplus.app.ai.VehicleInfoRepository
 import com.odbplus.app.ai.data.VehicleInfo
+import com.odbplus.app.data.ConnectionProfileRepository
 import com.odbplus.app.session.DtcMonitorService
 import com.odbplus.app.session.VehicleSessionManager
 import com.odbplus.core.protocol.ObdService
@@ -17,8 +21,10 @@ import com.odbplus.core.transport.ConnectionState
 import com.odbplus.core.transport.TransportRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import java.io.File
 import javax.inject.Inject
@@ -30,7 +36,8 @@ class ConnectViewModel @Inject constructor(
     private val obdService: ObdService,
     private val vehicleInfoRepository: VehicleInfoRepository,
     private val sessionManager: VehicleSessionManager,
-    private val dtcMonitorService: DtcMonitorService
+    private val dtcMonitorService: DtcMonitorService,
+    private val connectionProfileRepository: ConnectionProfileRepository
 ) : AndroidViewModel(application) {
 
     val connectionState: StateFlow<ConnectionState> = repo.connectionState
@@ -38,6 +45,15 @@ class ConnectViewModel @Inject constructor(
     val sessionState: StateFlow<ProtocolSessionState> = obdService.sessionState
     val discoveryState: StateFlow<PidDiscoveryState> = obdService.discoveryState
     val currentVehicle: StateFlow<VehicleInfo?> = vehicleInfoRepository.currentVehicle
+
+    val lastBtMac:  StateFlow<String?> = connectionProfileRepository.lastBtMac
+        .stateIn(viewModelScope, SharingStarted.Eagerly, null)
+    val lastBtName: StateFlow<String?> = connectionProfileRepository.lastBtName
+        .stateIn(viewModelScope, SharingStarted.Eagerly, null)
+    val lastWifiHost: StateFlow<String?> = connectionProfileRepository.lastWifiHost
+        .stateIn(viewModelScope, SharingStarted.Eagerly, null)
+    val lastWifiPort: StateFlow<Int> = connectionProfileRepository.lastWifiPort
+        .stateIn(viewModelScope, SharingStarted.Eagerly, 35000)
 
     private val _isAcquiring = MutableStateFlow(false)
     val isAcquiring: StateFlow<Boolean> = _isAcquiring.asStateFlow()
@@ -52,17 +68,25 @@ class ConnectViewModel @Inject constructor(
             if (repo.connectionState.value == ConnectionState.CONNECTED) {
                 obdService.onTransportReady("tcp:$host:$port")
                 obdService.runPidDiscovery()
+                connectionProfileRepository.saveWifiProfile(host, port)
             }
         }
     }
 
     /** Connect via Bluetooth SPP (ELM327 BT adapters). */
+    @SuppressLint("MissingPermission")
     fun connectBluetooth(macAddress: String) {
         viewModelScope.launch {
             repo.connect(macAddress, 0, isBluetooth = true)
             if (repo.connectionState.value == ConnectionState.CONNECTED) {
                 obdService.onTransportReady("bt:$macAddress")
                 obdService.runPidDiscovery()
+                // Look up device name from system paired devices
+                val btManager = getApplication<Application>()
+                    .getSystemService(Context.BLUETOOTH_SERVICE) as? BluetoothManager
+                val deviceName = btManager?.adapter?.bondedDevices
+                    ?.firstOrNull { it.address == macAddress }?.name ?: macAddress
+                connectionProfileRepository.saveBluetoothProfile(macAddress, deviceName)
             }
         }
     }
@@ -142,14 +166,10 @@ class ConnectViewModel @Inject constructor(
     }
 
     /**
-     * Writes a combined diagnostic log (transport >>/<< lines + UOAPL events)
-     * to the app's cache dir and returns a shareable [Uri] via FileProvider.
-     *
-     * Returns null if the file could not be written.
+     * Writes a combined diagnostic log to the app's cache dir and returns a shareable Uri.
      */
     fun exportDiagnosticLog(): Uri? = try {
         val app = getApplication<Application>()
-
         val diagText  = DiagnosticLogger.exportText()
         val transport = repo.logLines.value
         val combined  = buildString {
@@ -160,10 +180,8 @@ class ConnectViewModel @Inject constructor(
             appendLine("=".repeat(64))
             transport.forEach { appendLine(it) }
         }
-
         val file = File(app.cacheDir, "odbplus_diagnostic.txt")
         file.writeText(combined)
-
         FileProvider.getUriForFile(app, "${app.packageName}.fileprovider", file)
     } catch (_: Exception) {
         null

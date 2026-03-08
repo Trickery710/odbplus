@@ -25,6 +25,7 @@ import androidx.compose.material.icons.filled.Bluetooth
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.DirectionsCar
 import androidx.compose.material.icons.filled.History
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Link
 import androidx.compose.material.icons.filled.LinkOff
 import androidx.compose.material.icons.filled.Speed
@@ -76,6 +77,10 @@ fun OdbHubScreen(
 ) {
     val connectionState by viewModel.connectionState.collectAsState()
     val currentVehicle by viewModel.currentVehicle.collectAsState()
+    val lastBtMac  by viewModel.lastBtMac.collectAsState()
+    val lastBtName by viewModel.lastBtName.collectAsState()
+    val lastWifiHost by viewModel.lastWifiHost.collectAsState()
+    val lastWifiPort by viewModel.lastWifiPort.collectAsState()
     val isConnected = connectionState == ConnectionState.CONNECTED
 
     var showBtPicker by remember { mutableStateOf(false) }
@@ -88,6 +93,8 @@ fun OdbHubScreen(
         BluetoothDevicePickerDialog(
             onDeviceSelected = { address -> viewModel.connectBluetooth(address) },
             onDismiss = { showBtPicker = false },
+            lastMac = lastBtMac,
+            lastName = lastBtName,
         )
     }
 
@@ -95,6 +102,8 @@ fun OdbHubScreen(
         WifiConnectDialog(
             onConnect = { host, port -> viewModel.connectTcp(host, port) },
             onDismiss = { showWifiDialog = false },
+            initialHost = lastWifiHost ?: "",
+            initialPort = lastWifiPort,
         )
     }
 
@@ -140,6 +149,13 @@ fun OdbHubScreen(
             icon = Icons.Filled.Terminal,
             description = "Custom OBD commands",
             requiresConnection = true
+        ),
+        OdbMenuItem(
+            id = "odb_hub/settings",
+            label = "Settings",
+            icon = Icons.Filled.Settings,
+            description = "App preferences",
+            requiresConnection = false
         )
     )
 

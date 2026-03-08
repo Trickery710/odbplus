@@ -51,6 +51,10 @@ fun ConnectScreen(viewModel: ConnectViewModel = hiltViewModel()) {
     val isAcquiring by viewModel.isAcquiring.collectAsState()
     val acquireStatus by viewModel.acquireStatus.collectAsState()
     val logLines by viewModel.logLines.collectAsState()
+    val lastBtMac  by viewModel.lastBtMac.collectAsState()
+    val lastBtName by viewModel.lastBtName.collectAsState()
+    val lastWifiHost by viewModel.lastWifiHost.collectAsState()
+    val lastWifiPort by viewModel.lastWifiPort.collectAsState()
 
     var showBtPicker by remember { mutableStateOf(false) }
     var showWifiDialog by remember { mutableStateOf(false) }
@@ -62,6 +66,8 @@ fun ConnectScreen(viewModel: ConnectViewModel = hiltViewModel()) {
         BluetoothDevicePickerDialog(
             onDeviceSelected = { address -> viewModel.connectBluetooth(address) },
             onDismiss = { showBtPicker = false },
+            lastMac = lastBtMac,
+            lastName = lastBtName,
         )
     }
 
@@ -69,6 +75,8 @@ fun ConnectScreen(viewModel: ConnectViewModel = hiltViewModel()) {
         WifiConnectDialog(
             onConnect = { host, port -> viewModel.connectTcp(host, port) },
             onDismiss = { showWifiDialog = false },
+            initialHost = lastWifiHost ?: "",
+            initialPort = lastWifiPort,
         )
     }
 

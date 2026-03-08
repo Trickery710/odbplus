@@ -19,4 +19,7 @@ interface VehicleSessionDao {
 
     @Query("SELECT * FROM vehicle_sessions WHERE vin = :vin ORDER BY timestampStart DESC LIMIT :limit")
     suspend fun getRecentSessions(vin: String, limit: Int = 10): List<VehicleSessionEntity>
+
+    @Query("SELECT * FROM vehicle_sessions WHERE sessionId = :sessionId LIMIT 1")
+    suspend fun getBySessionId(sessionId: String): VehicleSessionEntity?
 }

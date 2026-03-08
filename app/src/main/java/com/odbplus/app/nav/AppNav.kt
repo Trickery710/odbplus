@@ -11,6 +11,8 @@ import com.odbplus.app.ui.OdbHubScreen
 import com.odbplus.app.ui.PartsScreen
 import com.odbplus.app.ui.TerminalScreen
 import com.odbplus.app.ui.ToolOrderingScreen
+import com.odbplus.app.ui.SessionDetailScreen
+import com.odbplus.app.ui.SettingsScreen
 import com.odbplus.app.ui.VehicleDetailScreen
 import com.odbplus.app.ui.VehicleHistoryScreen
 
@@ -118,6 +120,11 @@ fun AppScreen() {
                         onBack = { navController.popBackStack() }
                     )
                 }
+                composable("odb_hub/settings") {
+                    SettingsScreen(
+                        onBack = { navController.popBackStack() }
+                    )
+                }
             }
 
             // Tab 3: Parts
@@ -157,6 +164,17 @@ fun AppScreen() {
                 composable("vehicle/detail/{vin}") { backStackEntry ->
                     VehicleDetailScreen(
                         vin = backStackEntry.arguments?.getString("vin") ?: "",
+                        onBack = { navController.popBackStack() },
+                        onSessionClick = { sessionId ->
+                            navController.navigate("vehicle/session/$sessionId") {
+                                launchSingleTop = true
+                            }
+                        }
+                    )
+                }
+                composable("vehicle/session/{sessionId}") { backStackEntry ->
+                    SessionDetailScreen(
+                        sessionId = backStackEntry.arguments?.getString("sessionId") ?: "",
                         onBack = { navController.popBackStack() }
                     )
                 }
