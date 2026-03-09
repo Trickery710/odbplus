@@ -5,6 +5,8 @@ import androidx.lifecycle.viewModelScope
 import com.odbplus.app.ai.VehicleInfoRepository
 import com.odbplus.app.data.db.dao.DtcLogDao
 import com.odbplus.app.data.db.entity.DtcLogEntity
+import com.odbplus.app.expertdiag.DiagnosticKnowledgeBase
+import com.odbplus.app.expertdiag.model.KnowledgeBaseEntry
 import com.odbplus.core.protocol.DiagnosticTroubleCode
 import com.odbplus.core.protocol.ObdService
 import com.odbplus.core.transport.ConnectionState
@@ -30,7 +32,8 @@ data class DiagnosticsUiState(
 class DiagnosticsViewModel @Inject constructor(
     private val obdService: ObdService,
     private val dtcLogDao: DtcLogDao,
-    private val vehicleInfoRepository: VehicleInfoRepository
+    private val vehicleInfoRepository: VehicleInfoRepository,
+    private val knowledgeBase: DiagnosticKnowledgeBase,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(DiagnosticsUiState())
@@ -124,4 +127,6 @@ class DiagnosticsViewModel @Inject constructor(
     fun dismissMessage() {
         _uiState.update { it.copy(errorMessage = null, clearSuccess = null) }
     }
+
+    fun kbEntry(dtcCode: String): KnowledgeBaseEntry? = knowledgeBase.lookup(dtcCode)
 }

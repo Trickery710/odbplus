@@ -1,0 +1,51 @@
+number,dtc,description,severity,common_causes,automatic_tests,guided_tests,monitored_pids
+1,P0100,MAF Circuit Malfunction,Medium,Dirty MAF; Wiring fault; Intake leak,MAF_Plausibility; FuelTrimAnalysis,RPMSweepTest,RPM;MAF;MAP;STFT;LTFT
+2,P0101,MAF Performance,Medium,Dirty MAF; Intake restriction,MAF_Plausibility,RPMSweepTest,RPM;MAF;MAP
+3,P0102,MAF Low Input,Medium,MAF unplugged; Wiring,MAF_SignalCheck,MAFInspection,MAF;RPM
+4,P0103,MAF High Input,Medium,Short to power; Faulty MAF,MAF_SignalCheck,WiringInspection,MAF;RPM
+5,P0104,MAF Intermittent,Medium,Loose connector,MAF_GraphCheck,HarnessWiggleTest,MAF;RPM
+6,P0105,MAP Circuit,Medium,Bad MAP; Vacuum issue,MAP_Plausibility,ThrottleSnapTest,MAP;RPM;TPS
+7,P0106,MAP Performance,Medium,Vacuum leak; MAP sensor,MAP_Plausibility,RPMSweepTest,MAP;RPM
+8,P0107,MAP Low Input,Medium,Short to ground,MAP_VoltageCheck,SensorInspection,MAP
+9,P0108,MAP High Input,Medium,Short to power,MAP_VoltageCheck,SensorInspection,MAP
+10,P0109,MAP Intermittent,Medium,Loose wiring,MAP_Graph,HarnessWiggleTest,MAP
+11,P0110,IAT Circuit,Low,IAT sensor fault,IAT_Plausibility,ColdStartCheck,IAT;ECT
+12,P0111,IAT Performance,Low,Sensor drift,IAT_Plausibility,ColdStartCheck,IAT;ECT
+13,P0112,IAT Low Input,Low,Short to ground,IAT_VoltageCheck,SensorInspection,IAT
+14,P0113,IAT High Input,Low,Open circuit,IAT_VoltageCheck,SensorInspection,IAT
+15,P0114,IAT Intermittent,Low,Loose connector,IAT_Graph,HarnessWiggleTest,IAT
+16,P0115,ECT Circuit,Medium,Coolant sensor fault,ECT_Plausibility,ColdStartCheck,ECT;IAT
+17,P0116,ECT Performance,Medium,Thermostat stuck,ECT_WarmupCurve,CoolingSystemCheck,ECT
+18,P0117,ECT Low Input,Medium,Short to ground,ECT_VoltageCheck,SensorInspection,ECT
+19,P0118,ECT High Input,Medium,Open circuit,ECT_VoltageCheck,SensorInspection,ECT
+20,P0119,ECT Intermittent,Medium,Connector issue,ECT_Graph,HarnessWiggleTest,ECT
+21,P0120,TPS Circuit,Medium,Throttle sensor fault,TPS_Sweep,ThrottleCalibration,TPS;RPM
+22,P0121,TPS Range,Medium,Throttle misalignment,TPS_Correlation,ThrottleSweepTest,TPS;RPM
+23,P0122,TPS Low Input,Medium,Short to ground,TPS_VoltageCheck,SensorInspection,TPS
+24,P0123,TPS High Input,Medium,Open circuit,TPS_VoltageCheck,SensorInspection,TPS
+25,P0124,TPS Intermittent,Medium,Loose connector,TPS_Graph,HarnessWiggleTest,TPS
+26,P0130,O2 Circuit B1S1,Medium,Bad O2 sensor,O2_ResponseTest,ThrottleSnapTest,O2_B1S1;STFT
+27,P0131,O2 Low Voltage,Medium,Lean condition,O2_ResponseTest,FuelTrimAnalysis,O2_B1S1;STFT
+28,P0132,O2 High Voltage,Medium,Rich mixture,O2_ResponseTest,FuelTrimAnalysis,O2_B1S1;STFT
+29,P0133,O2 Slow Response,Medium,Aging O2 sensor,O2_SwitchRate,ThrottleSnapTest,O2_B1S1
+30,P0134,O2 No Activity,Medium,Sensor dead,O2_SignalCheck,SensorInspection,O2_B1S1
+31,P0171,System Too Lean B1,High,Vacuum leak; Weak pump,FuelTrimAnalysis;MAF_Plausibility,VacuumLeakInspection,STFT;LTFT;MAF;MAP
+32,P0172,System Too Rich B1,High,Leaking injector,FuelTrimAnalysis,InjectorBalanceTest,STFT;LTFT
+33,P0174,System Too Lean B2,High,Vacuum leak,FuelTrimAnalysis,VacuumLeakInspection,STFT_B2;LTFT_B2
+34,P0175,System Too Rich B2,High,Injector leak,FuelTrimAnalysis,InjectorBalanceTest,STFT_B2
+35,P0190,Fuel Rail Pressure Sensor,High,Sensor fault,FuelPressureAnalysis,FuelPressureTest,FuelRailPressure
+36,P0191,Fuel Pressure Range,High,Weak fuel pump,FuelPressureAnalysis,FuelPressureTest,FuelRailPressure;RPM
+37,P0201,Injector Circuit Cyl1,High,Injector wiring,InjectorPulseCheck,CylinderContributionTest,RPM
+38,P0202,Injector Circuit Cyl2,High,Injector wiring,InjectorPulseCheck,CylinderContributionTest,RPM
+39,P0203,Injector Circuit Cyl3,High,Injector wiring,InjectorPulseCheck,CylinderContributionTest,RPM
+40,P0204,Injector Circuit Cyl4,High,Injector wiring,InjectorPulseCheck,CylinderContributionTest,RPM
+41,P0299,Turbo Underboost,High,Boost leak,BoostPressureAnalysis,BoostLeakInspection,MAP;Boost
+42,P0300,Random Misfire,High,Ignition; fuel,Mode6Misfire,PowerBalanceTest,RPM
+43,P0301,Misfire Cyl1,High,Plug or coil,Mode6Misfire,CylinderContributionTest,RPM
+44,P0302,Misfire Cyl2,High,Plug or coil,Mode6Misfire,CylinderContributionTest,RPM
+45,P0303,Misfire Cyl3,High,Plug or coil,Mode6Misfire,CylinderContributionTest,RPM
+46,P0304,Misfire Cyl4,High,Plug or coil,Mode6Misfire,CylinderContributionTest,RPM
+47,P0335,Crank Sensor Circuit,Critical,Crank sensor fault,CrankSignalCheck,CrankingTest,RPM
+48,P0340,Cam Sensor Circuit,Critical,Cam sensor fault,CamSignalCheck,TimingCorrelationTest,RPM
+49,P0401,EGR Insufficient Flow,Medium,Clogged EGR,EGR_CommandTest,CarbonInspection,MAP
+50,P0420,Catalyst Efficiency B1,High,Bad catalytic converter,CatalystMonitor,O2ComparisonTest,O2_B1S1;O2_B1S2

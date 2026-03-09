@@ -249,19 +249,8 @@ class ObdParser @Inject constructor() {
      * Parse the VIN (Vehicle Identification Number) from Mode 09 PID 02 response.
      */
     fun parseVin(rawResponse: String): String? {
-        val cleaned = cleanResponse(rawResponse)
-        if (cleaned.isEmpty() || cleaned == "NO DATA") return null
-
-        val bytes = hexStringToBytes(cleaned)
-
-        // Response starts with 49 02 (Mode 09, PID 02)
-        if (bytes.size < 3 || bytes[0] != 0x49.toByte() || bytes[1] != 0x02.toByte()) {
-            return null
-        }
-
-        // Skip header bytes and message count byte
-        val vinBytes = bytes.drop(3)
-        return vinBytes.map { it.toInt().toChar() }
+        val dataBytes = findMode09Payload(rawResponse, 0x02) ?: return null
+        return dataBytes.map { it.toInt().toChar() }
             .joinToString("")
             .filter { it.isLetterOrDigit() }
             .take(17) // VIN is 17 characters
@@ -271,22 +260,8 @@ class ObdParser @Inject constructor() {
      * Parse a Mode 09 response as ASCII string (e.g., Calibration ID, ECU Name).
      */
     fun parseMode09String(rawResponse: String, expectedPid: Int): String? {
-        val cleaned = cleanResponse(rawResponse)
-        if (cleaned.isEmpty() || cleaned == "NO DATA") return null
-
-        val bytes = hexStringToBytes(cleaned)
-
-        // Response starts with 49 XX (Mode 09 response)
-        if (bytes.size < 3 || bytes[0] != 0x49.toByte()) return null
-
-        // Verify PID
-        if ((bytes[1].toInt() and 0xFF) != expectedPid) return null
-
-        // Skip header bytes (49 XX) and message count byte
-        val dataBytes = bytes.drop(3)
+        val dataBytes = findMode09Payload(rawResponse, expectedPid) ?: return null
         if (dataBytes.isEmpty()) return null
-
-        // Convert to ASCII, filtering printable characters
         return dataBytes
             .map { (it.toInt() and 0xFF).toChar() }
             .filter { it.isLetterOrDigit() || it.isWhitespace() || it in ".-_" }
@@ -299,25 +274,35 @@ class ObdParser @Inject constructor() {
      * Parse a Mode 09 response as hex string (e.g., CVN).
      */
     fun parseMode09Hex(rawResponse: String, expectedPid: Int): String? {
+        val dataBytes = findMode09Payload(rawResponse, expectedPid) ?: return null
+        if (dataBytes.isEmpty()) return null
+        return dataBytes
+            .joinToString("") { String.format("%02X", it.toInt() and 0xFF) }
+            .takeIf { it.isNotEmpty() }
+    }
+
+    /**
+     * Find and return the data bytes from a Mode 09 response for [expectedPid].
+     *
+     * Searches for the "49 XX" marker anywhere in the cleaned byte stream so that
+     * ISO/KWP2000 header bytes (e.g. "84 F1 10 49 02 01 ...") are skipped correctly.
+     * Returns the payload bytes after the header (49) + PID (XX) + message-count byte,
+     * or null if the marker is not found or the response is empty/NO DATA.
+     */
+    private fun findMode09Payload(rawResponse: String, expectedPid: Int): ByteArray? {
         val cleaned = cleanResponse(rawResponse)
         if (cleaned.isEmpty() || cleaned == "NO DATA") return null
 
         val bytes = hexStringToBytes(cleaned)
 
-        // Response starts with 49 XX (Mode 09 response)
-        if (bytes.size < 3 || bytes[0] != 0x49.toByte()) return null
-
-        // Verify PID
-        if ((bytes[1].toInt() and 0xFF) != expectedPid) return null
-
-        // Skip header bytes (49 XX) and message count byte
-        val dataBytes = bytes.drop(3)
-        if (dataBytes.isEmpty()) return null
-
-        // Return as hex string
-        return dataBytes
-            .joinToString("") { String.format("%02X", it.toInt() and 0xFF) }
-            .takeIf { it.isNotEmpty() }
+        // Search for "49 XX" anywhere — handles both bare and ISO/KWP header-prefixed responses
+        for (i in 0 until bytes.size - 2) {
+            if (bytes[i] == 0x49.toByte() && (bytes[i + 1].toInt() and 0xFF) == expectedPid) {
+                // bytes[i+2] is the message count; payload starts at i+3
+                return if (bytes.size > i + 3) bytes.drop(i + 3).toByteArray() else ByteArray(0)
+            }
+        }
+        return null
     }
 
     private fun parseDataResponse(

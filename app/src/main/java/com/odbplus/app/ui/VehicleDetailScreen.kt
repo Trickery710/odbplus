@@ -1,7 +1,11 @@
 package com.odbplus.app.ui
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -20,6 +24,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.ChevronRight
+import androidx.compose.material.icons.filled.Circle
 import androidx.compose.material.icons.filled.ExpandLess
 import androidx.compose.material.icons.filled.ExpandMore
 import androidx.compose.material3.Card
@@ -34,11 +39,13 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
@@ -50,6 +57,8 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.odbplus.app.data.db.entity.DtcLogEntity
 import com.odbplus.app.data.db.entity.EcuModuleEntity
+import com.odbplus.app.expertdiag.model.DtcSeverity
+import com.odbplus.app.expertdiag.model.KnowledgeBaseEntry
 import com.odbplus.app.data.db.entity.FreezeFrameEntity
 import com.odbplus.app.data.db.entity.TestResultEntity
 import com.odbplus.app.data.db.entity.VehicleSessionEntity
@@ -57,11 +66,14 @@ import com.odbplus.app.ui.theme.AmberSecondary
 import com.odbplus.app.ui.theme.CyanPrimary
 import com.odbplus.app.ui.theme.DarkBackground
 import com.odbplus.app.ui.theme.DarkBorder
+import com.odbplus.app.ui.theme.DarkSurface
+import com.odbplus.app.ui.theme.DarkSurfaceHigh
 import com.odbplus.app.ui.theme.DarkSurfaceVariant
 import com.odbplus.app.ui.theme.GreenSuccess
 import com.odbplus.app.ui.theme.RedError
 import com.odbplus.app.ui.theme.TextPrimary
 import com.odbplus.app.ui.theme.TextSecondary
+import com.odbplus.app.ui.theme.TextTertiary
 import com.odbplus.app.vehicle.VehicleDetailViewModel
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -122,8 +134,6 @@ fun VehicleDetailScreen(
             ExpandableSection(title = "Vehicle Info", initiallyExpanded = true) {
                 InfoRow("VIN", vin)
                 vehicle?.let { v ->
-                    v.calibrationId?.let { InfoRow("Calibration ID", it) }
-                    v.calibrationVerificationNumber?.let { InfoRow("CVN", it) }
                     v.ecuName?.let { InfoRow("ECU Name", it) }
                     InfoRow("First Seen", formatTimestamp(v.firstSeenTimestamp))
                     InfoRow("Last Seen", formatTimestamp(v.lastSeenTimestamp))
@@ -144,7 +154,10 @@ fun VehicleDetailScreen(
                 if (dtcs.isEmpty()) {
                     Text("No DTCs recorded", color = TextSecondary, style = MaterialTheme.typography.bodyMedium)
                 } else {
-                    dtcs.forEach { dtc -> DtcRow(dtc) }
+                    dtcs.forEach { dtc ->
+                        DtcExpandableTile(dtc = dtc, kbEntry = viewModel.kbEntry(dtc.dtcCode))
+                        Spacer(Modifier.height(6.dp))
+                    }
                 }
             }
 
@@ -321,37 +334,203 @@ private fun InfoRow(label: String, value: String) {
 }
 
 @Composable
-private fun DtcRow(dtc: DtcLogEntity) {
-    Row(
+private fun DtcExpandableTile(
+    dtc: DtcLogEntity,
+    kbEntry: KnowledgeBaseEntry?,
+) {
+    var expanded by rememberSaveable(dtc.dtcCode) { mutableStateOf(false) }
+    val chevronRotation by animateFloatAsState(
+        targetValue = if (expanded) 90f else 0f,
+        label = "dtc_chevron",
+    )
+
+    val severityColor = when (kbEntry?.severity) {
+        DtcSeverity.CRITICAL -> RedError
+        DtcSeverity.HIGH     -> AmberSecondary
+        DtcSeverity.MEDIUM   -> CyanPrimary
+        DtcSeverity.LOW      -> GreenSuccess
+        null                 -> RedError
+    }
+
+    val description = kbEntry?.description ?: dtc.description
+
+    Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 4.dp),
-        verticalAlignment = Alignment.CenterVertically
+            .clip(RoundedCornerShape(10.dp))
+            .background(DarkSurfaceHigh)
+            .border(1.dp, severityColor.copy(alpha = 0.35f), RoundedCornerShape(10.dp)),
     ) {
-        Box(
+        // ── Header row ────────────────────────────────────────────────────
+        Row(
             modifier = Modifier
-                .clip(RoundedCornerShape(6.dp))
-                .background(RedError.copy(alpha = 0.15f))
-                .padding(horizontal = 8.dp, vertical = 3.dp)
+                .fillMaxWidth()
+                .clickable { expanded = !expanded }
+                .padding(horizontal = 12.dp, vertical = 10.dp),
+            verticalAlignment = Alignment.CenterVertically,
         ) {
-            Text(
-                dtc.dtcCode,
-                style = MaterialTheme.typography.labelMedium,
-                color = RedError,
-                fontWeight = FontWeight.Bold
+            // Severity dot
+            Icon(
+                Icons.Filled.Circle,
+                contentDescription = null,
+                tint = severityColor,
+                modifier = Modifier.size(9.dp),
             )
-        }
-        Spacer(Modifier.width(10.dp))
-        Column(modifier = Modifier.weight(1f)) {
-            dtc.description?.let {
-                Text(it, style = MaterialTheme.typography.bodySmall, color = TextPrimary)
+            Spacer(Modifier.width(8.dp))
+
+            Column(modifier = Modifier.weight(1f)) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    // DTC code badge
+                    Box(
+                        modifier = Modifier
+                            .clip(RoundedCornerShape(5.dp))
+                            .background(severityColor.copy(alpha = 0.15f))
+                            .padding(horizontal = 7.dp, vertical = 2.dp),
+                    ) {
+                        Text(
+                            dtc.dtcCode,
+                            fontSize = 13.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = severityColor,
+                        )
+                    }
+                    // Severity badge
+                    kbEntry?.severity?.let { sev ->
+                        Spacer(Modifier.width(6.dp))
+                        Box(
+                            modifier = Modifier
+                                .clip(RoundedCornerShape(4.dp))
+                                .background(severityColor.copy(alpha = 0.1f))
+                                .padding(horizontal = 5.dp, vertical = 1.dp),
+                        ) {
+                            Text(
+                                sev.label.uppercase(),
+                                fontSize = 9.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = severityColor,
+                                letterSpacing = 0.5.sp,
+                            )
+                        }
+                    }
+                }
+                if (description != null) {
+                    Spacer(Modifier.height(2.dp))
+                    Text(
+                        description,
+                        fontSize = 12.sp,
+                        color = TextSecondary,
+                        maxLines = if (expanded) Int.MAX_VALUE else 1,
+                    )
+                }
+                Text(
+                    formatTimestamp(dtc.timestamp),
+                    fontSize = 10.sp,
+                    color = TextTertiary,
+                )
             }
-            Text(
-                formatTimestamp(dtc.timestamp),
-                style = MaterialTheme.typography.bodySmall,
-                color = TextSecondary
+
+            Icon(
+                Icons.Filled.ChevronRight,
+                contentDescription = if (expanded) "Collapse" else "Expand",
+                tint = TextTertiary,
+                modifier = Modifier
+                    .size(18.dp)
+                    .rotate(chevronRotation),
             )
         }
+
+        // ── Expanded content ──────────────────────────────────────────────
+        AnimatedVisibility(
+            visible = expanded,
+            enter = expandVertically(),
+            exit = shrinkVertically(),
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(DarkSurface)
+                    .padding(horizontal = 12.dp, vertical = 10.dp),
+            ) {
+                if (kbEntry != null) {
+                    // Common causes
+                    if (kbEntry.commonCauses.isNotEmpty()) {
+                        SectionLabel("COMMON CAUSES")
+                        Spacer(Modifier.height(4.dp))
+                        kbEntry.commonCauses.forEach { cause ->
+                            Text(
+                                "• $cause",
+                                fontSize = 12.sp,
+                                color = TextPrimary,
+                                modifier = Modifier.padding(start = 4.dp, bottom = 2.dp),
+                            )
+                        }
+                    }
+
+                    // Automatic tests available
+                    if (kbEntry.automaticTests.isNotEmpty()) {
+                        Spacer(Modifier.height(10.dp))
+                        SectionLabel("AUTOMATIC TESTS")
+                        Spacer(Modifier.height(4.dp))
+                        kbEntry.automaticTests.forEach { test ->
+                            TestChip(label = test, color = CyanPrimary)
+                        }
+                    }
+
+                    // Guided tests available
+                    if (kbEntry.guidedTests.isNotEmpty()) {
+                        Spacer(Modifier.height(10.dp))
+                        SectionLabel("GUIDED TESTS")
+                        Spacer(Modifier.height(4.dp))
+                        kbEntry.guidedTests.forEach { test ->
+                            TestChip(label = test, color = AmberSecondary)
+                        }
+                    }
+
+                    // Monitored PIDs
+                    if (kbEntry.monitoredPids.isNotEmpty()) {
+                        Spacer(Modifier.height(10.dp))
+                        SectionLabel("MONITORED PIDS")
+                        Spacer(Modifier.height(4.dp))
+                        Text(
+                            kbEntry.monitoredPids.joinToString(" · "),
+                            fontSize = 11.sp,
+                            color = TextSecondary,
+                        )
+                    }
+                } else {
+                    Text(
+                        "No additional diagnostic data in knowledge base for this code.",
+                        fontSize = 12.sp,
+                        color = TextTertiary,
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun SectionLabel(text: String) {
+    Text(
+        text,
+        fontSize = 9.sp,
+        fontWeight = FontWeight.Bold,
+        color = TextSecondary,
+        letterSpacing = 1.sp,
+    )
+}
+
+@Composable
+private fun TestChip(label: String, color: Color) {
+    Box(
+        modifier = Modifier
+            .padding(bottom = 3.dp)
+            .clip(RoundedCornerShape(5.dp))
+            .background(color.copy(alpha = 0.1f))
+            .border(1.dp, color.copy(alpha = 0.3f), RoundedCornerShape(5.dp))
+            .padding(horizontal = 8.dp, vertical = 3.dp),
+    ) {
+        Text(label, fontSize = 11.sp, color = color)
     }
 }
 

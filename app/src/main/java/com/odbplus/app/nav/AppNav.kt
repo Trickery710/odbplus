@@ -1,5 +1,6 @@
 package com.odbplus.app.nav
 
+import com.odbplus.app.expertdiag.ui.ExpertDiagnosticScreen
 import com.odbplus.app.ui.AiChatScreen
 import com.odbplus.app.ui.CodesScreen
 import com.odbplus.app.ui.ConnectScreen
@@ -112,6 +113,11 @@ fun AppScreen() {
                 }
                 composable("odb_hub/tests") {
                     DiagnosticHudScreen(
+                        onBack = { navController.popBackStack() }
+                    )
+                }
+                composable("odb_hub/expert_diag") {
+                    ExpertDiagnosticScreen(
                         onBack = { navController.popBackStack() }
                     )
                 }

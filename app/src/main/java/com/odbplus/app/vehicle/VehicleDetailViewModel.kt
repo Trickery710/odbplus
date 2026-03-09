@@ -5,6 +5,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.odbplus.app.ai.VehicleInfoRepository
 import com.odbplus.app.ai.data.VehicleInfo
+import com.odbplus.app.expertdiag.DiagnosticKnowledgeBase
+import com.odbplus.app.expertdiag.model.KnowledgeBaseEntry
 import com.odbplus.app.data.db.dao.DtcLogDao
 import com.odbplus.app.data.db.dao.EcuModuleDao
 import com.odbplus.app.data.db.dao.FreezeFrameDao
@@ -21,6 +23,7 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -33,6 +36,7 @@ class VehicleDetailViewModel @Inject constructor(
     private val freezeFrameDao: FreezeFrameDao,
     private val ecuModuleDao: EcuModuleDao,
     private val testResultDao: TestResultDao,
+    private val knowledgeBase: DiagnosticKnowledgeBase,
     savedState: SavedStateHandle
 ) : ViewModel() {
 
@@ -47,6 +51,7 @@ class VehicleDetailViewModel @Inject constructor(
 
     val dtcs: StateFlow<List<DtcLogEntity>> = dtcLogDao
         .getDtcsForVin(vin)
+        .map { list -> list.distinctBy { it.dtcCode } }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
     val freezeFrames: StateFlow<List<FreezeFrameEntity>> = freezeFrameDao
@@ -70,6 +75,8 @@ class VehicleDetailViewModel @Inject constructor(
             _vehicle.value = vehicleInfoRepository.getVehicle(vin)
         }
     }
+
+    fun kbEntry(dtcCode: String): KnowledgeBaseEntry? = knowledgeBase.lookup(dtcCode)
 
     private fun calculateHealthScore(
         dtcs: List<DtcLogEntity>,

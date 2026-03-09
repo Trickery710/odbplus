@@ -22,6 +22,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Bluetooth
+import androidx.compose.material.icons.filled.BugReport
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.DirectionsCar
 import androidx.compose.material.icons.filled.History
@@ -148,6 +149,13 @@ fun OdbHubScreen(
             label = "Terminal",
             icon = Icons.Filled.Terminal,
             description = "Custom OBD commands",
+            requiresConnection = true
+        ),
+        OdbMenuItem(
+            id = "odb_hub/expert_diag",
+            label = "Expert Diag",
+            icon = Icons.Filled.BugReport,
+            description = "AI-powered DTC analysis",
             requiresConnection = true
         ),
         OdbMenuItem(

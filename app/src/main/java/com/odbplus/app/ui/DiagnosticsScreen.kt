@@ -1,7 +1,12 @@
 package com.odbplus.app.ui
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -18,7 +23,10 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AutoAwesome
+import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.DirectionsRun
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.Button
@@ -36,9 +44,13 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -48,6 +60,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.odbplus.app.diagnostics.DiagnosticsUiState
 import com.odbplus.app.diagnostics.DiagnosticsViewModel
+import com.odbplus.app.expertdiag.model.KnowledgeBaseEntry
 import com.odbplus.app.ui.theme.*
 import com.odbplus.core.protocol.DiagnosticTroubleCode
 import java.text.SimpleDateFormat
@@ -57,6 +70,7 @@ import java.util.Locale
 @Composable
 fun CodesScreen(viewModel: DiagnosticsViewModel = hiltViewModel()) {
     val uiState by viewModel.uiState.collectAsState()
+    val kbLookup: (String) -> KnowledgeBaseEntry? = { viewModel.kbEntry(it) }
 
     Box(
         modifier = Modifier
@@ -85,7 +99,8 @@ fun CodesScreen(viewModel: DiagnosticsViewModel = hiltViewModel()) {
             } else {
                 CodesList(
                     storedCodes = uiState.storedCodes,
-                    pendingCodes = uiState.pendingCodes
+                    pendingCodes = uiState.pendingCodes,
+                    kbLookup = kbLookup,
                 )
             }
         }
@@ -375,122 +390,253 @@ private fun NoCodesState() {
 @Composable
 private fun CodesList(
     storedCodes: List<DiagnosticTroubleCode>,
-    pendingCodes: List<DiagnosticTroubleCode>
+    pendingCodes: List<DiagnosticTroubleCode>,
+    kbLookup: (String) -> KnowledgeBaseEntry?,
 ) {
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
         contentPadding = androidx.compose.foundation.layout.PaddingValues(16.dp),
         verticalArrangement = Arrangement.spacedBy(10.dp)
     ) {
-        // Stored codes section
         if (storedCodes.isNotEmpty()) {
             item {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Box(
-                        modifier = Modifier
-                            .size(8.dp)
-                            .clip(CircleShape)
-                            .background(RedError)
-                    )
-                    Spacer(Modifier.width(8.dp))
-                    Text(
-                        text = "STORED CODES",
-                        style = MaterialTheme.typography.labelMedium,
-                        color = RedError,
-                        fontWeight = FontWeight.Bold,
-                        letterSpacing = 1.sp
-                    )
-                }
+                CodeSectionHeader(label = "STORED CODES", color = RedError)
                 Spacer(Modifier.height(8.dp))
             }
-
-            items(storedCodes) { code ->
-                DtcCodeCard(code = code, isPending = false)
+            items(storedCodes, key = { it.code }) { code ->
+                DtcCodeCard(code = code, isPending = false, kbEntry = kbLookup(code.code))
             }
-
             item { Spacer(Modifier.height(12.dp)) }
         }
 
-        // Pending codes section
         if (pendingCodes.isNotEmpty()) {
             item {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Box(
-                        modifier = Modifier
-                            .size(8.dp)
-                            .clip(CircleShape)
-                            .background(AmberSecondary)
-                    )
-                    Spacer(Modifier.width(8.dp))
-                    Text(
-                        text = "PENDING CODES",
-                        style = MaterialTheme.typography.labelMedium,
-                        color = AmberSecondary,
-                        fontWeight = FontWeight.Bold,
-                        letterSpacing = 1.sp
-                    )
-                }
+                CodeSectionHeader(label = "PENDING CODES", color = AmberSecondary)
                 Spacer(Modifier.height(8.dp))
             }
-
-            items(pendingCodes) { code ->
-                DtcCodeCard(code = code, isPending = true)
+            items(pendingCodes, key = { "p_${it.code}" }) { code ->
+                DtcCodeCard(code = code, isPending = true, kbEntry = kbLookup(code.code))
             }
         }
     }
 }
 
 @Composable
+private fun CodeSectionHeader(label: String, color: Color) {
+    Row(verticalAlignment = Alignment.CenterVertically) {
+        Box(
+            modifier = Modifier
+                .size(8.dp)
+                .clip(CircleShape)
+                .background(color)
+        )
+        Spacer(Modifier.width(8.dp))
+        Text(
+            text = label,
+            style = MaterialTheme.typography.labelMedium,
+            color = color,
+            fontWeight = FontWeight.Bold,
+            letterSpacing = 1.sp,
+        )
+    }
+}
+
+@Composable
 private fun DtcCodeCard(
     code: DiagnosticTroubleCode,
-    isPending: Boolean
+    isPending: Boolean,
+    kbEntry: KnowledgeBaseEntry?,
 ) {
     val accentColor = if (isPending) AmberSecondary else RedError
+    val containerColor = if (isPending) AmberContainer else RedContainer
+    var expanded by rememberSaveable(code.code) { mutableStateOf(false) }
+    val chevronRotation by animateFloatAsState(
+        targetValue = if (expanded) 90f else 0f,
+        label = "chevron_${code.code}",
+    )
 
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .border(
-                width = 1.dp,
-                color = accentColor.copy(alpha = 0.2f),
-                shape = RoundedCornerShape(12.dp)
-            ),
-        colors = CardDefaults.cardColors(
-            containerColor = if (isPending) AmberContainer else RedContainer
-        ),
-        shape = RoundedCornerShape(12.dp)
+            .border(1.dp, accentColor.copy(alpha = 0.25f), RoundedCornerShape(12.dp)),
+        colors = CardDefaults.cardColors(containerColor = containerColor),
+        shape = RoundedCornerShape(12.dp),
     ) {
+        // ── Header ────────────────────────────────────────────────────────
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp),
+                .clickable { expanded = !expanded }
+                .padding(horizontal = 16.dp, vertical = 14.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
         ) {
-            // Code display -- large monospace for that diagnostic feel
-            Text(
-                text = code.code,
-                style = MaterialTheme.typography.headlineMedium,
-                fontFamily = FontFamily.Monospace,
-                fontWeight = FontWeight.Bold,
-                color = accentColor
+            Column(modifier = Modifier.weight(1f)) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Text(
+                        text = code.code,
+                        style = MaterialTheme.typography.headlineMedium,
+                        fontFamily = FontFamily.Monospace,
+                        fontWeight = FontWeight.Bold,
+                        color = accentColor,
+                    )
+                    Spacer(Modifier.width(10.dp))
+                    // System badge
+                    androidx.compose.material3.Surface(
+                        shape = RoundedCornerShape(6.dp),
+                        color = accentColor.copy(alpha = 0.15f),
+                        border = androidx.compose.foundation.BorderStroke(
+                            1.dp, accentColor.copy(alpha = 0.2f)
+                        ),
+                    ) {
+                        Text(
+                            text = code.system.displayName,
+                            modifier = Modifier.padding(horizontal = 8.dp, vertical = 3.dp),
+                            style = MaterialTheme.typography.labelSmall,
+                            color = if (isPending) AmberOnContainer else RedOnContainer,
+                            fontWeight = FontWeight.Medium,
+                        )
+                    }
+                }
+                // Description preview
+                val desc = kbEntry?.description ?: code.description
+                if (desc != null) {
+                    Spacer(Modifier.height(3.dp))
+                    Text(
+                        text = desc,
+                        style = MaterialTheme.typography.bodySmall,
+                        color = TextSecondary,
+                        maxLines = if (expanded) Int.MAX_VALUE else 1,
+                    )
+                }
+            }
+            Icon(
+                Icons.Filled.ChevronRight,
+                contentDescription = if (expanded) "Collapse" else "Expand",
+                tint = accentColor.copy(alpha = 0.6f),
+                modifier = Modifier
+                    .size(20.dp)
+                    .rotate(chevronRotation),
             )
+        }
 
-            // System type badge
-            androidx.compose.material3.Surface(
-                shape = RoundedCornerShape(8.dp),
-                color = accentColor.copy(alpha = 0.15f),
-                border = androidx.compose.foundation.BorderStroke(
-                    1.dp, accentColor.copy(alpha = 0.2f)
-                )
+        // ── Expanded detail ───────────────────────────────────────────────
+        AnimatedVisibility(
+            visible = expanded,
+            enter = expandVertically(),
+            exit = shrinkVertically(),
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(DarkBackground.copy(alpha = 0.5f))
+                    .padding(horizontal = 16.dp, vertical = 12.dp),
             ) {
-                Text(
-                    text = code.system.displayName,
-                    modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp),
-                    style = MaterialTheme.typography.labelSmall,
-                    color = if (isPending) AmberOnContainer else RedOnContainer,
-                    fontWeight = FontWeight.Medium
-                )
+                if (kbEntry == null) {
+                    Text(
+                        "No additional information in knowledge base for ${code.code}.",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = TextTertiary,
+                    )
+                } else {
+                    // Common causes
+                    if (kbEntry.commonCauses.isNotEmpty()) {
+                        DetailSectionLabel("COMMON CAUSES")
+                        Spacer(Modifier.height(5.dp))
+                        kbEntry.commonCauses.forEach { cause ->
+                            Row(
+                                modifier = Modifier.padding(bottom = 3.dp),
+                                verticalAlignment = Alignment.Top,
+                            ) {
+                                Text("•", color = accentColor, fontSize = 12.sp,
+                                    modifier = Modifier.padding(end = 6.dp, top = 1.dp))
+                                Text(
+                                    cause,
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = TextPrimary,
+                                )
+                            }
+                        }
+                    }
+
+                    // Automatic tests
+                    if (kbEntry.automaticTests.isNotEmpty()) {
+                        Spacer(Modifier.height(12.dp))
+                        DetailSectionLabel("AUTOMATIC TESTS")
+                        Spacer(Modifier.height(5.dp))
+                        Text(
+                            "These run automatically when ECU connects.",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = TextTertiary,
+                        )
+                        Spacer(Modifier.height(5.dp))
+                        TestChipRow(chips = kbEntry.automaticTests, icon = Icons.Filled.AutoAwesome, color = CyanPrimary)
+                    }
+
+                    // Guided tests
+                    if (kbEntry.guidedTests.isNotEmpty()) {
+                        Spacer(Modifier.height(12.dp))
+                        DetailSectionLabel("GUIDED TESTS")
+                        Spacer(Modifier.height(5.dp))
+                        Text(
+                            "Run from Expert Diagnostics for step-by-step instructions.",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = TextTertiary,
+                        )
+                        Spacer(Modifier.height(5.dp))
+                        TestChipRow(chips = kbEntry.guidedTests, icon = Icons.Filled.DirectionsRun, color = AmberSecondary)
+                    }
+
+                    // Monitored PIDs
+                    if (kbEntry.monitoredPids.isNotEmpty()) {
+                        Spacer(Modifier.height(12.dp))
+                        DetailSectionLabel("MONITORED PIDS")
+                        Spacer(Modifier.height(4.dp))
+                        Text(
+                            kbEntry.monitoredPids.joinToString("  ·  "),
+                            style = MaterialTheme.typography.bodySmall,
+                            color = TextSecondary,
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun DetailSectionLabel(text: String) {
+    Text(
+        text = text,
+        style = MaterialTheme.typography.labelSmall,
+        color = TextSecondary,
+        fontWeight = FontWeight.Bold,
+        letterSpacing = 1.sp,
+    )
+}
+
+@Composable
+private fun TestChipRow(
+    chips: List<String>,
+    icon: androidx.compose.ui.graphics.vector.ImageVector,
+    color: Color,
+) {
+    androidx.compose.foundation.layout.FlowRow(
+        horizontalArrangement = Arrangement.spacedBy(6.dp),
+        verticalArrangement = Arrangement.spacedBy(6.dp),
+    ) {
+        chips.forEach { label ->
+            Row(
+                modifier = Modifier
+                    .clip(RoundedCornerShape(6.dp))
+                    .background(color.copy(alpha = 0.1f))
+                    .border(1.dp, color.copy(alpha = 0.3f), RoundedCornerShape(6.dp))
+                    .padding(horizontal = 8.dp, vertical = 4.dp),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Icon(icon, null, tint = color, modifier = Modifier.size(11.dp))
+                Spacer(Modifier.width(4.dp))
+                Text(label, style = MaterialTheme.typography.labelSmall, color = color)
             }
         }
     }

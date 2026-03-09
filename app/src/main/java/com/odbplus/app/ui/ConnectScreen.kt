@@ -395,8 +395,6 @@ private fun VehicleInfoRows(info: VehicleInfo) {
     decoded["Manufacturer"]?.let { VehicleInfoRow("Manufacturer", it) }
     decoded["Model Year"]?.let { VehicleInfoRow("Model Year", it) }
     info.ecuName?.let { VehicleInfoRow("ECU Name", it) }
-    info.calibrationId?.let { VehicleInfoRow("Calibration ID", it) }
-    info.calibrationVerificationNumber?.let { VehicleInfoRow("CVN", it) }
 }
 
 @Composable
