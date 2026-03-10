@@ -1,25 +1,13 @@
 package com.odbplus.app.ui
 
 import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
-import androidx.compose.foundation.layout.FlowRow
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.aspectRatio
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
@@ -27,1196 +15,961 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.CheckCircle
-import androidx.compose.material.icons.filled.Clear
-import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.FiberManualRecord
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
-import androidx.compose.material.icons.filled.KeyboardArrowDown
-import androidx.compose.material.icons.filled.PlayArrow
-import androidx.compose.material.icons.filled.Stop
-import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.FilterChip
-import androidx.compose.material3.FilterChipDefaults
-import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.LinearProgressIndicator
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
-import androidx.compose.material3.Slider
-import androidx.compose.material3.SliderDefaults
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.material.icons.filled.*
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawWithCache
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.graphics.StrokeJoin
+import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import androidx.compose.ui.draw.drawWithCache
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Path
-import androidx.compose.ui.graphics.StrokeCap
-import androidx.compose.ui.graphics.StrokeJoin
-import androidx.compose.ui.graphics.drawscope.Stroke
-import com.odbplus.app.live.ChartPoint
-import com.odbplus.app.live.LiveDataUiState
-import com.odbplus.app.live.LiveDataViewModel
-import com.odbplus.app.live.LogSession
-import com.odbplus.app.live.PidDisplayState
-import com.odbplus.app.live.PidPreset
-import com.odbplus.app.ui.theme.*
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.odbplus.app.live.*
 import com.odbplus.core.protocol.ObdPid
 import com.odbplus.core.protocol.PidDiscoveryState
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Entry point
+// ─────────────────────────────────────────────────────────────────────────────
 
 @Composable
-fun LiveScreen(viewModel: LiveDataViewModel = hiltViewModel()) {
-    val uiState by viewModel.uiState.collectAsState()
-    var showPidSelector by remember { mutableStateOf(false) }
-    var showLogSessions by remember { mutableStateOf(false) }
+fun LiveScreen(vm: LiveDataViewModel = hiltViewModel()) {
+    val state by vm.uiState.collectAsState()
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(DarkBackground)
-    ) {
-        // Header with connection status and controls
-        LiveDataHeader(
-            uiState = uiState,
-            onTogglePolling = { viewModel.togglePolling() },
-            onOpenPidSelector = { showPidSelector = true },
-            onSetPollInterval = { viewModel.setPollInterval(it) },
-            onToggleLogging = { viewModel.toggleLogging() },
-            onOpenLogSessions = { showLogSessions = true },
-            onStopReplay = { viewModel.stopReplay() },
-            onSetReplaySpeed = { viewModel.setReplaySpeed(it) }
-        )
+    Column(Modifier.fillMaxSize().background(MaterialTheme.colorScheme.background)) {
+        // Top bar with connection + discovery status
+        LiveTopBar(state, vm)
 
-        HorizontalDivider(color = DarkBorder, thickness = 1.dp)
+        // Display mode + sort controls
+        LiveControlBar(state, vm)
 
-        if (uiState.selectedPids.isEmpty()) {
-            EmptyStatePrompt(onOpenPidSelector = { showPidSelector = true })
-        } else if (uiState.showChart) {
-            PidLineChart(
-                chartData = uiState.chartData,
-                selectedPids = uiState.selectedPids,
-                onToggleChart = { viewModel.toggleChart() }
-            )
-        } else {
-            LiveDataGrid(
-                uiState = uiState,
-                onToggleChart = { viewModel.toggleChart() }
-            )
+        // Category tab strip (only when connected)
+        if (state.isConnected && state.availablePids.isNotEmpty()) {
+            CategoryTabRow(state, vm)
         }
-    }
 
-    // PID Selector Dialog
-    if (showPidSelector) {
-        PidSelectorDialog(
-            uiState = uiState,
-            onDismiss = { showPidSelector = false },
-            onTogglePid = { viewModel.togglePidSelection(it) },
-            onSelectPreset = { viewModel.selectPreset(it) },
-            onClearAll = { viewModel.clearSelection() }
-        )
-    }
+        // Main content pane
+        Box(Modifier.weight(1f)) {
+            when (state.displayMode) {
+                LiveDisplayMode.NUMERIC -> NumericListPane(state, vm)
+                LiveDisplayMode.GAUGE   -> GaugeGridPane(state)
+                LiveDisplayMode.GRAPH   -> GraphPane(state, vm)
+                LiveDisplayMode.TILES   -> TilesPane(state)
+            }
+        }
 
-    // Log Sessions Dialog
-    if (showLogSessions) {
-        LogSessionsDialog(
-            sessions = uiState.savedSessions,
-            onDismiss = { showLogSessions = false },
-            onReplay = { session ->
-                showLogSessions = false
-                viewModel.startReplay(session)
-            },
-            onDelete = { viewModel.deleteSession(it) },
-            onClearAll = { viewModel.clearAllSessions() }
-        )
+        // Bottom control bar (poll / log / preset)
+        LiveBottomBar(state, vm)
     }
 }
 
+// ─────────────────────────────────────────────────────────────────────────────
+// Top Bar
+// ─────────────────────────────────────────────────────────────────────────────
+
 @Composable
-private fun LiveDataHeader(
-    uiState: LiveDataUiState,
-    onTogglePolling: () -> Unit,
-    onOpenPidSelector: () -> Unit,
-    onSetPollInterval: (Long) -> Unit,
-    onToggleLogging: () -> Unit,
-    onOpenLogSessions: () -> Unit,
-    onStopReplay: () -> Unit,
-    onSetReplaySpeed: (Float) -> Unit
-) {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(DarkSurface)
-            .padding(16.dp)
-    ) {
-        // Status row
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            // Connection/Replay indicator
+private fun LiveTopBar(state: LiveDataUiState, vm: LiveDataViewModel) {
+    Surface(tonalElevation = 2.dp, modifier = Modifier.fillMaxWidth()) {
+        Column(Modifier.padding(horizontal = 16.dp, vertical = 8.dp)) {
             Row(verticalAlignment = Alignment.CenterVertically) {
-                Box(
-                    modifier = Modifier
-                        .size(12.dp)
-                        .clip(CircleShape)
-                        .background(
-                            when {
-                                uiState.isReplaying -> ReplayBlue
-                                uiState.isConnected -> GreenSuccess
-                                else -> TextTertiary
-                            }
-                        )
+                // Connection indicator
+                val dotColor by animateColorAsState(
+                    if (state.isConnected) Color(0xFF4CAF50) else Color(0xFF9E9E9E),
+                    animationSpec = tween(300)
                 )
+                Box(Modifier.size(10.dp).clip(CircleShape).background(dotColor))
                 Spacer(Modifier.width(8.dp))
                 Text(
-                    text = when {
-                        uiState.isReplaying -> "Replaying"
-                        uiState.isConnected -> "Connected"
-                        else -> "Disconnected"
-                    },
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = when {
-                        uiState.isReplaying -> ReplayBlue
-                        uiState.isConnected -> GreenSuccess
-                        else -> TextSecondary
-                    },
-                    fontWeight = FontWeight.Medium
+                    if (state.isConnected) "Connected" else "Disconnected",
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.SemiBold,
+                    modifier = Modifier.weight(1f)
                 )
-
-                // Recording indicator with pulse feel
-                if (uiState.isLogging) {
-                    Spacer(Modifier.width(14.dp))
-                    Surface(
-                        shape = RoundedCornerShape(12.dp),
-                        color = RecordingPulse.copy(alpha = 0.12f),
-                        border = androidx.compose.foundation.BorderStroke(
-                            1.dp, RecordingPulse.copy(alpha = 0.3f)
-                        )
-                    ) {
-                        Row(
-                            modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Icon(
-                                Icons.Default.FiberManualRecord,
-                                contentDescription = "Recording",
-                                tint = RecordingPulse,
-                                modifier = Modifier.size(10.dp)
-                            )
-                            Spacer(Modifier.width(5.dp))
-                            Text(
-                                text = "REC ${uiState.currentLogSession?.dataPointCount ?: 0}",
-                                style = MaterialTheme.typography.labelSmall,
-                                color = RecordingPulse,
-                                fontWeight = FontWeight.Bold
-                            )
-                        }
+                // Source badge
+                if (state.isConnected) {
+                    SourceBadge(state.supportSource)
+                    Spacer(Modifier.width(8.dp))
+                    IconButton(onClick = { vm.rescanSupportedPids() }, modifier = Modifier.size(32.dp)) {
+                        Icon(Icons.Default.Refresh, "Rescan", modifier = Modifier.size(18.dp))
                     }
                 }
             }
 
-            // Selected/Session count
-            Text(
-                text = if (uiState.isReplaying) {
-                    "${uiState.replayIndex + 1}/${uiState.replaySession?.dataPointCount ?: 0}"
-                } else {
-                    "${uiState.selectedPids.size} PIDs"
-                },
-                style = MaterialTheme.typography.labelMedium,
-                color = TextTertiary,
-                fontWeight = FontWeight.Medium
-            )
-        }
-
-        // Discovery progress banner — shown while the adapter scans the ECU for supported PIDs.
-        if (uiState.pidDiscoveryState == PidDiscoveryState.DISCOVERING) {
-            Spacer(Modifier.height(8.dp))
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                CircularProgressIndicator(
-                    modifier = Modifier.size(12.dp),
-                    color = CyanPrimary,
-                    strokeWidth = 1.5.dp
-                )
-                Spacer(Modifier.width(8.dp))
-                Text(
-                    text = "Scanning supported PIDs…",
-                    style = MaterialTheme.typography.labelSmall,
-                    color = TextSecondary
-                )
-            }
-        }
-
-        Spacer(Modifier.height(14.dp))
-
-        // Replay controls (when replaying)
-        if (uiState.isReplaying) {
-            ReplayControls(
-                uiState = uiState,
-                onStop = onStopReplay,
-                onSetSpeed = onSetReplaySpeed
-            )
-        } else {
-            // Normal controls
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(10.dp)
-            ) {
-                Button(
-                    onClick = onTogglePolling,
-                    enabled = uiState.isConnected && uiState.selectedPids.isNotEmpty(),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = if (uiState.isPolling) RedError else CyanPrimary,
-                        contentColor = if (uiState.isPolling) Color.White else TextOnAccent,
-                        disabledContainerColor = DarkSurfaceVariant,
-                        disabledContentColor = TextTertiary
-                    ),
-                    shape = RoundedCornerShape(12.dp),
-                    modifier = Modifier.weight(1f)
-                ) {
-                    Icon(
-                        imageVector = if (uiState.isPolling) Icons.Default.Stop else Icons.Default.PlayArrow,
-                        contentDescription = null,
-                        modifier = Modifier.size(18.dp)
-                    )
-                    Spacer(Modifier.width(6.dp))
-                    Text(
-                        if (uiState.isPolling) "Stop" else "Start",
-                        fontWeight = FontWeight.SemiBold
-                    )
-                }
-
-                OutlinedButton(
-                    onClick = onOpenPidSelector,
-                    modifier = Modifier.weight(1f),
-                    shape = RoundedCornerShape(12.dp),
-                    border = ButtonDefaults.outlinedButtonBorder(enabled = true).copy(
-                        brush = androidx.compose.ui.graphics.SolidColor(DarkBorder)
-                    ),
-                    colors = ButtonDefaults.outlinedButtonColors(contentColor = TextPrimary)
-                ) {
-                    Text("Select PIDs", fontWeight = FontWeight.Medium)
-                }
-            }
-
-            Spacer(Modifier.height(10.dp))
-
-            // Logger controls row
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(10.dp)
-            ) {
-                Button(
-                    onClick = onToggleLogging,
-                    enabled = uiState.isConnected && uiState.selectedPids.isNotEmpty(),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = if (uiState.isLogging) RecordingPulse else DarkSurfaceHigh,
-                        contentColor = if (uiState.isLogging) Color.White else TextPrimary,
-                        disabledContainerColor = DarkSurfaceVariant,
-                        disabledContentColor = TextTertiary
-                    ),
-                    shape = RoundedCornerShape(12.dp),
-                    modifier = Modifier.weight(1f)
-                ) {
-                    Icon(
-                        imageVector = if (uiState.isLogging) Icons.Default.Stop else Icons.Default.FiberManualRecord,
-                        contentDescription = null,
-                        modifier = Modifier.size(18.dp),
-                        tint = if (uiState.isLogging) Color.White else RecordingPulse
-                    )
-                    Spacer(Modifier.width(6.dp))
-                    Text(
-                        if (uiState.isLogging) "Stop Rec" else "Record",
-                        fontWeight = FontWeight.Medium
-                    )
-                }
-
-                OutlinedButton(
-                    onClick = onOpenLogSessions,
-                    enabled = uiState.savedSessions.isNotEmpty(),
-                    modifier = Modifier.weight(1f),
-                    shape = RoundedCornerShape(12.dp),
-                    border = ButtonDefaults.outlinedButtonBorder(enabled = true).copy(
-                        brush = androidx.compose.ui.graphics.SolidColor(DarkBorder)
-                    ),
-                    colors = ButtonDefaults.outlinedButtonColors(contentColor = TextPrimary)
-                ) {
-                    Text(
-                        "Logs (${uiState.savedSessions.size})",
-                        fontWeight = FontWeight.Medium
-                    )
-                }
-            }
-        }
-
-        // Poll interval slider (when not replaying)
-        if (!uiState.isReplaying && uiState.selectedPids.isNotEmpty()) {
-            Spacer(Modifier.height(14.dp))
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    text = "Interval:",
-                    style = MaterialTheme.typography.labelSmall,
-                    color = TextTertiary
-                )
-                Spacer(Modifier.width(8.dp))
-                Slider(
-                    value = uiState.pollIntervalMs.toFloat(),
-                    onValueChange = { onSetPollInterval(it.toLong()) },
-                    valueRange = 100f..2000f,
-                    steps = 18,
-                    modifier = Modifier.weight(1f),
-                    colors = SliderDefaults.colors(
-                        thumbColor = CyanPrimary,
-                        activeTrackColor = CyanPrimary,
-                        inactiveTrackColor = DarkBorder
-                    )
-                )
-                Spacer(Modifier.width(8.dp))
-                Text(
-                    text = "${uiState.pollIntervalMs}ms",
-                    style = MaterialTheme.typography.labelSmall,
-                    color = CyanPrimary,
-                    fontWeight = FontWeight.Medium,
-                    modifier = Modifier.width(52.dp)
-                )
-            }
-        }
-    }
-}
-
-@Composable
-private fun ReplayControls(
-    uiState: LiveDataUiState,
-    onStop: () -> Unit,
-    onSetSpeed: (Float) -> Unit
-) {
-    Column {
-        // Progress bar
-        val progress = if (uiState.replaySession != null && uiState.replaySession.dataPointCount > 0) {
-            (uiState.replayIndex + 1).toFloat() / uiState.replaySession.dataPointCount
-        } else 0f
-
-        LinearProgressIndicator(
-            progress = { progress },
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(4.dp)
-                .clip(RoundedCornerShape(2.dp)),
-            color = ReplayBlue,
-            trackColor = DarkBorder
-        )
-
-        Spacer(Modifier.height(14.dp))
-
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(10.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Button(
-                onClick = onStop,
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = RedError,
-                    contentColor = Color.White
-                ),
-                shape = RoundedCornerShape(12.dp),
-                modifier = Modifier.weight(1f)
-            ) {
-                Icon(Icons.Default.Stop, contentDescription = null, modifier = Modifier.size(18.dp))
-                Spacer(Modifier.width(6.dp))
-                Text("Stop Replay", fontWeight = FontWeight.SemiBold)
-            }
-
-            // Speed controls
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.weight(1f),
-                horizontalArrangement = Arrangement.Center
-            ) {
-                Text("Speed:", style = MaterialTheme.typography.labelSmall, color = TextTertiary)
-                Spacer(Modifier.width(6.dp))
-                listOf(0.5f, 1f, 2f).forEach { speed ->
-                    TextButton(
-                        onClick = { onSetSpeed(speed) },
-                        colors = ButtonDefaults.textButtonColors(
-                            contentColor = if (uiState.replaySpeed == speed)
-                                CyanPrimary
-                            else
-                                TextTertiary
-                        )
-                    ) {
-                        Text(
-                            "${speed}x",
-                            fontWeight = if (uiState.replaySpeed == speed) FontWeight.Bold else FontWeight.Normal
-                        )
+            // Discovery state
+            when (state.pidDiscoveryState) {
+                PidDiscoveryState.DISCOVERING -> {
+                    Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(top = 4.dp)) {
+                        CircularProgressIndicator(modifier = Modifier.size(12.dp), strokeWidth = 1.5.dp)
+                        Spacer(Modifier.width(6.dp))
+                        Text("Discovering supported sensors…", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.primary)
                     }
                 }
-            }
-        }
-    }
-}
-
-@Composable
-private fun EmptyStatePrompt(onOpenPidSelector: () -> Unit) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(32.dp),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Text(
-            text = "No PIDs Selected",
-            style = MaterialTheme.typography.headlineSmall,
-            color = TextPrimary,
-            fontWeight = FontWeight.Bold
-        )
-        Spacer(Modifier.height(8.dp))
-        Text(
-            text = "Select which parameters to monitor from your vehicle",
-            style = MaterialTheme.typography.bodyMedium,
-            color = TextSecondary,
-            textAlign = TextAlign.Center
-        )
-        Spacer(Modifier.height(28.dp))
-        Button(
-            onClick = onOpenPidSelector,
-            colors = ButtonDefaults.buttonColors(
-                containerColor = CyanPrimary,
-                contentColor = TextOnAccent
-            ),
-            shape = RoundedCornerShape(12.dp)
-        ) {
-            Text("Select PIDs", fontWeight = FontWeight.SemiBold)
-        }
-    }
-}
-
-@Composable
-private fun LiveDataGrid(uiState: LiveDataUiState, onToggleChart: () -> Unit) {
-    Column(modifier = Modifier.fillMaxSize()) {
-        // Chart toggle button — only show when polling with data
-        if (uiState.isPolling && uiState.chartData.isNotEmpty()) {
-            TextButton(
-                onClick = onToggleChart,
-                modifier = Modifier
-                    .align(Alignment.End)
-                    .padding(end = 8.dp, top = 4.dp)
-            ) {
-                Text("Show Chart", style = MaterialTheme.typography.labelMedium, color = CyanPrimary)
-            }
-        }
-        LazyVerticalGrid(
-            columns = GridCells.Fixed(2),
-            contentPadding = PaddingValues(10.dp),
-            horizontalArrangement = Arrangement.spacedBy(10.dp),
-            verticalArrangement = Arrangement.spacedBy(10.dp),
-            modifier = Modifier.weight(1f)
-        ) {
-            items(uiState.selectedPids) { pid ->
-                val pidState = uiState.pidValues[pid] ?: PidDisplayState(pid)
-                PidDisplayCard(pidState = pidState)
-            }
-        }
-    }
-}
-
-@Composable
-private fun PidDisplayCard(pidState: PidDisplayState) {
-    // Color-code based on state: error = red, active value = cyan glow, empty = neutral
-    val borderColor by animateColorAsState(
-        targetValue = when {
-            pidState.error != null -> RedError.copy(alpha = 0.3f)
-            pidState.value != null -> CyanPrimary.copy(alpha = 0.25f)
-            else -> DarkBorder
-        },
-        label = "cardBorder"
-    )
-    val bgColor by animateColorAsState(
-        targetValue = when {
-            pidState.error != null -> RedContainer
-            pidState.value != null -> DarkSurfaceVariant
-            else -> DarkSurfaceVariant
-        },
-        label = "cardBackground"
-    )
-
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .aspectRatio(1.2f)
-            .border(
-                width = 1.dp,
-                color = borderColor,
-                shape = RoundedCornerShape(14.dp)
-            ),
-        colors = CardDefaults.cardColors(containerColor = bgColor),
-        shape = RoundedCornerShape(14.dp)
-    ) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(12.dp),
-            verticalArrangement = Arrangement.SpaceBetween
-        ) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.Top
-            ) {
-                Text(
-                    text = pidState.pid.description,
-                    style = MaterialTheme.typography.labelMedium,
-                    maxLines = 2,
-                    overflow = TextOverflow.Ellipsis,
-                    modifier = Modifier.weight(1f),
-                    color = TextSecondary
-                )
-            }
-
-            Column(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                if (pidState.error != null) {
+                PidDiscoveryState.COMPLETE -> {
                     Text(
-                        text = pidState.error,
+                        "${state.availablePids.size} sensors supported",
                         style = MaterialTheme.typography.bodySmall,
-                        color = RedLight,
-                        textAlign = TextAlign.Center
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        modifier = Modifier.padding(top = 2.dp)
                     )
-                } else {
-                    // Large bold value -- the dashboard-style readout
-                    Text(
-                        text = pidState.value?.let {
-                            formatDisplayValue(it, pidState.pid)
-                        } ?: "--",
-                        style = MaterialTheme.typography.headlineMedium,
-                        fontWeight = FontWeight.Bold,
-                        color = if (pidState.value != null) CyanPrimary else TextTertiary,
-                        fontFamily = FontFamily.Default
-                    )
-                    // Unit label in smaller muted text
-                    Text(
-                        text = pidState.pid.unit,
-                        style = MaterialTheme.typography.labelSmall,
-                        color = TextTertiary
+                }
+                PidDiscoveryState.FAILED -> {
+                    Text("Discovery failed — showing all sensors", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.error, modifier = Modifier.padding(top = 2.dp))
+                }
+                PidDiscoveryState.IDLE -> {}
+            }
+        }
+    }
+}
+
+@Composable
+private fun SourceBadge(source: String) {
+    val (label, color) = when (source) {
+        "cache_hit"       -> "Cached" to Color(0xFF2196F3)
+        "validated_cache" -> "Validated" to Color(0xFF4CAF50)
+        "discovery"       -> "Fresh scan" to Color(0xFF9C27B0)
+        else              -> "Offline" to Color(0xFF9E9E9E)
+    }
+    Surface(
+        color = color.copy(alpha = 0.15f),
+        shape = RoundedCornerShape(12.dp),
+        modifier = Modifier.border(1.dp, color.copy(alpha = 0.4f), RoundedCornerShape(12.dp))
+    ) {
+        Text(
+            label,
+            modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp),
+            style = MaterialTheme.typography.labelSmall,
+            color = color,
+            fontWeight = FontWeight.Medium
+        )
+    }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Control bar (display mode + sort)
+// ─────────────────────────────────────────────────────────────────────────────
+
+@Composable
+private fun LiveControlBar(state: LiveDataUiState, vm: LiveDataViewModel) {
+    Row(
+        Modifier.fillMaxWidth().padding(horizontal = 12.dp, vertical = 6.dp),
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        // Display mode chips
+        LiveDisplayMode.values().forEach { mode ->
+            val selected = state.displayMode == mode
+            FilterChip(
+                selected = selected,
+                onClick = { vm.setDisplayMode(mode) },
+                label = { Text(mode.label, style = MaterialTheme.typography.labelSmall) },
+                modifier = Modifier.height(28.dp)
+            )
+        }
+
+        Spacer(Modifier.weight(1f))
+
+        // Sort dropdown
+        var sortExpanded by remember { mutableStateOf(false) }
+        Box {
+            OutlinedButton(
+                onClick = { sortExpanded = true },
+                modifier = Modifier.height(32.dp),
+                contentPadding = PaddingValues(horizontal = 10.dp)
+            ) {
+                Icon(Icons.Default.Sort, null, Modifier.size(14.dp))
+                Spacer(Modifier.width(4.dp))
+                Text(state.sortOrder.label, style = MaterialTheme.typography.labelSmall)
+            }
+            DropdownMenu(expanded = sortExpanded, onDismissRequest = { sortExpanded = false }) {
+                SortOrder.values().forEach { order ->
+                    DropdownMenuItem(
+                        text = { Text(order.label) },
+                        onClick = { vm.setSortOrder(order); sortExpanded = false }
                     )
                 }
             }
+        }
+    }
+}
 
-            // PID code in bottom corner
+// ─────────────────────────────────────────────────────────────────────────────
+// Category tab row
+// ─────────────────────────────────────────────────────────────────────────────
+
+@Composable
+private fun CategoryTabRow(state: LiveDataUiState, vm: LiveDataViewModel) {
+    // Only show categories that have at least one available PID.
+    val activeCategories = remember(state.availablePids) {
+        state.availablePids.map { it.category }.distinct().sortedBy { it.ordinal }
+    }
+
+    LazyRow(
+        contentPadding = PaddingValues(horizontal = 12.dp, vertical = 4.dp),
+        horizontalArrangement = Arrangement.spacedBy(6.dp),
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        item {
+            FilterChip(
+                selected = state.activeCategory == null,
+                onClick = { vm.setActiveCategory(null) },
+                label = { Text("All", style = MaterialTheme.typography.labelSmall) },
+                modifier = Modifier.height(28.dp)
+            )
+        }
+        items(activeCategories) { cat ->
+            FilterChip(
+                selected = state.activeCategory == cat,
+                onClick = { vm.setActiveCategory(if (state.activeCategory == cat) null else cat) },
+                label = { Text(cat.displayName, style = MaterialTheme.typography.labelSmall) },
+                modifier = Modifier.height(28.dp)
+            )
+        }
+    }
+
+    // DTC filter strip
+    if (state.activeDtcFilter.isNotEmpty()) {
+        Row(
+            Modifier.fillMaxWidth().background(MaterialTheme.colorScheme.errorContainer.copy(alpha = 0.3f)).padding(horizontal = 12.dp, vertical = 4.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Icon(Icons.Default.Warning, null, Modifier.size(14.dp), tint = MaterialTheme.colorScheme.error)
+            Spacer(Modifier.width(6.dp))
             Text(
-                text = "PID: ${pidState.pid.code}",
+                "DTC focus: ${state.activeDtcFilter.joinToString(", ")}",
                 style = MaterialTheme.typography.labelSmall,
-                color = TextTertiary.copy(alpha = 0.6f),
-                fontFamily = FontFamily.Monospace
+                color = MaterialTheme.colorScheme.error,
+                modifier = Modifier.weight(1f)
             )
-        }
-    }
-}
-
-private fun formatDisplayValue(value: Double, pid: ObdPid): String {
-    return when (pid) {
-        ObdPid.ENGINE_RPM -> value.toInt().toString()
-        ObdPid.VEHICLE_SPEED -> value.toInt().toString()
-        ObdPid.ENGINE_COOLANT_TEMP,
-        ObdPid.INTAKE_AIR_TEMP,
-        ObdPid.AMBIENT_AIR_TEMP,
-        ObdPid.ENGINE_OIL_TEMP -> value.toInt().toString()
-        else -> if (value == value.toLong().toDouble()) {
-            value.toLong().toString()
-        } else {
-            String.format("%.1f", value)
-        }
-    }
-}
-
-/**
- * Categories for organizing PIDs in the selector.
- */
-enum class PidCategory(val displayName: String) {
-    ENGINE("Engine"),
-    FUEL("Fuel System"),
-    TEMPERATURE("Temperature"),
-    SPEED_DISTANCE("Speed & Distance"),
-    OXYGEN_SENSORS("Oxygen Sensors"),
-    EMISSIONS("Emissions & EGR"),
-    THROTTLE_PEDAL("Throttle & Pedal"),
-    TURBO_BOOST("Turbo & Boost"),
-    DIAGNOSTICS("Diagnostics"),
-    OTHER("Other")
-}
-
-/**
- * Get the category for a PID based on its code and description.
- */
-private fun ObdPid.getCategory(): PidCategory {
-    return when {
-        code in listOf("04", "0C", "0E", "1F", "61", "62", "63", "64", "8E") -> PidCategory.ENGINE
-        description.contains("Engine", ignoreCase = true) && !description.contains("Temp", ignoreCase = true) -> PidCategory.ENGINE
-        code in listOf("03", "06", "07", "08", "09", "0A", "22", "23", "2F", "51", "52", "59", "5D", "5E", "9D") -> PidCategory.FUEL
-        description.contains("Fuel", ignoreCase = true) -> PidCategory.FUEL
-        code in listOf("05", "0F", "46", "5C", "67", "68", "6B", "75", "76", "77", "78", "79", "84") -> PidCategory.TEMPERATURE
-        description.contains("Temp", ignoreCase = true) -> PidCategory.TEMPERATURE
-        code in listOf("0D", "21", "30", "31", "4D", "4E", "7F") -> PidCategory.SPEED_DISTANCE
-        description.contains("Speed", ignoreCase = true) || description.contains("Distance", ignoreCase = true) -> PidCategory.SPEED_DISTANCE
-        code in listOf("13", "14", "15", "16", "17", "18", "19", "1A", "1B", "1D",
-            "24", "25", "26", "27", "28", "29", "2A", "2B",
-            "34", "35", "36", "37", "38", "39", "3A", "3B",
-            "55", "56", "57", "58", "8C", "9C") -> PidCategory.OXYGEN_SENSORS
-        description.contains("O2", ignoreCase = true) || description.contains("Oxygen", ignoreCase = true) -> PidCategory.OXYGEN_SENSORS
-        code in listOf("12", "2C", "2D", "2E", "32", "3C", "3D", "3E", "3F", "53", "54",
-            "69", "6A", "7A", "7B", "7C", "7D", "7E", "83", "85", "86", "88", "8B", "94") -> PidCategory.EMISSIONS
-        description.contains("EGR", ignoreCase = true) || description.contains("Catalyst", ignoreCase = true) ||
-        description.contains("Evap", ignoreCase = true) || description.contains("NOx", ignoreCase = true) ||
-        description.contains("DPF", ignoreCase = true) || description.contains("Particulate", ignoreCase = true) -> PidCategory.EMISSIONS
-        code in listOf("11", "45", "47", "48", "49", "4A", "4B", "4C", "5A", "6C", "8D") -> PidCategory.THROTTLE_PEDAL
-        description.contains("Throttle", ignoreCase = true) || description.contains("Pedal", ignoreCase = true) -> PidCategory.THROTTLE_PEDAL
-        code in listOf("6F", "70", "71", "72", "73", "74") -> PidCategory.TURBO_BOOST
-        description.contains("Turbo", ignoreCase = true) || description.contains("Boost", ignoreCase = true) ||
-        description.contains("Wastegate", ignoreCase = true) -> PidCategory.TURBO_BOOST
-        code in listOf("00", "01", "02", "1C", "1E", "20", "40", "41", "60", "65", "80", "A0", "C0") -> PidCategory.DIAGNOSTICS
-        description.contains("Monitor", ignoreCase = true) || description.contains("DTC", ignoreCase = true) ||
-        description.contains("Supported", ignoreCase = true) || description.contains("Status", ignoreCase = true) -> PidCategory.DIAGNOSTICS
-        else -> PidCategory.OTHER
-    }
-}
-
-@OptIn(ExperimentalLayoutApi::class)
-@Composable
-private fun PidSelectorDialog(
-    uiState: LiveDataUiState,
-    onDismiss: () -> Unit,
-    onTogglePid: (ObdPid) -> Unit,
-    onSelectPreset: (PidPreset) -> Unit,
-    onClearAll: () -> Unit
-) {
-    val groupedPids = remember(uiState.availablePids) {
-        uiState.availablePids
-            .groupBy { it.pid.getCategory() }
-            .toSortedMap(compareBy { it.ordinal })
-    }
-
-    var expandedCategory by remember { mutableStateOf<PidCategory?>(PidCategory.ENGINE) }
-
-    AlertDialog(
-        onDismissRequest = onDismiss,
-        containerColor = DarkSurface,
-        titleContentColor = TextPrimary,
-        title = {
-            Column {
-                Text(
-                    "Select PIDs to Monitor",
-                    fontWeight = FontWeight.Bold
-                )
-                val subtitle = buildString {
-                    append("${uiState.selectedPids.size} selected")
-                    when (uiState.pidDiscoveryState) {
-                        PidDiscoveryState.COMPLETE ->
-                            append("  ·  ${uiState.availablePids.size} available on this vehicle")
-                        PidDiscoveryState.DISCOVERING ->
-                            append("  ·  Scanning supported PIDs…")
-                        else -> Unit
-                    }
-                }
-                Text(
-                    text = subtitle,
-                    style = MaterialTheme.typography.bodySmall,
-                    color = CyanPrimary
-                )
-            }
-        },
-        text = {
-            LazyColumn(
-                verticalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                item {
-                    Text(
-                        text = "QUICK PRESETS",
-                        style = MaterialTheme.typography.labelSmall,
-                        fontWeight = FontWeight.Bold,
-                        color = TextTertiary,
-                        letterSpacing = 1.sp
-                    )
-                    Spacer(Modifier.height(10.dp))
-                    FlowRow(
-                        horizontalArrangement = Arrangement.spacedBy(8.dp),
-                        verticalArrangement = Arrangement.spacedBy(8.dp)
-                    ) {
-                        PidPreset.entries.forEach { preset ->
-                            FilterChip(
-                                selected = false,
-                                onClick = { onSelectPreset(preset) },
-                                label = {
-                                    Text(
-                                        preset.displayName,
-                                        color = CyanPrimary
-                                    )
-                                },
-                                colors = FilterChipDefaults.filterChipColors(
-                                    containerColor = CyanContainer,
-                                    labelColor = CyanPrimary
-                                ),
-                                border = FilterChipDefaults.filterChipBorder(
-                                    enabled = true,
-                                    selected = false,
-                                    borderColor = CyanPrimary.copy(alpha = 0.3f)
-                                )
-                            )
-                        }
-                    }
-                }
-
-                item {
-                    HorizontalDivider(
-                        modifier = Modifier.padding(vertical = 10.dp),
-                        color = DarkBorder
-                    )
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Text(
-                            text = "BY CATEGORY",
-                            style = MaterialTheme.typography.labelSmall,
-                            fontWeight = FontWeight.Bold,
-                            color = TextTertiary,
-                            letterSpacing = 1.sp
-                        )
-                        TextButton(onClick = onClearAll) {
-                            Icon(
-                                Icons.Default.Clear,
-                                contentDescription = null,
-                                modifier = Modifier.size(14.dp),
-                                tint = RedError
-                            )
-                            Spacer(Modifier.width(4.dp))
-                            Text("Clear All", color = RedError)
-                        }
-                    }
-                }
-
-                // Render each category
-                groupedPids.forEach { (category, pidsInCategory) ->
-                    val selectedCount = pidsInCategory.count { it.isSelected }
-                    val isExpanded = expandedCategory == category
-
-                    item {
-                        PidCategoryHeader(
-                            category = category,
-                            totalCount = pidsInCategory.size,
-                            selectedCount = selectedCount,
-                            isExpanded = isExpanded,
-                            onClick = {
-                                expandedCategory = if (isExpanded) null else category
-                            }
-                        )
-                    }
-
-                    if (isExpanded) {
-                        items(pidsInCategory) { pidState ->
-                            PidSelectorItem(
-                                pidState = pidState,
-                                onToggle = { onTogglePid(pidState.pid) }
-                            )
-                        }
-                    }
-                }
-            }
-        },
-        confirmButton = {
-            Button(
-                onClick = onDismiss,
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = CyanPrimary,
-                    contentColor = TextOnAccent
-                ),
-                shape = RoundedCornerShape(10.dp)
-            ) {
-                Text("Done", fontWeight = FontWeight.SemiBold)
+            TextButton(onClick = { vm.clearDtcFilter() }, contentPadding = PaddingValues(4.dp)) {
+                Text("Clear", style = MaterialTheme.typography.labelSmall)
             }
         }
-    )
+    }
 }
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Numeric list pane
+// ─────────────────────────────────────────────────────────────────────────────
 
 @Composable
-private fun PidCategoryHeader(
-    category: PidCategory,
-    totalCount: Int,
-    selectedCount: Int,
-    isExpanded: Boolean,
-    onClick: () -> Unit
-) {
-    Surface(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clip(RoundedCornerShape(10.dp))
-            .clickable { onClick() },
-        color = if (selectedCount > 0)
-            CyanContainer
-        else
-            DarkSurfaceVariant,
-        shape = RoundedCornerShape(10.dp)
+private fun NumericListPane(state: LiveDataUiState, vm: LiveDataViewModel) {
+    val sorted = remember(state.availablePids, state.sortOrder, state.activeCategory, state.activeDtcFilter) {
+        vm.sortedFilteredPids(state)
+    }
+
+    LazyColumn(
+        contentPadding = PaddingValues(horizontal = 12.dp, vertical = 8.dp),
+        verticalArrangement = Arrangement.spacedBy(6.dp)
     ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(12.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Icon(
-                    imageVector = if (isExpanded)
-                        Icons.Default.KeyboardArrowDown
-                    else
-                        Icons.AutoMirrored.Filled.KeyboardArrowRight,
-                    contentDescription = if (isExpanded) "Collapse" else "Expand",
-                    modifier = Modifier.size(20.dp),
-                    tint = if (selectedCount > 0) CyanPrimary else TextSecondary
-                )
-                Spacer(Modifier.width(8.dp))
+        // Derived metrics section
+        if (state.derivedMetrics.isNotEmpty() && state.isConnected) {
+            item {
+                DerivedMetricsSection(state.derivedMetrics)
+            }
+        }
+
+        // PID cards
+        items(sorted, key = { it.pid.code }) { pidState ->
+            PidNumericCard(pidState, vm)
+        }
+
+        // Sessions section when not connected
+        if (!state.isConnected && state.savedSessions.isNotEmpty()) {
+            item { Spacer(Modifier.height(8.dp)) }
+            item {
                 Text(
-                    text = category.displayName,
+                    "Saved Sessions",
                     style = MaterialTheme.typography.titleSmall,
-                    fontWeight = FontWeight.Medium,
-                    color = if (selectedCount > 0) CyanOnContainer else TextPrimary
+                    fontWeight = FontWeight.SemiBold,
+                    modifier = Modifier.padding(vertical = 4.dp)
                 )
             }
-            Text(
-                text = if (selectedCount > 0) "$selectedCount / $totalCount" else "$totalCount",
-                style = MaterialTheme.typography.labelMedium,
-                color = if (selectedCount > 0) CyanPrimary else TextTertiary,
-                fontWeight = if (selectedCount > 0) FontWeight.Bold else FontWeight.Normal
-            )
+            items(state.savedSessions, key = { it.id }) { session ->
+                SessionCard(session, onReplay = { vm.startReplay(session) }, onDelete = { vm.deleteSession(session) })
+            }
         }
     }
 }
 
 @Composable
-private fun PidSelectorItem(
-    pidState: PidDisplayState,
-    onToggle: () -> Unit
-) {
-    val backgroundColor by animateColorAsState(
-        targetValue = if (pidState.isSelected)
-            CyanPrimary.copy(alpha = 0.1f)
-        else
-            Color.Transparent,
-        label = "selectorBackground"
+private fun DerivedMetricsSection(metrics: List<DerivedMetric>) {
+    Text(
+        "Derived Metrics",
+        style = MaterialTheme.typography.labelMedium,
+        color = MaterialTheme.colorScheme.primary,
+        fontWeight = FontWeight.SemiBold,
+        modifier = Modifier.padding(bottom = 4.dp)
     )
+    LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.fillMaxWidth()) {
+        items(metrics, key = { it.id.name }) { metric ->
+            DerivedMetricChip(metric)
+        }
+    }
+    Spacer(Modifier.height(8.dp))
+}
 
-    Surface(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clip(RoundedCornerShape(8.dp))
-            .clickable { onToggle() }
-            .background(backgroundColor),
-        color = backgroundColor
-    ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(12.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
+@Composable
+private fun DerivedMetricChip(metric: DerivedMetric) {
+    val bgColor = when (metric.status) {
+        SensorStatus.NORMAL   -> MaterialTheme.colorScheme.primaryContainer
+        SensorStatus.WARNING  -> Color(0xFFFFF3E0)
+        SensorStatus.CRITICAL -> Color(0xFFFFEBEE)
+    }
+    val textColor = when (metric.status) {
+        SensorStatus.NORMAL   -> MaterialTheme.colorScheme.onPrimaryContainer
+        SensorStatus.WARNING  -> Color(0xFFE65100)
+        SensorStatus.CRITICAL -> Color(0xFFB71C1C)
+    }
+    Surface(color = bgColor, shape = RoundedCornerShape(12.dp)) {
+        Column(
+            Modifier.padding(horizontal = 12.dp, vertical = 8.dp).widthIn(min = 80.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Column(modifier = Modifier.weight(1f)) {
-                Text(
-                    text = pidState.pid.description,
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = TextPrimary
-                )
-                Text(
-                    text = "PID: ${pidState.pid.code} | ${pidState.pid.unit}",
-                    style = MaterialTheme.typography.bodySmall,
-                    color = TextTertiary
-                )
-            }
-            if (pidState.isSelected) {
-                Icon(
-                    Icons.Default.CheckCircle,
-                    contentDescription = "Selected",
-                    tint = CyanPrimary
-                )
-            }
+            Text(metric.label, style = MaterialTheme.typography.labelSmall, color = textColor.copy(alpha = 0.7f))
+            Text(metric.formattedValue, style = MaterialTheme.typography.titleSmall, fontWeight = FontWeight.Bold, color = textColor)
+            metric.note?.let { Text(it, style = MaterialTheme.typography.labelSmall, color = textColor.copy(alpha = 0.5f)) }
         }
     }
 }
 
 @Composable
-private fun LogSessionsDialog(
-    sessions: List<LogSession>,
-    onDismiss: () -> Unit,
-    onReplay: (LogSession) -> Unit,
-    onDelete: (LogSession) -> Unit,
-    onClearAll: () -> Unit
-) {
-    AlertDialog(
-        onDismissRequest = onDismiss,
-        containerColor = DarkSurface,
-        titleContentColor = TextPrimary,
-        title = { Text("Saved Logs", fontWeight = FontWeight.Bold) },
-        text = {
-            if (sessions.isEmpty()) {
-                Text(
-                    text = "No saved logs yet.\nStart recording to create a log.",
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = TextSecondary
-                )
-            } else {
-                LazyColumn(
-                    verticalArrangement = Arrangement.spacedBy(10.dp)
-                ) {
-                    items(sessions.reversed()) { session ->
-                        LogSessionItem(
-                            session = session,
-                            onReplay = { onReplay(session) },
-                            onDelete = { onDelete(session) }
-                        )
-                    }
-                }
-            }
-        },
-        confirmButton = {
-            Button(
-                onClick = onDismiss,
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = CyanPrimary,
-                    contentColor = TextOnAccent
-                ),
-                shape = RoundedCornerShape(10.dp)
-            ) {
-                Text("Close", fontWeight = FontWeight.SemiBold)
-            }
-        },
-        dismissButton = {
-            if (sessions.isNotEmpty()) {
-                TextButton(onClick = onClearAll) {
-                    Text("Clear All", color = RedError)
-                }
-            }
-        }
-    )
-}
+private fun PidNumericCard(pidState: PidDisplayState, vm: LiveDataViewModel) {
+    var expanded by remember { mutableStateOf(false) }
 
-@Composable
-private fun LogSessionItem(
-    session: LogSession,
-    onReplay: () -> Unit,
-    onDelete: () -> Unit
-) {
-    val dateFormat = SimpleDateFormat("MMM dd, HH:mm", Locale.getDefault())
-    val durationSec = session.duration / 1000
+    val borderColor by animateColorAsState(
+        when (pidState.status) {
+            SensorStatus.NORMAL   -> Color.Transparent
+            SensorStatus.WARNING  -> Color(0xFFFFA726)
+            SensorStatus.CRITICAL -> Color(0xFFEF5350)
+        },
+        animationSpec = tween(300)
+    )
+    val valueColor = when (pidState.status) {
+        SensorStatus.NORMAL   -> MaterialTheme.colorScheme.primary
+        SensorStatus.WARNING  -> Color(0xFFF57C00)
+        SensorStatus.CRITICAL -> Color(0xFFC62828)
+    }
 
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .border(1.dp, DarkBorder, RoundedCornerShape(12.dp)),
-        colors = CardDefaults.cardColors(containerColor = DarkSurfaceVariant),
-        shape = RoundedCornerShape(12.dp)
-    ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(12.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Column(modifier = Modifier.weight(1f)) {
-                Text(
-                    text = dateFormat.format(Date(session.startTime)),
-                    style = MaterialTheme.typography.bodyMedium,
-                    fontWeight = FontWeight.Medium,
-                    color = TextPrimary
-                )
-                Text(
-                    text = "${session.dataPointCount} samples | ${durationSec}s | ${session.selectedPids.size} PIDs",
-                    style = MaterialTheme.typography.bodySmall,
-                    color = TextTertiary
-                )
-            }
-
-            Row {
-                IconButton(onClick = onReplay) {
-                    Icon(
-                        Icons.Default.PlayArrow,
-                        contentDescription = "Replay",
-                        tint = CyanPrimary
-                    )
-                }
-                IconButton(onClick = onDelete) {
-                    Icon(
-                        Icons.Default.Delete,
-                        contentDescription = "Delete",
-                        tint = RedError.copy(alpha = 0.7f)
-                    )
-                }
-            }
-        }
-    }
-}
-
-// ─── Live sensor chart ────────────────────────────────────────────────────────
-
-private val CHART_LINE_COLORS = listOf(
-    Color(0xFF00D4FF), // cyan
-    Color(0xFF00E676), // green
-    Color(0xFFFF8C00), // amber
-    Color(0xFFE040FB), // purple
-    Color(0xFFFF5252), // red
-    Color(0xFF40C4FF), // light blue
-    Color(0xFFFFFF00), // yellow
-    Color(0xFF69F0AE), // light green
-)
-
-@Composable
-private fun PidLineChart(
-    chartData: Map<ObdPid, List<ChartPoint>>,
-    selectedPids: List<ObdPid>,
-    onToggleChart: () -> Unit
-) {
-    val pidsWithData = selectedPids.filter { (chartData[it]?.size ?: 0) >= 2 }
-
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(DarkBackground)
-    ) {
-        // Toolbar
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 12.dp, vertical = 4.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(
-                "Live Chart",
-                style = MaterialTheme.typography.titleSmall,
-                color = TextPrimary,
-                fontWeight = FontWeight.SemiBold,
-                modifier = Modifier.weight(1f)
+            .border(
+                width = if (pidState.status != SensorStatus.NORMAL) 1.dp else 0.dp,
+                color = borderColor,
+                shape = RoundedCornerShape(12.dp)
             )
-            TextButton(onClick = onToggleChart) {
-                Text("Grid View", style = MaterialTheme.typography.labelMedium, color = CyanPrimary)
-            }
-        }
-
-        HorizontalDivider(color = DarkBorder)
-
-        if (pidsWithData.isEmpty()) {
-            Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                Text("Collecting data...", color = TextSecondary, style = MaterialTheme.typography.bodyMedium)
-            }
-            return@Column
-        }
-
-        // Chart canvas
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .weight(1f)
-                .padding(horizontal = 12.dp, vertical = 8.dp)
-                .drawWithCache {
-                    val width = size.width
-                    val height = size.height
-                    val padding = 8.dp.toPx()
-
-                    onDrawBehind {
-                        pidsWithData.forEachIndexed { idx, pid ->
-                            val points = chartData[pid] ?: return@forEachIndexed
-                            if (points.size < 2) return@forEachIndexed
-
-                            val color = CHART_LINE_COLORS[idx % CHART_LINE_COLORS.size]
-                            val values = points.map { it.value }
-                            val minVal = values.min()
-                            val maxVal = values.max()
-                            val range = (maxVal - minVal).takeIf { it > 0 } ?: 1.0
-
-                            val path = Path()
-                            points.forEachIndexed { i, pt ->
-                                val x = padding + (i.toFloat() / (points.size - 1)) * (width - 2 * padding)
-                                val y = height - padding - ((pt.value - minVal) / range * (height - 2 * padding)).toFloat()
-                                if (i == 0) path.moveTo(x, y) else path.lineTo(x, y)
-                            }
-                            drawPath(
-                                path = path,
-                                color = color,
-                                style = Stroke(
-                                    width = 2.dp.toPx(),
-                                    cap = StrokeCap.Round,
-                                    join = StrokeJoin.Round
-                                )
-                            )
-                        }
-                    }
-                }
-        ) {}
-
-        HorizontalDivider(color = DarkBorder)
-
-        // Legend
-        androidx.compose.foundation.layout.FlowRow(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 12.dp, vertical = 6.dp),
-            horizontalArrangement = Arrangement.spacedBy(12.dp),
-            verticalArrangement = Arrangement.spacedBy(4.dp)
-        ) {
-            pidsWithData.forEachIndexed { idx, pid ->
-                val color = CHART_LINE_COLORS[idx % CHART_LINE_COLORS.size]
-                val lastVal = chartData[pid]?.lastOrNull()?.value
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Box(
-                        Modifier
-                            .size(10.dp)
-                            .clip(CircleShape)
-                            .background(color)
+            .clickable { expanded = !expanded },
+        shape = RoundedCornerShape(12.dp),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)
+    ) {
+        Column(Modifier.padding(horizontal = 14.dp, vertical = 10.dp)) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                // Favorite star
+                IconButton(
+                    onClick = { vm.toggleFavorite(pidState.pid) },
+                    modifier = Modifier.size(24.dp)
+                ) {
+                    Icon(
+                        if (pidState.isFavorite) Icons.Default.Star else Icons.Default.StarBorder,
+                        null,
+                        Modifier.size(16.dp),
+                        tint = if (pidState.isFavorite) Color(0xFFFFC107) else MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.4f)
                     )
-                    Spacer(Modifier.width(4.dp))
+                }
+                Spacer(Modifier.width(6.dp))
+
+                // PID label + category
+                Column(Modifier.weight(1f)) {
                     Text(
-                        text = "${pid.name}${if (lastVal != null) ": ${"%.1f".format(lastVal)} ${pid.unit}" else ""}",
-                        style = MaterialTheme.typography.labelSmall,
-                        color = color,
+                        pidState.definition?.name ?: pidState.pid.description,
+                        style = MaterialTheme.typography.bodyMedium,
+                        fontWeight = FontWeight.Medium,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis
                     )
+                    Text(
+                        pidState.category.displayName,
+                        style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f)
+                    )
+                }
+
+                // Value
+                if (pidState.isLoading) {
+                    CircularProgressIndicator(modifier = Modifier.size(18.dp), strokeWidth = 2.dp)
+                } else {
+                    Text(
+                        pidState.formattedValue,
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.Bold,
+                        color = valueColor,
+                        fontFamily = FontFamily.Monospace
+                    )
+                }
+
+                Spacer(Modifier.width(6.dp))
+
+                // Selection toggle
+                Checkbox(
+                    checked = pidState.isSelected,
+                    onCheckedChange = { vm.togglePidSelection(pidState.pid) },
+                    modifier = Modifier.size(20.dp)
+                )
+            }
+
+            // Expanded detail row
+            if (expanded) {
+                Spacer(Modifier.height(8.dp))
+                HorizontalDivider(color = MaterialTheme.colorScheme.outline.copy(alpha = 0.3f))
+                Spacer(Modifier.height(6.dp))
+                Row(
+                    Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
+                    DetailItem("PID", "01${pidState.pid.code}")
+                    DetailItem("Unit", pidState.pid.unit)
+                    pidState.definition?.let { def ->
+                        DetailItem("Range", "${def.minValue.toInt()}–${def.maxValue.toInt()}")
+                        if (def.dtcTags.isNotEmpty()) {
+                            DetailItem("DTCs", def.dtcTags.take(3).joinToString(", "))
+                        }
+                    }
+                }
+                pidState.error?.let {
+                    Text("Error: $it", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.error, modifier = Modifier.padding(top = 4.dp))
                 }
             }
         }
+    }
+}
+
+@Composable
+private fun DetailItem(label: String, value: String) {
+    Column {
+        Text(label, style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f))
+        Text(value, style = MaterialTheme.typography.bodySmall, fontWeight = FontWeight.Medium)
+    }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Gauge grid pane
+// ─────────────────────────────────────────────────────────────────────────────
+
+@Composable
+private fun GaugeGridPane(state: LiveDataUiState) {
+    val gaugePids = remember(state.availablePids) {
+        state.availablePids.filter { it.definition?.gaugeEligible == true || it.isSelected }
+    }
+
+    if (gaugePids.isEmpty()) {
+        EmptyPane("Select PIDs to view gauges.\nGauge-eligible sensors: RPM, Speed, Load, Coolant, Throttle, Voltage")
+        return
+    }
+
+    LazyVerticalGrid(
+        columns = GridCells.Fixed(2),
+        contentPadding = PaddingValues(12.dp),
+        horizontalArrangement = Arrangement.spacedBy(10.dp),
+        verticalArrangement = Arrangement.spacedBy(10.dp)
+    ) {
+        items(gaugePids, key = { it.pid.code }) { pidState ->
+            GaugeCard(pidState)
+        }
+    }
+}
+
+@Composable
+private fun GaugeCard(pidState: PidDisplayState) {
+    val def = pidState.definition
+    val fillFraction = if (def != null && pidState.value != null) {
+        ((pidState.value - def.minValue) / (def.maxValue - def.minValue)).coerceIn(0.0, 1.0).toFloat()
+    } else 0f
+
+    val fillColor = when (pidState.status) {
+        SensorStatus.NORMAL   -> Color(0xFF4CAF50)
+        SensorStatus.WARNING  -> Color(0xFFFF9800)
+        SensorStatus.CRITICAL -> Color(0xFFF44336)
+    }
+
+    Card(shape = RoundedCornerShape(16.dp), modifier = Modifier.fillMaxWidth().aspectRatio(1f)) {
+        Column(
+            Modifier.fillMaxSize().padding(12.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.SpaceBetween
+        ) {
+            Text(
+                pidState.definition?.label ?: pidState.pid.code,
+                style = MaterialTheme.typography.labelMedium,
+                fontWeight = FontWeight.SemiBold,
+                textAlign = TextAlign.Center,
+                maxLines = 2
+            )
+
+            // Arc gauge
+            ArcGauge(fillFraction, fillColor, Modifier.size(80.dp))
+
+            Text(
+                pidState.formattedValue,
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.Bold,
+                fontFamily = FontFamily.Monospace,
+                color = fillColor,
+                textAlign = TextAlign.Center
+            )
+        }
+    }
+}
+
+@Composable
+private fun ArcGauge(fraction: Float, color: Color, modifier: Modifier = Modifier) {
+    Box(modifier = modifier.drawWithCache {
+        onDrawBehind {
+            val stroke = Stroke(width = 8.dp.toPx(), cap = StrokeCap.Round)
+            val startAngle = 135f
+            val sweepTotal = 270f
+            // Background arc
+            drawArc(
+                color = color.copy(alpha = 0.15f),
+                startAngle = startAngle, sweepAngle = sweepTotal,
+                useCenter = false, style = stroke,
+                size = size.copy(width = size.width - 8.dp.toPx(), height = size.height - 8.dp.toPx()),
+                topLeft = Offset(4.dp.toPx(), 4.dp.toPx())
+            )
+            // Value arc
+            drawArc(
+                color = color,
+                startAngle = startAngle, sweepAngle = sweepTotal * fraction,
+                useCenter = false, style = stroke,
+                size = size.copy(width = size.width - 8.dp.toPx(), height = size.height - 8.dp.toPx()),
+                topLeft = Offset(4.dp.toPx(), 4.dp.toPx())
+            )
+        }
+    })
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Graph pane
+// ─────────────────────────────────────────────────────────────────────────────
+
+@Composable
+private fun GraphPane(state: LiveDataUiState, vm: LiveDataViewModel) {
+    val selectedWithData = remember(state.selectedPids, state.chartData) {
+        state.selectedPids.filter { state.chartData[it]?.isNotEmpty() == true }
+    }
+
+    Column(Modifier.fillMaxSize().padding(12.dp)) {
+        if (selectedWithData.isEmpty()) {
+            EmptyPane("Select PIDs and start polling to see live graphs")
+            return@Column
+        }
+
+        selectedWithData.forEach { pid ->
+            val points = state.chartData[pid] ?: return@forEach
+            val pidState = state.pidValues[pid]
+
+            Card(modifier = Modifier.fillMaxWidth().padding(bottom = 10.dp)) {
+                Column(Modifier.padding(12.dp)) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Text(
+                            PidRegistry.get(pid)?.name ?: pid.description,
+                            style = MaterialTheme.typography.labelLarge,
+                            fontWeight = FontWeight.SemiBold,
+                            modifier = Modifier.weight(1f)
+                        )
+                        Text(
+                            pidState?.formattedValue ?: "--",
+                            style = MaterialTheme.typography.titleSmall,
+                            fontWeight = FontWeight.Bold,
+                            fontFamily = FontFamily.Monospace,
+                            color = MaterialTheme.colorScheme.primary
+                        )
+                    }
+                    Spacer(Modifier.height(8.dp))
+                    LineGraph(points, Modifier.fillMaxWidth().height(100.dp))
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun LineGraph(points: List<ChartPoint>, modifier: Modifier = Modifier) {
+    val lineColor = MaterialTheme.colorScheme.primary
+    val gridColor = MaterialTheme.colorScheme.outline.copy(alpha = 0.2f)
+
+    Box(modifier = modifier.drawWithCache {
+        onDrawBehind {
+            if (points.size < 2) return@onDrawBehind
+            val minV = points.minOf { it.value }
+            val maxV = points.maxOf { it.value }
+            val range = (maxV - minV).takeIf { it > 0.0 } ?: 1.0
+            val w = size.width; val h = size.height
+
+            // Draw 3 horizontal grid lines
+            repeat(3) { i ->
+                val y = h * i / 2f
+                drawLine(gridColor, Offset(0f, y), Offset(w, y), strokeWidth = 0.5.dp.toPx())
+            }
+
+            // Draw line
+            val path = Path()
+            points.forEachIndexed { idx, pt ->
+                val x = w * idx / (points.size - 1).toFloat()
+                val y = h - h * ((pt.value - minV) / range).toFloat()
+                if (idx == 0) path.moveTo(x, y) else path.lineTo(x, y)
+            }
+            drawPath(
+                path, lineColor,
+                style = Stroke(width = 2.dp.toPx(), cap = StrokeCap.Round, join = StrokeJoin.Round)
+            )
+
+            // Fill under line
+            val fillPath = Path().apply {
+                addPath(path)
+                val lastPt = points.last()
+                val lastX = w
+                val lastY = h - h * ((lastPt.value - minV) / range).toFloat()
+                lineTo(lastX, h); lineTo(0f, h); close()
+            }
+            drawPath(fillPath, lineColor.copy(alpha = 0.08f))
+        }
+    })
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Tiles pane (combined sensor tiles)
+// ─────────────────────────────────────────────────────────────────────────────
+
+@Composable
+private fun TilesPane(state: LiveDataUiState) {
+    LazyColumn(
+        contentPadding = PaddingValues(12.dp),
+        verticalArrangement = Arrangement.spacedBy(10.dp)
+    ) {
+        // Fuel Trim Tile
+        val stftB1 = state.pidValues[ObdPid.SHORT_TERM_FUEL_TRIM_BANK1]
+        val ltftB1 = state.pidValues[ObdPid.LONG_TERM_FUEL_TRIM_BANK1]
+        if (stftB1 != null || ltftB1 != null) {
+            item {
+                CombinedTile(
+                    "Fuel Trims — Bank 1",
+                    listOf(stftB1 to "STFT", ltftB1 to "LTFT")
+                )
+            }
+        }
+
+        // Air Intake Tile
+        val maf = state.pidValues[ObdPid.MAF_FLOW_RATE]
+        val map = state.pidValues[ObdPid.INTAKE_MANIFOLD_PRESSURE]
+        val iat = state.pidValues[ObdPid.INTAKE_AIR_TEMP]
+        if (maf != null || map != null || iat != null) {
+            item {
+                CombinedTile(
+                    "Air Intake",
+                    listOf(maf to "MAF", map to "MAP", iat to "IAT")
+                )
+            }
+        }
+
+        // Engine Health Tile
+        val rpm = state.pidValues[ObdPid.ENGINE_RPM]
+        val load = state.pidValues[ObdPid.ENGINE_LOAD]
+        val timing = state.pidValues[ObdPid.TIMING_ADVANCE]
+        val coolant = state.pidValues[ObdPid.ENGINE_COOLANT_TEMP]
+        if (rpm != null || load != null) {
+            item {
+                CombinedTile(
+                    "Engine Health",
+                    listOf(rpm to "RPM", load to "Load", timing to "Timing", coolant to "Coolant")
+                )
+            }
+        }
+
+        // O2 Tile
+        val o2b1s1 = state.pidValues[ObdPid.O2_SENSOR_B1S1_VOLTAGE]
+        val o2b1s2 = state.pidValues[ObdPid.O2_SENSOR_B1S2_VOLTAGE]
+        if (o2b1s1 != null || o2b1s2 != null) {
+            item {
+                CombinedTile(
+                    "O2 Sensors",
+                    listOf(o2b1s1 to "B1S1", o2b1s2 to "B1S2 (Cat)")
+                )
+            }
+        }
+
+        // Electrical Tile
+        val voltage = state.pidValues[ObdPid.CONTROL_MODULE_VOLTAGE]
+        if (voltage != null) {
+            item {
+                CombinedTile("Electrical", listOf(voltage to "Battery"))
+            }
+        }
+
+        // Derived metrics as tiles
+        if (state.derivedMetrics.isNotEmpty()) {
+            item {
+                Text(
+                    "Derived Metrics",
+                    style = MaterialTheme.typography.titleSmall,
+                    fontWeight = FontWeight.SemiBold,
+                    modifier = Modifier.padding(top = 4.dp, bottom = 2.dp)
+                )
+            }
+            items(state.derivedMetrics, key = { it.id.name }) { metric ->
+                DerivedMetricTile(metric)
+            }
+        }
+
+        if (state.pidValues.isEmpty()) {
+            item { EmptyPane("Start polling to see combined sensor tiles") }
+        }
+    }
+}
+
+@Composable
+private fun CombinedTile(title: String, sensors: List<Pair<PidDisplayState?, String>>) {
+    val worstStatus = sensors.mapNotNull { it.first }.maxByOrNull { it.status.ordinal }?.status ?: SensorStatus.NORMAL
+    val tileBorder = when (worstStatus) {
+        SensorStatus.NORMAL   -> Color.Transparent
+        SensorStatus.WARNING  -> Color(0xFFFF9800)
+        SensorStatus.CRITICAL -> Color(0xFFF44336)
+    }
+
+    Card(
+        modifier = Modifier.fillMaxWidth().border(1.dp, tileBorder, RoundedCornerShape(14.dp)),
+        shape = RoundedCornerShape(14.dp)
+    ) {
+        Column(Modifier.padding(14.dp)) {
+            Text(title, style = MaterialTheme.typography.labelLarge, fontWeight = FontWeight.SemiBold, modifier = Modifier.padding(bottom = 8.dp))
+            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(16.dp)) {
+                sensors.forEach { (pidState, label) ->
+                    Column(Modifier.weight(1f)) {
+                        Text(label, style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f))
+                        Text(
+                            pidState?.formattedValue ?: "--",
+                            style = MaterialTheme.typography.titleSmall,
+                            fontWeight = FontWeight.Bold,
+                            fontFamily = FontFamily.Monospace,
+                            color = when (pidState?.status) {
+                                SensorStatus.WARNING  -> Color(0xFFF57C00)
+                                SensorStatus.CRITICAL -> Color(0xFFC62828)
+                                else                  -> MaterialTheme.colorScheme.onSurface
+                            }
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun DerivedMetricTile(metric: DerivedMetric) {
+    val bgColor = when (metric.status) {
+        SensorStatus.NORMAL   -> MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.5f)
+        SensorStatus.WARNING  -> Color(0xFFFFF3E0)
+        SensorStatus.CRITICAL -> Color(0xFFFFEBEE)
+    }
+    val valueColor = when (metric.status) {
+        SensorStatus.NORMAL   -> MaterialTheme.colorScheme.primary
+        SensorStatus.WARNING  -> Color(0xFFE65100)
+        SensorStatus.CRITICAL -> Color(0xFFB71C1C)
+    }
+    Card(colors = CardDefaults.cardColors(containerColor = bgColor), shape = RoundedCornerShape(12.dp)) {
+        Row(
+            Modifier.fillMaxWidth().padding(horizontal = 14.dp, vertical = 10.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Column(Modifier.weight(1f)) {
+                Text(metric.label, style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.Medium)
+                metric.note?.let { Text(it, style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f)) }
+            }
+            Text(
+                metric.formattedValue,
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.Bold,
+                fontFamily = FontFamily.Monospace,
+                color = valueColor
+            )
+        }
+    }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Bottom bar (polling controls + presets + logging)
+// ─────────────────────────────────────────────────────────────────────────────
+
+@Composable
+private fun LiveBottomBar(state: LiveDataUiState, vm: LiveDataViewModel) {
+    Surface(tonalElevation = 3.dp, modifier = Modifier.fillMaxWidth()) {
+        Column(Modifier.padding(12.dp)) {
+            // Poll speed slider
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Text("Poll", style = MaterialTheme.typography.labelSmall, modifier = Modifier.width(32.dp))
+                Slider(
+                    value = state.pollIntervalMs.toFloat(),
+                    onValueChange = { vm.setPollInterval(it.toLong()) },
+                    valueRange = 100f..2000f,
+                    modifier = Modifier.weight(1f).height(24.dp)
+                )
+                Text("${state.pollIntervalMs}ms", style = MaterialTheme.typography.labelSmall, modifier = Modifier.width(52.dp), textAlign = TextAlign.End)
+            }
+
+            Spacer(Modifier.height(6.dp))
+
+            // Preset chips
+            LazyRow(horizontalArrangement = Arrangement.spacedBy(6.dp), modifier = Modifier.fillMaxWidth()) {
+                items(PidPreset.values().toList(), key = { it.name }) { preset ->
+                    FilterChip(
+                        selected = false,
+                        onClick = { vm.selectPreset(preset) },
+                        label = { Text(preset.displayName, style = MaterialTheme.typography.labelSmall) },
+                        modifier = Modifier.height(28.dp)
+                    )
+                }
+            }
+
+            Spacer(Modifier.height(6.dp))
+
+            // Main action buttons
+            Row(
+                Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                // Poll toggle
+                val pollEnabled = state.isConnected && !state.isReplaying && state.selectedPids.isNotEmpty()
+                Button(
+                    onClick = { vm.togglePolling() },
+                    enabled = pollEnabled || state.isPolling,
+                    modifier = Modifier.weight(1f),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = if (state.isPolling) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.primary
+                    )
+                ) {
+                    Icon(
+                        if (state.isPolling) Icons.Default.Stop else Icons.Default.PlayArrow,
+                        null, Modifier.size(16.dp)
+                    )
+                    Spacer(Modifier.width(4.dp))
+                    Text(if (state.isPolling) "Stop" else "Poll", style = MaterialTheme.typography.labelMedium)
+                }
+
+                // Log toggle
+                OutlinedButton(
+                    onClick = { vm.toggleLogging() },
+                    enabled = state.isPolling || state.isLogging,
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Icon(
+                        if (state.isLogging) Icons.Default.FiberManualRecord else Icons.Default.FiberManualRecord,
+                        null, Modifier.size(16.dp),
+                        tint = if (state.isLogging) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurface
+                    )
+                    Spacer(Modifier.width(4.dp))
+                    Text(if (state.isLogging) "Stop Log" else "Log", style = MaterialTheme.typography.labelMedium)
+                }
+
+                // Clear selection
+                IconButton(onClick = { vm.clearSelection() }) {
+                    Icon(Icons.Default.Clear, "Clear selection", Modifier.size(20.dp))
+                }
+            }
+
+            // Logging status
+            if (state.isLogging) {
+                val session = state.currentLogSession
+                Spacer(Modifier.height(4.dp))
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Box(Modifier.size(8.dp).clip(CircleShape).background(MaterialTheme.colorScheme.error))
+                    Spacer(Modifier.width(6.dp))
+                    Text(
+                        "Recording — ${session?.dataPointCount ?: 0} points",
+                        style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.error
+                    )
+                }
+            }
+
+            // Replay status
+            if (state.isReplaying) {
+                Spacer(Modifier.height(4.dp))
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Text(
+                        "Replay ${state.replaySession?.id?.take(8) ?: ""} — frame ${state.replayIndex}",
+                        style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.secondary,
+                        modifier = Modifier.weight(1f)
+                    )
+                    OutlinedButton(onClick = { vm.stopReplay() }, contentPadding = PaddingValues(horizontal = 8.dp, vertical = 2.dp)) {
+                        Text("Stop Replay", style = MaterialTheme.typography.labelSmall)
+                    }
+                }
+            }
+        }
+    }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Session card (for saved sessions list in offline mode)
+// ─────────────────────────────────────────────────────────────────────────────
+
+@Composable
+private fun SessionCard(session: LogSession, onReplay: () -> Unit, onDelete: () -> Unit) {
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(12.dp)
+    ) {
+        Row(
+            Modifier.padding(12.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Column(Modifier.weight(1f)) {
+                Text(
+                    "Session ${session.id.take(8)}",
+                    style = MaterialTheme.typography.bodyMedium,
+                    fontWeight = FontWeight.Medium
+                )
+                Text(
+                    "${session.dataPointCount} points · ${session.duration / 1000}s",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
+            IconButton(onClick = onReplay) {
+                Icon(Icons.Default.PlayArrow, "Replay", tint = MaterialTheme.colorScheme.primary)
+            }
+            IconButton(onClick = onDelete) {
+                Icon(Icons.Default.Delete, "Delete", tint = MaterialTheme.colorScheme.error)
+            }
+        }
+    }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Shared
+// ─────────────────────────────────────────────────────────────────────────────
+
+@Composable
+private fun EmptyPane(message: String) {
+    Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+        Text(
+            message,
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f),
+            textAlign = TextAlign.Center,
+            modifier = Modifier.padding(24.dp)
+        )
     }
 }

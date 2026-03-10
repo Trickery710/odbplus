@@ -298,6 +298,18 @@ class ObdService @Inject constructor(
         }
     }
 
+    /**
+     * Skip the bitmap discovery phase by directly loading a pre-validated supported-PID set
+     * from the Room cache. Sets [supportedPids] and [discoveryState] as if discovery completed.
+     *
+     * Call this when [ResolveSupportedPidsUseCase] returns a CacheHit or ValidatedCache.
+     */
+    fun preloadSupportedPids(pids: Set<String>) {
+        _supportedPids.value = pids
+        _discoveryState.value = PidDiscoveryState.COMPLETE
+        Timber.i("ObdService: preloaded ${pids.size} supported PIDs from cache")
+    }
+
     // ── PID support bitmap (legacy) ───────────────────────────────────────────
 
     /**

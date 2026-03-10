@@ -13,38 +13,39 @@ import com.odbplus.core.protocol.ObdService
 import com.odbplus.core.protocol.PidDiscoveryState
 import com.odbplus.core.transport.ConnectionState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
-/**
- * Represents a single PID's current state in the live data view.
- */
+// ─────────────────────────────────────────────────────────────────────────────
+// UI data classes
+// ─────────────────────────────────────────────────────────────────────────────
+
 data class PidDisplayState(
     val pid: ObdPid,
+    val definition: PidDefinition? = null,
     val isSelected: Boolean = false,
     val isLoading: Boolean = false,
     val value: Double? = null,
     val formattedValue: String = "--",
-    val error: String? = null
-)
+    val error: String? = null,
+    val status: SensorStatus = SensorStatus.NORMAL,
+    val isFavorite: Boolean = false,
+    val changeRate: Double = 0.0     // units/s, for "most active" sorting
+) {
+    val category: PidCategory get() = definition?.category ?: PidCategory.SENSORS
+}
 
-/**
- * A single logged data point.
- */
 data class LoggedDataPoint(
     val timestamp: Long,
     val pidValues: Map<ObdPid, Double?>
 )
 
-/**
- * A complete log session.
- */
 data class LogSession(
     val id: String = System.currentTimeMillis().toString(),
     val startTime: Long = System.currentTimeMillis(),
@@ -57,14 +58,10 @@ data class LogSession(
     val dataPointCount: Int get() = dataPoints.size
 }
 
-/** A single timestamped value for chart rendering. */
 data class ChartPoint(val timestamp: Long, val value: Double)
 
 private const val CHART_MAX_POINTS = 120
 
-/**
- * UI state for the live data screen.
- */
 data class LiveDataUiState(
     val isConnected: Boolean = false,
     val isPolling: Boolean = false,
@@ -73,27 +70,36 @@ data class LiveDataUiState(
     val showChart: Boolean = false,
     /**
      * PIDs available for selection on the current vehicle.
-     *
-     * When disconnected: the full master PID list (allows offline browsing).
-     * When connected and discovery complete: only PIDs confirmed supported by the
-     * vehicle's ECU. Unsupported PIDs are never included — they must never be
-     * polled, as doing so wastes ECU bus time and risks timeout cascades.
+     * When disconnected: full master list for offline browsing.
+     * When connected + discovery complete: only ECU-confirmed supported PIDs.
      */
     val availablePids: List<PidDisplayState> = emptyList(),
     val selectedPids: List<ObdPid> = emptyList(),
     val pidValues: Map<ObdPid, PidDisplayState> = emptyMap(),
-    // Logging state
+    // Logging
     val isLogging: Boolean = false,
     val currentLogSession: LogSession? = null,
     val savedSessions: List<LogSession> = emptyList(),
-    // Replay state
+    // Replay
     val isReplaying: Boolean = false,
     val replaySession: LogSession? = null,
     val replayIndex: Int = 0,
     val replaySpeed: Float = 1.0f,
-    /** Current state of the PID discovery run. COMPLETE means availablePids is filtered. */
-    val pidDiscoveryState: PidDiscoveryState = PidDiscoveryState.IDLE
+    val pidDiscoveryState: PidDiscoveryState = PidDiscoveryState.IDLE,
+    // Smart display
+    val displayMode: LiveDisplayMode = LiveDisplayMode.NUMERIC,
+    val sortOrder: SortOrder = SortOrder.CATEGORY,
+    val activeCategory: PidCategory? = null,
+    val activeDtcFilter: List<String> = emptyList(),
+    val derivedMetrics: List<DerivedMetric> = emptyList(),
+    val favoritePidCodes: Set<String> = emptySet(),
+    /** Source of the current supported-PID set: "cache_hit", "validated_cache", "discovery", "disconnected" */
+    val supportSource: String = "disconnected"
 )
+
+// ─────────────────────────────────────────────────────────────────────────────
+// ViewModel
+// ─────────────────────────────────────────────────────────────────────────────
 
 @HiltViewModel
 class LiveDataViewModel @Inject constructor(
@@ -103,27 +109,58 @@ class LiveDataViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
     private val sensorLoggingService: SensorLoggingService,
     private val sessionManager: VehicleSessionManager,
-    private val settingsRepository: SettingsRepository
+    private val settingsRepository: SettingsRepository,
+    private val resolveSupportedPids: ResolveSupportedPidsUseCase,
+    private val pidCacheRepository: SupportedPidCacheRepository
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(LiveDataUiState())
     val uiState: StateFlow<LiveDataUiState> = _uiState.asStateFlow()
 
+    /** Profile ID resolved during the last connect flow, for saving discovery results. */
+    private var resolvedProfileId: Long = -1L
+
     private val polling = PollingManager(obdService).also { mgr ->
         mgr.onPollCycle = { pidValues ->
             logSession.addPoint(pidValues)
             repository.updatePidValues(_uiState.value.pidValues)
-            // Record each non-null PID value to the sensor log DB and update chart data
+
             val now = System.currentTimeMillis()
             val chartUpdates = _uiState.value.chartData.toMutableMap()
+            val favorites = _uiState.value.favoritePidCodes
+
             for ((pid, v) in pidValues) {
                 val value = v ?: continue
                 sensorLoggingService.record(pid.name, value)
                 val existing = chartUpdates[pid] ?: emptyList()
-                chartUpdates[pid] = (existing + ChartPoint(now, value))
-                    .takeLast(CHART_MAX_POINTS)
+                chartUpdates[pid] = (existing + ChartPoint(now, value)).takeLast(CHART_MAX_POINTS)
             }
-            _uiState.update { it.copy(chartData = chartUpdates) }
+
+            // Recalculate derived metrics from the full current PID value map.
+            val allValues = buildCurrentValueMap(pidValues)
+            val derived = DerivedMetricCalculator.calculate(allValues)
+
+            _uiState.update { state ->
+                val updatedValues = state.pidValues.toMutableMap()
+                for ((pid, v) in pidValues) {
+                    val current = updatedValues[pid]
+                    if (current != null) {
+                        val def = PidRegistry.get(pid)
+                        val status = if (v != null) def?.statusFor(v) ?: SensorStatus.NORMAL else SensorStatus.NORMAL
+                        updatedValues[pid] = current.copy(
+                            value = v,
+                            formattedValue = if (v != null) "%.1f ${pid.unit}".format(v) else "--",
+                            status = status,
+                            isFavorite = pid.code in favorites
+                        )
+                    }
+                }
+                state.copy(
+                    chartData = chartUpdates,
+                    pidValues = updatedValues,
+                    derivedMetrics = derived
+                )
+            }
         }
     }
     private val logSession = LogSessionManager(repository)
@@ -133,9 +170,12 @@ class LiveDataViewModel @Inject constructor(
             val updatedValues = _uiState.value.pidValues.toMutableMap()
             for ((pid, value) in pidValues) {
                 updatedValues[pid] = PidDisplayState(
-                    pid = pid, isSelected = pid in selectedPids,
-                    isLoading = false, value = value,
-                    formattedValue = if (value != null) formatReplayValue(value, pid) else "N/A",
+                    pid = pid,
+                    definition = PidRegistry.get(pid),
+                    isSelected = pid in selectedPids,
+                    isLoading = false,
+                    value = value,
+                    formattedValue = if (value != null) "%.1f ${pid.unit}".format(value) else "N/A",
                     error = if (value == null) "No data" else null
                 )
             }
@@ -144,70 +184,57 @@ class LiveDataViewModel @Inject constructor(
     }
 
     init {
-        // Apply the persisted poll interval from settings reactively so changes
-        // made in the Settings screen propagate immediately to the poller.
         viewModelScope.launch {
             settingsRepository.defaultPollIntervalMs.collect { ms ->
                 polling.setInterval(ms)
             }
         }
 
-        // Load persisted state first, then observe discovery results. Sequenced in
-        // a single coroutine so the saved PIDs are available when the first
-        // supportedPids emission is processed.
         viewModelScope.launch {
             try {
                 repository.initialize()
                 val savedPids = repository.selectedPids.value
                 _uiState.update { it.copy(selectedPids = savedPids) }
                 val savedValues = repository.currentPidValues.value
-                if (savedValues.isNotEmpty()) {
-                    _uiState.update { it.copy(pidValues = savedValues) }
-                }
+                if (savedValues.isNotEmpty()) _uiState.update { it.copy(pidValues = savedValues) }
             } catch (_: Exception) {}
 
-            // Observe PID discovery results and rebuild availablePids reactively.
-            //
-            // supportedPids == null  → not connected; show full master list so users
-            //                          can browse and plan their PID selection offline.
-            // supportedPids != null  → discovery complete; show only PIDs confirmed
-            //                          supported by this vehicle's ECU.
-            //
-            // Caching discovery results avoids re-querying the ECU on every poll start.
-            // Only supported PIDs are ever added to availablePids — unsupported PIDs
-            // must never appear in the UI, and must never be polled.
             obdService.supportedPids.collect { supported ->
                 val current = _uiState.value
                 if (supported == null) {
-                    // Disconnected: show full master list for offline browsing.
                     val allPids = withContext(Dispatchers.Default) {
                         ObdPid.entries.map { pid ->
-                            PidDisplayState(pid, isSelected = pid in current.selectedPids)
+                            PidDisplayState(
+                                pid, PidRegistry.get(pid),
+                                isSelected = pid in current.selectedPids
+                            )
                         }
                     }
-                    _uiState.update { it.copy(availablePids = allPids) }
+                    _uiState.update { it.copy(availablePids = allPids, supportSource = "disconnected") }
                 } else {
-                    // Discovery complete: only include PIDs the ECU confirmed as supported.
                     val availablePids = withContext(Dispatchers.Default) {
                         ObdPid.entries
                             .filter { pid -> supported.contains(pid.code) }
                             .map { pid ->
-                                PidDisplayState(pid, isSelected = pid in current.selectedPids)
+                                PidDisplayState(
+                                    pid, PidRegistry.get(pid),
+                                    isSelected = pid in current.selectedPids,
+                                    isFavorite = pid.code in current.favoritePidCodes
+                                )
                             }
                     }
-                    // On reconnect: restore only selected PIDs still supported by this ECU.
                     val validSelected = current.selectedPids.filter { supported.contains(it.code) }
-                    _uiState.update { it.copy(availablePids = availablePids, selectedPids = validSelected) }
+                    _uiState.update {
+                        it.copy(
+                            availablePids = availablePids,
+                            selectedPids = validSelected
+                        )
+                    }
                 }
             }
         }
 
-        viewModelScope.launch {
-            repository.sessions.collect { sessions ->
-                _uiState.update { it.copy(savedSessions = sessions) }
-            }
-        }
-
+        viewModelScope.launch { repository.sessions.collect { s -> _uiState.update { it.copy(savedSessions = s) } } }
         viewModelScope.launch {
             obdService.connectionState.collect { state ->
                 val connected = state == ConnectionState.CONNECTED
@@ -215,8 +242,6 @@ class LiveDataViewModel @Inject constructor(
                 if (!connected && polling.isPolling.value) polling.stop()
             }
         }
-
-        // Mirror sub-manager state into the unified UiState
         viewModelScope.launch { polling.isPolling.collect { v -> _uiState.update { it.copy(isPolling = v) } } }
         viewModelScope.launch { polling.pollIntervalMs.collect { v -> _uiState.update { it.copy(pollIntervalMs = v) } } }
         viewModelScope.launch { polling.pidValues.collect { v -> _uiState.update { it.copy(pidValues = v) } } }
@@ -229,7 +254,62 @@ class LiveDataViewModel @Inject constructor(
         viewModelScope.launch { replay.replaySpeed.collect { v -> _uiState.update { it.copy(replaySpeed = v) } } }
     }
 
-    // ==================== PID Selection ====================
+    // ─────────────────────────────────────────────────────────────────────────
+    // Connect-time cache resolution
+    // ─────────────────────────────────────────────────────────────────────────
+
+    /**
+     * Run on every successful transport connect, before PID polling begins.
+     *
+     * Attempts to load the supported-PID set from the Room cache.
+     * Falls back to full bitmap discovery if the cache is empty, stale, or fails validation.
+     * After discovery, saves the result back to the cache.
+     */
+    fun resolveAndDiscoverPids() {
+        viewModelScope.launch {
+            val outcome = resolveSupportedPids.execute()
+            when (outcome) {
+                is ResolutionOutcome.CacheHit -> {
+                    resolvedProfileId = outcome.profileId
+                    obdService.preloadSupportedPids(outcome.pidCodes)
+                    _uiState.update { it.copy(supportSource = "cache_hit") }
+                }
+                is ResolutionOutcome.ValidatedCache -> {
+                    resolvedProfileId = outcome.profileId
+                    obdService.preloadSupportedPids(outcome.pidCodes)
+                    _uiState.update { it.copy(supportSource = "validated_cache") }
+                }
+                is ResolutionOutcome.NeedsDiscovery -> {
+                    resolvedProfileId = outcome.profileId
+                    obdService.runPidDiscovery()
+                    _uiState.update { it.copy(supportSource = "discovery") }
+                    // Save the fresh discovery result for next time.
+                    obdService.supportedPids.value?.let { codes ->
+                        if (codes.isNotEmpty()) {
+                            pidCacheRepository.saveDiscovery(resolvedProfileId, codes)
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    /** Force a full rescan, ignoring any cached data. */
+    fun rescanSupportedPids() {
+        viewModelScope.launch {
+            obdService.runPidDiscovery()
+            _uiState.update { it.copy(supportSource = "discovery") }
+            obdService.supportedPids.value?.let { codes ->
+                if (codes.isNotEmpty() && resolvedProfileId >= 0) {
+                    pidCacheRepository.saveDiscovery(resolvedProfileId, codes, "bitmap_discovery")
+                }
+            }
+        }
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // PID Selection
+    // ─────────────────────────────────────────────────────────────────────────
 
     fun togglePidSelection(pid: ObdPid) {
         _uiState.update { state ->
@@ -255,9 +335,6 @@ class LiveDataViewModel @Inject constructor(
 
     fun selectPreset(preset: PidPreset) {
         val supported = obdService.supportedPids.value
-        // When connected, filter the preset to only include PIDs that the vehicle's
-        // ECU confirmed as supported during discovery. Presets contain hardcoded PIDs
-        // that may not exist on all vehicles.
         val filteredPids = if (supported != null) {
             preset.pids.filter { supported.contains(it.code) }
         } else {
@@ -268,7 +345,71 @@ class LiveDataViewModel @Inject constructor(
 
     fun clearSelection() = selectPids(emptyList())
 
-    // ==================== Polling ====================
+    fun toggleFavorite(pid: ObdPid) {
+        _uiState.update { state ->
+            val updated = state.favoritePidCodes.toMutableSet().also {
+                if (pid.code in it) it.remove(pid.code) else it.add(pid.code)
+            }
+            state.copy(
+                favoritePidCodes = updated,
+                availablePids = state.availablePids.map {
+                    it.copy(isFavorite = it.pid.code in updated)
+                },
+                pidValues = state.pidValues.mapValues { (p, s) ->
+                    s.copy(isFavorite = p.code in updated)
+                }
+            )
+        }
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // Display / Filtering
+    // ─────────────────────────────────────────────────────────────────────────
+
+    fun setDisplayMode(mode: LiveDisplayMode) = _uiState.update { it.copy(displayMode = mode) }
+
+    fun setSortOrder(order: SortOrder) = _uiState.update { it.copy(sortOrder = order) }
+
+    fun setActiveCategory(category: PidCategory?) = _uiState.update { it.copy(activeCategory = category) }
+
+    fun setDtcFilter(dtcCodes: List<String>) {
+        _uiState.update { it.copy(activeDtcFilter = dtcCodes) }
+    }
+
+    fun clearDtcFilter() = _uiState.update { it.copy(activeDtcFilter = emptyList()) }
+
+    /**
+     * Returns the current pid display list filtered + sorted according to active state.
+     * Expensive — call from a derived StateFlow or remember in the UI.
+     */
+    fun sortedFilteredPids(state: LiveDataUiState): List<PidDisplayState> {
+        var pids = state.availablePids
+
+        // DTC filter takes priority
+        if (state.activeDtcFilter.isNotEmpty()) {
+            val dtcPidCodes = DtcSensorMap.getPidsForDtcs(state.activeDtcFilter).map { it.code }.toSet()
+            pids = pids.filter { it.pid.code in dtcPidCodes }
+        }
+
+        // Category filter
+        state.activeCategory?.let { cat ->
+            pids = pids.filter { it.category == cat }
+        }
+
+        return when (state.sortOrder) {
+            SortOrder.ALPHABETICAL -> pids.sortedBy { it.definition?.name ?: it.pid.description }
+            SortOrder.CATEGORY -> pids.sortedWith(compareBy({ it.category.ordinal }, { it.definition?.name }))
+            SortOrder.VALUE -> pids.sortedByDescending { it.value ?: Double.MIN_VALUE }
+            SortOrder.SEVERITY -> pids.sortedByDescending { it.status.ordinal }
+            SortOrder.MOST_ACTIVE -> pids.sortedByDescending { it.changeRate }
+            SortOrder.FAVORITES -> pids.sortedWith(compareByDescending<PidDisplayState> { it.isFavorite }.thenBy { it.definition?.name })
+            SortOrder.SUPPORTED_ONLY -> pids // already filtered to supported only when connected
+        }
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // Polling
+    // ─────────────────────────────────────────────────────────────────────────
 
     fun setPollInterval(intervalMs: Long) {
         polling.setInterval(intervalMs)
@@ -278,10 +419,6 @@ class LiveDataViewModel @Inject constructor(
     fun startPolling() {
         if (_uiState.value.isReplaying) return
         val state = _uiState.value
-        // Only poll PIDs that appear in availablePids (i.e. confirmed supported by discovery).
-        // Sending Mode 01 queries for unsupported PIDs wastes ECU bus time and can cause
-        // timeout cascades on KWP2000 / ISO 9141-2 buses where each NO DATA response
-        // burns a full timeout window (~300 ms).
         val availablePidSet = state.availablePids.map { it.pid }.toHashSet()
         val pollablePids = state.selectedPids.filter { it in availablePidSet }
         if (pollablePids.isNotEmpty()) {
@@ -307,7 +444,9 @@ class LiveDataViewModel @Inject constructor(
         polling.querySingle(pid, viewModelScope)
     }
 
-    // ==================== Logging ====================
+    // ─────────────────────────────────────────────────────────────────────────
+    // Logging
+    // ─────────────────────────────────────────────────────────────────────────
 
     fun startLogging() {
         if (_uiState.value.isReplaying) return
@@ -324,7 +463,9 @@ class LiveDataViewModel @Inject constructor(
 
     fun clearAllSessions() = logSession.clearAll(viewModelScope)
 
-    // ==================== Replay ====================
+    // ─────────────────────────────────────────────────────────────────────────
+    // Replay
+    // ─────────────────────────────────────────────────────────────────────────
 
     fun startReplay(session: LogSession) {
         if (session.dataPoints.isEmpty()) return
@@ -337,20 +478,16 @@ class LiveDataViewModel @Inject constructor(
 
     fun setReplaySpeed(speed: Float) = replay.setSpeed(speed)
 
-    // ==================== Helpers ====================
+    // ─────────────────────────────────────────────────────────────────────────
+    // Helpers
+    // ─────────────────────────────────────────────────────────────────────────
 
-    private fun formatReplayValue(value: Double, pid: ObdPid): String {
-        val numericPart = when (pid) {
-            ObdPid.ENGINE_RPM, ObdPid.VEHICLE_SPEED,
-            ObdPid.ENGINE_COOLANT_TEMP, ObdPid.INTAKE_AIR_TEMP,
-            ObdPid.AMBIENT_AIR_TEMP, ObdPid.ENGINE_OIL_TEMP -> value.toInt().toString()
-            else -> if (value == value.toLong().toDouble()) {
-                value.toLong().toString()
-            } else {
-                String.format("%.1f", value)
-            }
-        }
-        return "$numericPart ${pid.unit}"
+    private fun buildCurrentValueMap(freshValues: Map<ObdPid, Double?>): Map<ObdPid, Double?> {
+        val result = _uiState.value.pidValues
+            .mapValues { (_, state) -> state.value }
+            .toMutableMap()
+        result.putAll(freshValues)
+        return result
     }
 
     override fun onCleared() {
@@ -360,9 +497,10 @@ class LiveDataViewModel @Inject constructor(
     }
 }
 
-/**
- * Preset PID groups for quick selection.
- */
+// ─────────────────────────────────────────────────────────────────────────────
+// Preset PID groups
+// ─────────────────────────────────────────────────────────────────────────────
+
 enum class PidPreset(val displayName: String, val pids: List<ObdPid>) {
     ENGINE_BASICS(
         "Engine Basics",
@@ -385,6 +523,22 @@ enum class PidPreset(val displayName: String, val pids: List<ObdPid>) {
         listOf(
             ObdPid.ENGINE_RPM, ObdPid.VEHICLE_SPEED, ObdPid.ENGINE_COOLANT_TEMP,
             ObdPid.THROTTLE_POSITION, ObdPid.ENGINE_LOAD, ObdPid.FUEL_TANK_LEVEL
+        )
+    ),
+    AIR_FUEL(
+        "Air / Fuel",
+        listOf(
+            ObdPid.MAF_FLOW_RATE, ObdPid.SHORT_TERM_FUEL_TRIM_BANK1,
+            ObdPid.LONG_TERM_FUEL_TRIM_BANK1, ObdPid.INTAKE_MANIFOLD_PRESSURE,
+            ObdPid.O2_SENSOR_B1S1_VOLTAGE
+        )
+    ),
+    MISFIRE_DIAGNOSIS(
+        "Misfire",
+        listOf(
+            ObdPid.ENGINE_RPM, ObdPid.SHORT_TERM_FUEL_TRIM_BANK1,
+            ObdPid.LONG_TERM_FUEL_TRIM_BANK1, ObdPid.MAF_FLOW_RATE,
+            ObdPid.TIMING_ADVANCE, ObdPid.ENGINE_LOAD
         )
     )
 }
