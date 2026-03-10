@@ -26,7 +26,6 @@ import androidx.compose.material.icons.filled.BugReport
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.DirectionsCar
 import androidx.compose.material.icons.filled.History
-import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Link
 import androidx.compose.material.icons.filled.LinkOff
 import androidx.compose.material.icons.filled.Speed
@@ -157,13 +156,6 @@ fun OdbHubScreen(
             icon = Icons.Filled.BugReport,
             description = "AI-powered DTC analysis",
             requiresConnection = true
-        ),
-        OdbMenuItem(
-            id = "odb_hub/settings",
-            label = "Settings",
-            icon = Icons.Filled.Settings,
-            description = "App preferences",
-            requiresConnection = false
         )
     )
 

@@ -10,9 +10,8 @@ import com.odbplus.app.ui.GuidedRpmTestScreen
 import com.odbplus.app.ui.LiveScreen
 import com.odbplus.app.ui.LogsScreen
 import com.odbplus.app.ui.OdbHubScreen
-import com.odbplus.app.ui.PartsScreen
+import com.odbplus.app.ui.PartsAndToolsScreen
 import com.odbplus.app.ui.TerminalScreen
-import com.odbplus.app.ui.ToolOrderingScreen
 import com.odbplus.app.ui.SessionDetailScreen
 import com.odbplus.app.ui.SettingsScreen
 import com.odbplus.app.ui.VehicleDetailScreen
@@ -136,16 +135,11 @@ fun AppScreen() {
                         onBack = { navController.popBackStack() }
                     )
                 }
-                composable("odb_hub/settings") {
-                    SettingsScreen(
-                        onBack = { navController.popBackStack() }
-                    )
-                }
             }
 
-            // Tab 3: Parts
+            // Tab 3: Parts & Tools (combined)
             composable(BottomNavItem.Parts.route) {
-                PartsScreen(
+                PartsAndToolsScreen(
                     onNavigateToAi = {
                         navController.navigate(BottomNavItem.AiChat.route) {
                             popUpTo(navController.graph.findStartDestination().id) {
@@ -158,12 +152,13 @@ fun AppScreen() {
                 )
             }
 
-            // Tab 4: Tools
-            composable(BottomNavItem.Tools.route) {
-                ToolOrderingScreen()
+            // Tab 4: Vehicle History
+            // Tab 5: Settings (standalone tab — moved out of ODB Hub)
+            composable(BottomNavItem.Settings.route) {
+                SettingsScreen()
             }
 
-            // Tab 5: Vehicle History
+            // Tab 4: Vehicle History
             navigation(
                 startDestination = "vehicle/history",
                 route = BottomNavItem.Vehicle.route
