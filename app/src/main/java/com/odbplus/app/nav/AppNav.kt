@@ -2,6 +2,7 @@ package com.odbplus.app.nav
 
 import com.odbplus.app.expertdiag.ui.ExpertDiagnosticScreen
 import com.odbplus.app.ui.AiChatScreen
+import com.odbplus.app.ui.SplashScreen
 import com.odbplus.app.ui.CodesScreen
 import com.odbplus.app.ui.ConnectScreen
 import com.odbplus.app.ui.DiagnosticHudScreen
@@ -27,6 +28,9 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -45,6 +49,12 @@ import com.odbplus.app.ui.theme.*
 fun AppScreen() {
     // Instantiate at app scope so it collects connection/vehicle data for the lifetime of the session.
     hiltViewModel<VehicleContextViewModel>()
+
+    var showSplash by remember { mutableStateOf(true) }
+    if (showSplash) {
+        SplashScreen(onFinished = { showSplash = false })
+        return
+    }
 
     val navController = rememberNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
