@@ -11,6 +11,7 @@ import androidx.lifecycle.viewModelScope
 import com.odbplus.app.ai.VehicleInfoRepository
 import com.odbplus.app.ai.data.VehicleInfo
 import com.odbplus.app.data.ConnectionProfileRepository
+import com.odbplus.app.vin.coordinator.VinDecodeCoordinator
 import com.odbplus.core.protocol.ObdService
 import com.odbplus.core.protocol.PidDiscoveryState
 import com.odbplus.core.protocol.adapter.ProtocolSessionState
@@ -33,7 +34,8 @@ class ConnectViewModel @Inject constructor(
     private val repo: TransportRepository,
     private val obdService: ObdService,
     private val vehicleInfoRepository: VehicleInfoRepository,
-    private val connectionProfileRepository: ConnectionProfileRepository
+    private val connectionProfileRepository: ConnectionProfileRepository,
+    private val vinDecodeCoordinator: VinDecodeCoordinator
 ) : AndroidViewModel(application) {
 
     val connectionState: StateFlow<ConnectionState> = repo.connectionState
@@ -113,6 +115,9 @@ class ConnectViewModel @Inject constructor(
                     }
                     vehicleInfoRepository.saveVehicle(info)
                     _acquireStatus.value = "VIN acquired: $vin"
+
+                    // Fire VIN decode as a background sidecar — non-blocking
+                    vinDecodeCoordinator.onVinDiscovered(vin)
                 } else {
                     _acquireStatus.value = "VIN not available from vehicle"
                 }
@@ -147,6 +152,7 @@ class ConnectViewModel @Inject constructor(
         viewModelScope.launch {
             obdService.onTransportDisconnected()
             repo.disconnect()
+            vinDecodeCoordinator.reset()
         }
     }
 

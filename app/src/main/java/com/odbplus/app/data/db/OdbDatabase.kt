@@ -11,8 +11,12 @@ import com.odbplus.app.data.db.dao.SensorLogDao
 import com.odbplus.app.data.db.dao.SupportedPidDao
 import com.odbplus.app.data.db.dao.TestResultDao
 import com.odbplus.app.data.db.dao.VehicleDao
+import com.odbplus.app.data.db.dao.VehicleIdentityDao
 import com.odbplus.app.data.db.dao.VehicleProfileDao
 import com.odbplus.app.data.db.dao.VehicleSessionDao
+import com.odbplus.app.data.db.dao.VinCachePolicyDao
+import com.odbplus.app.data.db.dao.VinRawDecodeDao
+import com.odbplus.app.data.db.dao.VinValidationDao
 import com.odbplus.app.data.db.entity.DtcLogEntity
 import com.odbplus.app.data.db.entity.EcuModuleEntity
 import com.odbplus.app.data.db.entity.FreezeFrameEntity
@@ -20,8 +24,12 @@ import com.odbplus.app.data.db.entity.SensorLogEntity
 import com.odbplus.app.data.db.entity.SupportedPidEntity
 import com.odbplus.app.data.db.entity.TestResultEntity
 import com.odbplus.app.data.db.entity.VehicleEntity
+import com.odbplus.app.data.db.entity.VehicleIdentityEntity
 import com.odbplus.app.data.db.entity.VehicleProfileEntity
 import com.odbplus.app.data.db.entity.VehicleSessionEntity
+import com.odbplus.app.data.db.entity.VehicleVinCachePolicyEntity
+import com.odbplus.app.data.db.entity.VehicleVinRawDecodeEntity
+import com.odbplus.app.data.db.entity.VehicleVinValidationEntity
 
 @Database(
     entities = [
@@ -33,9 +41,14 @@ import com.odbplus.app.data.db.entity.VehicleSessionEntity
         EcuModuleEntity::class,
         TestResultEntity::class,
         VehicleProfileEntity::class,
-        SupportedPidEntity::class
+        SupportedPidEntity::class,
+        // VIN decode subsystem (v3)
+        VehicleIdentityEntity::class,
+        VehicleVinValidationEntity::class,
+        VehicleVinRawDecodeEntity::class,
+        VehicleVinCachePolicyEntity::class
     ],
-    version = 2,
+    version = 3,
     exportSchema = false
 )
 abstract class OdbDatabase : RoomDatabase() {
@@ -48,6 +61,11 @@ abstract class OdbDatabase : RoomDatabase() {
     abstract fun testResultDao(): TestResultDao
     abstract fun vehicleProfileDao(): VehicleProfileDao
     abstract fun supportedPidDao(): SupportedPidDao
+    // VIN decode subsystem (v3)
+    abstract fun vehicleIdentityDao(): VehicleIdentityDao
+    abstract fun vinValidationDao(): VinValidationDao
+    abstract fun vinRawDecodeDao(): VinRawDecodeDao
+    abstract fun vinCachePolicyDao(): VinCachePolicyDao
 
     companion object {
         val MIGRATION_1_2 = object : Migration(1, 2) {
@@ -97,6 +115,98 @@ abstract class OdbDatabase : RoomDatabase() {
                 )
                 database.execSQL(
                     "CREATE UNIQUE INDEX IF NOT EXISTS idx_spid_unique ON supported_pids(vehicleProfileId, mode, pid)"
+                )
+            }
+        }
+
+        val MIGRATION_2_3 = object : Migration(2, 3) {
+            override fun migrate(database: SupportSQLiteDatabase) {
+                // vehicle_identity: stores remotely decoded VIN data
+                database.execSQL(
+                    """
+                    CREATE TABLE IF NOT EXISTS vehicle_identity (
+                        vin TEXT PRIMARY KEY NOT NULL,
+                        normalizedVin TEXT NOT NULL,
+                        make TEXT,
+                        model TEXT,
+                        modelYear INTEGER,
+                        trim TEXT,
+                        series TEXT,
+                        manufacturer TEXT,
+                        vehicleType TEXT,
+                        bodyClass TEXT,
+                        engineModel TEXT,
+                        engineCylinders INTEGER,
+                        displacementL REAL,
+                        fuelTypePrimary TEXT,
+                        fuelTypeSecondary TEXT,
+                        driveType TEXT,
+                        transmissionStyle TEXT,
+                        plantCountry TEXT,
+                        plantCompany TEXT,
+                        plantCity TEXT,
+                        plantState TEXT,
+                        gvwrClass TEXT,
+                        brakeSystemType TEXT,
+                        airBagLocations TEXT,
+                        createdAt INTEGER NOT NULL,
+                        updatedAt INTEGER NOT NULL,
+                        source TEXT NOT NULL,
+                        confidenceScore REAL NOT NULL,
+                        verificationStatus TEXT NOT NULL
+                    )
+                    """.trimIndent()
+                )
+                database.execSQL("CREATE INDEX IF NOT EXISTS idx_identity_make ON vehicle_identity(make)")
+                database.execSQL("CREATE INDEX IF NOT EXISTS idx_identity_year ON vehicle_identity(modelYear)")
+
+                // vehicle_vin_validation: local validation result per VIN
+                database.execSQL(
+                    """
+                    CREATE TABLE IF NOT EXISTS vehicle_vin_validation (
+                        vin TEXT PRIMARY KEY NOT NULL,
+                        isLengthValid INTEGER NOT NULL,
+                        hasOnlyAllowedChars INTEGER NOT NULL,
+                        isCheckDigitValid INTEGER NOT NULL,
+                        parsedModelYear INTEGER,
+                        wmi TEXT,
+                        plantCode TEXT,
+                        validationStatus TEXT NOT NULL,
+                        validationSummary TEXT NOT NULL,
+                        checkedAt INTEGER NOT NULL
+                    )
+                    """.trimIndent()
+                )
+
+                // vehicle_vin_raw_decode: raw JSON from provider
+                database.execSQL(
+                    """
+                    CREATE TABLE IF NOT EXISTS vehicle_vin_raw_decode (
+                        vin TEXT PRIMARY KEY NOT NULL,
+                        providerName TEXT NOT NULL,
+                        providerVersion TEXT,
+                        rawJson TEXT NOT NULL,
+                        fetchedAt INTEGER NOT NULL,
+                        httpStatus INTEGER NOT NULL,
+                        wasSuccessful INTEGER NOT NULL
+                    )
+                    """.trimIndent()
+                )
+
+                // vehicle_vin_cache_policy: cache freshness tracking
+                database.execSQL(
+                    """
+                    CREATE TABLE IF NOT EXISTS vehicle_vin_cache_policy (
+                        vin TEXT PRIMARY KEY NOT NULL,
+                        lastAttemptAt INTEGER NOT NULL,
+                        lastSuccessAt INTEGER,
+                        lastFailureAt INTEGER,
+                        retryCount INTEGER NOT NULL,
+                        cacheExpiresAt INTEGER NOT NULL,
+                        isStale INTEGER NOT NULL,
+                        shouldRefresh INTEGER NOT NULL
+                    )
+                    """.trimIndent()
                 )
             }
         }

@@ -9,8 +9,12 @@ import com.odbplus.app.data.db.dao.SensorLogDao
 import com.odbplus.app.data.db.dao.SupportedPidDao
 import com.odbplus.app.data.db.dao.TestResultDao
 import com.odbplus.app.data.db.dao.VehicleDao
+import com.odbplus.app.data.db.dao.VehicleIdentityDao
 import com.odbplus.app.data.db.dao.VehicleProfileDao
 import com.odbplus.app.data.db.dao.VehicleSessionDao
+import com.odbplus.app.data.db.dao.VinCachePolicyDao
+import com.odbplus.app.data.db.dao.VinRawDecodeDao
+import com.odbplus.app.data.db.dao.VinValidationDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -26,7 +30,7 @@ object DatabaseModule {
     @Singleton
     fun provideDatabase(@ApplicationContext ctx: Context): OdbDatabase =
         Room.databaseBuilder(ctx, OdbDatabase::class.java, "odb_database")
-            .addMigrations(OdbDatabase.MIGRATION_1_2)
+            .addMigrations(OdbDatabase.MIGRATION_1_2, OdbDatabase.MIGRATION_2_3)
             .build()
 
     @Provides @Singleton
@@ -55,4 +59,17 @@ object DatabaseModule {
 
     @Provides @Singleton
     fun provideSupportedPidDao(db: OdbDatabase): SupportedPidDao = db.supportedPidDao()
+
+    // VIN decode subsystem (v3)
+    @Provides @Singleton
+    fun provideVehicleIdentityDao(db: OdbDatabase): VehicleIdentityDao = db.vehicleIdentityDao()
+
+    @Provides @Singleton
+    fun provideVinValidationDao(db: OdbDatabase): VinValidationDao = db.vinValidationDao()
+
+    @Provides @Singleton
+    fun provideVinRawDecodeDao(db: OdbDatabase): VinRawDecodeDao = db.vinRawDecodeDao()
+
+    @Provides @Singleton
+    fun provideVinCachePolicyDao(db: OdbDatabase): VinCachePolicyDao = db.vinCachePolicyDao()
 }
