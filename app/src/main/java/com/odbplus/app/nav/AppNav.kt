@@ -17,7 +17,19 @@ import com.odbplus.app.ui.SettingsScreen
 import com.odbplus.app.ui.VehicleDetailScreen
 import com.odbplus.app.ui.VehicleHistoryScreen
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBars
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalView
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
@@ -64,6 +76,7 @@ fun AppScreen() {
 
     Scaffold(
         containerColor = DarkBackground,
+        contentWindowInsets = WindowInsets.statusBars,
         bottomBar = {
             if (showBottomBar) {
                 BottomNavigationBar(
@@ -199,10 +212,22 @@ fun BottomNavigationBar(
     navController: NavController,
     currentRoute: String?
 ) {
+    val view = LocalView.current
+    val navBarHeightPx = ViewCompat.getRootWindowInsets(view)
+        ?.getInsets(WindowInsetsCompat.Type.navigationBars())
+        ?.bottom ?: 0
+    val navBarHeightDp = with(LocalDensity.current) { navBarHeightPx.toDp() }
+
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(DarkSurface)
+    ) {
     NavigationBar(
         containerColor = DarkSurface,
         contentColor = TextPrimary,
-        tonalElevation = 0.dp
+        tonalElevation = 0.dp,
+        windowInsets = WindowInsets(0)
     ) {
         BottomNavItem.items.forEach { item ->
             val selected = currentRoute?.startsWith(item.route) == true
@@ -240,5 +265,13 @@ fun BottomNavigationBar(
                 )
             )
         }
+    } // end NavigationBar
+    if (navBarHeightDp > 0.dp) {
+        Spacer(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(navBarHeightDp)
+        )
     }
+    } // end Column
 }

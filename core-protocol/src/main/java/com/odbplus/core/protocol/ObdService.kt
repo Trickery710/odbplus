@@ -441,14 +441,16 @@ class ObdService @Inject constructor(
     }
 
     private suspend fun querySupportBitmap(command: String, timeoutMs: Long): Long {
+        val pidCode = command.drop(2).uppercase()
         val response = sendCommand(command, timeoutMs)
-        val cleaned = response
-            .replace("\\s+".toRegex(), "")
-            .replace(">", "")
-            .uppercase()
-        if (cleaned.length < 12) return 0L
+        val cleaned = response.replace("\\s+".toRegex(), "").replace(">", "").uppercase()
+        val marker = "41$pidCode"
+        val idx = cleaned.indexOf(marker)
+        if (idx < 0) return 0L
+        val bitmapStart = idx + 4
+        if (cleaned.length < bitmapStart + 8) return 0L
         return try {
-            cleaned.substring(4, 12).toLong(16)
+            cleaned.substring(bitmapStart, bitmapStart + 8).toLong(16)
         } catch (e: NumberFormatException) {
             0L
         }

@@ -48,6 +48,11 @@ import com.odbplus.core.protocol.PidDiscoveryState
 fun LiveScreen(vm: LiveDataViewModel = hiltViewModel()) {
     val state by vm.uiState.collectAsState()
 
+    // Trigger PID cache resolution (or full discovery) once per connect.
+    LaunchedEffect(state.isConnected) {
+        if (state.isConnected) vm.resolveAndDiscoverPids()
+    }
+
     Column(Modifier.fillMaxSize().background(MaterialTheme.colorScheme.background)) {
         // Top bar with connection + discovery status
         LiveTopBar(state, vm)

@@ -65,7 +65,6 @@ class ConnectViewModel @Inject constructor(
             repo.connect(host, port, isBluetooth = false)
             if (repo.connectionState.value == ConnectionState.CONNECTED) {
                 obdService.onTransportReady("tcp:$host:$port")
-                obdService.runPidDiscovery()
                 connectionProfileRepository.saveWifiProfile(host, port)
             }
         }
@@ -78,7 +77,6 @@ class ConnectViewModel @Inject constructor(
             repo.connect(macAddress, 0, isBluetooth = true)
             if (repo.connectionState.value == ConnectionState.CONNECTED) {
                 obdService.onTransportReady("bt:$macAddress")
-                obdService.runPidDiscovery()
                 // Look up device name from system paired devices
                 val btManager = getApplication<Application>()
                     .getSystemService(Context.BLUETOOTH_SERVICE) as? BluetoothManager
