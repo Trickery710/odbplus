@@ -1,0 +1,6 @@
+circuit_id,circuit_name,function,pid_codes,modules
+5V_REF_A,5 Volt Reference Circuit A,Provides 5V regulated reference voltage to TPS APP1 and MAP sensors,11|49|0B,PCM
+5V_REF_B,5 Volt Reference Circuit B,Provides 5V regulated reference voltage to APP2 MAF and IAT sensors,4A|10|0F,PCM
+SIG_GND_A,Signal Ground Circuit A,Shared low-reference ground for all analog sensor returns on Bank A,11|49|0B|4A|10|0F,PCM
+CAN_HS,High Speed CAN Bus,High-speed CAN network 500kbps for powertrain critical modules,0C|11|49|4A,PCM|TAC|ABS
+CAN_MS,Medium Speed CAN Bus,Medium-speed CAN network 250kbps for body and chassis modules,0D|2F,BCM|TCM|ABS

@@ -1,0 +1,6 @@
+sensor_a,sensor_b,relationship
+app1,app2,ratio_2_to_1
+maf,rpm,proportional
+map,maf,airflow_model
+tps,rpm,load_response
+ect,fan_temp,thermal_control

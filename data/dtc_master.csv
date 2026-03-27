@@ -1,0 +1,6 @@
+code,system,description,primary_component
+P0101,air,MAF Performance,maf
+P0120,throttle,TPS Circuit,tps
+P0171,fuel,System Too Lean,fuel_system
+P0606,pcm,PCM Processor Fault,pcm
+P1518,throttle,TAC Module Communication,tac_module

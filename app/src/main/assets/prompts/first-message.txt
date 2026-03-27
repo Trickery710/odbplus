@@ -8,3 +8,6 @@ P:{pid_data}
 T:{test_results}
 N:{network_status}
 X:{flags}
+H:{hypothesis}
+K:{knowledge}
+G:{guided_tests}

@@ -1,0 +1,34 @@
+code,description,system,subsystem,severity,related_pids,related_modules,knowledge_tokens,fault_tokens
+P0101,MAF Sensor Range/Performance,powertrain,air_intake,medium,10|0B|0C|06|07,PCM,maf_sensor air_intake mass_airflow,maf_circuit_fault maf_range_fault
+P0102,MAF Sensor Circuit Low Input,powertrain,air_intake,high,10|0B|0C|42,PCM,maf_circuit maf_low signal_low,maf_circuit_fault maf_low
+P0103,MAF Sensor Circuit High Input,powertrain,air_intake,high,10|0B|0C|42,PCM,maf_circuit maf_high signal_high,maf_circuit_fault maf_high
+P0107,MAP Sensor Circuit Low Input,powertrain,intake_pressure,high,0B|0C|42|11,PCM,map_sensor map_circuit map_low,map_sensor_fault map_low
+P0108,MAP Sensor Circuit High Input,powertrain,intake_pressure,high,0B|0C|42|11,PCM,map_sensor map_circuit map_high,map_sensor_fault map_high
+P0112,IAT Sensor Circuit Low Input,powertrain,air_intake,low,0F|10|0B,PCM,iat_sensor iat_circuit iat_low,iat_circuit_fault iat_low
+P0113,IAT Sensor Circuit High Input,powertrain,air_intake,low,0F|10|0B,PCM,iat_sensor iat_circuit iat_high,iat_circuit_fault iat_high
+P0116,ECT Sensor Range/Performance,powertrain,cooling,medium,05|0C|04,PCM,ect_sensor coolant_temp ect_range,ect_range_fault coolant_temp_concern
+P0117,ECT Sensor Circuit Low Input,powertrain,cooling,medium,05|0C,PCM,ect_sensor ect_circuit ect_low,ect_circuit_fault ect_low
+P0118,ECT Sensor Circuit High Input,powertrain,cooling,medium,05|0C,PCM,ect_sensor ect_circuit ect_high,ect_circuit_fault ect_high
+P0121,TPS Range/Performance,powertrain,throttle,high,11|49|4A|0C|42,PCM|TAC,tps_sensor tps_range throttle_position,tps_circuit_fault tps_range_fault
+P0122,TPS Circuit Low Input,powertrain,throttle,high,11|42|0C,PCM|TAC,tps_circuit tps_low signal_low vref,tps_circuit_fault tps_low
+P0123,TPS Circuit High Input,powertrain,throttle,high,11|42|0C,PCM|TAC,tps_circuit tps_high signal_high vref,tps_circuit_fault tps_high
+P0131,O2 Sensor Circuit Low Voltage B1S1,powertrain,fuel_system,medium,14|06|07|0C|05,PCM,o2_sensor upstream lambda fuel_trim,o2_circuit_fault o2_low
+P0132,O2 Sensor Circuit High Voltage B1S1,powertrain,fuel_system,medium,14|06|07|0C|05,PCM,o2_sensor upstream lambda fuel_trim,o2_circuit_fault o2_high
+P0171,System Too Lean Bank 1,powertrain,fuel_system,medium,06|07|10|14|0B|0C,PCM,fuel_trim lean maf_low vacuum_leak,fuel_trim_lean lean_condition
+P0172,System Too Rich Bank 1,powertrain,fuel_system,medium,06|07|10|14|0B|0C,PCM,fuel_trim rich injector_leak maf_high,fuel_trim_rich rich_condition
+P0201,Injector Circuit Open - Cylinder 1,powertrain,fuel_delivery,high,0C|10|06|07,PCM,injector_circuit fuel_injector cylinder1,injector_fault injector_open
+P0300,Random/Multiple Cylinder Misfire,powertrain,ignition,high,0C|10|06|07|04|14,PCM,misfire multiple_cylinder ignition fuel,misfire_fault random_misfire
+P0301,Cylinder 1 Misfire Detected,powertrain,ignition,high,0C|10|06|07|04,PCM,misfire cylinder1 ignition coil,misfire_fault cylinder_misfire
+P0302,Cylinder 2 Misfire Detected,powertrain,ignition,high,0C|10|06|07|04,PCM,misfire cylinder2 ignition coil,misfire_fault cylinder_misfire
+P0303,Cylinder 3 Misfire Detected,powertrain,ignition,high,0C|10|06|07|04,PCM,misfire cylinder3 ignition coil,misfire_fault cylinder_misfire
+P0304,Cylinder 4 Misfire Detected,powertrain,ignition,high,0C|10|06|07|04,PCM,misfire cylinder4 ignition coil,misfire_fault cylinder_misfire
+P0420,Catalyst System Efficiency Below Threshold B1,powertrain,emissions,medium,14|15|06|07|05,PCM,catalyst efficiency o2_sensor downstream,catalyst_fault catalyst_efficiency
+P0440,EVAP System Malfunction,powertrain,emissions,low,2F|0C,PCM,evap_system purge_valve fuel_vapor,evap_fault evap_system
+P0606,PCM Processor Fault,powertrain,pcm,critical,0C|0B|11|42,PCM,pcm_processor internal_fault,pcm_fault
+P0641,Sensor Reference Voltage A Circuit Open,powertrain,sensors,high,11|49|0B|42,PCM,vref_circuit sensor_power,vref_fault pcm_fault
+P0651,Sensor Reference Voltage B Circuit Open,powertrain,sensors,high,4A|10|0F|42,PCM,vref_circuit sensor_power,vref_fault pcm_fault
+P1515,TAC Module Commanded vs Actual Throttle Position,powertrain,throttle,high,11|49|4A|0C,PCM|TAC,tac_module throttle_command tac_mismatch,tac_system_fault tac_mismatch
+P1516,TAC Module Throttle Actuator Control Range/Performance,powertrain,throttle,high,11|49|4A|0C,PCM|TAC,tac_module throttle_range tac_performance,tac_system_fault tac_range_fault
+P1518,TAC Module Communication Fault,powertrain,throttle,high,11|49|4A,PCM|TAC,tac_module tac_comm can_network,tac_comm_fault tac_system_fault
+U0100,Lost Communication with ECM/PCM,network,communication,critical,0C|11|42,PCM|BCM,can_bus lost_comm pcm_comm network_fault,no_rpm_signal comm_loss_fault pcm_comm_fault
+U0121,Lost Communication with ABS Control Module,network,communication,high,0D,ABS|PCM|BCM,can_bus abs_comm lost_comm,abs_comm_fault comm_loss_fault

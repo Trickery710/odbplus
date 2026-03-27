@@ -1,0 +1,25 @@
+code,name,short_name,unit,min_normal,max_normal,critical_low,critical_high
+04,Calculated Engine Load,load,%,0,80,0,100
+05,Engine Coolant Temperature,ect,°C,-10,220,-40,260
+06,Short Term Fuel Trim Bank 1,stft1,%,-10,10,-25,25
+07,Long Term Fuel Trim Bank 1,ltft1,%,-10,10,-25,25
+08,Short Term Fuel Trim Bank 2,stft2,%,-10,10,-25,25
+09,Long Term Fuel Trim Bank 2,ltft2,%,-10,10,-25,25
+0A,Fuel Pressure,fp,kPa,200,500,0,700
+0B,Intake Manifold Absolute Pressure,map,kPa,20,105,0,120
+0C,Engine RPM,rpm,RPM,400,6000,0,8000
+0D,Vehicle Speed,spd,km/h,0,200,0,300
+0E,Ignition Timing Advance,ign,°,-5,40,-30,60
+0F,Intake Air Temperature,iat,°C,-10,60,-40,100
+10,MAF Air Flow Rate,maf,g/s,2,80,0,200
+11,Throttle Position,tps,%,0,100,0,100
+14,O2 Sensor Voltage B1S1,o2b1s1,V,0.1,0.9,0,1.1
+15,O2 Sensor Voltage B1S2,o2b1s2,V,0.1,0.9,0,1.1
+1B,O2 Sensor Voltage B2S1,o2b2s1,V,0.1,0.9,0,1.1
+1C,O2 Sensor Voltage B2S2,o2b2s2,V,0.1,0.9,0,1.1
+2F,Fuel Tank Level Input,fuel,%,5,100,0,100
+42,Control Module Voltage,vref,V,11.5,14.5,9,16
+44,Commanded Equivalence Ratio,er,ratio,0.9,1.1,0.7,1.3
+49,Accelerator Pedal Position D,app1,%,0,100,0,100
+4A,Accelerator Pedal Position E,app2,%,0,50,0,100
+5E,Engine Fuel Rate,frate,L/h,0,30,0,50

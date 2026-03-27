@@ -1,0 +1,12 @@
+pid_a,pid_b,relationship,rule_description,threshold
+49,4A,ratio,APP1 should be approximately twice APP2 at all throttle positions,0.5
+11,49,correlation,TPS should track APP1 with less than 5% deviation,5.0
+10,0C,correlation,MAF increases proportionally with RPM above idle; MAF near 0 at RPM above 800 indicates fault,0.0
+0B,0C,inverse,MAP decreases (more vacuum) as RPM increases at steady throttle; high MAP at idle indicates leak,95.0
+11,42,dependency,TPS uses 5V_REF_A reference; TPS reads near 0 when vref is low even if physical sensor is OK,4.5
+49,42,dependency,APP1 uses 5V_REF_A reference; APP1 reads near 0 when vref is low,4.5
+4A,42,dependency,APP2 uses 5V_REF_B reference; APP2 reads near 0 when vref is low,4.5
+0B,42,dependency,MAP uses 5V_REF_A reference; MAP reads zero or near-zero when vref is low,4.5
+10,42,dependency,MAF uses 5V_REF_B reference; MAF reads zero when vref B is low,4.5
+14,06,correlation,Upstream O2 voltage drives short-term fuel trim; lean O2 increases STFT; rich O2 decreases STFT,10.0
+06,07,correlation,STFT and LTFT track together under persistent lean or rich condition; large combined value indicates system fault,25.0

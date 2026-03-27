@@ -2,6 +2,7 @@ package com.obdplus.app.ai
 
 import android.content.Context
 import com.obdplus.app.ai.data.VehicleContext
+import com.obdplus.app.ai.diagnostic.DiagnosticPipelineResult
 import com.obdplus.app.live.PidDisplayState
 import com.obdplus.app.live.SensorStatus
 import com.obdplus.app.vin.domain.DecodedVin
@@ -63,7 +64,8 @@ object DiagnosticPromptBuilder {
         context: Context,
         vehicleCtx: VehicleContext,
         symptoms: String,
-        decodedVin: DecodedVin? = null
+        decodedVin: DecodedVin? = null,
+        pipelineResult: DiagnosticPipelineResult? = null
     ): String {
         val template = context.assets.open(TEMPLATE_PATH).bufferedReader().readText()
 
@@ -113,8 +115,18 @@ object DiagnosticPromptBuilder {
             ?.joinToString(" ") { "${it.lowercase()}.on" }
             ?: ""
 
-        // X: abnormal-value flags
-        val flags = buildFlags(allPids)
+        // ── Pipeline result ──────────────────────────────────────────────────────
+        val hypothesisLine = pipelineResult?.hypothesisTokens?.takeIf { it.isNotEmpty() }
+            ?.joinToString(" ") ?: ""
+        val knowledgeLine = pipelineResult?.knowledgeTokens?.takeIf { it.isNotEmpty() }
+            ?.joinToString(" ") ?: ""
+        val guidedTestsLine = pipelineResult?.guidedTestIds?.take(5)?.joinToString(" ") ?: ""
+
+        // Merge pipeline flags into the flags string
+        val allFlags = buildFlags(allPids).let { base ->
+            val pipelineFlags = pipelineResult?.allFlags ?: emptyList()
+            (base.split(" ").filter { it.isNotBlank() } + pipelineFlags).distinct().joinToString(" ")
+        }
 
         // ── Fill template ──────────────────────────────────────────────────────
         var result = template
@@ -125,7 +137,10 @@ object DiagnosticPromptBuilder {
             .replace("{pid_data}",      pidData)
             .replace("{test_results}",  testResults)
             .replace("{network_status}", networkStatus)
-            .replace("{flags}",         flags)
+            .replace("{flags}",         allFlags)
+            .replace("{hypothesis}",    hypothesisLine)
+            .replace("{knowledge}",     knowledgeLine)
+            .replace("{guided_tests}",  guidedTestsLine)
 
         result = removeEmptySections(result)
         result = collapseBlankLines(result)
@@ -274,7 +289,7 @@ object DiagnosticPromptBuilder {
      * This strips empty sections cleanly without leaving bare colons.
      */
     private fun removeEmptySections(text: String): String {
-        val sectionPrefixes = listOf("V:", "S:", "D:", "F:", "P:", "T:", "N:", "X:")
+        val sectionPrefixes = listOf("V:", "S:", "D:", "F:", "P:", "T:", "N:", "X:", "H:", "K:", "G:")
         return text.lines().filter { line ->
             val trimmed = line.trim()
             val emptySection = sectionPrefixes.any { prefix ->

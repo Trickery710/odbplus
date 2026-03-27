@@ -1,0 +1,5 @@
+component,power_source,ground,communication
+pcm,ignition_relay,g103,can_bus
+tac_module,pcm_5v,g104,serial_line
+maf_sensor,pcm_5v,g103,signal_wire
+map_sensor,pcm_5v,g103,signal_wire

@@ -1,0 +1,7 @@
+fault,test_step,description
+vref_fault,1,Check 5V reference at MAP sensor
+vref_fault,2,Disconnect sensors on the 5V circuit one at a time
+vref_fault,3,Inspect harness for short to ground
+tac_system_fault,1,Verify TAC module power and ground
+tac_system_fault,2,Check APP sensor correlation
+tac_system_fault,3,Inspect TAC communication wiring

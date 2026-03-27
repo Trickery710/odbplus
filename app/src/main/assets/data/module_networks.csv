@@ -1,0 +1,6 @@
+module_id,display_name,protocol,bus,can_address,dependencies,function
+PCM,Powertrain Control Module,CAN,CAN_HS,0x7E0,none,Controls engine fuel ignition emissions and monitors all powertrain sensors
+TAC,Throttle Actuator Control Module,CAN,CAN_HS,0x7E4,PCM,Controls electronic throttle body position based on PCM commands and driver input
+ABS,Anti-Lock Brake System Module,CAN,CAN_HS|CAN_MS,0x7E8,PCM|BCM,Manages anti-lock braking traction control and stability control systems
+BCM,Body Control Module,CAN,CAN_MS,0x7B0,PCM,Controls body electrical systems lighting HVAC security and communication gateway
+TCM,Transmission Control Module,CAN,CAN_MS,0x7E1,PCM,Controls automatic transmission shift points torque converter lockup and fluid pressure

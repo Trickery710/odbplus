@@ -29,7 +29,8 @@ class AiChatViewModel @Inject constructor(
     private val vehicleIdentityRepository: VehicleIdentityRepository,
     private val partsRepository: PartsRepository,
     private val googleAuthManager: GoogleAuthManager,
-    private val vehicleHistoryRepository: VehicleHistoryRepository
+    private val vehicleHistoryRepository: VehicleHistoryRepository,
+    private val diagnosticPipelineOrchestrator: com.obdplus.app.ai.diagnostic.DiagnosticPipelineOrchestrator
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(AiChatUiState())
@@ -180,12 +181,21 @@ class AiChatViewModel @Inject constructor(
             runCatching { vehicleIdentityRepository.getDecodedVin(vin) }.getOrNull()
         } else null
 
+        // Run the full diagnostic pipeline to compute flags, hypotheses, knowledge, tests
+        val pipelineResult = runCatching {
+            diagnosticPipelineOrchestrator.run(
+                vehicleCtx = vehicleContextProvider.current(),
+                symptoms = symptoms
+            )
+        }.getOrNull()
+
         // Build the full diagnostic context prompt from the template
         val diagnosticPrompt = DiagnosticPromptBuilder.build(
             context = appContext,
             vehicleCtx = vehicleContextProvider.current(),
             symptoms = symptoms,
-            decodedVin = decodedVin
+            decodedVin = decodedVin,
+            pipelineResult = pipelineResult
         )
 
         // Store in chat with symptoms as display text so the UI shows what the user typed
