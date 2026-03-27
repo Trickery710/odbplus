@@ -4,7 +4,7 @@ plugins {
     alias(libs.plugins.kotlin.compose)
 }
 android {
-    namespace = "com.odbplus.feature.logger"
+    namespace = "com.obdplus.feature.logger"
     compileSdk = 35
     defaultConfig {
         minSdk = 26

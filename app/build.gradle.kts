@@ -8,11 +8,11 @@ plugins {
 }
 
 android {
-    namespace = "com.odbplus.app"
+    namespace = "com.obdplus.app"
     compileSdk = 36
 
     defaultConfig {
-        applicationId = "com.odbplus.app"
+        applicationId = "com.obdplus.app"
         minSdk = 26
         targetSdk = 36
         versionCode = 1

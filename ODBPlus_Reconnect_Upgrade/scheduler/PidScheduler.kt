@@ -1,5 +1,5 @@
 
-package com.odbplus.scheduler
+package com.obdplus.scheduler
 
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.Channel

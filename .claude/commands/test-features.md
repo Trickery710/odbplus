@@ -17,13 +17,13 @@ Automated test cycle focused on Live Data reliability. Terminal is used only to 
 
 3. **Build & install**:
    ```
-   cd /home/casey/Desktop/projects/odbplus && ./gradlew :app:installDebug
+   cd /home/casey/Desktop/projects/obdplus && ./gradlew :app:installDebug
    ```
    If build fails, stop with `STATUS: BUILD_FAILED` and include the gradle error output.
 
 4. **Launch app**:
    ```
-   adb shell am force-stop com.odbplus.app && sleep 2 && adb shell am start -n com.odbplus.app/.MainActivity && sleep 2
+   adb shell am force-stop com.obdplus.app && sleep 2 && adb shell am start -n com.obdplus.app/.MainActivity && sleep 2
    ```
 
 5. **Navigate to ODB tab** `(403, 2151)`:
@@ -76,7 +76,7 @@ Automated test cycle focused on Live Data reliability. Terminal is used only to 
     Take screenshot. ATI must return a version string like `ELM327 v2.3`.
     If ATI returns nothing or gibberish → dump logs and stop with `STATUS: TERMINAL_FAILED`:
     ```
-    adb logcat -d -v threadtime 2>/dev/null | grep -E "(com\.odbplus|UOAPL|AdapterSession|ElmDriver|ObdService|PollingManager|LiveData|Adapter|Protocol|SESSION)" | tail -300
+    adb logcat -d -v threadtime 2>/dev/null | grep -E "(com\.obdplus|UOAPL|AdapterSession|ElmDriver|ObdService|PollingManager|LiveData|Adapter|Protocol|SESSION)" | tail -300
     ```
 
 12. **Send 010C** `(640, 1540)`:
@@ -111,7 +111,7 @@ Automated test cycle focused on Live Data reliability. Terminal is used only to 
     Take screenshot. All 4 cards must be present: Engine RPM (0C), Vehicle Speed (0D), Throttle Position (11), Calculated Engine Load (04).
     If any card is missing or header already shows "0 / 4 PIDs" → dump logs and stop with `STATUS: CARDS_MISSING_BEFORE_START`:
     ```
-    adb logcat -d -v threadtime 2>/dev/null | grep -E "(com\.odbplus|UOAPL|AdapterSession|ElmDriver|ObdService|PollingManager|LiveData|Adapter|Protocol|SESSION)" | tail -300
+    adb logcat -d -v threadtime 2>/dev/null | grep -E "(com\.obdplus|UOAPL|AdapterSession|ElmDriver|ObdService|PollingManager|LiveData|Adapter|Protocol|SESSION)" | tail -300
     ```
 
 16. **Start streaming** `(316, 441)`:
@@ -129,7 +129,7 @@ Automated test cycle focused on Live Data reliability. Terminal is used only to 
 
     On failure → dump logs and stop with `STATUS: PIDS_NOT_DISPLAYING`:
     ```
-    adb logcat -d -v threadtime 2>/dev/null | grep -E "(com\.odbplus|UOAPL|AdapterSession|ElmDriver|ObdService|PollingManager|LiveData|Adapter|Protocol|SESSION)" | tail -300
+    adb logcat -d -v threadtime 2>/dev/null | grep -E "(com\.obdplus|UOAPL|AdapterSession|ElmDriver|ObdService|PollingManager|LiveData|Adapter|Protocol|SESSION)" | tail -300
     ```
 
 17. **Watch live data for ~2 minutes** — only if all 4 cards are showing numeric values.
@@ -143,7 +143,7 @@ Automated test cycle focused on Live Data reliability. Terminal is used only to 
     ```
     On failure at any interval:
     ```
-    adb logcat -d -v threadtime 2>/dev/null | grep -E "(com\.odbplus|UOAPL|AdapterSession|ElmDriver|ObdService|PollingManager|LiveData|Adapter|Protocol|SESSION)" | tail -300
+    adb logcat -d -v threadtime 2>/dev/null | grep -E "(com\.obdplus|UOAPL|AdapterSession|ElmDriver|ObdService|PollingManager|LiveData|Adapter|Protocol|SESSION)" | tail -300
     ```
 
 18. **Stop streaming** `(316, 441)`:

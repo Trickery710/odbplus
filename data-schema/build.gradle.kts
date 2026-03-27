@@ -4,7 +4,7 @@ plugins {
     alias(libs.plugins.kotlin.compose)
 }
 android {
-    namespace = "com.odbplus.data.schema"
+    namespace = "com.obdplus.data.schema"
     compileSdk = 35
     defaultConfig {
         minSdk = 26

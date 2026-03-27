@@ -10,7 +10,7 @@ Build and install the latest app, launch it on the connected Android device, nav
 
 3. **Launch app** — force-stop first so the BT socket is released cleanly, then start:
    ```
-   adb shell am force-stop com.odbplus.app && sleep 2 && adb shell am start -n com.odbplus.app/.MainActivity && sleep 2
+   adb shell am force-stop com.obdplus.app && sleep 2 && adb shell am start -n com.obdplus.app/.MainActivity && sleep 2
    ```
 
 4. **Navigate to ODB tab** — tap the ODB bottom nav item (text bounds `[368,2132][438,2171]`, center `(403, 2151)`):

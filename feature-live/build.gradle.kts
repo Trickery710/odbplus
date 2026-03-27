@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "com.odbplus.feature.live"
+    namespace = "com.obdplus.feature.live"
     compileSdk = 35
     defaultConfig { minSdk = 26 }
     buildFeatures { compose = true }

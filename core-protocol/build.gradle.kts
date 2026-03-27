@@ -7,7 +7,7 @@ plugins {
 
 
 android {
-    namespace = "com.odbplus.core.protocol"
+    namespace = "com.obdplus.core.protocol"
     compileSdk = 36
 
     defaultConfig {

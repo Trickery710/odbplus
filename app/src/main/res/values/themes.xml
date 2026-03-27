@@ -1,0 +1,3 @@
+<resources>
+    <style name="Theme.ObdPlus" parent="android:Theme.Material.NoActionBar" />
+</resources>

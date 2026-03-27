@@ -4,7 +4,7 @@ plugins {
     alias(libs.plugins.kotlin.compose)
 }
 android {
-    namespace = "com.odbplus.feature.ecu.profile"
+    namespace = "com.obdplus.feature.ecu.profile"
     compileSdk = 35
     defaultConfig {
         minSdk = 26

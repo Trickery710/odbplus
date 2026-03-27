@@ -1,7 +1,7 @@
 
-package com.odbplus.protocol
+package com.obdplus.protocol
 
-import com.odbplus.transport.Transport
+import com.obdplus.transport.Transport
 
 class STN1110Protocol(private val transport: Transport) {
 

@@ -15,6 +15,6 @@ dependencyResolutionManagement {
         mavenCentral()
     }
 }
-rootProject.name = "odbplus_multi_module_scaffold"
+rootProject.name = "obdplus_multi_module_scaffold"
 include(":app", ":core-transport", ":core-protocol")
 

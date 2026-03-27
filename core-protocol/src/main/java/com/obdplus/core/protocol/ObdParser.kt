@@ -1,0 +1,406 @@
+package com.obdplus.core.protocol
+
+import javax.inject.Inject
+import javax.inject.Singleton
+
+/**
+ * Parser for OBD-II responses from an ELM327-compatible adapter.
+ *
+ * Handles:
+ * - Mode 01 (live data) responses
+ * - Mode 03 (stored DTCs) responses
+ * - Mode 07 (pending DTCs) responses
+ * - Error responses (NO DATA, ?, ERROR, etc.)
+ */
+@Singleton
+class ObdParser @Inject constructor() {
+
+    // ── Compiled patterns ──────────────────────────────────────────────────────
+
+    private companion object {
+        /** Three-byte negative-response frame(s): `7F <svc> <nrc>` repeated 1+ times. */
+        val NEG_FRAME_RE = Regex(
+            """^(?:7F\s+[0-9A-F]{2}\s+[0-9A-F]{2}\s*)+$""",
+            RegexOption.IGNORE_CASE
+        )
+
+        /** Adapter error / state keywords. */
+        val NO_DATA_RE      = Regex("""^NO\s+DATA$""",          RegexOption.IGNORE_CASE)
+        val NO_DATA_MIX_RE  = Regex("""NO\s+DATA""",            RegexOption.IGNORE_CASE)
+        val UNKNOWN_CMD_RE  = Regex("""^\?$""")
+        val ERROR_RE        = Regex("""^ERROR""",               RegexOption.IGNORE_CASE)
+        val NO_CONN_RE      = Regex("""^UNABLE\s+TO\s+CONNECT""", RegexOption.IGNORE_CASE)
+        val BUS_INIT_RE     = Regex("""^BUS\s+INIT""",          RegexOption.IGNORE_CASE)
+        val STOPPED_RE      = Regex("""^STOPPED""",             RegexOption.IGNORE_CASE)
+
+        /** Collapses any run of whitespace to a single space. */
+        val WHITESPACE_RE   = Regex("""\s+""")
+    }
+
+    /**
+     * Parse a raw response string for a known PID request.
+     *
+     * Handles multi-line responses where the adapter returns multiple PID responses
+     * in a single batch. Searches for the response matching the requested PID.
+     *
+     * @param rawResponse The raw hex response from the adapter (e.g., "41 0C 1A F8")
+     * @param requestedPid The PID that was requested (for validation)
+     * @return Parsed OBD response
+     */
+    fun parse(rawResponse: String, requestedPid: ObdPid): ObdResponse {
+        // Split into individual response lines first
+        val responseLines = rawResponse
+            .split("\n", "\r")
+            .map { it.trim() }
+            .filter { it.isNotEmpty() }
+
+        // If we have multiple lines, try to find the one matching our requested PID
+        if (responseLines.size > 1) {
+            val matchingResponse = findMatchingResponse(responseLines, requestedPid)
+            if (matchingResponse != null) {
+                return parseDataResponse(rawResponse, matchingResponse, requestedPid)
+            }
+        }
+
+        // Detect BUS INIT errors in the raw response BEFORE cleanResponse strips the prefix.
+        // cleanResponse removes "BUS INIT: ..." so BUS_INIT_RE can never match the cleaned
+        // string — we must check the original here. Only treat as bus-init failure when there
+        // is no valid "41 xx" response data alongside it.
+        val rawUpper = rawResponse.uppercase()
+        if (BUS_INIT_RE.containsMatchIn(rawUpper) && !rawUpper.contains("41")) {
+            return ObdResponse.Error(rawResponse, "Bus initialization failed")
+        }
+
+        val cleaned = cleanResponse(rawResponse)
+
+        // If the entire response is a negative response (7F xx yy) with no valid data,
+        // treat it as NoData. Common on multi-ECU buses where a secondary module
+        // responds with "subFunctionNotSupported" (12) for unsupported PIDs.
+        if (isOnlyNegativeResponse(cleaned)) {
+            return ObdResponse.NoData(rawResponse, requestedPid)
+        }
+
+        // Try to extract matching response from merged multi-response data FIRST
+        // This handles cases where "NO DATA" appears alongside valid responses.
+        // The extracted response is truncated to exactly the expected byte count,
+        // discarding any trailing 7F xx xx bytes from secondary ECUs.
+        val extractedResponse = extractMatchingPidResponse(cleaned, requestedPid)
+        if (extractedResponse != null) {
+            return parseDataResponse(rawResponse, extractedResponse, requestedPid)
+        }
+
+        // Check for error responses only if we couldn't find a valid response
+        when {
+            cleaned.isEmpty()                                       -> return ObdResponse.Error(rawResponse, "No response")
+            NO_DATA_RE.matches(cleaned)                             -> return ObdResponse.NoData(rawResponse, requestedPid)
+            NO_DATA_MIX_RE.containsMatchIn(cleaned)
+                && !cleaned.contains("41")                          -> return ObdResponse.NoData(rawResponse, requestedPid)
+            UNKNOWN_CMD_RE.matches(cleaned)                         -> return ObdResponse.Error(rawResponse, "Unknown command")
+            ERROR_RE.containsMatchIn(cleaned)                       -> return ObdResponse.Error(rawResponse, cleaned)
+            NO_CONN_RE.containsMatchIn(cleaned)                     -> return ObdResponse.Error(rawResponse, "Unable to connect to vehicle")
+            STOPPED_RE.containsMatchIn(cleaned)                     -> return ObdResponse.Error(rawResponse, "Command stopped")
+        }
+
+        // If cleaned still contains no "41" response, all error conditions have been handled
+        // above (NO DATA, ERROR, UNABLE TO CONNECT, negative-response-only).  What remains is
+        // likely an ISO/KWP header-wrapped negative response (e.g. "84 F1 10 7F 01 12") where
+        // the 7F frame is not at the start of the string so isOnlyNegativeResponse() missed it.
+        // Attempting to parse it as a PID response would produce a misleading "Invalid mode byte"
+        // error.  Treat it as NoData instead.
+        if (!cleaned.contains("41")) {
+            return ObdResponse.NoData(rawResponse, requestedPid)
+        }
+
+        return parseDataResponse(rawResponse, cleaned, requestedPid)
+    }
+
+    /**
+     * Find a response line that matches the requested PID.
+     */
+    private fun findMatchingResponse(responseLines: List<String>, requestedPid: ObdPid): String? {
+        val expectedPrefix = "41 ${requestedPid.code}".uppercase()
+        val expectedPrefixNoSpace = "41${requestedPid.code}".uppercase()
+
+        for (line in responseLines) {
+            val cleaned = cleanResponse(line)
+            val upper = cleaned.uppercase()
+            val upperNoSpace = upper.replace(" ", "")
+            // Match at start (no headers) or embedded after ISO 9141-2/KWP2000 header bytes
+            if (upper.startsWith(expectedPrefix) || upperNoSpace.startsWith(expectedPrefixNoSpace)) {
+                return cleaned
+            }
+            // Headered response: "84 F1 10 41 0C …" — find the OBD payload after the header
+            val idx = upper.indexOf(" $expectedPrefix")
+            if (idx >= 0) return cleaned.substring(idx + 1)
+            val idxNoSpace = upperNoSpace.indexOf(expectedPrefixNoSpace)
+            if (idxNoSpace >= 0 && idxNoSpace % 2 == 0) {
+                // Re-insert spaces for the downstream parser
+                return upperNoSpace.substring(idxNoSpace).chunked(2).joinToString(" ")
+            }
+        }
+        return null
+    }
+
+    /**
+     * Extract a specific PID response from a merged multi-response string.
+     *
+     * Handles cases like "41 0C 1A F8 41 0D 3C" where multiple responses are concatenated,
+     * and also strips trailing negative-response bytes ("7F 01 12") that secondary ECUs
+     * append after the primary ECU's valid positive response.
+     *
+     * The returned string contains EXACTLY `2 + expectedBytes` hex tokens so the caller
+     * always gets a clean, unambiguous response with no trailing garbage.
+     */
+    private fun extractMatchingPidResponse(merged: String, requestedPid: ObdPid): String? {
+        val pidCode = requestedPid.code.uppercase()
+        // Match "41 <PID>" followed by at least one hex byte
+        val pattern = "41\\s*$pidCode(?:\\s+[0-9A-F]{2})+".toRegex(RegexOption.IGNORE_CASE)
+
+        val match = pattern.find(merged) ?: return null
+        val allBytes = hexStringToBytes(match.value)
+
+        // Need at least: service (1) + pid (1) + data (expectedBytes)
+        val needed = 2 + requestedPid.expectedBytes
+        if (allBytes.size < needed) return null
+
+        // Truncate to exactly the expected size — drops any trailing 7F xx xx bytes
+        val exactBytes = allBytes.take(needed)
+        return exactBytes.joinToString(" ") { String.format("%02X", it.toInt() and 0xFF) }
+    }
+
+    /**
+     * Parse a raw response without knowing the requested PID.
+     * Attempts to identify the PID from the response itself.
+     */
+    fun parseAuto(rawResponse: String): ObdResponse {
+        val cleaned = cleanResponse(rawResponse)
+
+        when {
+            cleaned.isEmpty()                   -> return ObdResponse.NoData(rawResponse)
+            NO_DATA_RE.matches(cleaned)         -> return ObdResponse.NoData(rawResponse)
+            UNKNOWN_CMD_RE.matches(cleaned)     -> return ObdResponse.Error(rawResponse, "Unknown command")
+            ERROR_RE.containsMatchIn(cleaned)   -> return ObdResponse.Error(rawResponse, cleaned)
+        }
+
+        val bytes = hexStringToBytes(cleaned)
+        if (bytes.size < 2) {
+            return ObdResponse.ParseError(rawResponse, "Response too short")
+        }
+
+        // Mode 01 response starts with 41
+        if (bytes[0] != 0x41.toByte()) {
+            return ObdResponse.ParseError(rawResponse, "Not a Mode 01 response")
+        }
+
+        val pidCode = String.format("%02X", bytes[1])
+        val pid = ObdPid.fromCode(pidCode)
+            ?: return ObdResponse.ParseError(rawResponse, "Unknown PID: $pidCode")
+
+        val dataBytes = bytes.drop(2).toByteArray()
+        return parseValue(rawResponse, pid, dataBytes)
+    }
+
+    /**
+     * Parse DTCs from Mode 03 (stored) or Mode 07 (pending) response.
+     *
+     * Handles multi-ECU responses where two or more ECUs each emit a complete
+     * `43`/`47` frame concatenated into a single string, e.g.:
+     *   `43 01 71 00 00 00 00 43 00 00 00 00 00 00`
+     * The second `43` is a new response header, not a DTC byte. Each segment is
+     * parsed independently and duplicate DTCs are de-duplicated.
+     *
+     * @param rawResponse The raw hex response
+     * @param isPending True for Mode 07 (pending DTCs), false for Mode 03 (stored DTCs)
+     * @return De-duplicated list of parsed DTCs
+     */
+    fun parseDtcs(rawResponse: String, isPending: Boolean = false): List<DiagnosticTroubleCode> {
+        val cleaned = cleanResponse(rawResponse)
+        if (cleaned.isEmpty() || cleaned == "NO DATA") return emptyList()
+
+        val headerByte = if (isPending) 0x47 else 0x43
+        val headerHex  = String.format("%02X", headerByte)
+
+        // Split the cleaned string into segments at each occurrence of the header token.
+        // "43 01 71 00 43 00 00" → ["43 01 71 00", "43 00 00"]
+        val segments = cleaned.split(Regex("(?<![0-9A-Fa-f])$headerHex(?![0-9A-Fa-f])"))
+            .map { it.trim() }
+            .filter { it.isNotEmpty() }
+
+        val dtcs = linkedSetOf<DiagnosticTroubleCode>() // use Set to de-duplicate
+        for (segment in segments) {
+            val bytes = hexStringToBytes(segment)
+            if (bytes.isEmpty()) continue
+
+            // DTCs come in pairs of bytes
+            var i = 0
+            while (i + 1 < bytes.size) {
+                val b1 = bytes[i].toInt()     and 0xFF
+                val b2 = bytes[i + 1].toInt() and 0xFF
+                i += 2
+                if (b1 == 0 && b2 == 0) continue  // empty slot
+                dtcs.add(DiagnosticTroubleCode.fromBytes(b1, b2))
+            }
+        }
+
+        return dtcs.toList()
+    }
+
+    /**
+     * Parse the VIN (Vehicle Identification Number) from Mode 09 PID 02 response.
+     */
+    fun parseVin(rawResponse: String): String? {
+        val dataBytes = findMode09Payload(rawResponse, 0x02) ?: return null
+        return dataBytes.map { it.toInt().toChar() }
+            .joinToString("")
+            .filter { it.isLetterOrDigit() }
+            .take(17) // VIN is 17 characters
+    }
+
+    /**
+     * Parse a Mode 09 response as ASCII string (e.g., Calibration ID, ECU Name).
+     */
+    fun parseMode09String(rawResponse: String, expectedPid: Int): String? {
+        val dataBytes = findMode09Payload(rawResponse, expectedPid) ?: return null
+        if (dataBytes.isEmpty()) return null
+        return dataBytes
+            .map { (it.toInt() and 0xFF).toChar() }
+            .filter { it.isLetterOrDigit() || it.isWhitespace() || it in ".-_" }
+            .joinToString("")
+            .trim()
+            .takeIf { it.isNotEmpty() }
+    }
+
+    /**
+     * Parse a Mode 09 response as hex string (e.g., CVN).
+     */
+    fun parseMode09Hex(rawResponse: String, expectedPid: Int): String? {
+        val dataBytes = findMode09Payload(rawResponse, expectedPid) ?: return null
+        if (dataBytes.isEmpty()) return null
+        return dataBytes
+            .joinToString("") { String.format("%02X", it.toInt() and 0xFF) }
+            .takeIf { it.isNotEmpty() }
+    }
+
+    /**
+     * Find and return the data bytes from a Mode 09 response for [expectedPid].
+     *
+     * Searches for the "49 XX" marker anywhere in the cleaned byte stream so that
+     * ISO/KWP2000 header bytes (e.g. "84 F1 10 49 02 01 ...") are skipped correctly.
+     * Returns the payload bytes after the header (49) + PID (XX) + message-count byte,
+     * or null if the marker is not found or the response is empty/NO DATA.
+     */
+    private fun findMode09Payload(rawResponse: String, expectedPid: Int): ByteArray? {
+        val cleaned = cleanResponse(rawResponse)
+        if (cleaned.isEmpty() || cleaned == "NO DATA") return null
+
+        val bytes = hexStringToBytes(cleaned)
+
+        // Search for "49 XX" anywhere — handles both bare and ISO/KWP header-prefixed responses
+        for (i in 0 until bytes.size - 2) {
+            if (bytes[i] == 0x49.toByte() && (bytes[i + 1].toInt() and 0xFF) == expectedPid) {
+                // bytes[i+2] is the message count; payload starts at i+3
+                return if (bytes.size > i + 3) bytes.drop(i + 3).toByteArray() else ByteArray(0)
+            }
+        }
+        return null
+    }
+
+    private fun parseDataResponse(
+        rawResponse: String,
+        cleaned: String,
+        requestedPid: ObdPid
+    ): ObdResponse {
+        val bytes = hexStringToBytes(cleaned)
+
+        if (bytes.size < 2) {
+            return ObdResponse.ParseError(rawResponse, "Response too short: ${bytes.size} bytes")
+        }
+
+        // Validate response header (41 = Mode 01 response)
+        if (bytes[0] != 0x41.toByte()) {
+            return ObdResponse.ParseError(
+                rawResponse,
+                "Invalid mode byte: expected 41, got ${String.format("%02X", bytes[0])}"
+            )
+        }
+
+        // Validate PID matches
+        val responsePid = String.format("%02X", bytes[1])
+        if (!responsePid.equals(requestedPid.code, ignoreCase = true)) {
+            return ObdResponse.ParseError(
+                rawResponse,
+                "PID mismatch: expected ${requestedPid.code}, got $responsePid"
+            )
+        }
+
+        // Extract data bytes (skip mode + pid bytes)
+        val dataBytes = bytes.drop(2).toByteArray()
+        return parseValue(rawResponse, requestedPid, dataBytes)
+    }
+
+    private fun parseValue(rawResponse: String, pid: ObdPid, dataBytes: ByteArray): ObdResponse {
+        if (dataBytes.size < pid.expectedBytes) {
+            return ObdResponse.ParseError(
+                rawResponse,
+                "Insufficient data: expected ${pid.expectedBytes} bytes, got ${dataBytes.size}"
+            )
+        }
+
+        return try {
+            val value = pid.parse(dataBytes)
+            val formatted = formatValue(value, pid)
+            ObdResponse.Success(rawResponse, pid, value, formatted)
+        } catch (e: Exception) {
+            ObdResponse.ParseError(rawResponse, "Parse error: ${e.message}")
+        }
+    }
+
+    private fun formatValue(value: Double, pid: ObdPid): String {
+        val formatted = when {
+            value == value.toLong().toDouble() -> value.toLong().toString()
+            else -> String.format("%.2f", value)
+        }
+        return "$formatted ${pid.unit}"
+    }
+
+    /**
+     * Returns true when every hex token in [cleaned] is part of a negative-response
+     * frame (`7F xx yy`), meaning no positive `41` response is present.
+     *
+     * A negative response has the form:
+     *   7F — negative-response service ID
+     *   xx — echoed service byte
+     *   yy — NRC (e.g. 12 = subFunctionNotSupported, 22 = conditionsNotCorrect)
+     *
+     * Secondary ECUs on a multi-ECU CAN bus commonly return `7F 01 12` for PIDs
+     * they don't support, appearing after or instead of the primary ECU's response.
+     */
+    private fun isOnlyNegativeResponse(cleaned: String): Boolean {
+        if (cleaned.isEmpty() || cleaned.contains("41")) return false
+        return NEG_FRAME_RE.matches(cleaned)
+    }
+
+    private fun cleanResponse(response: String): String {
+        return response
+            .uppercase()
+            .replace("\r", " ")
+            .replace("\n", " ")
+            .replace(">", "")
+            .replace("SEARCHING...", "")
+            .replace("BUS INIT: ...", "")
+            .let { WHITESPACE_RE.replace(it, " ") }
+            .trim()
+    }
+
+    private fun hexStringToBytes(hexString: String): ByteArray {
+        // Split on whitespace first, then chunk any run-together tokens into 2-char pairs.
+        // Handles both space-separated ("84 F1 10 41 0C") and unspaced ("84F110410C") formats.
+        return hexString.split("\\s+".toRegex())
+            .filter { it.isNotEmpty() }
+            .flatMap { token -> if (token.length == 2) listOf(token) else token.chunked(2) }
+            .mapNotNull { pair ->
+                try { pair.toInt(16).toByte() } catch (e: NumberFormatException) { null }
+            }
+            .toByteArray()
+    }
+}

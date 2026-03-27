@@ -1,5 +1,5 @@
 
-package com.odbplus.transport
+package com.obdplus.transport
 
 interface Transport {
     suspend fun connect(): Boolean

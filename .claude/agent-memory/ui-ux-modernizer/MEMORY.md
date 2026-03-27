@@ -16,10 +16,10 @@
 - **Backgrounds**: Deep navy `#0D1117` base, `#151B23` surface, `#1A2332` cards
 - **Borders**: `#2A3A4E` subtle border on cards/dividers
 - **Text**: `#E6EDF3` primary, `#8B949E` secondary, `#6E7681` tertiary
-- Color tokens in `/app/src/main/java/com/odbplus/app/ui/theme/Color.kt`
+- Color tokens in `/app/src/main/java/com/obdplus/app/ui/theme/Color.kt`
 
 ## Website Concept Series
-- Location: `/home/casey/Desktop/projects/odbplus/website-redesigns/`
+- Location: `/home/casey/Desktop/projects/obdplus/website-redesigns/`
 - Concept 5 (High Contrast Diagnostic Tool): `concept_5_high_contrast_tool/`
   - Pure black (#000000) + matrix green (#00FF88) palette
   - Scan-tool aesthetic (Snap-on Zeus, Autel MaxiSys inspired)
@@ -37,9 +37,9 @@
 - Bottom nav: CyanPrimary selected, TextTertiary unselected, 0.12 alpha indicator
 
 ## File Locations
-- Theme: `app/src/main/java/com/odbplus/app/ui/theme/` (Color.kt, Theme.kt, Type.kt)
-- Screens: `app/src/main/java/com/odbplus/app/ui/`
-- Nav: `app/src/main/java/com/odbplus/app/nav/` (AppNav.kt, BottomNavItem.kt)
+- Theme: `app/src/main/java/com/obdplus/app/ui/theme/` (Color.kt, Theme.kt, Type.kt)
+- Screens: `app/src/main/java/com/obdplus/app/ui/`
+- Nav: `app/src/main/java/com/obdplus/app/nav/` (AppNav.kt, BottomNavItem.kt)
 
 ## Build Notes
 - `window.statusBarColor` and `window.navigationBarColor` are deprecated but still work

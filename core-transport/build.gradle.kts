@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "com.odbplus.core.transport"
+    namespace = "com.obdplus.core.transport"
     compileSdk = 36
 
     defaultConfig {

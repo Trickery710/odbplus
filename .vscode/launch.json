@@ -8,8 +8,8 @@
             "type": "kotlin",
             "request": "launch",
             "name": "Kotlin Launch",
-            "projectRoot": "/home/casey/Desktop/app/obdvin/test3/odbplus_multi_module_scaffold",
-            "mainClass": "/home/casey/Desktop/app/obdvin/test3/odbplus_multi_module_scaffold/app/src/main/java/com/odbplus/app/MainActivity.kt"
+            "projectRoot": "/home/casey/Desktop/app/obdvin/test3/obdplus_multi_module_scaffold",
+            "mainClass": "/home/casey/Desktop/app/obdvin/test3/obdplus_multi_module_scaffold/app/src/main/java/com/obdplus/app/MainActivity.kt"
         }
     ]
 }

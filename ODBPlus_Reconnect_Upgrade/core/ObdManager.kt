@@ -1,10 +1,10 @@
 
-package com.odbplus.core
+package com.obdplus.core
 
 import kotlinx.coroutines.*
-import com.odbplus.transport.Transport
-import com.odbplus.protocol.STN1110Protocol
-import com.odbplus.scheduler.PidScheduler
+import com.obdplus.transport.Transport
+import com.obdplus.protocol.STN1110Protocol
+import com.obdplus.scheduler.PidScheduler
 
 class ObdManager(
     private val scope: CoroutineScope,

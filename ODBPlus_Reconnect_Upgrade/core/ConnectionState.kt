@@ -1,5 +1,5 @@
 
-package com.odbplus.core
+package com.obdplus.core
 
 sealed class ConnectionState {
     object Disconnected : ConnectionState()

@@ -1,5 +1,5 @@
 
-package com.odbplus.core
+package com.obdplus.core
 
 import kotlinx.coroutines.*
 import kotlin.math.min

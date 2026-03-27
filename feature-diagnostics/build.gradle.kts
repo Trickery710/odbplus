@@ -4,7 +4,7 @@ plugins {
     alias(libs.plugins.kotlin.compose)
 }
 android {
-    namespace = "com.odbplus.feature.diagnostics"
+    namespace = "com.obdplus.feature.diagnostics"
     compileSdk = 35
     defaultConfig {
         minSdk = 26

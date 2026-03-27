@@ -22,12 +22,14 @@
     <uses-feature android:name="android.hardware.bluetooth" android:required="false"/>
 
     <application
-        android:name=".OdbPlusApp"
+        android:name=".ObdPlusApp"
         android:label="@string/app_name"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/ic_launcher"
+        android:theme="@style/Theme.ObdPlus">
         <activity
             android:name=".MainActivity"
-            android:exported="true">
+            android:exported="true"
+            android:theme="@style/Theme.ObdPlus">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
