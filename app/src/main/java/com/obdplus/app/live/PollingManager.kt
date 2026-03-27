@@ -3,6 +3,7 @@ package com.obdplus.app.live
 import com.obdplus.core.protocol.ObdPid
 import com.obdplus.core.protocol.ObdResponse
 import com.obdplus.core.protocol.ObdService
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -12,6 +13,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 class PollingManager(private val obdService: ObdService) {
 
@@ -100,9 +102,15 @@ class PollingManager(private val obdService: ObdService) {
         for ((index, pid) in batch.withIndex()) {
             if (!_isPolling.value) break
             updateLoading(pid, true)
-            val response = obdService.query(pid)
-            applyResponse(pid, pids, response)
-            valuesForCycle[pid] = (response as? ObdResponse.Success)?.value
+            try {
+                val response = obdService.query(pid)
+                applyResponse(pid, pids, response)
+                valuesForCycle[pid] = (response as? ObdResponse.Success)?.value
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                Timber.w(e, "Poll error for pid %s", pid.code)
+            }
             // Small breathing room between commands so the adapter isn't overwhelmed.
             if (index < batch.lastIndex) delay(INTER_PID_DELAY_MS)
         }

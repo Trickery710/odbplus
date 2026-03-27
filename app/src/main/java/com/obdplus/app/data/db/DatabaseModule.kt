@@ -2,7 +2,10 @@ package com.obdplus.app.data.db
 
 import android.content.Context
 import androidx.room.Room
+import androidx.room.RoomDatabase
+import androidx.sqlite.db.SupportSQLiteDatabase
 import com.obdplus.app.data.db.dao.DtcLogDao
+import timber.log.Timber
 import com.obdplus.app.data.db.dao.EcuModuleDao
 import com.obdplus.app.data.db.dao.FreezeFrameDao
 import com.obdplus.app.data.db.dao.SensorLogDao
@@ -31,6 +34,11 @@ object DatabaseModule {
     fun provideDatabase(@ApplicationContext ctx: Context): OdbDatabase =
         Room.databaseBuilder(ctx, OdbDatabase::class.java, "odb_database")
             .addMigrations(OdbDatabase.MIGRATION_1_2, OdbDatabase.MIGRATION_2_3)
+            .addCallback(object : RoomDatabase.Callback() {
+                override fun onDestructiveMigration(db: SupportSQLiteDatabase) {
+                    Timber.e("DESTRUCTIVE MIGRATION — all user data wiped. A migration script is missing.")
+                }
+            })
             .build()
 
     @Provides @Singleton

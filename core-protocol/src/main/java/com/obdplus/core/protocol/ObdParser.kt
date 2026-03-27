@@ -1,5 +1,6 @@
 package com.obdplus.core.protocol
 
+import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -397,8 +398,18 @@ class ObdParser @Inject constructor() {
         // Handles both space-separated ("84 F1 10 41 0C") and unspaced ("84F110410C") formats.
         return hexString.split("\\s+".toRegex())
             .filter { it.isNotEmpty() }
-            .flatMap { token -> if (token.length == 2) listOf(token) else token.chunked(2) }
+            .flatMap { token ->
+                if (token.length == 2) {
+                    listOf(token)
+                } else {
+                    if (token.length % 2 != 0) {
+                        Timber.w("hexStringToBytes: odd-length token '%s' — trailing nibble dropped", token)
+                    }
+                    token.chunked(2)
+                }
+            }
             .mapNotNull { pair ->
+                if (pair.length != 2) return@mapNotNull null  // drop incomplete nibbles
                 try { pair.toInt(16).toByte() } catch (e: NumberFormatException) { null }
             }
             .toByteArray()

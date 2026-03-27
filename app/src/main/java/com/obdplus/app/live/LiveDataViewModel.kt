@@ -4,13 +4,11 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.obdplus.app.ai.VehicleContextProvider
-import com.obdplus.app.ai.data.VehicleInfo
 import com.obdplus.app.session.SensorLoggingService
 import com.obdplus.app.session.VehicleSessionManager
 import com.obdplus.app.settings.SettingsRepository
 import com.obdplus.core.protocol.ObdPid
 import com.obdplus.core.protocol.ObdService
-import com.obdplus.core.protocol.PidDiscoveryState
 import com.obdplus.core.transport.ConnectionState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import timber.log.Timber
@@ -23,80 +21,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
-// ─────────────────────────────────────────────────────────────────────────────
-// UI data classes
-// ─────────────────────────────────────────────────────────────────────────────
-
-data class PidDisplayState(
-    val pid: ObdPid,
-    val definition: PidDefinition? = null,
-    val isSelected: Boolean = false,
-    val isLoading: Boolean = false,
-    val value: Double? = null,
-    val formattedValue: String = "--",
-    val error: String? = null,
-    val status: SensorStatus = SensorStatus.NORMAL,
-    val isFavorite: Boolean = false,
-    val changeRate: Double = 0.0     // units/s, for "most active" sorting
-) {
-    val category: PidCategory get() = definition?.category ?: PidCategory.SENSORS
-}
-
-data class LoggedDataPoint(
-    val timestamp: Long,
-    val pidValues: Map<ObdPid, Double?>
-)
-
-data class LogSession(
-    val id: String = System.currentTimeMillis().toString(),
-    val startTime: Long = System.currentTimeMillis(),
-    val endTime: Long? = null,
-    val selectedPids: List<ObdPid> = emptyList(),
-    val dataPoints: List<LoggedDataPoint> = emptyList(),
-    val vehicleInfo: VehicleInfo? = null
-) {
-    val duration: Long get() = (endTime ?: System.currentTimeMillis()) - startTime
-    val dataPointCount: Int get() = dataPoints.size
-}
-
-data class ChartPoint(val timestamp: Long, val value: Double)
-
 private const val CHART_MAX_POINTS = 120
-
-data class LiveDataUiState(
-    val isConnected: Boolean = false,
-    val isPolling: Boolean = false,
-    val pollIntervalMs: Long = 500L,
-    val chartData: Map<ObdPid, List<ChartPoint>> = emptyMap(),
-    val showChart: Boolean = false,
-    /**
-     * PIDs available for selection on the current vehicle.
-     * When disconnected: full master list for offline browsing.
-     * When connected + discovery complete: only ECU-confirmed supported PIDs.
-     */
-    val availablePids: List<PidDisplayState> = emptyList(),
-    val selectedPids: List<ObdPid> = emptyList(),
-    val pidValues: Map<ObdPid, PidDisplayState> = emptyMap(),
-    // Logging
-    val isLogging: Boolean = false,
-    val currentLogSession: LogSession? = null,
-    val savedSessions: List<LogSession> = emptyList(),
-    // Replay
-    val isReplaying: Boolean = false,
-    val replaySession: LogSession? = null,
-    val replayIndex: Int = 0,
-    val replaySpeed: Float = 1.0f,
-    val pidDiscoveryState: PidDiscoveryState = PidDiscoveryState.IDLE,
-    // Smart display
-    val displayMode: LiveDisplayMode = LiveDisplayMode.NUMERIC,
-    val sortOrder: SortOrder = SortOrder.CATEGORY,
-    val activeCategory: PidCategory? = null,
-    val activeDtcFilter: List<String> = emptyList(),
-    val derivedMetrics: List<DerivedMetric> = emptyList(),
-    val favoritePidCodes: Set<String> = emptySet(),
-    /** Source of the current supported-PID set: "cache_hit", "validated_cache", "discovery", "disconnected" */
-    val supportSource: String = "disconnected"
-)
 
 // ─────────────────────────────────────────────────────────────────────────────
 // ViewModel
@@ -121,6 +46,12 @@ class LiveDataViewModel @Inject constructor(
     /** Profile ID resolved during the last connect flow, for saving discovery results. */
     private var resolvedProfileId: Long = -1L
 
+    /**
+     * Accumulates all PID values seen across poll cycles on the main thread.
+     * Avoids copying the full pidValues map on every cycle just to compute derived metrics.
+     */
+    private val lastKnownValues = mutableMapOf<ObdPid, Double?>()
+
     private val polling = PollingManager(obdService).also { mgr ->
         mgr.onPollCycle = { pidValues ->
             logSession.addPoint(pidValues)
@@ -137,9 +68,9 @@ class LiveDataViewModel @Inject constructor(
                 chartUpdates[pid] = (existing + ChartPoint(now, value)).takeLast(CHART_MAX_POINTS)
             }
 
-            // Recalculate derived metrics from the full current PID value map.
-            val allValues = buildCurrentValueMap(pidValues)
-            val derived = DerivedMetricCalculator.calculate(allValues)
+            // Accumulate values and recalculate derived metrics without copying the full pidValues map.
+            lastKnownValues.putAll(pidValues)
+            val derived = DerivedMetricCalculator.calculate(lastKnownValues)
 
             _uiState.update { state ->
                 val updatedValues = state.pidValues.toMutableMap()
@@ -202,12 +133,14 @@ class LiveDataViewModel @Inject constructor(
 
             obdService.supportedPids.collect { supported ->
                 val current = _uiState.value
+                // Use a HashSet for O(1) membership checks across 200+ PID iterations.
+                val selectedSet = current.selectedPids.toHashSet()
                 if (supported == null) {
                     val allPids = withContext(Dispatchers.Default) {
                         ObdPid.entries.map { pid ->
                             PidDisplayState(
                                 pid, PidRegistry.get(pid),
-                                isSelected = pid in current.selectedPids
+                                isSelected = pid in selectedSet
                             )
                         }
                     }
@@ -219,7 +152,7 @@ class LiveDataViewModel @Inject constructor(
                             .map { pid ->
                                 PidDisplayState(
                                     pid, PidRegistry.get(pid),
-                                    isSelected = pid in current.selectedPids,
+                                    isSelected = pid in selectedSet,
                                     isFavorite = pid.code in current.favoritePidCodes
                                 )
                             }
@@ -240,7 +173,10 @@ class LiveDataViewModel @Inject constructor(
             obdService.connectionState.collect { state ->
                 val connected = state == ConnectionState.CONNECTED
                 _uiState.update { it.copy(isConnected = connected) }
-                if (!connected && polling.isPolling.value) polling.stop()
+                if (!connected) {
+                    if (polling.isPolling.value) polling.stop()
+                    lastKnownValues.clear()
+                }
             }
         }
         viewModelScope.launch { polling.isPolling.collect { v -> _uiState.update { it.copy(isPolling = v) } } }
@@ -488,18 +424,6 @@ class LiveDataViewModel @Inject constructor(
 
     fun setReplaySpeed(speed: Float) = replay.setSpeed(speed)
 
-    // ─────────────────────────────────────────────────────────────────────────
-    // Helpers
-    // ─────────────────────────────────────────────────────────────────────────
-
-    private fun buildCurrentValueMap(freshValues: Map<ObdPid, Double?>): Map<ObdPid, Double?> {
-        val result = _uiState.value.pidValues
-            .mapValues { (_, state) -> state.value }
-            .toMutableMap()
-        result.putAll(freshValues)
-        return result
-    }
-
     override fun onCleared() {
         super.onCleared()
         polling.stop()
@@ -507,48 +431,3 @@ class LiveDataViewModel @Inject constructor(
     }
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// Preset PID groups
-// ─────────────────────────────────────────────────────────────────────────────
-
-enum class PidPreset(val displayName: String, val pids: List<ObdPid>) {
-    ENGINE_BASICS(
-        "Engine Basics",
-        listOf(ObdPid.ENGINE_RPM, ObdPid.ENGINE_LOAD, ObdPid.ENGINE_COOLANT_TEMP, ObdPid.THROTTLE_POSITION)
-    ),
-    DRIVING(
-        "Driving",
-        listOf(ObdPid.ENGINE_RPM, ObdPid.VEHICLE_SPEED, ObdPid.THROTTLE_POSITION, ObdPid.ENGINE_LOAD)
-    ),
-    FUEL_ECONOMY(
-        "Fuel Economy",
-        listOf(ObdPid.MAF_FLOW_RATE, ObdPid.VEHICLE_SPEED, ObdPid.ENGINE_FUEL_RATE, ObdPid.FUEL_TANK_LEVEL)
-    ),
-    TEMPERATURES(
-        "Temperatures",
-        listOf(ObdPid.ENGINE_COOLANT_TEMP, ObdPid.INTAKE_AIR_TEMP, ObdPid.AMBIENT_AIR_TEMP, ObdPid.ENGINE_OIL_TEMP)
-    ),
-    FULL_DASHBOARD(
-        "Full Dashboard",
-        listOf(
-            ObdPid.ENGINE_RPM, ObdPid.VEHICLE_SPEED, ObdPid.ENGINE_COOLANT_TEMP,
-            ObdPid.THROTTLE_POSITION, ObdPid.ENGINE_LOAD, ObdPid.FUEL_TANK_LEVEL
-        )
-    ),
-    AIR_FUEL(
-        "Air / Fuel",
-        listOf(
-            ObdPid.MAF_FLOW_RATE, ObdPid.SHORT_TERM_FUEL_TRIM_BANK1,
-            ObdPid.LONG_TERM_FUEL_TRIM_BANK1, ObdPid.INTAKE_MANIFOLD_PRESSURE,
-            ObdPid.O2_SENSOR_B1S1_VOLTAGE
-        )
-    ),
-    MISFIRE_DIAGNOSIS(
-        "Misfire",
-        listOf(
-            ObdPid.ENGINE_RPM, ObdPid.SHORT_TERM_FUEL_TRIM_BANK1,
-            ObdPid.LONG_TERM_FUEL_TRIM_BANK1, ObdPid.MAF_FLOW_RATE,
-            ObdPid.TIMING_ADVANCE, ObdPid.ENGINE_LOAD
-        )
-    )
-}
