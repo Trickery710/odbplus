@@ -28,7 +28,8 @@ class AiChatViewModel @Inject constructor(
     private val vehicleContextProvider: VehicleContextProvider,
     private val vehicleIdentityRepository: VehicleIdentityRepository,
     private val partsRepository: PartsRepository,
-    private val googleAuthManager: GoogleAuthManager
+    private val googleAuthManager: GoogleAuthManager,
+    private val vehicleHistoryRepository: VehicleHistoryRepository
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(AiChatUiState())
@@ -110,6 +111,13 @@ class AiChatViewModel @Inject constructor(
                 }
             }
 
+            // Vehicle history — last 10 VINs persisted across sessions
+            launch {
+                vehicleHistoryRepository.vinHistory.collect { history ->
+                    _uiState.update { it.copy(vehicleHistory = history) }
+                }
+            }
+
             // Run both DataStore reads in parallel — chat_history and ai_settings are separate
             // files so they can be read concurrently with no contention.
             val chatInitJob = async(Dispatchers.IO) { chatRepository.initialize() }
@@ -165,8 +173,9 @@ class AiChatViewModel @Inject constructor(
         // Mark the diagnostic context as sent immediately so rapid taps don't resend
         _uiState.update { it.copy(isSending = true, errorMessage = null, diagnosticContextSent = true) }
 
-        // Lookup NHTSA-decoded VIN data (may be null if not yet fetched)
+        // Record VIN in persistent history (no-op if blank)
         val vin = vehicleContextProvider.current().vehicleInfo?.vin
+        if (!vin.isNullOrBlank()) vehicleHistoryRepository.recordVin(vin)
         val decodedVin = if (!vin.isNullOrBlank()) {
             runCatching { vehicleIdentityRepository.getDecodedVin(vin) }.getOrNull()
         } else null

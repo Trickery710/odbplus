@@ -25,6 +25,10 @@ data class AiChatUiState(
      * Resets to false when chat history is cleared.
      */
     val diagnosticContextSent: Boolean = false,
+    /**
+     * Last [VehicleHistoryRepository.MAX_HISTORY] VINs seen across sessions.
+     */
+    val vehicleHistory: List<String> = emptyList(),
     // Google Auth state
     val isGoogleSignedIn: Boolean = false,
     val googleUserEmail: String? = null,

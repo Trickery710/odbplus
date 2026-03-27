@@ -15,7 +15,18 @@ data class VehicleContext(
     val pendingDtcs: List<DiagnosticTroubleCode> = emptyList(),
     val livePidValues: Map<ObdPid, PidDisplayState> = emptyMap(),
     val recentSessions: List<LogSession> = emptyList(),
-    val isFetchingVehicleInfo: Boolean = false
+    val isFetchingVehicleInfo: Boolean = false,
+    /**
+     * Completed auto-test results to include in the diagnostic prompt.
+     * Each entry is (testName, result) where result is "pass", "fail", or "warning".
+     * Updated by ExpertDiagViewModel via VehicleContextProvider.
+     */
+    val autoTestResults: List<Pair<String, String>> = emptyList(),
+    /**
+     * Network module names that are currently online (e.g. "PCM", "TAC", "ABS").
+     * Used to populate the N: section of the diagnostic prompt.
+     */
+    val networkModules: List<String> = emptyList()
 ) {
     /**
      * Format vehicle context for AI system prompt injection.
